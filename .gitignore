@@ -1,0 +1,18 @@
+
+# IDE specifics
+
+# Intellij
+**/.idea
+**/*.iml
+
+# Eclipse
+**/.project
+**/.settings
+**/.checkstyle
+**/.classpath
+
+# Project
+
+**/target
+**/out
+/bdpammgen

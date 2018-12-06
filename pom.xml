@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.gouv.beta.fabnum</groupId>
+    <artifactId>kelrisks</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>kelrisks-data</module>
+        <module>kelrisks-facade</module>
+        <module>kelrisks-metier</module>
+        <module>kelrisks-persistance</module>
+        <module>kelrisks-presentation</module>
+        <module>kelrisks-transverse</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.1.RELEASE</version>
+    </parent>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <maven.apt.version>1.1.3</maven.apt.version>
+
+        <!-- Versions non définies par 'Spring Boot Dependencies' -->
+        <flyway.version>5.2.1</flyway.version>
+        <postgres.driver.version>42.2.5</postgres.driver.version>
+        <mapstruct.version>1.2.0.Final</mapstruct.version>
+        <springfox.version>2.9.2</springfox.version>
+        <javax.ws.rs.version>2.0.1</javax.ws.rs.version>
+
+        <org.geolatte.version>1.4.0</org.geolatte.version>
+        <com.vividsolutions.version>1.13</com.vividsolutions.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jersey</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-spatial</artifactId>
+        </dependency>
+
+        <!-- GeoLatte -->
+        <dependency>
+            <groupId>org.geolatte</groupId>
+            <artifactId>geolatte-geom</artifactId>
+            <version>${org.geolatte.version}</version>
+        </dependency>
+
+        <!-- (Parsing des Geoms) Caused by: java.lang.ClassNotFoundException: com.vividsolutions.jts.io.ParseException -->
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>${com.vividsolutions.version}</version>
+        </dependency>
+
+        <!-- (Deserialisation des Geoms) Caused by: java.lang.ClassNotFoundException: org.glassfish.jersey.internal.RuntimeDelegateImpl -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+        </dependency>
+
+    </dependencies>
+</project>

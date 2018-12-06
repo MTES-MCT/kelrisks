@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="/kelrisks"
+         path="kelrisks"
+         reloadable="false">
+    <Resource name="jdbc/kelrisks"
+              auth="Container"
+              type="javax.sql.DataSource"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost:5432/kelrisks"
+              username="postgres"
+              password="postgres"
+              minIdle="5"
+              maxTotal="20"
+              maxIdle="10"
+              maxWaitMillis="-1"
+              defaultAutoCommit="true"
+              validationQuery="select '1'"/>
+</Context>

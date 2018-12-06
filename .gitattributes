@@ -1,0 +1,6 @@
+# Tous les fichiers Java, Jsp, Properties && xml en LF.
+*.java eol=lf
+*.jsp eol=lf
+*.properties eol=lf
+*.xml eol=lf
+*.sql eol=lf

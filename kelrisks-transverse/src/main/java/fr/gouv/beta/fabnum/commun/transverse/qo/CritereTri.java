@@ -1,0 +1,61 @@
+package fr.gouv.beta.fabnum.commun.transverse.qo;
+
+
+import fr.gouv.beta.fabnum.commun.transverse.referentiel.ConstantesCommunes;
+import fr.gouv.beta.fabnum.commun.utils.InitManager;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.querydsl.core.types.OrderSpecifier;
+
+@Data
+public class CritereTri implements Serializable {
+    
+    /**
+     * Champ serialVersionUID
+     */
+    private static final long serialVersionUID = 7914369229164646504L;
+    
+    /**
+     * La version typée grâce à QueryDSL
+     */
+    private List<OrderSpecifier<?>> ordres = new ArrayList<>();
+    
+    /**
+     * Champ propriete : la propriete sur laquelle il faut trier
+     */
+    private String propriete;
+    
+    /**
+     * Champ ascendant : true = croissant, false = decroissant
+     */
+    private boolean ascendant;
+    
+    /**
+     * Constructeur
+     *
+     * @param unePropriete : propriété sur laquelle effectuer le tri
+     * @param isAscendant  : true pour un tri ascendant
+     */
+    public CritereTri(String unePropriete, boolean isAscendant) {
+        
+        setPropriete(unePropriete);
+        setAscendant(isAscendant);
+    }
+    
+    /**
+     * Constructeur par défaut : tri ascendant sur "id"
+     */
+    public CritereTri() {
+        
+        this(InitManager.getProperty(ConstantesCommunes.CRITERE_TRI_DEFAUT), true);
+    }
+    
+    public void ajouteOrdre(OrderSpecifier<?> ordre) {
+        
+        ordres.add(ordre);
+    }
+}
