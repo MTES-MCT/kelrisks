@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(tags = {"API Basol"}, description = "API permettant les recoupements concernant la table des Sites Industriels Basol")
+@Api(tags = {"API Basol"}, description = "API permettant les recoupements concernant les Sites Industriels Basol")
 public class ApiRestBasol {
     
     @Autowired

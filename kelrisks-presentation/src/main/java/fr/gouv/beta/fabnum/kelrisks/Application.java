@@ -24,9 +24,4 @@ public class Application extends SpringBootServletInitializer {
         
         SpringApplication.run(Application.class, args);
     }
-    
-    //    @Bean
-    //    public Module geoJsonModule(){
-    //        return new org.geolatte.geom.json.GeolatteGeomModule();
-    //    }
 }

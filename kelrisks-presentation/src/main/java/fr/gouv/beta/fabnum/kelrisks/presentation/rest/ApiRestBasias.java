@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(tags = {"API Basias"}, description = "API permettant les recoupements concernant la table des Sites Industriels Basias")
+@Api(tags = {"API Basias"}, description = "API permettant les recoupements concernant les Sites Industriels Basias")
 public class ApiRestBasias {
     
     private static final String TEXT_PLAIN_UTF8       = MediaType.TEXT_PLAIN + ";charset=UTF-8";
