@@ -24,7 +24,7 @@ public class ApiRestBasol {
     
     @GetMapping("/api/basol/cadastre/{codeParcelle}")
     @ApiOperation(value = "Requête retournant les sites industiels Basol liés à la Parcelle.", response = String.class)
-    public Response basolInCadastre(@ApiParam(required = true, name = "Parcelle", value = "Code de la parcelle.")
+    public Response basolInCadastre(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                     @PathVariable("codeParcelle") String codeParcelle) {
         
         List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = gestionSiteIndustrielBasolFacade.rechercherSitesSurParcelle(codeParcelle);
