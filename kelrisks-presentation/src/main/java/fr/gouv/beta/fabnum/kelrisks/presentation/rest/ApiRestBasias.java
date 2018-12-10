@@ -42,6 +42,17 @@ public class ApiRestBasias {
     }
     
     
+    @GetMapping("/api/basias/proprietaire/{nomProprietaire}")
+    @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la Parcelle.", response = String.class)
+    public Response basiasByRaisonSociale(@ApiParam(required = true, name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
+                                          @PathVariable("nomProprietaire") String nomProprietaire) {
+        
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = gestionSiteIndustrielBasiasFacade.rechercherSitesParRaisonSociale(nomProprietaire);
+        
+        return Response.ok(siteIndustrielBasiasDTOS).build();
+    }
+    
+    
     @GetMapping("/api/basias/cadastre/{codeParcelle}/{distance}")
     @ApiOperation(value = "Requête retournant les sites industiels Basias dans un certain rayon du centroîde de la Parcelle.", response = String.class)
     public Response basiasWithinCadastreRange(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
@@ -50,8 +61,8 @@ public class ApiRestBasias {
                                               @PathVariable("distance") String distance) {
         
         Double rayon = distance.equals("") ? 100D : Double.parseDouble(distance);
-        
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = gestionSiteIndustrielBasiasFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon);
+    
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = gestionSiteIndustrielBasiasFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon / 100000D);
         
         return Response.ok(siteIndustrielBasiasDTOS).build();
     }

@@ -19,11 +19,16 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     @Query(value = "SELECT si " +
                    "FROM SiteIndustrielBasias si, Parcelle p " +
                    "WHERE p.code = :codeParcelle" +
-                   "  AND st_intersects(si.point, p.multiPolygon) = TRUE")
+                   "  AND st_within(si.point, p.multiPolygon) = TRUE")
     List<SiteIndustrielBasias> rechercherSiteSurParcelle(@Param("codeParcelle") String codeParcelle);
     
     @Query("SELECT si " +
-           "FROM SiteIndustrielBasias si")
+           "FROM SiteIndustrielBasias AS si " +
+           "WHERE st_within(si.point, " +
+           "                 st_centroid((SELECT p.multiPolygon " +
+           "                             FROM Parcelle AS p " +
+           "                             WHERE p.code = :codeParcelle)), " +
+           "                 :distance) = TRUE")
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
                                                                         @Param("distance") Double distance);
 }

@@ -41,8 +41,8 @@ public class ApiRestBasol {
                                              @PathVariable("distance") String distance) {
         
         Double rayon = distance.equals("") ? 100D : Double.parseDouble(distance);
-        
-        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = gestionSiteIndustrielBasolFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon);
+    
+        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = gestionSiteIndustrielBasolFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon / 100000D);
         
         return Response.ok(siteIndustrielBasolDTOS).build();
     }

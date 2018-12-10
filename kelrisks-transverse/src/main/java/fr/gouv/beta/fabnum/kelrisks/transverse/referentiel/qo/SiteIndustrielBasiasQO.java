@@ -10,10 +10,17 @@ import com.querydsl.core.BooleanBuilder;
 @Data
 public class SiteIndustrielBasiasQO extends AbstractQO {
     
+    private String raisonSociale;
+    
     @Override
     public void feedBuilder(BooleanBuilder builder) {
         
         if (id != null) {builder.and(QSiteIndustrielBasias.siteIndustrielBasias.id.eq(id));}
+        if (raisonSociale != null) {
+            for (String word : raisonSociale.split(" ")) {
+                builder.and(QSiteIndustrielBasias.siteIndustrielBasias.raisonSociale.containsIgnoreCase(word));
+            }
+        }
     }
 }
   

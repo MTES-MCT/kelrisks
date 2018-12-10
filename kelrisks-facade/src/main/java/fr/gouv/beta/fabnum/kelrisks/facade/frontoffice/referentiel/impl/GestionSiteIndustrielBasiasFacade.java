@@ -5,6 +5,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasD
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISiteIndustrielBasiasMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISiteIndustrielBasiasService;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.SiteIndustrielBasiasQO;
 
 import java.util.List;
 
@@ -29,8 +30,20 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     
     @Override
     public List<SiteIndustrielBasiasDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance) {
-        
+    
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance));
+    
+        return siteIndustrielBasiasDTOS;
+    }
+    
+    @Override
+    public List<SiteIndustrielBasiasDTO> rechercherSitesParRaisonSociale(String nomProprietaire) {
+        
+        SiteIndustrielBasiasQO siteIndustrielBasiasQO = new SiteIndustrielBasiasQO();
+        
+        siteIndustrielBasiasQO.setRaisonSociale(nomProprietaire);
+        
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherAvecCritere(siteIndustrielBasiasQO));
         
         return siteIndustrielBasiasDTOS;
     }

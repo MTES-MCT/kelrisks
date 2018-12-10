@@ -23,8 +23,11 @@ public class SiteIndustrielBasias extends AbstractEntity {
     
     private String   identifiant;
     private String   adresse;
-    private String   code_activite;
+    @Column(name = "code_activite")
+    private String   codeActivite;
     private String   geolocalisation;
+    @Column(name = "raison_sociale")
+    private String   raisonSociale;
     private String   precision;
     @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
     @Type(type = "org.geolatte.geom.Geometry")
