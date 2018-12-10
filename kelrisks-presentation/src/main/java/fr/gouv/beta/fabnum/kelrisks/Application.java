@@ -4,6 +4,7 @@ package fr.gouv.beta.fabnum.kelrisks;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * Configuration of the business, persistence and security layers.
  */
 @SpringBootApplication(scanBasePackages = {"fr.gouv.beta.fabnum"})
+@EnableConfigurationProperties
 @EnableJpaAuditing
 public class Application extends SpringBootServletInitializer {
     

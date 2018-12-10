@@ -27,9 +27,3 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
                                                                         @Param("distance") Double distance);
 }
-//    AS si " +
-//                  "WHERE st_dwithin(si.point, " +
-//                  "                 st_centroid((SELECT p.multiPolygon " +
-//                  "                             FROM Parcelle AS p " +
-//                  "                             WHERE p.code = :codeParcelle)), " +
-//                  "                 :distance) = TRUE

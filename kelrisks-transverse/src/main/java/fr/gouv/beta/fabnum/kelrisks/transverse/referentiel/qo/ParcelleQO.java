@@ -10,10 +10,13 @@ import com.querydsl.core.BooleanBuilder;
 @Data
 public class ParcelleQO extends AbstractQO {
     
+    private String code;
+    
     @Override
     public void feedBuilder(BooleanBuilder builder) {
         
         if (id != null) {builder.and(QParcelle.parcelle.id.eq(id));}
+        if (code != null) {builder.and(QParcelle.parcelle.code.eq(code));}
     }
 }
   

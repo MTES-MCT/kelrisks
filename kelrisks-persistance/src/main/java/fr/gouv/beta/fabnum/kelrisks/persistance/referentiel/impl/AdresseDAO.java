@@ -9,6 +9,9 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.AdresseRe
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QAdresse;
 
+import java.util.List;
+
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -61,6 +64,12 @@ public class AdresseDAO extends AbstractDAO<Adresse> implements IAdresseDAO {
     protected EntityPathBase<Adresse> getQueryObject() {
         
         return adresse;
+    }
+    
+    @Override
+    public List<Adresse> rechercherAdresseDansGeometry(Geometry geometry) {
+        
+        return adresseRepository.rechercherAdresseDansGeometry(geometry);
     }
 }
   
