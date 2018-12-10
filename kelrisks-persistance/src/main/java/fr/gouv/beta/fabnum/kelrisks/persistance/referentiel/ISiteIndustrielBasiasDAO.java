@@ -6,6 +6,8 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustri
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
+
 /**
  * Classe interface d'accès DAO à SiteIndustrielBasias
  */
@@ -14,5 +16,7 @@ public interface ISiteIndustrielBasiasDAO extends IAbstractDAO<SiteIndustrielBas
     List<SiteIndustrielBasias> rechercherSiteSurParcelle(String codeParcelle);
     
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance);
+    
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
 }
   

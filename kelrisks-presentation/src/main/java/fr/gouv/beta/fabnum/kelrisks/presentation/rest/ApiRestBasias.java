@@ -1,7 +1,9 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,11 +27,23 @@ public class ApiRestBasias {
     
     @Autowired
     IGestionSiteIndustrielBasiasFacade gestionSiteIndustrielBasiasFacade;
+    @Autowired
+    IGestionSiteSolPolueFacade         gestionSiteSolPolueFacade;
     
     public ApiRestBasias() {
         // Rien à faire
     }
     
+    @GetMapping("/api/ssp/basias/cadastre/{codeParcelle}")
+    @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la zone Sites Sols Polués intersectant la Parcelle.", response = String.class)
+    public Response basiasInSSP(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
+                                @PathVariable("codeParcelle") String codeParcelle) {
+        
+        SiteSolPolueDTO               siteSolPolueDTO          = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(siteSolPolueDTO.getMultiPolygon());
+        
+        return Response.ok(siteIndustrielBasiasDTOS).build();
+    }
     
     @GetMapping("/api/basias/cadastre/{codeParcelle}")
     @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la Parcelle.", response = String.class)

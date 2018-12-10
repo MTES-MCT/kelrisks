@@ -4,6 +4,8 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasD
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
+
 public interface IGestionSiteIndustrielBasiasFacade {
     
     List<SiteIndustrielBasiasDTO> rechercherSitesSurParcelle(String codeParcelle);
@@ -11,4 +13,6 @@ public interface IGestionSiteIndustrielBasiasFacade {
     List<SiteIndustrielBasiasDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance);
     
     List<SiteIndustrielBasiasDTO> rechercherSitesParRaisonSociale(String nomProprietaire);
+    
+    List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry multiPolygon);
 }

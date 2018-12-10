@@ -11,6 +11,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustri
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -58,6 +59,12 @@ public class SiteIndustrielBasiasDAO extends AbstractDAO<SiteIndustrielBasias> i
     public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance) {
         
         return siteIndustrielBasiasRepository.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon) {
+        
+        return siteIndustrielBasiasRepository.rechercherSitesDansPolygon(multiPolygon);
     }
     
     @Override

@@ -9,6 +9,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.SiteIndustrielBasi
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,12 +39,20 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     
     @Override
     public List<SiteIndustrielBasiasDTO> rechercherSitesParRaisonSociale(String nomProprietaire) {
-        
+    
         SiteIndustrielBasiasQO siteIndustrielBasiasQO = new SiteIndustrielBasiasQO();
-        
+    
         siteIndustrielBasiasQO.setRaisonSociale(nomProprietaire);
-        
+    
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherAvecCritere(siteIndustrielBasiasQO));
+    
+        return siteIndustrielBasiasDTOS;
+    }
+    
+    @Override
+    public List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry multiPolygon) {
+        
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygon(multiPolygon));
         
         return siteIndustrielBasiasDTOS;
     }

@@ -6,6 +6,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustri
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -31,4 +32,9 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
            "                 :distance) = TRUE")
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
                                                                         @Param("distance") Double distance);
+    
+    @Query(value = "SELECT si " +
+                   "FROM SiteIndustrielBasias si " +
+                   "WHERE st_within(si.point, :multiPolygon) = TRUE")
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
 }

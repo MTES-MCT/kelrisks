@@ -8,6 +8,7 @@ import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISiteIndustrie
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +30,16 @@ public class GestionSiteIndustrielBasolFacade extends AbstractFacade implements 
     
     @Override
     public List<SiteIndustrielBasolDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance) {
-        
+    
         List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = siteIndustrielBasolMapper.toDTOs(siteIndustrielBasolService.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance));
+    
+        return siteIndustrielBasolDTOS;
+    }
+    
+    @Override
+    public List<SiteIndustrielBasolDTO> rechercherSitesDansPolygon(Geometry multiPolygon) {
+        
+        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = siteIndustrielBasolMapper.toDTOs(siteIndustrielBasolService.rechercherSitesDansPolygon(multiPolygon));
         
         return siteIndustrielBasolDTOS;
     }

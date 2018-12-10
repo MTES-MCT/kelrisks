@@ -1,7 +1,9 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -21,6 +23,8 @@ public class ApiRestBasol {
     
     @Autowired
     IGestionSiteIndustrielBasolFacade gestionSiteIndustrielBasolFacade;
+    @Autowired
+    IGestionSiteSolPolueFacade        gestionSiteSolPolueFacade;
     
     @GetMapping("/api/basol/cadastre/{codeParcelle}")
     @ApiOperation(value = "Requête retournant les sites industiels Basol liés à la Parcelle.", response = String.class)
@@ -38,11 +42,22 @@ public class ApiRestBasol {
     public Response basolWithinCadastreRange(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                              @PathVariable("codeParcelle") String codeParcelle,
                                              @ApiParam(required = true, name = "distance", value = "Distance au centroïde de la parcelle (en mètres).", defaultValue = "100")
-                                             @PathVariable("distance") String distance) {
-        
+                                                 @PathVariable("distance") String distance) {
+    
         Double rayon = distance.equals("") ? 100D : Double.parseDouble(distance);
     
         List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = gestionSiteIndustrielBasolFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon / 100000D);
+    
+        return Response.ok(siteIndustrielBasolDTOS).build();
+    }
+    
+    @GetMapping("/api/ssp/basol/cadastre/{codeParcelle}")
+    @ApiOperation(value = "Requête retournant les sites industiels Basol liés à la zone Sites Sols Polués intersectant la Parcelle.", response = String.class)
+    public Response basolInSSP(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
+                               @PathVariable("codeParcelle") String codeParcelle) {
+        
+        SiteSolPolueDTO              siteSolPolueDTO         = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
+        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(siteSolPolueDTO.getMultiPolygon());
         
         return Response.ok(siteIndustrielBasolDTOS).build();
     }
