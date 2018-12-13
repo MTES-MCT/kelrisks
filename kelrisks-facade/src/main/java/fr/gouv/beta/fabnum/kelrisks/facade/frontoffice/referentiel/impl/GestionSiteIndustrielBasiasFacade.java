@@ -23,18 +23,18 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     
     @Override
     public List<SiteIndustrielBasiasDTO> rechercherSitesSurParcelle(String codeParcelle) {
-        
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSiteSurParcelle(codeParcelle));
-        
-        return siteIndustrielBasiasDTOS;
+    
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSiteSurParcelle(codeParcelle));
+    
+        return siteIndustrielBasiasDTOs;
     }
     
     @Override
-    public List<SiteIndustrielBasiasDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance) {
+    public List<SiteIndustrielBasiasDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance) {
     
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance));
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance));
     
-        return siteIndustrielBasiasDTOS;
+        return siteIndustrielBasiasDTOs;
     }
     
     @Override
@@ -44,16 +44,16 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     
         siteIndustrielBasiasQO.setRaisonSociale(nomProprietaire);
     
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherAvecCritere(siteIndustrielBasiasQO));
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherAvecCritere(siteIndustrielBasiasQO));
     
-        return siteIndustrielBasiasDTOS;
+        return siteIndustrielBasiasDTOs;
     }
     
     @Override
     public List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry multiPolygon) {
-        
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygon(multiPolygon));
-        
-        return siteIndustrielBasiasDTOS;
+    
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygon(multiPolygon));
+    
+        return siteIndustrielBasiasDTOs;
     }
 }

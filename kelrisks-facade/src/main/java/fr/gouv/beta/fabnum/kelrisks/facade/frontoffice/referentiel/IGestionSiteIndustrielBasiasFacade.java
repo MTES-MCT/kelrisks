@@ -10,7 +10,7 @@ public interface IGestionSiteIndustrielBasiasFacade {
     
     List<SiteIndustrielBasiasDTO> rechercherSitesSurParcelle(String codeParcelle);
     
-    List<SiteIndustrielBasiasDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance);
+    List<SiteIndustrielBasiasDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance);
     
     List<SiteIndustrielBasiasDTO> rechercherSitesParRaisonSociale(String nomProprietaire);
     

@@ -40,19 +40,19 @@ public class ApiRestBasias {
                                 @PathVariable("codeParcelle") String codeParcelle) {
         
         SiteSolPolueDTO               siteSolPolueDTO          = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(siteSolPolueDTO.getMultiPolygon());
-        
-        return Response.ok(siteIndustrielBasiasDTOS).build();
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(siteSolPolueDTO.getMultiPolygon());
+    
+        return Response.ok(siteIndustrielBasiasDTOs).build();
     }
     
     @GetMapping("/api/basias/cadastre/{codeParcelle}")
     @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la Parcelle.", response = String.class)
     public Response basiasInCadastre(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                      @PathVariable("codeParcelle") String codeParcelle) {
-        
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = gestionSiteIndustrielBasiasFacade.rechercherSitesSurParcelle(codeParcelle);
-        
-        return Response.ok(siteIndustrielBasiasDTOS).build();
+    
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSitesSurParcelle(codeParcelle);
+    
+        return Response.ok(siteIndustrielBasiasDTOs).build();
     }
     
     
@@ -60,10 +60,10 @@ public class ApiRestBasias {
     @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la Parcelle.", response = String.class)
     public Response basiasByRaisonSociale(@ApiParam(required = true, name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                                           @PathVariable("nomProprietaire") String nomProprietaire) {
-        
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = gestionSiteIndustrielBasiasFacade.rechercherSitesParRaisonSociale(nomProprietaire);
-        
-        return Response.ok(siteIndustrielBasiasDTOS).build();
+    
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSitesParRaisonSociale(nomProprietaire);
+    
+        return Response.ok(siteIndustrielBasiasDTOs).build();
     }
     
     
@@ -76,8 +76,8 @@ public class ApiRestBasias {
         
         Double rayon = distance.equals("") ? 100D : Double.parseDouble(distance);
     
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = gestionSiteIndustrielBasiasFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon / 100000D);
-        
-        return Response.ok(siteIndustrielBasiasDTOS).build();
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon);
+    
+        return Response.ok(siteIndustrielBasiasDTOs).build();
     }
 }

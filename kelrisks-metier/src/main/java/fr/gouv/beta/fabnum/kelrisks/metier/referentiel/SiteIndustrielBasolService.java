@@ -41,9 +41,9 @@ public class SiteIndustrielBasolService extends AbstractCRUDService<SiteIndustri
     }
     
     @Override
-    public List<SiteIndustrielBasol> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance) {
-        
-        return dao.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance);
+    public List<SiteIndustrielBasol> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance) {
+    
+        return dao.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance / 100000D); // Conversion en mètres
     }
     
     @Override

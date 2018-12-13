@@ -16,6 +16,7 @@
         <module>kelrisks-persistance</module>
         <module>kelrisks-presentation</module>
         <module>kelrisks-transverse</module>
+        <!--<module>kelrisks-vue</module>-->
     </modules>
 
     <parent>

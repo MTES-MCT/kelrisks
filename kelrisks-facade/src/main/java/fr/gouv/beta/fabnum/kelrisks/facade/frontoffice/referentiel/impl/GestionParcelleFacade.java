@@ -9,6 +9,7 @@ import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleServi
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.AdresseQO;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
 import java.util.List;
 
@@ -43,5 +44,13 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
         Parcelle parcelle = parcelleService.rechercherParcelleContenantPoint(adresse.getPoint());
         
         return parcelleMapper.toDTO(parcelle);
+    }
+    
+    @Override
+    public ParcelleDTO rechercherResultatUniqueAvecCritere(ParcelleQO parcelleQO) {
+        
+        ParcelleDTO parcelleDTO = parcelleMapper.toDTO(parcelleService.rechercherResultatUniqueAvecCritere(parcelleQO));
+        
+        return parcelleDTO;
     }
 }

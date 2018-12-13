@@ -30,10 +30,10 @@ public class ApiRestBasol {
     @ApiOperation(value = "Requête retournant les sites industiels Basol liés à la Parcelle.", response = String.class)
     public Response basolInCadastre(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                     @PathVariable("codeParcelle") String codeParcelle) {
-        
-        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = gestionSiteIndustrielBasolFacade.rechercherSitesSurParcelle(codeParcelle);
-        
-        return Response.ok(siteIndustrielBasolDTOS).build();
+    
+        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs = gestionSiteIndustrielBasolFacade.rechercherSitesSurParcelle(codeParcelle);
+    
+        return Response.ok(siteIndustrielBasolDTOs).build();
     }
     
     
@@ -46,9 +46,9 @@ public class ApiRestBasol {
     
         Double rayon = distance.equals("") ? 100D : Double.parseDouble(distance);
     
-        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = gestionSiteIndustrielBasolFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon / 100000D);
+        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs = gestionSiteIndustrielBasolFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, rayon);
     
-        return Response.ok(siteIndustrielBasolDTOS).build();
+        return Response.ok(siteIndustrielBasolDTOs).build();
     }
     
     @GetMapping("/api/ssp/basol/cadastre/{codeParcelle}")
@@ -57,8 +57,8 @@ public class ApiRestBasol {
                                @PathVariable("codeParcelle") String codeParcelle) {
         
         SiteSolPolueDTO              siteSolPolueDTO         = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
-        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS = gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(siteSolPolueDTO.getMultiPolygon());
-        
-        return Response.ok(siteIndustrielBasolDTOS).build();
+        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs = gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(siteSolPolueDTO.getMultiPolygon());
+    
+        return Response.ok(siteIndustrielBasolDTOs).build();
     }
 }

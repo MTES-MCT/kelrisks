@@ -56,7 +56,7 @@ public class SiteIndustrielBasiasDAO extends AbstractDAO<SiteIndustrielBasias> i
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance) {
+    public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance) {
         
         return siteIndustrielBasiasRepository.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance);
     }

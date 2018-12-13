@@ -31,7 +31,7 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
            "                             WHERE p.code = :codeParcelle)), " +
            "                 :distance) = TRUE")
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
-                                                                        @Param("distance") Double distance);
+                                                                        @Param("distance") double distance);
     
     @Query(value = "SELECT si " +
                    "FROM SiteIndustrielBasias si " +
