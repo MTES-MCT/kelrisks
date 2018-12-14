@@ -9,7 +9,7 @@ const devConfigPromise = require('../../build/webpack.dev.conf')
 
 let server
 
-devConfigPromise.then(devConfig = > {
+devConfigPromise.then(devConfig => {
   const devServerOptions = devConfig.devServer
   const compiler = webpack(webpackConfig)
   server = new DevServer(compiler, devServerOptions)
@@ -18,8 +18,7 @@ devConfigPromise.then(devConfig = > {
   return server.listen(port, host)
 }
 )
-.
-then(() = > {
+.then(() => {
   // 2. run the nightwatch test suite against it
   // to run in additional browsers:
   //    1. add an entry in test/e2e/nightwatch.conf.js under "test_settings"
