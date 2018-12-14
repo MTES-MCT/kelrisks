@@ -10,13 +10,13 @@
     <version>0.1-SNAPSHOT</version>
 
     <modules>
+        <module>kelrisks-vue</module>
         <module>kelrisks-data</module>
         <module>kelrisks-facade</module>
         <module>kelrisks-metier</module>
         <module>kelrisks-persistance</module>
-        <module>kelrisks-presentation</module>
         <module>kelrisks-transverse</module>
-        <!--<module>kelrisks-vue</module>-->
+        <module>kelrisks-presentation</module>
     </modules>
 
     <parent>

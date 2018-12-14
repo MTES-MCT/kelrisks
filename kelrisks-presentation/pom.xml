@@ -129,6 +129,11 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>../kelrisks-vue/target/dist</directory>
+                <!-- We put this into the static directory so that Spring Boot serves it through HTTP as static content -->
+                <targetPath>static</targetPath>
+            </resource>
         </resources>
     </build>
 
