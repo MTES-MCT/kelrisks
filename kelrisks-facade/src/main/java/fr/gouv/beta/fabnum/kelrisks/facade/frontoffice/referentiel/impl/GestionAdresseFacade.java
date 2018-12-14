@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
+import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AdresseDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IAdresseMapper;
@@ -43,5 +44,11 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
         if (adresses.size() > 1) {return null;} // TODO
         
         return adresseMapper.toDTO(adresses.get(0));
+    }
+    
+    @Override
+    public List<AutocompleteDTO> rechercherCommunePartielle(String query) {
+        
+        return adresseMapper.toAutoCompleteDTOs(adresseService.rechercherCommunePartielle(query));
     }
 }

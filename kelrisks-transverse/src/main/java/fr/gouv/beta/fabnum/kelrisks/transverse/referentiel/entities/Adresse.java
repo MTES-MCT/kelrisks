@@ -29,17 +29,17 @@ public class Adresse extends AbstractEntity {
     //    @Column(name = "rep")
     //    String rep;
     @Column(name = "code_insee")
-    String code_insee;
+    String codeINSEE;
     @Column(name = "code_post")
-    String code_post;
+    String codePostal;
     //    @Column(name = "alias")
     //    String alias;
-    @Column(name = "nom_ld")
-    String nom_ld;
-    @Column(name = "nom_afnor")
-    String nom_afnor;
-    @Column(name = "libelle_acheminement")
-    String libelle_acheminement;
+    //    @Column(name = "nom_ld")
+    //    String nom_ld;
+    //    @Column(name = "nom_afnor")
+    //    String nom_afnor;
+    //    @Column(name = "libelle_acheminement")
+    //    String libelle_acheminement;
     //    @Column(name = "x")
     //    String x;
     //    @Column(name = "y")

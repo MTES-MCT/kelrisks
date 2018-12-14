@@ -25,7 +25,7 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     
     @Query("SELECT si " +
            "FROM SiteIndustrielBasias AS si " +
-           "WHERE st_within(si.point, " +
+           "WHERE st_dwithin(si.point, " +
            "                 st_centroid((SELECT p.multiPolygon " +
            "                             FROM Parcelle AS p " +
            "                             WHERE p.code = :codeParcelle)), " +

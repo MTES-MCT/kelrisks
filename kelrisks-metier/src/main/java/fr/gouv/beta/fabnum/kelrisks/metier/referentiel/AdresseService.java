@@ -39,5 +39,11 @@ public class AdresseService extends AbstractCRUDService<Adresse> implements IAdr
         
         return dao.rechercherAdresseDansGeometry(geometry);
     }
+    
+    @Override
+    public List<Adresse> rechercherCommunePartielle(String query) {
+        
+        return dao.rechercherCommunePartielle(query);
+    }
 }
   

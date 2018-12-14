@@ -199,6 +199,10 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IAbstract
         try {
             // On crée la requête en tenant compte des critères de sélection
             JPAQueryBase<T, ?> query = composerRequete(critere).getQuery();
+    
+            if (critereTri.getDistinct() != null) {
+                query.distinct().select(critereTri.getDistinct());
+            }
             
             // On ajoute la pagination
             if (first != null && maxResults != null) {

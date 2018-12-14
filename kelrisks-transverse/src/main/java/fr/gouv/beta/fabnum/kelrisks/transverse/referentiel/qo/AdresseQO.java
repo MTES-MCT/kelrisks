@@ -13,6 +13,7 @@ public class AdresseQO extends AbstractQO {
     private String nomCommune;
     private String nomVoie;
     private String numero;
+    private String adressePartielle;
     
     @Override
     public void feedBuilder(BooleanBuilder builder) {
@@ -21,6 +22,12 @@ public class AdresseQO extends AbstractQO {
         if (nomCommune != null) {builder.and(QAdresse.adresse.nomCommune.equalsIgnoreCase(nomCommune));}
         if (nomVoie != null) {builder.and(QAdresse.adresse.nomVoie.equalsIgnoreCase(nomVoie));}
         if (numero != null) {builder.and(QAdresse.adresse.numero.eq(numero));}
+        if (adressePartielle != null) {
+            BooleanBuilder orBuilder = new BooleanBuilder();
+            orBuilder.or(QAdresse.adresse.codePostal.containsIgnoreCase(adressePartielle));
+            orBuilder.or(QAdresse.adresse.nomCommune.containsIgnoreCase(adressePartielle));
+            builder.and(orBuilder);
+        }
     }
 }
   

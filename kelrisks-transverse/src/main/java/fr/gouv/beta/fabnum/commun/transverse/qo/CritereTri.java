@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.StringPath;
 
 @Data
 public class CritereTri implements Serializable {
@@ -33,6 +34,8 @@ public class CritereTri implements Serializable {
      * Champ ascendant : true = croissant, false = decroissant
      */
     private boolean ascendant;
+    
+    private StringPath distinct;
     
     /**
      * Constructeur

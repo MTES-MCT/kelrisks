@@ -50,6 +50,18 @@ public class AdresseDAO extends AbstractDAO<Adresse> implements IAdresseDAO {
     }
     
     @Override
+    public List<Adresse> rechercherAdresseDansGeometry(Geometry geometry) {
+        
+        return adresseRepository.rechercherAdresseDansGeometry(geometry);
+    }
+    
+    @Override
+    public List<Adresse> rechercherCommunePartielle(String query) {
+        
+        return adresseRepository.rechercherCommunePartielle(query);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }
@@ -64,12 +76,6 @@ public class AdresseDAO extends AbstractDAO<Adresse> implements IAdresseDAO {
     protected EntityPathBase<Adresse> getQueryObject() {
         
         return adresse;
-    }
-    
-    @Override
-    public List<Adresse> rechercherAdresseDansGeometry(Geometry geometry) {
-        
-        return adresseRepository.rechercherAdresseDansGeometry(geometry);
     }
 }
   

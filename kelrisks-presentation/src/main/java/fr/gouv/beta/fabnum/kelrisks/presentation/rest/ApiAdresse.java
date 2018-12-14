@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
+import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AdresseDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseFacade;
@@ -7,6 +8,8 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParce
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 
@@ -50,5 +53,15 @@ public class ApiAdresse {
         AdresseDTO adresseDTO = gestionAdresseFacade.rechercherAdresseAvecParcelle(codeParcelle);
         
         return Response.ok(adresseDTO).build();
+    }
+    
+    @GetMapping("/api/adresse/commune/autocomplete/{query}")
+    @ApiOperation(value = "Requête retournant des communes à partir d'une recherche partielle.", response = String.class)
+    public Response communePartielle(@ApiParam(required = true, name = "query", value = "Terme partiel.")
+                                     @PathVariable("query") String query) {
+        
+        List<AutocompleteDTO> autocompleteDTOs = gestionAdresseFacade.rechercherCommunePartielle(query);
+        
+        return Response.ok(autocompleteDTOs).build();
     }
 }

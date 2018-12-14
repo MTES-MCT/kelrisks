@@ -22,5 +22,11 @@ public interface AdresseRepository extends IAbstractRepository<Adresse> {
            "FROM Adresse a " +
            "WHERE st_contains(:geometry, a.point) = TRUE")
     List<Adresse> rechercherAdresseDansGeometry(Geometry geometry);
+    
+    @Query("SELECT a FROM Adresse a " +
+           "WHERE a.id IN ( SELECT min(b.id) " +
+           "                FROM Adresse b " +
+           "                WHERE b.codePostal LIKE concat('%',:query,'%') OR LOWER(b.nomCommune) LIKE LOWER(concat('%',:query,'%')) GROUP BY b.codePostal)")
+    List<Adresse> rechercherCommunePartielle(String query);
 }
   
