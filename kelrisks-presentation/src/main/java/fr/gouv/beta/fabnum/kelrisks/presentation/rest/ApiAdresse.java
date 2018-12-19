@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = {"API Base Adresse Nationale (BAN)"}, description = "API permettant les recoupements concernant la BAN")
-public class ApiAdresse {
+public class ApiAdresse extends AbstractBasicApi {
     
     @Autowired
     IGestionAdresseFacade  gestionAdresseFacade;
@@ -45,12 +45,14 @@ public class ApiAdresse {
         return Response.ok(parcelleDTO).build();
     }
     
-    @GetMapping("/api/cadastre/adresse/{codeParcelle}")
+    @GetMapping("/api/cadastre/adresse/{codenomVoie}/{codeParcelle}")
     @ApiOperation(value = "Requête retournant une éventuelle adresse à partir d'un code de Parcelle.", response = String.class)
-    public Response acdressFromCadastre(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
+    public Response adressFromCadastre(@ApiParam(name = "codenomVoie", value = "Code nomVoie de la commune.")
+                                       @PathVariable("codenomVoie") String codenomVoie,
+                                       @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                         @PathVariable("codeParcelle") String codeParcelle) {
         
-        AdresseDTO adresseDTO = gestionAdresseFacade.rechercherAdresseAvecParcelle(codeParcelle);
+        AdresseDTO adresseDTO = gestionAdresseFacade.rechercherAdresseAvecParcelle(getParcelleCode(codenomVoie, codeParcelle));
         
         return Response.ok(adresseDTO).build();
     }
@@ -59,8 +61,34 @@ public class ApiAdresse {
     @ApiOperation(value = "Requête retournant des communes à partir d'une recherche partielle.", response = String.class)
     public Response communePartielle(@ApiParam(required = true, name = "query", value = "Terme partiel.")
                                      @PathVariable("query") String query) {
-        
+    
         List<AutocompleteDTO> autocompleteDTOs = gestionAdresseFacade.rechercherCommunePartielle(query);
+    
+        return Response.ok(autocompleteDTOs).build();
+    }
+    
+    @GetMapping("/api/adresse/voie/autocomplete/{codeINSEE}/{query}")
+    @ApiOperation(value = "Requête retournant des communes à partir d'une recherche partielle.", response = String.class)
+    public Response ruePartielle(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
+                                 @PathVariable("codeINSEE") String codeINSEE,
+                                 @ApiParam(required = true, name = "query", value = "Terme partiel.")
+                                 @PathVariable("query") String query) {
+        
+        List<AutocompleteDTO> autocompleteDTOs = gestionAdresseFacade.rechercherRuePartielle(codeINSEE, query);
+        
+        return Response.ok(autocompleteDTOs).build();
+    }
+    
+    @GetMapping("/api/adresse/numero/autocomplete/{codeINSEE}/{nomVoie}/{query}")
+    @ApiOperation(value = "Requête retournant des communes à partir d'une recherche partielle.", response = String.class)
+    public Response ruePartielle(@ApiParam(required = true, name = "codeINSEE", value = "Code codeINSEE de la commune.")
+                                 @PathVariable("codeINSEE") String codeINSEE,
+                                 @ApiParam(required = true, name = "nomVoie", value = "Nom de la voie (Recherche exacte).")
+                                 @PathVariable("nomVoie") String nomVoie,
+                                 @ApiParam(required = true, name = "query", value = "Terme partiel.")
+                                 @PathVariable("query") String query) {
+        
+        List<AutocompleteDTO> autocompleteDTOs = gestionAdresseFacade.rechercherNumeroPartiel(codeINSEE, nomVoie, query);
         
         return Response.ok(autocompleteDTOs).build();
     }

@@ -11,5 +11,6 @@ public class AdresseDTO {
     private String codePostal;
     private String nomCommune;
     private String idBAN;
+    private String complement;
     private Long   id;
 }

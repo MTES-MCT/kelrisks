@@ -10,4 +10,10 @@ public interface IGestionAdresseFacade {
     AdresseDTO rechercherAdresseAvecParcelle(String codeParcelle);
     
     List<AutocompleteDTO> rechercherCommunePartielle(String query);
+    
+    List<AutocompleteDTO> rechercherRuePartielle(String codeINSEE, String query);
+    
+    List<AutocompleteDTO> rechercherNumeroPartiel(String codeINSEE, String nomVoie, String numero);
+    
+    String rechercherCodeINSEE(String codePostal);
 }

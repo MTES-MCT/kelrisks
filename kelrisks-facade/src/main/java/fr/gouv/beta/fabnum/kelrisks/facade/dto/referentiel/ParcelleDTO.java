@@ -13,5 +13,8 @@ public class ParcelleDTO {
     private String   type_geom;
     private String   commune;
     private Geometry multiPolygon;
+    private String   prefixe;
+    private String   section;
+    private String   numero;
 }
   

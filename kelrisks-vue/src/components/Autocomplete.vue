@@ -1,23 +1,33 @@
 <template>
-  <div class="autocomplete"><input @input="onChange"
-                                   @keydown.down="onArrowDown"
-                                   @keydown.enter="onEnter"
-                                   @keydown.up="onArrowUp"
-                                   type="text"
-                                   v-model="query"/>
-    <div class="loading"
-         v-if="isLoading">@
+  <div class="form__group">
+    <div class="autocomplete">
+      <label :for="id">{{ labelText }}</label>
+      <input :id="id"
+             :name="name + '.libelle'"
+             :placeholder="placeholder"
+             :type="type"
+             @input="onChange"
+             @keydown.down="onArrowDown"
+             @keydown.enter="onEnter"
+             @keydown.up="onArrowUp"
+             v-bind:class="{'autocomplete-no-results':hasNoResults}"
+             v-model="query"/>
+      <input :name="name + '.code'"
+             type="hidden"
+             v-model="code"/>
+      <div class="loading"
+           v-if="isLoading"><i class="fas fa-spinner fa-spin"></i></div>
+      <ul class="autocomplete-results"
+          id="autocomplete-results"
+          v-show="isOpen">
+        <li :class="{ 'is-active': i === arrowCounter }"
+            :key="i"
+            @click="setResult(result)"
+            class="autocomplete-result"
+            v-for="(result, i) in results">{{ result.libelle }}
+        </li>
+      </ul>
     </div>
-    <ul class="autocomplete-results"
-        id="autocomplete-results"
-        v-show="isOpen">
-      <li :class="{ 'is-active': i === arrowCounter }"
-          :key="i"
-          @click="setResult(result.code)"
-          class="autocomplete-result"
-          v-for="(result, i) in results">{{ result.libelle }}
-      </li>
-    </ul>
   </div>
 </template>
 
@@ -35,6 +45,27 @@ export default {
       type: [String, Array],
       required: true
     },
+    labelText: {
+      type: String,
+      required: true
+    },
+    id: {
+      type: String,
+      required: false
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    placeholder: {
+      type: String,
+      required: false
+    },
+    type: {
+      type: String,
+      required: false,
+      default: 'text'
+    },
     startAt: {
       type: Number,
       default: 3
@@ -45,39 +76,37 @@ export default {
     return {
       isOpen: false,
       results: [],
-      query: '',
       isLoading: false,
-      arrowCounter: 0
+      query: '',
+      code: '',
+      arrowCounter: 0,
+      hasNoResults: false
     }
   },
 
   methods: {
     onChange () {
       // Let's warn the parent that a change was made
+      console.log(this.query)
       this.$emit('input', this.query)
 
-      console.log('onChange')
-      console.log(this.startAt)
-      console.log(this.query.length)
-
       if (this.query.length >= this.startAt) {
-        console.log(this)
-        console.log(this.query)
-        console.log(this.source)
-
         // Is the data given by an outside ajax request
         if (typeof this.source === 'string') {
           this.isLoading = true
+          this.isOpen = false
           fetch(this.source + this.query)
             .then(stream => stream.json())
             .then(value => {
-              console.log(value)
               this.isLoading = false
-              // if (value.entity.length > 0) {
-              this.isOpen = true
-              console.log(value.entity)
-              this.results = value.entity
-              // }
+              if (value.entity.length > 0) {
+                this.isOpen = true
+                this.results = value.entity
+                this.hasNoResults = false
+              } else {
+                this.hasNoResults = true
+                this.isOpen = false
+              }
             })
           // Else, let's filter our flat array
         } else {
@@ -94,8 +123,10 @@ export default {
       })
     },
     setResult (result) {
-      this.query = result
+      this.query = result.libelle
+      this.code = result.code
       this.isOpen = false
+      this.$emit('input', this.code)
     },
     onArrowDown (evt) {
       if (this.arrowCounter < this.results.length) {
@@ -108,8 +139,7 @@ export default {
       }
     },
     onEnter () {
-      this.query = this.results[this.arrowCounter]
-      this.isOpen = false
+      this.setResult(this.results[this.arrowCounter])
       this.arrowCounter = -1
     },
     handleClickOutside (evt) {
@@ -148,7 +178,7 @@ export default {
     border   : 1px solid #EEEEEE;
     height   : 120px;
     overflow : auto;
-    width    : 100%;
+    width    : 100%
   }
 
   .autocomplete-result {
@@ -156,6 +186,21 @@ export default {
     text-align : left;
     padding    : 4px 2px;
     cursor     : pointer;
+  }
+
+  .autocomplete-no-results * {
+    background-color : hsl(0, 50%, 76%);
+    border-color     : hsl(0, 50%, 56%);
+  }
+
+  .autocomplete-no-results:hover {
+    background-color : hsl(0, 50%, 60%);
+    border-color     : hsl(0, 50%, 40%);
+  }
+
+  .autocomplete-no-results:focus {
+    background-color : hsl(0, 50%, 44%);
+    border-color     : hsl(0, 50%, 22%);
   }
 
   .autocomplete-result.is-active,

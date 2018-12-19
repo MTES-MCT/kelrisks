@@ -16,9 +16,7 @@ import org.springframework.data.jpa.repository.Query;
 @Qualifier("parcelleRepository")
 public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
     
-    @Query(value = "SELECT p " +
-                   "FROM Parcelle p " +
-                   "WHERE st_contains(p.multiPolygon, :point) = TRUE")
+    @Query(value = "SELECT * FROM kelrisks.cadastre AS p ORDER BY st_distance(p.geog, :point) LIMIT 1", nativeQuery = true)
     Parcelle rechercherParcelleContenantPoint(Geometry point);
 }
   

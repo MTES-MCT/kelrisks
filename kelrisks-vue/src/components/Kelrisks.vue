@@ -119,6 +119,7 @@
       </div>
     </header>
 
+    <!--suppress CssUnknownTarget -->
     <div class="hero"
          role="banner"
          style="background-image: url('/static/images/banner-min.png'); background-size: auto; background-position-y: -30px">
@@ -139,66 +140,72 @@
 
             <br/>
 
-            <form action="#"
-                  method="post"
-                  name="form"
-                  novalidate
-                  style="max-width: unset;"
-                  target="_blank">
-              <div style="width: 40%; float: left;">
-                <div class="form__group">
-                  <label for="codepostal">Code Postal</label>
-                  <!--<autocomplete source="https://jsonplaceholder.typicode.com/users"></autocomplete>-->
-                  <autocomplete source="http://localhost:8080/api/adresse/commune/autocomplete/"/>
-                  <!--<input id="codepostal"-->
-                  <!--name="codepostal"-->
-                  <!--placeholder=""-->
-                  <!--type="text">-->
-                </div>
-                <div class="form__group">
-                  <label for="rue">Rue</label>
-                  <input id="rue"
-                         name="rue"
-                         placeholder=""
-                         type="text">
-                </div>
-                <div class="form__group">
-                  <label for="numero">Numéro</label>
-                  <input id="numero"
-                         name="numero"
-                         placeholder=""
-                         type="number">
-                </div>
-              </div>
+            <!--<form action="#"-->
+            <!--method="post"-->
+            <!--name="form"-->
+            <!--novalidate-->
+            <!--style="max-width: unset;"-->
+            <!--target="_blank">-->
+            <div style="width: 40%; float: left; margin-left: 5%">
+              <autocomplete @input="onCodePostalChanged"
+                            id="codepostal"
+                            label-text="Code Postal"
+                            name="codePostal"
+                            source="http://localhost:8080/api/adresse/commune/autocomplete/"/>
+              <autocomplete @input="onNomVoieChanged"
+                            id="nomvoie"
+                            label-text="Nom voie"
+                            name="nomVoie"
+                            v-bind:source="'http://localhost:8080/api/adresse/voie/autocomplete/' + form.codeINSEE + '/'"
+                            v-bind:start-at="2"/>
+              <autocomplete @input="onNumeroChanged"
+                            id="numero"
+                            label-text="Numéro"
+                            name="numero"
+                            v-bind:source="'http://localhost:8080/api/adresse/numero/autocomplete/' + form.codeINSEE + '/' + form.nomVoie + '/'"
+                            v-bind:start-at="1"/>
+            </div>
 
-              <div style="width: 20%; float: left; margin-top: 35px">
-                <p class="section__subtitle">Et/Ou</p>
+            <div style="width: 10%; float: left; margin-top: 35px">
+              <!--<p class="section__subtitle">Et/Ou</p>-->
+            </div>
+            <div style="width: 40%; float: left; margin-right: 5%">
+              <div class="form__group">
+                <label for="codeparcelle">Code Parcelle</label>
+                <input id="codeparcelle"
+                       name="codeparcelle"
+                       placeholder="BA-115 ou 912250000A0352"
+                       type="text"
+                       v-model="form.parcelle">
               </div>
-              <div style="width: 40%; float: left;">
-                <div class="form__group">
-                  <label for="codeparcelle">Code Parcelle</label>
-                  <input id="codeparcelle"
-                         name="codeparcelle"
-                         placeholder=""
-                         type="text">
-                </div>
-              </div>
+              <autocomplete id="raisonsociale"
+                            label-text="Nom de l'ancien propriétaire / Raison sociale"
+                            name="raisonSociale"
+                            source="http://localhost:8080/api/basias/rs/autocomplete/"
+                            v-bind:start-at="3"/>
+            </div>
 
-              <div style="width: 100%; display: flex; justify-content: center; padding-top: 10px;">
-                <button class="button"
-                        id="submit"
-                        name="subscribe"
-                        type="submit">Valider
-                </button>
-              </div>
-              <ul>
-                <li style="list-style-type:none"
-                    v-bind:key="player.id"
-                    v-for="player in players">
-                  <player v-bind:player="player"></player>
-                </li>
-              </ul>
-            </form>
+            <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
+              <button @click="getAvis"
+                      class="button"
+                      id="submit"
+                      name="subscribe"
+                      type="submit">Valider
+              </button>
+            </div>
+            <div>
+              <h4>Avis Simple</h4>
+              - {{ avis.basiasParcelle }}<br/>
+              - {{ avis.basiasAutourParcelle }}<br/>
+              - {{ avis.basiasRaisonSociale }}<br/>
+              - {{ avis.basolParcelle }}<br/>
+              - {{ avis.basolAutourParcelle }}<br/>
+              - {{ avis.installationClasseeParcelle }}<br/>
+              - {{ avis.installationClasseeAutourParcelle }}<br/>
+              - {{ avis.installationClasseeCommune }}<br/>
+
+            </div>
+            <!--</form>-->
           </div>
         </div>
       </section>
@@ -214,18 +221,125 @@ export default {
   name: 'Kelrisks',
   data () {
     return {
+      form: {
+        communeLib: '',
+        codeINSEE: '',
+        nomVoieLib: '',
+        nomVoie: '',
+        numeroVoieLib: '',
+        idBAN: '',
+        parcelle: '',
+        proprio: ''
+      },
       api: {
         message: 'API'
       },
-      players: [
-        {id: '1', name: 'Lionel Messi', description: 'Argentina\'s superstar'},
-        {id: '2', name: 'Christiano Ronaldo', description: 'Portugal top-ranked player'}
-      ]
+      avis: {
+        basiasParcelle: '',
+        basiasAutourParcelle: '',
+        basiasRaisonSociale: '',
+        basolParcelle: '',
+        basolAutourParcelle: '',
+        installationClasseeParcelle: '',
+        installationClasseeAutourParcelle: '',
+        installationClasseeCommune: ''
+      }
     }
   },
   components: {
     Player,
     Autocomplete
+  },
+  methods: {
+    onCodePostalChanged (value) {
+      this.form.codeINSEE = value
+      this.form.nomVoie = ''
+      this.form.nomVoieLib = ''
+      this.form.idBAN = ''
+      this.form.numeroVoieLib = ''
+    },
+    onNomVoieChanged (value) {
+      this.form.nomVoie = value
+      this.form.idBAN = ''
+      this.form.numeroVoieLib = ''
+    },
+    onNumeroChanged (value) {
+      this.form.idBAN = value
+    },
+    getAvis () {
+      fetch('http://localhost:8080/api/avis?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio)
+        .then(stream => stream.json())
+        .then(value => {
+          console.log(value.entity)
+
+          if (value.entity.siteIndustrielBasiasSurParcelleDTOs.length === 0) {
+            this.avis.basiasParcelle = 'Aucun site Basias sur la parcelle'
+          } else {
+            this.avis.basiasParcelle = 'Sites Basias trouvé(s) sur la parcelle : '
+            value.entity.siteIndustrielBasiasSurParcelleDTOs.forEach(function (element) {
+              this.avis.basiasParcelle += element.identifiant + ', '
+            }, this)
+          }
+          if (value.entity.siteIndustrielBasiasAutourParcelleDTOs.length === 0) {
+            this.avis.basiasAutourParcelle = 'Aucun site Basias autour la parcelle (100m)'
+          } else {
+            this.avis.basiasAutourParcelle = 'Sites Basias trouvé(s) autour de la parcelle (100m) : '
+            value.entity.siteIndustrielBasiasAutourParcelleDTOs.forEach(function (element) {
+              this.avis.basiasAutourParcelle += element.identifiant + ', '
+            }, this)
+          }
+          if (value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.length === 0) {
+            this.avis.basiasRaisonSociale = 'Aucun site Basias trouvé par raison sociale'
+          } else {
+            this.avis.basiasRaisonSociale = 'Sites Basias trouvé par raison sociale : '
+            value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.forEach(function (element) {
+              this.avis.basiasRaisonSociale += element.identifiant + ', '
+            }, this)
+          }
+          if (value.entity.siteIndustrielBasolSurParcelleDTOs.length === 0) {
+            this.avis.basolParcelle = 'Aucun site Basol sur la parcelle'
+          } else {
+            this.avis.basolParcelle = 'Sites Basol trouvé(s) sur la parcelle : '
+            value.entity.siteIndustrielBasolSurParcelleDTOs.forEach(function (element) {
+              this.avis.basolParcelle += element.identifiant + ', '
+            }, this)
+          }
+          if (value.entity.siteIndustrielBasolAutourParcelleDTOs.length === 0) {
+            this.avis.basolAutourParcelle = 'Aucun site Basol autour la parcelle (100m)'
+          } else {
+            this.avis.basolAutourParcelle = 'Sites Basol trouvé(s) autour de la parcelle (100m) : '
+            value.entity.siteIndustrielBasolAutourParcelleDTOs.forEach(function (element) {
+              this.avis.basolAutourParcelle += element.identifiant + ', '
+            }, this)
+          }
+          if (value.entity.installationClasseeSurParcelleDTOs.length === 0) {
+            this.avis.installationClasseeParcelle = 'Aucune Installation Classée sur la parcelle'
+          } else {
+            this.avis.installationClasseeParcelle = 'Installation(s) Classée(s) trouvée(s) sur la parcelle : '
+            value.entity.installationClasseeSurParcelleDTOs.forEach(function (element) {
+              this.avis.installationClasseeParcelle += element.identifiant + ', '
+            }, this)
+          }
+          if (value.entity.installationClasseeAutourParcelleDTOs.length === 0) {
+            this.avis.installationClasseeAutourParcelle = 'Aucune Installation Classée autour la parcelle (100m)'
+          } else {
+            this.avis.installationClasseeAutourParcelle = 'Installation(s) Classée(s) trouvée(s) autour de la parcelle (100m) : '
+            value.entity.installationClasseeAutourParcelleDTOs.forEach(function (element) {
+              this.avis.installationClasseeAutourParcelle += element.raisonSociale + ', '
+            }, this)
+          }
+          if (value.entity.installationClasseeNonGeorerenceesDTOs.length === 0) {
+            this.avis.installationClasseeCommune = 'Aucune Installation Classée non géoréférencée dans la commune'
+          } else {
+            this.avis.installationClasseeCommune = 'Installation(s) Classée(s) non géoréférencée(s) trouvée(s) dans la commune : '
+            console.log(value.entity.installationClasseeNonGeorerenceesDTOs)
+            value.entity.installationClasseeNonGeorerenceesDTOs.forEach(function (element) {
+              console.log(element)
+              this.avis.installationClasseeCommune += element.raisonSociale + ', '
+            }, this)
+          }
+        })
+    }
   }
 }
 </script>

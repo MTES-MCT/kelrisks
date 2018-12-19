@@ -38,11 +38,11 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
     }
     
     @Override
-    public List<InstallationClasseeDTO> rechercherInstallationsAuCentroideCommune(String codePostal) {
+    public List<InstallationClasseeDTO> rechercherInstallationsAuCentroideCommune(String codeINSEE) {
         
         InstallationClasseeQO installationClasseeQO = new InstallationClasseeQO();
-        
-        installationClasseeQO.setCodePostal(codePostal);
+    
+        installationClasseeQO.setCodeINSEE(codeINSEE);
         installationClasseeQO.setCentroideCommune(true);
         
         List<InstallationClasseeDTO> installationClasseeDTOs = installationClasseeMapper.toDTOs(installationClasseeService.rechercherAvecCritere(installationClasseeQO));

@@ -68,6 +68,18 @@ public class SiteIndustrielBasiasDAO extends AbstractDAO<SiteIndustrielBasias> i
     }
     
     @Override
+    public List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance) {
+        
+        return siteIndustrielBasiasRepository.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, distance);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherRaisonsSociales(String query) {
+        
+        return siteIndustrielBasiasRepository.rechercherRaisonsSociales(query);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }

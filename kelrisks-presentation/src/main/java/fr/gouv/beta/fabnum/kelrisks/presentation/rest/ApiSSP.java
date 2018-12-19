@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = {"API Sites et Sols Polués (SSP)"}, description = "API permettant les recoupements concernant les SSP")
-public class ApiSSP {
+public class ApiSSP extends AbstractBasicApi {
     
     @Autowired
     IGestionSiteSolPolueFacade gestionSiteSolPolueFacade;
@@ -24,12 +24,14 @@ public class ApiSSP {
         // Rien à faire
     }
     
-    @GetMapping("/api/ssp/cadastre/{codeParcelle}")
+    @GetMapping("/api/ssp/cadastre/{codeINSEE}/{codeParcelle}")
     @ApiOperation(value = "Requête retournant une éventuelle adresse à partir d'un code de Parcelle.", response = String.class)
-    public Response acdressFromCadastre(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
+    public Response acdressFromCadastre(@ApiParam(name = "codeINSEE", value = "Code postal de la commune.")
+                                        @PathVariable("codeINSEE") String codeINSEE,
+                                        @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                         @PathVariable("codeParcelle") String codeParcelle) {
         
-        SiteSolPolueDTO siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
+        SiteSolPolueDTO siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
         
         siteSolPolueDTO.setMultiPolygon(null); // TODO : com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Direct self-reference leading to cycle
         

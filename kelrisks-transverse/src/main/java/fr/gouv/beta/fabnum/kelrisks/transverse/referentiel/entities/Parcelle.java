@@ -26,6 +26,9 @@ public class Parcelle extends AbstractEntity {
     private String   commune;
     @Column(name = "geog", columnDefinition = "geometry")
     private Geometry multiPolygon;
+    private String   prefixe;
+    private String   section;
+    private String   numero;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)

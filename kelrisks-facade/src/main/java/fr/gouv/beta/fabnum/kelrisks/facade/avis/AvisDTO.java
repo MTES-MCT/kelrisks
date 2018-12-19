@@ -5,17 +5,18 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasD
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class AvisDTO {
     
-    private List<SiteIndustrielBasiasDTO> siteIndustrielBasiasSurParcelleDTOs;
-    private List<SiteIndustrielBasiasDTO> siteIndustrielBasiasAutourParcelleDTOs;
-    private List<SiteIndustrielBasiasDTO> siteIndustrielBasiasParRaisonSocialeDTOs;
-    private List<SiteIndustrielBasolDTO>  siteIndustrielBasolSurParcelleDTOs;
-    private List<SiteIndustrielBasolDTO>  siteIndustrielBasolAutourParcelleDTOs;
-    private List<InstallationClasseeDTO>  installationClasseeSurParcelleDTOs;
-    private List<InstallationClasseeDTO>  installationClasseeAutourParcelleDTOs;
-    private List<InstallationClasseeDTO>  installationClasseeNonGeorerenceesDTOs;
+    private List<SiteIndustrielBasiasDTO> siteIndustrielBasiasSurParcelleDTOs      = new ArrayList<>();
+    private List<SiteIndustrielBasiasDTO> siteIndustrielBasiasAutourParcelleDTOs   = new ArrayList<>();
+    private List<SiteIndustrielBasiasDTO> siteIndustrielBasiasParRaisonSocialeDTOs = new ArrayList<>();
+    private List<SiteIndustrielBasolDTO>  siteIndustrielBasolSurParcelleDTOs       = new ArrayList<>();
+    private List<SiteIndustrielBasolDTO>  siteIndustrielBasolAutourParcelleDTOs    = new ArrayList<>();
+    private List<InstallationClasseeDTO>  installationClasseeSurParcelleDTOs       = new ArrayList<>();
+    private List<InstallationClasseeDTO>  installationClasseeAutourParcelleDTOs    = new ArrayList<>();
+    private List<InstallationClasseeDTO>  installationClasseeNonGeorerenceesDTOs   = new ArrayList<>();
 }

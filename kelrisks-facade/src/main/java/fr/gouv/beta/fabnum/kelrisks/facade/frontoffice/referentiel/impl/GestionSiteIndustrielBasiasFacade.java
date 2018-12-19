@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
+import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISiteIndustrielBasiasMapper;
@@ -41,7 +42,6 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     public List<SiteIndustrielBasiasDTO> rechercherSitesParRaisonSociale(String nomProprietaire) {
     
         SiteIndustrielBasiasQO siteIndustrielBasiasQO = new SiteIndustrielBasiasQO();
-    
         siteIndustrielBasiasQO.setRaisonSociale(nomProprietaire);
     
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherAvecCritere(siteIndustrielBasiasQO));
@@ -55,5 +55,21 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygon(multiPolygon));
     
         return siteIndustrielBasiasDTOs;
+    }
+    
+    @Override
+    public List<SiteIndustrielBasiasDTO> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance) {
+        
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, distance));
+        
+        return siteIndustrielBasiasDTOs;
+    }
+    
+    @Override
+    public List<AutocompleteDTO> rechercherRaisonsSociales(String query) {
+        
+        List<AutocompleteDTO> autocompleteDTOs = siteIndustrielMapper.toAutocompleteDTOs(siteIndustrielService.rechercherRaisonsSociales(query));
+        
+        return autocompleteDTOs;
     }
 }

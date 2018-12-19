@@ -27,10 +27,10 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     IAdresseService  adresseService;
     
     @Override
-    public ParcelleDTO rechercherParcelleAvecAdresse(String commune, String rue, String numero) {
+    public ParcelleDTO rechercherParcelleAvecAdresse(String codeINSEE, String rue, String numero) {
         
         AdresseQO adresseQO = new AdresseQO();
-        adresseQO.setNomCommune(commune);
+        adresseQO.setCodeINSEE(codeINSEE);
         adresseQO.setNomVoie(rue);
         adresseQO.setNumero(numero);
         
@@ -52,5 +52,25 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
         ParcelleDTO parcelleDTO = parcelleMapper.toDTO(parcelleService.rechercherResultatUniqueAvecCritere(parcelleQO));
         
         return parcelleDTO;
+    }
+    
+    @Override
+    public List<ParcelleDTO> rechercherAvecCritere(ParcelleQO parcelleQO) {
+        
+        List<ParcelleDTO> parcelleDTOs = parcelleMapper.toDTOs(parcelleService.rechercherAvecCritere(parcelleQO));
+        
+        return parcelleDTOs;
+    }
+    
+    @Override
+    public ParcelleDTO rechercherParcelleAvecIdBan(String idBAN) {
+        
+        AdresseQO adresseQO = new AdresseQO();
+        adresseQO.setIdBan(idBAN);
+        
+        Adresse  adresse  = adresseService.rechercherResultatUniqueAvecCritere(adresseQO);
+        Parcelle parcelle = parcelleService.rechercherParcelleContenantPoint(adresse.getPoint());
+        
+        return parcelleMapper.toDTO(parcelle);
     }
 }

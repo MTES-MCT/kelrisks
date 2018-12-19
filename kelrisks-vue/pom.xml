@@ -14,6 +14,7 @@
   <artifactId>kelrisks-vue</artifactId>
   <packaging>jar</packaging>
 
+  <!--TODO : Reactivate-->
   <build>
     <plugins>
       <plugin>

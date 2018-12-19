@@ -26,8 +26,8 @@ public class Adresse extends AbstractEntity {
     //    String id_fantoir;
     @Column(name = "numero")
     String numero;
-    //    @Column(name = "rep")
-    //    String rep;
+    @Column(name = "rep")
+    String complement;
     @Column(name = "code_insee")
     String codeINSEE;
     @Column(name = "code_post")

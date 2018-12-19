@@ -8,9 +8,11 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 
 import java.util.List;
 
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.Named;
 
 
 @Mapper(config = ICommonMapperConfig.class)
@@ -20,12 +22,36 @@ public interface IAdresseMapper {
     
     AdresseDTO toDTO(Adresse adresse);
     
-    List<AutocompleteDTO> toAutoCompleteDTOs(List<Adresse> adresse);
+    @IterableMapping(qualifiedByName = "toAutoCompleteDTO")
+    List<AutocompleteDTO> toCommuneAutoCompleteDTOs(List<Adresse> adresse);
     
+    @Named("toAutoCompleteDTO")
     @Mappings({
             @Mapping(target = "id", source = "id"),
-            @Mapping(target = "code", source = "codePostal"),
-            @Mapping(target = "libelle", expression = "java(adresse.getCodePostal() + ' - ' + adresse.getNomCommune())"),
+            @Mapping(target = "code", source = "codeINSEE"),
+            @Mapping(target = "libelle", expression = "java(adresse.getCodePostal() + \" - \" + adresse.getNomCommune())"),
     })
-    AutocompleteDTO toAutoCompleteDTO(Adresse adresse);
+    AutocompleteDTO toAutoCommuneCompleteDTO(Adresse adresse);
+    
+    @IterableMapping(qualifiedByName = "toRueAutoCompleteDTO")
+    List<AutocompleteDTO> toRueAutoCompleteDTOs(List<Adresse> adresses);
+    
+    @Named("toRueAutoCompleteDTO")
+    @Mappings({
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "code", source = "nomVoie"),
+            @Mapping(target = "libelle", source = "nomVoie"),
+    })
+    AutocompleteDTO toRueAutoCompleteDTO(Adresse adresse);
+    
+    @IterableMapping(qualifiedByName = "toNumeroVoieCompleteDTO")
+    List<AutocompleteDTO> toNumeroVoieAutoCompleteDTOs(List<Adresse> adresses);
+    
+    @Named("toNumeroVoieCompleteDTO")
+    @Mappings({
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "code", source = "idBAN"),
+            @Mapping(target = "libelle", expression = "java(adresse.getNumero() + \" \" + adresse.getComplement())"),
+    })
+    AutocompleteDTO toNumeroVoieCompleteDTO(Adresse adresse);
 }

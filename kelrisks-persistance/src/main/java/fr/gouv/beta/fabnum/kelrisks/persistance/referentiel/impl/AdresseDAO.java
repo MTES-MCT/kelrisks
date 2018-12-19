@@ -62,6 +62,12 @@ public class AdresseDAO extends AbstractDAO<Adresse> implements IAdresseDAO {
     }
     
     @Override
+    public List<Adresse> rechercherVoiePartielle(String codePostal, String query) {
+        
+        return adresseRepository.rechercherVoiePartielle(codePostal, query);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }

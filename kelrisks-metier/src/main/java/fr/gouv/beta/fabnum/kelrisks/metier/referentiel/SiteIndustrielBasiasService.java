@@ -51,5 +51,17 @@ public class SiteIndustrielBasiasService extends AbstractCRUDService<SiteIndustr
         
         return dao.rechercherSitesDansPolygon(multiPolygon);
     }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance) {
+        
+        return dao.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, distance);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherRaisonsSociales(String query) {
+        
+        return dao.rechercherRaisonsSociales(query);
+    }
 }
   

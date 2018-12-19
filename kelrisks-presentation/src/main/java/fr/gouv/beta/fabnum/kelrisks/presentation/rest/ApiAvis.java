@@ -2,17 +2,20 @@ package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-public class ApiAvis {
+@RestController
+@Api(tags = {"API Avis Generator"}, description = "API permettant la génération d'avis")
+public class ApiAvis extends AbstractBasicApi {
     
     @Autowired
     IGestionAvisFacade gestionAvisFacade;
@@ -21,19 +24,20 @@ public class ApiAvis {
         // Rien à faire
     }
     
-    @RequestMapping("/api/avis/{codeParcelle}/{codePostal}/{rue}/{numero}")
+    @GetMapping("/api/avis")
+    @ApiOperation(value = "Requête retournant un avis à partir des paramètres.", response = String.class)
     public Response avis(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
-                         @PathVariable("codeParcelle") String codeParcelle,
-                         @ApiParam(required = true, name = "codePostal", value = "Code postal de la commune.")
-                         @PathVariable("codePostal") String codePostal,
-                         @ApiParam(required = true, name = "nomVoie", value = "Nom de la rue.")
-                         @PathVariable("nomVoie") String nomVoie,
-                         @ApiParam(required = true, name = "numero", value = "Numéro.")
-                         @PathVariable("numero") String numero,
-                         @ApiParam(required = true, name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
-                         @PathVariable("nomProprietaire") String nomProprietaire) {
+                         @RequestParam("codeParcelle") String codeParcelle,
+                         @ApiParam(required = true, name = "codeINSEE", value = "Code postal de la commune.")
+                         @RequestParam("codeINSEE") String codeINSEE,
+                         @ApiParam(name = "nomVoie", value = "Nom de la voie.")
+                         @RequestParam(value = "nomVoie", required = false) String nomVoie,
+                         @ApiParam(name = "idBAN", value = "Id BAN (e.g. ADRNIVX_0000002009679805).")
+                         @RequestParam(value = "idBAN", required = false) String idBAN,
+                         @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
+                         @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
-        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codePostal, nomVoie, numero, nomProprietaire);
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(getParcelleCode(codeINSEE, codeParcelle), codeINSEE, nomVoie, idBAN, nomProprietaire);
         
         return Response.ok(avisDTO).build();
     }
