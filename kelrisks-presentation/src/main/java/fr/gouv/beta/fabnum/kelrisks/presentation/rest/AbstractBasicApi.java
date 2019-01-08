@@ -20,22 +20,31 @@ public class AbstractBasicApi {
     IGestionAdresseFacade  gestionAdresseFacade;
     
     String getParcelleCode(String codeINSEE, String parcelleCode) {
+    
+        parcelleCode = parcelleCode.replaceAll(" ", "-");
         
         Pattern pattern = Pattern.compile("\\w+-\\d+");
         Matcher matcher = pattern.matcher(parcelleCode);
+    
+        List<ParcelleDTO> parcelleDTOs;
         
         if (matcher.matches()) {
             ParcelleQO parcelleQO = new ParcelleQO();
             parcelleQO.setCodeINSEE(codeINSEE);
             parcelleQO.setSection(parcelleCode.split("-")[0]);
             parcelleQO.setNumero(parcelleCode.split("-")[1]);
-            
-            List<ParcelleDTO> parcelleDTOs = gestionParcelleFacade.rechercherAvecCritere(parcelleQO);
-            
-            if (parcelleDTOs.isEmpty()) { return null;}
-            else if (parcelleDTOs.size() > 1) { return null;}
-            else { return parcelleDTOs.get(0).getCode(); }
+    
+            parcelleDTOs = gestionParcelleFacade.rechercherAvecCritere(parcelleQO);
         }
-        else { return parcelleCode; }
+        else {
+            ParcelleQO parcelleQO = new ParcelleQO();
+            parcelleQO.setCode(parcelleCode);
+    
+            parcelleDTOs = gestionParcelleFacade.rechercherAvecCritere(parcelleQO);
+        }
+    
+        if (parcelleDTOs.isEmpty()) { return null;}
+        else if (parcelleDTOs.size() > 1) { return null;}
+        else { return parcelleDTOs.get(0).getCode(); }
     }
 }

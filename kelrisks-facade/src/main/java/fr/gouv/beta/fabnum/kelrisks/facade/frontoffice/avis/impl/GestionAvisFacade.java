@@ -50,9 +50,15 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             ParcelleQO parcelleQO = new ParcelleQO();
             parcelleQO.setCode(codeParcelle);
             List<ParcelleDTO> parcelleDTOS = gestionParcelleFacade.rechercherAvecCritere(parcelleQO);
-        
-            if (parcelleDTOS.isEmpty()) {return null;} //TODO
-            if (parcelleDTOS.size() > 1) {return null;} // TODO
+    
+            if (parcelleDTOS.isEmpty()) {
+                avisDTO.addError("Aucune parcelle n'a été trouvée avec le code donné !");
+                return avisDTO;
+            }
+            if (parcelleDTOS.size() > 1) {
+                avisDTO.addError("Plusieurs parcelles ont été trouvées avec le code donné !");
+                return avisDTO;
+            }
             parcelleDTO = parcelleDTOS.get(0);
         }
         

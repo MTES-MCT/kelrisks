@@ -122,7 +122,7 @@
     <!--suppress CssUnknownTarget -->
     <div class="hero"
          role="banner"
-         style="background-image: url('/static/images/banner-min.png'); background-size: auto; background-position-y: -30px">
+         style="background-image: url('static/images/banner-min.png'); background-size: auto; background-position-y: -30px">
       <div class="hero__container">
         <h1 class="hero__white-background">Kelrisks</h1>
         <p class="hero__white-background">Evaluez simplement et rapidement le risque de pollution votre terrain</p>
@@ -131,12 +131,40 @@
 
     <main role="main">
 
-      <section class="section section-white">
+      <section class="section section-white"
+               v-show="!avis.rendered">
         <div class="container">
           <div class="panel"
                style="overflow: hidden; position : relative ">
             <h2 class="section__title">Votre terrain</h2>
             <p class="section__subtitle">Informations</p>
+
+            <hr/>
+
+            <ul class="error">
+              <li :key="error"
+                  v-for="error in informations.errorList">
+                {{ error }}
+              </li>
+            </ul>
+            <ul class="warning">
+              <li :key="warning"
+                  v-for="warning in informations.warningList">
+                {{ warning }}
+              </li>
+            </ul>
+            <ul class="info">
+              <li :key="info"
+                  v-for="info in informations.infoList">
+                {{ info }}
+              </li>
+            </ul>
+            <ul class="success">
+              <li :key="success"
+                  v-for="success in informations.successList">
+                {{ success }}
+              </li>
+            </ul>
 
             <br/>
 
@@ -151,18 +179,18 @@
                             id="codepostal"
                             label-text="Code Postal"
                             name="codePostal"
-                            source="http://localhost:8080/api/adresse/commune/autocomplete/"/>
+                            v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'"/>
               <autocomplete @input="onNomVoieChanged"
                             id="nomvoie"
                             label-text="Nom voie"
                             name="nomVoie"
-                            v-bind:source="'http://localhost:8080/api/adresse/voie/autocomplete/' + form.codeINSEE + '/'"
+                            v-bind:source="env.apiPath + '/adresse/voie/autocomplete/' + form.codeINSEE + '/'"
                             v-bind:start-at="2"/>
               <autocomplete @input="onNumeroChanged"
                             id="numero"
                             label-text="Numéro"
                             name="numero"
-                            v-bind:source="'http://localhost:8080/api/adresse/numero/autocomplete/' + form.codeINSEE + '/' + form.nomVoie + '/'"
+                            v-bind:source="env.apiPath + '/adresse/numero/autocomplete/' + form.codeINSEE + '/' + form.nomVoie + '/'"
                             v-bind:start-at="1"/>
             </div>
 
@@ -181,32 +209,52 @@
               <autocomplete id="raisonsociale"
                             label-text="Nom de l'ancien propriétaire / Raison sociale"
                             name="raisonSociale"
-                            source="http://localhost:8080/api/basias/rs/autocomplete/"
+                            v-bind:source="env.apiPath + '/basias/rs/autocomplete/'"
                             v-bind:start-at="3"/>
             </div>
 
             <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
+              <button type="submit"
+                      class="button"
+                      name="subscribe"
+                      v-if="avis.querying">Recherche en cours...
+              </button>
               <button @click="getAvis"
                       class="button"
                       id="submit"
                       name="subscribe"
-                      type="submit">Valider
+                      type="submit"
+                      v-else>Valider
               </button>
-            </div>
-            <div>
-              <h4>Avis Simple</h4>
-              - {{ avis.basiasParcelle }}<br/>
-              - {{ avis.basiasAutourParcelle }}<br/>
-              - {{ avis.basiasRaisonSociale }}<br/>
-              - {{ avis.basolParcelle }}<br/>
-              - {{ avis.basolAutourParcelle }}<br/>
-              - {{ avis.installationClasseeParcelle }}<br/>
-              - {{ avis.installationClasseeAutourParcelle }}<br/>
-              - {{ avis.installationClasseeCommune }}<br/>
-
             </div>
             <!--</form>-->
           </div>
+        </div>
+      </section>
+
+      <section class="section section-white"
+               v-show="avis.rendered">
+        <div class="container">
+          <div class="panel"
+               style="overflow: hidden; position : relative ">
+            <h2 class="section__title">Avis Simple</h2>
+            <p class="section__subtitle">Résumé des Sites trouvés</p>
+
+            <hr/>
+
+            <br/>
+            - {{ avis.basiasParcelle }}<br/>
+            - {{ avis.basiasAutourParcelle }}<br/>
+            - {{ avis.basiasRaisonSociale }}<br/>
+            - {{ avis.basolParcelle }}<br/>
+            - {{ avis.basolAutourParcelle }}<br/>
+            - {{ avis.installationClasseeParcelle }}<br/>
+            - {{ avis.installationClasseeAutourParcelle }}<br/>
+            - {{ avis.installationClasseeCommune }}<br/>
+          </div>
+
+          <a @click="avis.rendered = false"
+             class="button">Retour</a>
         </div>
       </section>
     </main>
@@ -214,13 +262,22 @@
 </template>
 
 <script>
-import Player from './Player'
 import Autocomplete from './Autocomplete'
 
 export default {
   name: 'Kelrisks',
   data () {
     return {
+      informations: {
+        hasError: false,
+        errorList: [],
+        hasWarning: false,
+        warningList: [],
+        hasInfo: false,
+        infoList: [],
+        hasSuccess: false,
+        successList: []
+      },
       form: {
         communeLib: '',
         codeINSEE: '',
@@ -235,6 +292,8 @@ export default {
         message: 'API'
       },
       avis: {
+        querying: false,
+        rendered: false,
         basiasParcelle: '',
         basiasAutourParcelle: '',
         basiasRaisonSociale: '',
@@ -243,11 +302,14 @@ export default {
         installationClasseeParcelle: '',
         installationClasseeAutourParcelle: '',
         installationClasseeCommune: ''
+      },
+      env: {
+        basePath: process.env.VUE_APP_PATH,
+        apiPath: process.env.VUE_APP_API_PATH
       }
     }
   },
   components: {
-    Player,
     Autocomplete
   },
   methods: {
@@ -266,11 +328,29 @@ export default {
     onNumeroChanged (value) {
       this.form.idBAN = value
     },
+    checkInformations: function (info) {
+      // console.log(info)
+      this.informations.hasError = info.hasError
+      this.informations.errorList = info.errorList
+      this.informations.hasInfo = info.hasInfo
+      this.informations.infoList = info.infoList
+      this.informations.hasSuccess = info.hasSuccess
+      this.informations.successList = info.successList
+      this.informations.hasWarning = info.hasWarning
+      this.informations.warningList = info.warningList
+    },
     getAvis () {
-      fetch('http://localhost:8080/api/avis?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio)
+      this.avis.querying = true
+      fetch(this.env.apiPath + '/avis?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio)
         .then(stream => stream.json())
         .then(value => {
-          console.log(value.entity)
+          this.avis.querying = false
+          console.log(this.avis.querying)
+          this.checkInformations(value.entity)
+          if (this.informations.hasError) return
+
+          // console.log(value.entity)
+          this.avis.rendered = true
 
           if (value.entity.siteIndustrielBasiasSurParcelleDTOs.length === 0) {
             this.avis.basiasParcelle = 'Aucun site Basias sur la parcelle'

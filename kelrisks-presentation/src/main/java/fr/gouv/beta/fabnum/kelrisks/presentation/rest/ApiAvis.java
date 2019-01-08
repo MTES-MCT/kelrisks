@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
+import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import io.swagger.annotations.Api;
@@ -36,8 +37,19 @@ public class ApiAvis extends AbstractBasicApi {
                          @RequestParam(value = "idBAN", required = false) String idBAN,
                          @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                          @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
+    
+        if (codeParcelle != null) {
         
-        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(getParcelleCode(codeINSEE, codeParcelle), codeINSEE, nomVoie, idBAN, nomProprietaire);
+            codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
+        
+            if (codeParcelle == null) {
+                JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
+                jsonInfoDTO.addError("Le code parcelle n'a pas été trouvé.");
+                return Response.ok(jsonInfoDTO).build();
+            }
+        }
+    
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomVoie, idBAN, nomProprietaire);
         
         return Response.ok(avisDTO).build();
     }
