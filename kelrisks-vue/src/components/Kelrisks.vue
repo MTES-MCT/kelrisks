@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <svg aria-hidden="true"
          focusable="false"
@@ -129,10 +130,38 @@
       </div>
     </div>
 
-    <main role="main">
+    <main id="main"
+          role="main">
 
       <section class="section section-white"
-               v-show="!avis.rendered">
+               id="section1"
+               v-show="flow.index === 1">
+        <div class="container">
+          <div class="panel"
+               style="overflow: hidden; position : relative ">
+            <h2 class="section__title">Vous êtes ?</h2>
+            <p class="section__subtitle">Identité</p>
+
+            <hr/>
+
+            <br/>
+            <a @click="flowNext()
+                       form.categorieDemandeur = 1"
+               class="button">
+              <font-awesome-icon icon="user"/>
+              Un particulier</a>
+            <a @click="flowNext()
+                       form.categorieDemandeur = 2"
+               class="button">
+              <font-awesome-icon icon="briefcase"/>
+              Un notaire</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-white"
+               id="section2"
+               v-show="flow.index === 2">
         <div class="container">
           <div class="panel"
                style="overflow: hidden; position : relative ">
@@ -168,25 +197,76 @@
 
             <br/>
 
-            <!--<form action="#"-->
-            <!--method="post"-->
-            <!--name="form"-->
-            <!--novalidate-->
-            <!--style="max-width: unset;"-->
-            <!--target="_blank">-->
-            <div style="width: 40%; float: left; margin-left: 5%">
-              <autocomplete @input="onCodePostalChanged"
+            <div style="width: 100%; display: flex; justify-content: center;">
+              <autocomplete @result="onCodePostalChanged"
                             id="codepostal"
                             label-text="Code Postal"
                             name="codePostal"
                             v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'"/>
-              <autocomplete @input="onNomVoieChanged"
+            </div>
+
+            <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
+              <a @click="flowPrevious()"
+                 class="button">
+                <font-awesome-icon icon="chevron-left"/>
+                Précédent</a>
+              <a @click="checkCodePostal"
+                 class="button">Suivant
+                <font-awesome-icon :style="{margin : '0 0 0 10px'}"
+                                   icon="chevron-right"/>
+              </a>
+            </div>
+            <!--</form>-->
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-white"
+               id="section3"
+               v-show="flow.index === 3">
+        <div class="container">
+          <div class="panel"
+               style="overflow: hidden; position : relative ">
+            <h2 class="section__title">Votre terrain</h2>
+            <p class="section__subtitle">Informations</p>
+
+            <hr/>
+
+            <ul class="error">
+              <li :key="error"
+                  v-for="error in informations.errorList">
+                {{ error }}
+              </li>
+            </ul>
+            <ul class="warning">
+              <li :key="warning"
+                  v-for="warning in informations.warningList">
+                {{ warning }}
+              </li>
+            </ul>
+            <ul class="info">
+              <li :key="info"
+                  v-for="info in informations.infoList">
+                {{ info }}
+              </li>
+            </ul>
+            <ul class="success">
+              <li :key="success"
+                  v-for="success in informations.successList">
+                {{ success }}
+              </li>
+            </ul>
+
+            <br/>
+
+            <div style="width: 40%; float: left; margin-left: 5%">
+              <autocomplete @result="onNomVoieChanged"
                             id="nomvoie"
                             label-text="Nom voie"
                             name="nomVoie"
                             v-bind:source="env.apiPath + '/adresse/voie/autocomplete/' + form.codeINSEE + '/'"
                             v-bind:start-at="2"/>
-              <autocomplete @input="onNumeroChanged"
+              <autocomplete @result="onNumeroChanged"
                             id="numero"
                             label-text="Numéro"
                             name="numero"
@@ -195,7 +275,7 @@
             </div>
 
             <div style="width: 10%; float: left; margin-top: 35px">
-              <!--<p class="section__subtitle">Et/Ou</p>-->
+              <p class="section__subtitle">Et/Ou</p>
             </div>
             <div style="width: 40%; float: left; margin-right: 5%">
               <div class="form__group">
@@ -206,6 +286,12 @@
                        type="text"
                        v-model="form.parcelle">
               </div>
+            </div>
+
+            <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
+              <p class="section__subtitle">Optionnel</p>
+            </div>
+            <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
               <autocomplete id="raisonsociale"
                             label-text="Nom de l'ancien propriétaire / Raison sociale"
                             name="raisonSociale"
@@ -214,18 +300,28 @@
             </div>
 
             <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
+              <a @click="flowPrevious()"
+                 class="button">
+                <font-awesome-icon icon="chevron-left"/>
+                Précédent</a>
               <button type="submit"
                       class="button"
                       name="subscribe"
-                      v-if="avis.querying">Recherche en cours...
+                      v-if="avis.querying">
+                <font-awesome-icon icon="spinner"
+                                   spin/>
+                Recherche en cours...
               </button>
               <button @click="getAvis"
                       class="button"
                       id="submit"
                       name="subscribe"
                       type="submit"
-                      v-else>Valider
+                      v-else>
+                <font-awesome-icon icon="search"/>
+                Rechercher
               </button>
+              <!--<i class="fas fa-search left"></i>-->
             </div>
             <!--</form>-->
           </div>
@@ -233,7 +329,8 @@
       </section>
 
       <section class="section section-white"
-               v-show="avis.rendered">
+               id="section4"
+               v-show="flow.index === 4">
         <div class="container">
           <div class="panel"
                style="overflow: hidden; position : relative ">
@@ -243,18 +340,48 @@
             <hr/>
 
             <br/>
-            - {{ avis.basiasParcelle }}<br/>
-            - {{ avis.basiasAutourParcelle }}<br/>
-            - {{ avis.basiasRaisonSociale }}<br/>
-            - {{ avis.basolParcelle }}<br/>
-            - {{ avis.basolAutourParcelle }}<br/>
-            - {{ avis.installationClasseeParcelle }}<br/>
-            - {{ avis.installationClasseeAutourParcelle }}<br/>
-            - {{ avis.installationClasseeCommune }}<br/>
-          </div>
 
-          <a @click="avis.rendered = false"
-             class="button">Retour</a>
+            <div style="width: 20%; background-color: #EEEEEE; float: left">
+              Code postal : {{form.communeLib}}<br/>
+              Rue : {{form.nomVoie}}<br/>
+              N° : {{form.nomVoie}}<br/>
+              Code parcelle : {{form.parcelle}}<br/>
+              <hr/>
+              <a @click="flowPrevious()"
+                 class="button">
+                <font-awesome-icon icon="undo"/>
+                Retour</a>
+            </div>
+            <div style="width: 80%; float: left">
+              <br/>
+              Présence on non de votre recherche dans les bases de données de l'état<br/>
+
+              <big-check :checked="avis.isBasias"
+                         label-text="Sites polués BASIAS"/>
+
+              <big-check :checked="avis.isBasol"
+                         label-text="Sites polués BASOL"/>
+
+              <big-check :checked="avis.isS3IC"
+                         label-text="Installations classées S3IC"/>
+              <br/>
+
+              - {{ avis.basiasParcelle }}<br/>
+              - {{ avis.basolParcelle }}<br/>
+              - {{ avis.installationClasseeParcelle }}<br/>
+
+              <b>Obligations relatives</b><br/>
+              - Lorem Ipsum
+
+              <p class="section__subtitle">Analyse au voisinage de la parcelle (100m)</p><br/>
+
+              - {{ avis.basiasAutourParcelle }}<br/>
+              - {{ avis.basiasRaisonSociale }}<br/>
+              - {{ avis.basolAutourParcelle }}<br/>
+              - {{ avis.installationClasseeAutourParcelle }}<br/>
+              - {{ avis.installationClasseeCommune }}<br/>
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -263,6 +390,8 @@
 
 <script>
 import Autocomplete from './Autocomplete'
+import BigCheck from './BigCheck'
+import functions from '../script/fonctions'
 
 export default {
   name: 'Kelrisks',
@@ -278,7 +407,11 @@ export default {
         hasSuccess: false,
         successList: []
       },
+      flow: {
+        index: 1
+      },
       form: {
+        categorieDemandeur: 0,
         communeLib: '',
         codeINSEE: '',
         nomVoieLib: '',
@@ -294,11 +427,14 @@ export default {
       avis: {
         querying: false,
         rendered: false,
+        isBasias: true,
         basiasParcelle: '',
         basiasAutourParcelle: '',
         basiasRaisonSociale: '',
+        isBasol: true,
         basolParcelle: '',
         basolAutourParcelle: '',
+        isS3IC: true,
         installationClasseeParcelle: '',
         installationClasseeAutourParcelle: '',
         installationClasseeCommune: ''
@@ -310,6 +446,7 @@ export default {
     }
   },
   components: {
+    BigCheck,
     Autocomplete
   },
   methods: {
@@ -328,6 +465,22 @@ export default {
     onNumeroChanged (value) {
       this.form.idBAN = value
     },
+    flowNext () {
+      this.flow.index++
+      functions.scrollToElement('main', false)
+    },
+    flowPrevious () {
+      this.flow.index--
+      functions.scrollToElement('main', false)
+    },
+    checkCodePostal () {
+      this.informations.errorList = []
+      if (/^\d{5}$/.test(this.form.codeINSEE)) {
+        this.flowNext('section3')
+      } else {
+        this.informations.errorList = ['Merci de bien vouloir sélectionner une commune au moyen de l\'autocomplétion.']
+      }
+    },
     checkInformations: function (info) {
       // console.log(info)
       this.informations.hasError = info.hasError
@@ -345,13 +498,14 @@ export default {
         .then(stream => stream.json())
         .then(value => {
           this.avis.querying = false
-          console.log(this.avis.querying)
+          // console.log(this.avis.querying)
           this.checkInformations(value.entity)
           if (this.informations.hasError) return
 
           // console.log(value.entity)
-          this.avis.rendered = true
+          this.flow.index++
 
+          this.avis.isBasias = this.avis.isBasias && value.entity.siteIndustrielBasiasSurParcelleDTOs.length === 0
           if (value.entity.siteIndustrielBasiasSurParcelleDTOs.length === 0) {
             this.avis.basiasParcelle = 'Aucun site Basias sur la parcelle'
           } else {
@@ -360,6 +514,7 @@ export default {
               this.avis.basiasParcelle += element.identifiant + ', '
             }, this)
           }
+          this.avis.isBasias = this.avis.isBasias && value.entity.siteIndustrielBasiasAutourParcelleDTOs.length === 0
           if (value.entity.siteIndustrielBasiasAutourParcelleDTOs.length === 0) {
             this.avis.basiasAutourParcelle = 'Aucun site Basias autour la parcelle (100m)'
           } else {
@@ -368,6 +523,7 @@ export default {
               this.avis.basiasAutourParcelle += element.identifiant + ', '
             }, this)
           }
+          this.avis.isBasias = this.avis.isBasias && value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.length === 0
           if (value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.length === 0) {
             this.avis.basiasRaisonSociale = 'Aucun site Basias trouvé par raison sociale'
           } else {
@@ -376,6 +532,7 @@ export default {
               this.avis.basiasRaisonSociale += element.identifiant + ', '
             }, this)
           }
+          this.avis.isBasol = this.avis.isBasol && value.entity.siteIndustrielBasolSurParcelleDTOs.length === 0
           if (value.entity.siteIndustrielBasolSurParcelleDTOs.length === 0) {
             this.avis.basolParcelle = 'Aucun site Basol sur la parcelle'
           } else {
@@ -384,6 +541,7 @@ export default {
               this.avis.basolParcelle += element.identifiant + ', '
             }, this)
           }
+          this.avis.isBasol = this.avis.isBasol && value.entity.siteIndustrielBasolAutourParcelleDTOs.length === 0
           if (value.entity.siteIndustrielBasolAutourParcelleDTOs.length === 0) {
             this.avis.basolAutourParcelle = 'Aucun site Basol autour la parcelle (100m)'
           } else {
@@ -392,14 +550,16 @@ export default {
               this.avis.basolAutourParcelle += element.identifiant + ', '
             }, this)
           }
+          this.avis.isS3IC = this.avis.isS3IC && value.entity.installationClasseeSurParcelleDTOs.length === 0
           if (value.entity.installationClasseeSurParcelleDTOs.length === 0) {
             this.avis.installationClasseeParcelle = 'Aucune Installation Classée sur la parcelle'
           } else {
             this.avis.installationClasseeParcelle = 'Installation(s) Classée(s) trouvée(s) sur la parcelle : '
             value.entity.installationClasseeSurParcelleDTOs.forEach(function (element) {
-              this.avis.installationClasseeParcelle += element.identifiant + ', '
+              this.avis.installationClasseeParcelle += element.raisonSociale + ', '
             }, this)
           }
+          this.avis.isS3IC = this.avis.isS3IC && value.entity.installationClasseeAutourParcelleDTOs.length === 0
           if (value.entity.installationClasseeAutourParcelleDTOs.length === 0) {
             this.avis.installationClasseeAutourParcelle = 'Aucune Installation Classée autour la parcelle (100m)'
           } else {
@@ -408,16 +568,18 @@ export default {
               this.avis.installationClasseeAutourParcelle += element.raisonSociale + ', '
             }, this)
           }
+          this.avis.isS3IC = this.avis.isS3IC && value.entity.installationClasseeNonGeorerenceesDTOs.length === 0
           if (value.entity.installationClasseeNonGeorerenceesDTOs.length === 0) {
             this.avis.installationClasseeCommune = 'Aucune Installation Classée non géoréférencée dans la commune'
           } else {
             this.avis.installationClasseeCommune = 'Installation(s) Classée(s) non géoréférencée(s) trouvée(s) dans la commune : '
-            console.log(value.entity.installationClasseeNonGeorerenceesDTOs)
+            // console.log(value.entity.installationClasseeNonGeorerenceesDTOs)
             value.entity.installationClasseeNonGeorerenceesDTOs.forEach(function (element) {
-              console.log(element)
+              // console.log(element)
               this.avis.installationClasseeCommune += element.raisonSociale + ', '
             }, this)
           }
+          functions.scrollToElement('main', false)
         })
     }
   }

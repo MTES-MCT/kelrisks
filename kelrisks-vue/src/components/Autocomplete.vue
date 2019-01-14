@@ -87,7 +87,9 @@ export default {
   methods: {
     onChange () {
       // Let's warn the parent that a change was made
-      console.log(this.query)
+      // console.log(this.query)
+      this.code = ''
+      this.$emit('result', this.code)
       this.$emit('input', this.query)
 
       if (this.query.length >= this.startAt) {
@@ -126,7 +128,7 @@ export default {
       this.query = result.libelle
       this.code = result.code
       this.isOpen = false
-      this.$emit('input', this.code)
+      this.$emit('result', this.code)
     },
     onArrowDown (evt) {
       if (this.arrowCounter < this.results.length) {

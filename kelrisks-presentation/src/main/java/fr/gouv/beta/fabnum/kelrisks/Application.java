@@ -39,6 +39,7 @@ public class Application extends SpringBootServletInitializer {
             public void addCorsMappings(CorsRegistry registry) {
     
                 registry.addMapping("/**/api/**");
+                registry.addMapping("/api/**");
             }
         };
     }

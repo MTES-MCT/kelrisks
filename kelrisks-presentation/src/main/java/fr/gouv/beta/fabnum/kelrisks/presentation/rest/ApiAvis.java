@@ -38,8 +38,8 @@ public class ApiAvis extends AbstractBasicApi {
                          @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                          @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
     
-        if (codeParcelle != null) {
-        
+        if (codeParcelle != null && !codeParcelle.equals("")) {
+            
             codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
         
             if (codeParcelle == null) {
@@ -49,6 +49,13 @@ public class ApiAvis extends AbstractBasicApi {
             }
         }
     
+        if ((codeParcelle == null || codeParcelle.equals("")) && (idBAN == null || idBAN.equals(""))) {
+        
+            JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
+            jsonInfoDTO.addError("Merci d'entrer un code parcelle ou une adresse complète.");
+            return Response.ok(jsonInfoDTO).build();
+        }
+        
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomVoie, idBAN, nomProprietaire);
         
         return Response.ok(avisDTO).build();
