@@ -29,9 +29,10 @@ public interface IAdresseMapper {
     @Mappings({
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "code", source = "codeINSEE"),
-            @Mapping(target = "libelle", expression = "java(adresse.getCodePostal() + \" - \" + adresse.getNomCommune())"),
+            @Mapping(target = "libelle", source = "nomCommune"),
+            @Mapping(target = "champSup1", source = "codePostal")
     })
-    AutocompleteDTO toAutoCommuneCompleteDTO(Adresse adresse);
+    AutocompleteDTO toCommuneAutoCompleteDTO(Adresse adresse);
     
     @IterableMapping(qualifiedByName = "toRueAutoCompleteDTO")
     List<AutocompleteDTO> toRueAutoCompleteDTOs(List<Adresse> adresses);

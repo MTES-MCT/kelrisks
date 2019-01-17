@@ -48,9 +48,9 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
     }
     
     @Override
-    public List<AutocompleteDTO> rechercherCommunePartielle(String query) {
+    public List<AdresseDTO> rechercherCommunePartielle(String query) {
     
-        return adresseMapper.toCommuneAutoCompleteDTOs(adresseService.rechercherCommunePartielle(query));
+        return adresseMapper.toDTOs(adresseService.rechercherCommunePartielle(query));
     }
     
     @Override

@@ -62,7 +62,7 @@ public class ApiAdresse extends AbstractBasicApi {
     public Response communePartielle(@ApiParam(required = true, name = "query", value = "Terme partiel.")
                                      @PathVariable("query") String query) {
     
-        List<AutocompleteDTO> autocompleteDTOs = gestionAdresseFacade.rechercherCommunePartielle(query);
+        List<AdresseDTO> autocompleteDTOs = gestionAdresseFacade.rechercherCommunePartielle(query);
     
         return Response.ok(autocompleteDTOs).build();
     }

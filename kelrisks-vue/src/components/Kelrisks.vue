@@ -137,12 +137,11 @@
                id="section1"
                v-show="flow.index === 1">
         <div class="container">
-          <div class="panel"
-               style="overflow: hidden; position : relative ">
+          <div class="panel">
             <h2 class="section__title">Vous êtes ?</h2>
             <p class="section__subtitle">Identité</p>
 
-            <hr/>
+            <!--<hr/>-->
 
             <br/>
             <a @click="flowNext()
@@ -163,12 +162,11 @@
                id="section2"
                v-show="flow.index === 2">
         <div class="container">
-          <div class="panel"
-               style="overflow: hidden; position : relative ">
+          <div class="panel">
             <h2 class="section__title">Votre terrain</h2>
             <p class="section__subtitle">Informations</p>
 
-            <hr/>
+            <!--<hr/>-->
 
             <ul class="error">
               <li :key="error"
@@ -197,15 +195,38 @@
 
             <br/>
 
-            <div style="width: 100%; display: flex; justify-content: center;">
-              <autocomplete @result="onCodePostalChanged"
-                            id="codepostal"
-                            label-text="Code Postal"
-                            name="codePostal"
-                            v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'"/>
+            <!--<div style="width: 100%; display: flex; justify-content: center;">-->
+            <!--<autocomplete @result="onCodePostalChanged"-->
+            <!--id="codepostal"-->
+            <!--label-text="Code Postal"-->
+            <!--name="codePostal"-->
+            <!--v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'"/>-->
+            <!--</div>-->
+
+            <div style="width: 50%; margin-left: 25%">
+              <kr-input :errors="checks.codeCommuneError"
+                        @selected="onCodePostalChanged"
+                        label="Code postal"
+                        name="codePostal"
+                        option-label-property="codePostal"
+                        option-value-property="codeINSEE"
+                        v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'">
+                <template slot="kr-option-label"
+                          slot-scope="slotProps">
+                  {{ slotProps.option.codePostal + ' - ' + slotProps.option.nomCommune}}
+                </template>
+                <template slot="kr-helper"
+                          slot-scope="slotProps">
+                  {{ slotProps.option.nomCommune }}
+                </template>
+                <template slot="kr-no-results"
+                          slot-scope="slotProps">
+                  Aucune commune trouvé pour "{{ slotProps.query }}"
+                </template>
+              </kr-input>
             </div>
 
-            <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
+            <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
               <a @click="flowPrevious()"
                  class="button">
                 <font-awesome-icon icon="chevron-left"/>
@@ -225,12 +246,11 @@
                id="section3"
                v-show="flow.index === 3">
         <div class="container">
-          <div class="panel"
-               style="overflow: hidden; position : relative ">
+          <div class="panel">
             <h2 class="section__title">Votre terrain</h2>
             <p class="section__subtitle">Informations</p>
 
-            <hr/>
+            <!--<hr/>-->
 
             <ul class="error">
               <li :key="error"
@@ -260,46 +280,61 @@
             <br/>
 
             <div style="width: 40%; float: left; margin-left: 5%">
-              <autocomplete @result="onNomVoieChanged"
-                            id="nomvoie"
-                            label-text="Nom voie"
-                            name="nomVoie"
-                            v-bind:source="env.apiPath + '/adresse/voie/autocomplete/' + form.codeINSEE + '/'"
-                            v-bind:start-at="2"/>
-              <autocomplete @result="onNumeroChanged"
-                            id="numero"
-                            label-text="Numéro"
-                            name="numero"
-                            v-bind:source="env.apiPath + '/adresse/numero/autocomplete/' + form.codeINSEE + '/' + form.nomVoie + '/'"
-                            v-bind:start-at="1"/>
+              <kr-input :start-at="2"
+                        @selected="onNomVoieChanged"
+                        label="Nom voie"
+                        name="nomVoie"
+                        v-bind:source="env.apiPath + '/adresse/voie/autocomplete/' + form.codeINSEE + '/'">
+                <template slot="kr-no-results"
+                          slot-scope="slotProps">
+                  Aucune voie trouvée pour "{{ slotProps.query }}"
+                </template>
+              </kr-input>
+
+              <kr-input :start-at="1"
+                        @selected="onNumeroChanged"
+                        label="Numéro voie"
+                        name="numero"
+                        v-bind:source="env.apiPath + '/adresse/numero/autocomplete/' + form.codeINSEE + '/' + form.nomVoie + '/'">
+                <template slot="kr-no-results"
+                          slot-scope="slotProps">
+                  Aucun numéro trouvé pour "{{ slotProps.query }}"
+                </template>
+                <template slot="kr-helper"
+                          slot-scope="slotProps">
+                  IBAN : {{ slotProps.option.id }}
+                </template>
+              </kr-input>
             </div>
 
             <div style="width: 10%; float: left; margin-top: 35px">
-              <p class="section__subtitle">Et/Ou</p>
+              <p class="section__subtitle">Ou</p>
             </div>
             <div style="width: 40%; float: left; margin-right: 5%">
-              <div class="form__group">
-                <label for="codeparcelle">Code Parcelle</label>
-                <input id="codeparcelle"
-                       name="codeparcelle"
-                       placeholder="BA-115 ou 912250000A0352"
-                       type="text"
-                       v-model="form.parcelle">
-              </div>
+              <kr-input label="Code Parcelle"
+                        name="codeparcelle"
+                        placeholder="BA-115 ou 912250000A0352"
+                        v-model="form.parcelle"/>
             </div>
 
-            <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
+            <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
               <p class="section__subtitle">Optionnel</p>
             </div>
-            <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
-              <autocomplete id="raisonsociale"
-                            label-text="Nom de l'ancien propriétaire / Raison sociale"
-                            name="raisonSociale"
-                            v-bind:source="env.apiPath + '/basias/rs/autocomplete/'"
-                            v-bind:start-at="3"/>
+
+            <div style="width: 90%; margin-left: 5%">
+              <kr-input :start-at="3"
+                        @selected="onNumeroChanged"
+                        label="Nom de l'ancien propriétaire / Raison sociale"
+                        name="raisonSociale"
+                        v-bind:source="env.apiPath + '/basias/rs/autocomplete/'">
+                <template slot="kr-no-results"
+                          slot-scope="slotProps">
+                  Aucun numéro trouvé pour "{{ slotProps.query }}"
+                </template>
+              </kr-input>
             </div>
 
-            <div style="width: 100%; display: flex; justify-content: center; padding-top: 30px;">
+            <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
               <a @click="flowPrevious()"
                  class="button">
                 <font-awesome-icon icon="chevron-left"/>
@@ -332,19 +367,18 @@
                id="section4"
                v-show="flow.index === 4">
         <div class="container">
-          <div class="panel"
-               style="overflow: hidden; position : relative ">
+          <div class="panel">
             <h2 class="section__title">Avis Simple</h2>
             <p class="section__subtitle">Résumé des Sites trouvés</p>
 
-            <hr/>
+            <!--<hr/>-->
 
             <br/>
 
             <div style="width: 20%; background-color: #EEEEEE; float: left">
               Code postal : {{form.communeLib}}<br/>
               Rue : {{form.nomVoie}}<br/>
-              N° : {{form.nomVoie}}<br/>
+              N° : {{form.numeroVoieLib}}<br/>
               Code parcelle : {{form.parcelle}}<br/>
               <hr/>
               <a @click="flowPrevious()"
@@ -389,68 +423,108 @@
 </template>
 
 <script>
-import Autocomplete from './Autocomplete'
+// import Autocomplete from './Autocomplete'
 import BigCheck from './BigCheck'
 import functions from '../script/fonctions'
+import KrInput from './KrInput'
 
 export default {
   name: 'Kelrisks',
-  data () {
-    return {
-      informations: {
-        hasError: false,
-        errorList: [],
-        hasWarning: false,
-        warningList: [],
-        hasInfo: false,
-        infoList: [],
-        hasSuccess: false,
-        successList: []
-      },
-      flow: {
-        index: 1
-      },
-      form: {
-        categorieDemandeur: 0,
-        communeLib: '',
-        codeINSEE: '',
-        nomVoieLib: '',
-        nomVoie: '',
-        numeroVoieLib: '',
-        idBAN: '',
-        parcelle: '',
-        proprio: ''
-      },
-      api: {
-        message: 'API'
-      },
-      avis: {
-        querying: false,
-        rendered: false,
-        isBasias: true,
-        basiasParcelle: '',
-        basiasAutourParcelle: '',
-        basiasRaisonSociale: '',
-        isBasol: true,
-        basolParcelle: '',
-        basolAutourParcelle: '',
-        isS3IC: true,
-        installationClasseeParcelle: '',
-        installationClasseeAutourParcelle: '',
-        installationClasseeCommune: ''
-      },
-      env: {
-        basePath: process.env.VUE_APP_PATH,
-        apiPath: process.env.VUE_APP_API_PATH
-      }
+  data: () => ({
+    informations: {
+      hasError: false,
+      errorList: [],
+      hasWarning: false,
+      warningList: [],
+      hasInfo: false,
+      infoList: [],
+      hasSuccess: false,
+      successList: []
+    },
+    flow: {
+      index: 1
+    },
+    form: {
+      categorieDemandeur: 0,
+      communes: [],
+      communeLib: '',
+      codePostal: null,
+      codeINSEE: null,
+      nomVoieLib: '',
+      nomVoie: '',
+      numeroVoieLib: '',
+      idBAN: '',
+      parcelle: '',
+      proprio: ''
+    },
+    checks: {
+      codeCommuneError: []
+    },
+    api: {
+      message: 'API'
+    },
+    avis: {
+      querying: false,
+      rendered: false,
+      isBasias: true,
+      basiasParcelle: '',
+      basiasAutourParcelle: '',
+      basiasRaisonSociale: '',
+      isBasol: true,
+      basolParcelle: '',
+      basolAutourParcelle: '',
+      isS3IC: true,
+      installationClasseeParcelle: '',
+      installationClasseeAutourParcelle: '',
+      installationClasseeCommune: ''
+    },
+    env: {
+      basePath: process.env.VUE_APP_PATH,
+      apiPath: process.env.VUE_APP_API_PATH
     }
-  },
+  }),
   components: {
-    BigCheck,
-    Autocomplete
+    KrInput,
+    BigCheck
+    // Autocomplete
   },
   methods: {
+    // async getCommunes (searchTerm) {
+    //   console.log('there : >' + searchTerm + '<')
+    //   this.form.communes = new Promise(resolve => {
+    //     if (!searchTerm) searchTerm = this.form.codePostal
+    //     if (/^\d{5}.*$/.test(searchTerm)) {
+    //       searchTerm = /^(\d{5}).*$/.exec(searchTerm)[1]
+    //     }
+    //
+    //     window.setTimeout(() => {
+    //       if (!searchTerm || searchTerm.length === 0) {
+    //         resolve([])
+    //       } else {
+    //         resolve(fetch(this.env.apiPath + '/adresse/commune/autocomplete/' + searchTerm)
+    //           .catch(reason => console.error(reason))
+    //           .then(value => value.json())
+    //           .then(value => {
+    //             console.log('getCommunes:new Promise')
+    //             console.log(value)
+    //             return value.entity
+    //           })
+    //         )
+    //       }
+    //     }, 500)
+    //   }).then(value => {
+    //     return value
+    //   })
+    // },
+    // getSelectedCommune (commune) {
+    //   console.log('getSelectedCommune (' + commune + ')')
+    //   this.form.codeINSEE = commune.code
+    //   // this.form.codePostal = commune.libelle
+    //   this.form.communeLib = /^\d{5} - (.*)$/.exec(commune.libelle)[1]
+    //   // this.form.codePostal = /^(\d{5}).*$/.exec(commune.libelle)[1]
+    // },
     onCodePostalChanged (value) {
+      console.log(value)
       this.form.codeINSEE = value
       this.form.nomVoie = ''
       this.form.nomVoieLib = ''
@@ -476,9 +550,10 @@ export default {
     checkCodePostal () {
       this.informations.errorList = []
       if (/^\d{5}$/.test(this.form.codeINSEE)) {
+        this.checks.codeCommuneError = []
         this.flowNext('section3')
       } else {
-        this.informations.errorList = ['Merci de bien vouloir sélectionner une commune au moyen de l\'autocomplétion.']
+        this.checks.codeCommuneError = ['Merci de bien vouloir sélectionner une commune au moyen de l\'autocomplétion.']
       }
     },
     checkInformations: function (info) {
@@ -585,3 +660,14 @@ export default {
   }
 }
 </script>
+
+<style>
+  .panel {
+    overflow : visible;
+    position : relative;
+  }
+
+  .section__subtitle {
+    margin-bottom : 40px;
+  }
+</style>

@@ -9,7 +9,7 @@ public interface IGestionAdresseFacade {
     
     AdresseDTO rechercherAdresseAvecParcelle(String codeParcelle);
     
-    List<AutocompleteDTO> rechercherCommunePartielle(String query);
+    List<AdresseDTO> rechercherCommunePartielle(String query);
     
     List<AutocompleteDTO> rechercherRuePartielle(String codeINSEE, String query);
     
