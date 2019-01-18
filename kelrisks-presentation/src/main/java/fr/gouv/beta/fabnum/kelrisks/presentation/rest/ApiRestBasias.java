@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = {"API Basias"}, description = "API permettant les recoupements concernant les Sites Industriels Basias")
 public class ApiRestBasias extends AbstractBasicApi {
     
-    //    private static final String TEXT_PLAIN_UTF8       = MediaType.TEXT_PLAIN + ";charset=UTF-8";
-    //    private static final String APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON + ";charset=UTF-8";
+    private static final String TEXT_PLAIN_UTF8       = MediaType.TEXT_PLAIN + ";charset=UTF-8";
+    private static final String APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON + ";charset=UTF-8";
     
     @Autowired
     IGestionSiteIndustrielBasiasFacade gestionSiteIndustrielBasiasFacade;

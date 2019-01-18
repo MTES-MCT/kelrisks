@@ -302,7 +302,7 @@
                 </template>
                 <template slot="kr-helper"
                           slot-scope="slotProps">
-                  IBAN : {{ slotProps.option.id }}
+                  IBAN&nbsp;: {{ slotProps.option.id }}
                 </template>
               </kr-input>
             </div>
@@ -368,52 +368,93 @@
                v-show="flow.index === 4">
         <div class="container">
           <div class="panel">
-            <h2 class="section__title">Avis Simple</h2>
-            <p class="section__subtitle">Résumé des Sites trouvés</p>
+            <h2 class="section__title">Avis</h2>
+            <p class="section__subtitle">Résumé</p>
 
             <!--<hr/>-->
 
             <br/>
 
-            <div style="width: 20%; background-color: #EEEEEE; float: left">
-              Code postal : {{form.communeLib}}<br/>
-              Rue : {{form.nomVoie}}<br/>
-              N° : {{form.numeroVoieLib}}<br/>
-              Code parcelle : {{form.parcelle}}<br/>
+            <div id="summary">
+              <div class="section__subtitle"><strong>Résumé : </strong></div>
+              Code postal&nbsp;: <span v-if="form.codePostal && form.codePostal !== ''">{{form.codePostal}}</span><span v-else><i>n/a</i></span><br/>
+              Rue&nbsp;: <span v-if="form.nomVoieLib && form.nomVoieLib !== ''">{{form.nomVoieLib}}</span><span v-else><i>n/a</i></span><br/>
+              N°&nbsp;: <span v-if="form.numeroVoieLib && form.numeroVoieLib !== ''">{{form.numeroVoieLib}}</span><span v-else><i>n/a</i></span><br/>
+              Code parcelle&nbsp;: <span v-if="form.parcelle && form.parcelle !== ''">{{form.parcelle}}</span><span v-else><i>n/a</i></span><br/>
               <hr/>
-              <a @click="flowPrevious()"
-                 class="button">
-                <font-awesome-icon icon="undo"/>
-                Retour</a>
+              <div style="text-align: center; padding-top: 20px;">
+                <a @click="flowPrevious()"
+                   class="button">
+                  <font-awesome-icon icon="undo"/>
+                  Retour</a>
+              </div>
             </div>
-            <div style="width: 80%; float: left">
-              <br/>
-              Présence on non de votre recherche dans les bases de données de l'état<br/>
+            <div id="avis">
+              <!--Recherche de sites <br/>-->
 
-              <big-check :checked="avis.isBasias"
+              <big-check :checked="!avis.isBasias"
+                         :level="avis.levelWarningBasias"
                          label-text="Sites polués BASIAS"/>
 
-              <big-check :checked="avis.isBasol"
+              <big-check :checked="!avis.isBasol"
+                         :level="avis.levelWarningBasol"
                          label-text="Sites polués BASOL"/>
 
-              <big-check :checked="avis.isS3IC"
-                         label-text="Installations classées S3IC"/>
+              <big-check :checked="!avis.isS3IC"
+                         :level="avis.levelWarningS3IC"
+                         label-text="Installations classées"/>
               <br/>
 
-              - {{ avis.basiasParcelle }}<br/>
-              - {{ avis.basolParcelle }}<br/>
-              - {{ avis.installationClasseeParcelle }}<br/>
+              <div style="text-align: left">
+                Nous vous informons que votre parcelle, <br/>
+                <p>{{ avis.basiasParcelle.lib }}</p>
+                <p>{{ avis.basolParcelle.lib }}</p>
+                <p>{{ avis.installationClasseeParcelle.lib }}</p>
 
-              <b>Obligations relatives</b><br/>
-              - Lorem Ipsum
+                <!--<b>Obligations relatives</b><br/>-->
+                <!-- - Lorem Ipsum-->
 
-              <p class="section__subtitle">Analyse au voisinage de la parcelle (100m)</p><br/>
+                <p class="section__subtitle">Analyse complémentaire</p>
 
-              - {{ avis.basiasAutourParcelle }}<br/>
-              - {{ avis.basiasRaisonSociale }}<br/>
-              - {{ avis.basolAutourParcelle }}<br/>
-              - {{ avis.installationClasseeAutourParcelle }}<br/>
-              - {{ avis.installationClasseeCommune }}<br/>
+                <template v-if="avis.basiasRayonParcelle.numberOf > 0 || avis.basolRayonParcelle.numberOf > 0 || avis.installationClasseeRayonParcelle.numberOf > 0">
+                  <p>Pour information, dans un rayon de 100m&nbsp;:</p>
+
+                  <template v-if="avis.basiasRayonParcelle.numberOf > 0">
+                    <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basias dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
+                    <p v-else>Se trouvent {{ avis.basiasRayonParcelle.numberOf }} sites Basias dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                    <ul class="site-list">
+                      <li :key="ic.id"
+                          v-for="ic in avis.basiasRayonParcelle.liste">
+                        - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                             target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                      </li>
+                    </ul>
+                  </template>
+                  <template v-if="avis.basolRayonParcelle.numberOf > 0">
+                    <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basol dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
+                    <p v-else>Se trouvent {{ avis.basolRayonParcelle.numberOf }} sites Basol dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                    <ul class="site-list">
+                      <li :key="ic.id"
+                          v-for="ic in avis.basolRayonParcelle.liste">
+                        - <a>http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a></li>
+                    </ul>
+                  </template>
+                  <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
+                    <p v-if="avis.installationClasseeRayonParcelle.numberOf === 1">Se trouve 1 installation classée&nbsp;: </p>
+                    <p v-else>Se trouvent {{ avis.installationClasseeRayonParcelle.numberOf }} installations classées&nbsp;: </p>
+                    <ul class="site-list">
+                      <li :key="ic.id"
+                          v-for="ic in avis.installationClasseeRayonParcelle.liste">
+                        - {{ ic.nom }}
+                      </li>
+                    </ul>
+                  </template>
+                </template>
+                <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+
+                <template v-if="avis.installationClasseeCommune.numberOf > 0"><p>Enfin, nous avons trouvé {{ avis.installationClasseeCommune.numberOf }} installation(s) classée(s) non géoréférencées
+                                                                                 dans la commune.</p></template>
+              </div>
             </div>
           </div>
         </div>
@@ -423,9 +464,9 @@
 </template>
 
 <script>
-// import Autocomplete from './Autocomplete'
 import BigCheck from './BigCheck'
 import functions from '../script/fonctions'
+import avis from '../script/avis'
 import KrInput from './KrInput'
 
 export default {
@@ -467,16 +508,22 @@ export default {
       querying: false,
       rendered: false,
       isBasias: true,
-      basiasParcelle: '',
-      basiasAutourParcelle: '',
-      basiasRaisonSociale: '',
+      levelWarningBasias: 1,
+      basiasParcelle: {},
+      basiasProximiteParcelle: {},
+      basiasRayonParcelle: {},
+      basiasRaisonSociale: {},
       isBasol: true,
-      basolParcelle: '',
-      basolAutourParcelle: '',
+      levelWarningBasol: 2,
+      basolParcelle: {},
+      basolProximiteParcelle: {},
+      basolRayonParcelle: {},
       isS3IC: true,
-      installationClasseeParcelle: '',
-      installationClasseeAutourParcelle: '',
-      installationClasseeCommune: ''
+      levelWarningS3IC: 3,
+      installationClasseeParcelle: {},
+      installationClasseeProximiteParcelle: {},
+      installationClasseeRayonParcelle: {},
+      installationClasseeCommune: {}
     },
     env: {
       basePath: process.env.VUE_APP_PATH,
@@ -486,58 +533,25 @@ export default {
   components: {
     KrInput,
     BigCheck
-    // Autocomplete
   },
   methods: {
-    // async getCommunes (searchTerm) {
-    //   console.log('there : >' + searchTerm + '<')
-    //   this.form.communes = new Promise(resolve => {
-    //     if (!searchTerm) searchTerm = this.form.codePostal
-    //     if (/^\d{5}.*$/.test(searchTerm)) {
-    //       searchTerm = /^(\d{5}).*$/.exec(searchTerm)[1]
-    //     }
-    //
-    //     window.setTimeout(() => {
-    //       if (!searchTerm || searchTerm.length === 0) {
-    //         resolve([])
-    //       } else {
-    //         resolve(fetch(this.env.apiPath + '/adresse/commune/autocomplete/' + searchTerm)
-    //           .catch(reason => console.error(reason))
-    //           .then(value => value.json())
-    //           .then(value => {
-    //             console.log('getCommunes:new Promise')
-    //             console.log(value)
-    //             return value.entity
-    //           })
-    //         )
-    //       }
-    //     }, 500)
-    //   }).then(value => {
-    //     return value
-    //   })
-    // },
-    // getSelectedCommune (commune) {
-    //   console.log('getSelectedCommune (' + commune + ')')
-    //   this.form.codeINSEE = commune.code
-    //   // this.form.codePostal = commune.libelle
-    //   this.form.communeLib = /^\d{5} - (.*)$/.exec(commune.libelle)[1]
-    //   // this.form.codePostal = /^(\d{5}).*$/.exec(commune.libelle)[1]
-    // },
     onCodePostalChanged (value) {
-      console.log(value)
-      this.form.codeINSEE = value
+      this.form.codeINSEE = value.codeINSEE
+      this.form.codePostal = value.codePostal
       this.form.nomVoie = ''
       this.form.nomVoieLib = ''
       this.form.idBAN = ''
       this.form.numeroVoieLib = ''
     },
     onNomVoieChanged (value) {
-      this.form.nomVoie = value
+      this.form.nomVoie = value.code
+      this.form.nomVoieLib = value.libelle
       this.form.idBAN = ''
       this.form.numeroVoieLib = ''
     },
     onNumeroChanged (value) {
-      this.form.idBAN = value
+      this.form.idBAN = value.code
+      this.form.numeroVoieLib = value.libelle
     },
     flowNext () {
       this.flow.index++
@@ -557,7 +571,6 @@ export default {
       }
     },
     checkInformations: function (info) {
-      // console.log(info)
       this.informations.hasError = info.hasError
       this.informations.errorList = info.errorList
       this.informations.hasInfo = info.hasInfo
@@ -573,87 +586,42 @@ export default {
         .then(stream => stream.json())
         .then(value => {
           this.avis.querying = false
-          // console.log(this.avis.querying)
           this.checkInformations(value.entity)
           if (this.informations.hasError) return
 
-          // console.log(value.entity)
           this.flow.index++
 
-          this.avis.isBasias = this.avis.isBasias && value.entity.siteIndustrielBasiasSurParcelleDTOs.length === 0
-          if (value.entity.siteIndustrielBasiasSurParcelleDTOs.length === 0) {
-            this.avis.basiasParcelle = 'Aucun site Basias sur la parcelle'
-          } else {
-            this.avis.basiasParcelle = 'Sites Basias trouvé(s) sur la parcelle : '
-            value.entity.siteIndustrielBasiasSurParcelleDTOs.forEach(function (element) {
-              this.avis.basiasParcelle += element.identifiant + ', '
-            }, this)
-          }
-          this.avis.isBasias = this.avis.isBasias && value.entity.siteIndustrielBasiasAutourParcelleDTOs.length === 0
-          if (value.entity.siteIndustrielBasiasAutourParcelleDTOs.length === 0) {
-            this.avis.basiasAutourParcelle = 'Aucun site Basias autour la parcelle (100m)'
-          } else {
-            this.avis.basiasAutourParcelle = 'Sites Basias trouvé(s) autour de la parcelle (100m) : '
-            value.entity.siteIndustrielBasiasAutourParcelleDTOs.forEach(function (element) {
-              this.avis.basiasAutourParcelle += element.identifiant + ', '
-            }, this)
-          }
-          this.avis.isBasias = this.avis.isBasias && value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.length === 0
-          if (value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.length === 0) {
-            this.avis.basiasRaisonSociale = 'Aucun site Basias trouvé par raison sociale'
-          } else {
-            this.avis.basiasRaisonSociale = 'Sites Basias trouvé par raison sociale : '
-            value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.forEach(function (element) {
-              this.avis.basiasRaisonSociale += element.identifiant + ', '
-            }, this)
-          }
-          this.avis.isBasol = this.avis.isBasol && value.entity.siteIndustrielBasolSurParcelleDTOs.length === 0
-          if (value.entity.siteIndustrielBasolSurParcelleDTOs.length === 0) {
-            this.avis.basolParcelle = 'Aucun site Basol sur la parcelle'
-          } else {
-            this.avis.basolParcelle = 'Sites Basol trouvé(s) sur la parcelle : '
-            value.entity.siteIndustrielBasolSurParcelleDTOs.forEach(function (element) {
-              this.avis.basolParcelle += element.identifiant + ', '
-            }, this)
-          }
-          this.avis.isBasol = this.avis.isBasol && value.entity.siteIndustrielBasolAutourParcelleDTOs.length === 0
-          if (value.entity.siteIndustrielBasolAutourParcelleDTOs.length === 0) {
-            this.avis.basolAutourParcelle = 'Aucun site Basol autour la parcelle (100m)'
-          } else {
-            this.avis.basolAutourParcelle = 'Sites Basol trouvé(s) autour de la parcelle (100m) : '
-            value.entity.siteIndustrielBasolAutourParcelleDTOs.forEach(function (element) {
-              this.avis.basolAutourParcelle += element.identifiant + ', '
-            }, this)
-          }
-          this.avis.isS3IC = this.avis.isS3IC && value.entity.installationClasseeSurParcelleDTOs.length === 0
-          if (value.entity.installationClasseeSurParcelleDTOs.length === 0) {
-            this.avis.installationClasseeParcelle = 'Aucune Installation Classée sur la parcelle'
-          } else {
-            this.avis.installationClasseeParcelle = 'Installation(s) Classée(s) trouvée(s) sur la parcelle : '
-            value.entity.installationClasseeSurParcelleDTOs.forEach(function (element) {
-              this.avis.installationClasseeParcelle += element.raisonSociale + ', '
-            }, this)
-          }
-          this.avis.isS3IC = this.avis.isS3IC && value.entity.installationClasseeAutourParcelleDTOs.length === 0
-          if (value.entity.installationClasseeAutourParcelleDTOs.length === 0) {
-            this.avis.installationClasseeAutourParcelle = 'Aucune Installation Classée autour la parcelle (100m)'
-          } else {
-            this.avis.installationClasseeAutourParcelle = 'Installation(s) Classée(s) trouvée(s) autour de la parcelle (100m) : '
-            value.entity.installationClasseeAutourParcelleDTOs.forEach(function (element) {
-              this.avis.installationClasseeAutourParcelle += element.raisonSociale + ', '
-            }, this)
-          }
-          this.avis.isS3IC = this.avis.isS3IC && value.entity.installationClasseeNonGeorerenceesDTOs.length === 0
-          if (value.entity.installationClasseeNonGeorerenceesDTOs.length === 0) {
-            this.avis.installationClasseeCommune = 'Aucune Installation Classée non géoréférencée dans la commune'
-          } else {
-            this.avis.installationClasseeCommune = 'Installation(s) Classée(s) non géoréférencée(s) trouvée(s) dans la commune : '
-            // console.log(value.entity.installationClasseeNonGeorerenceesDTOs)
-            value.entity.installationClasseeNonGeorerenceesDTOs.forEach(function (element) {
-              // console.log(element)
-              this.avis.installationClasseeCommune += element.raisonSociale + ', '
-            }, this)
-          }
+          this.avis.basiasParcelle = avis.getBasiasParcelle(value)
+          this.avis.basiasRaisonSociale = avis.getBasiasRaisonSociale(value)
+          this.avis.basiasProximiteParcelle = avis.getBasiasProximiteParcelle(value)
+          this.avis.basiasRayonParcelle = avis.getBasiasRayonParcelle(value)
+          this.avis.isBasias = this.avis.basiasParcelle.numberOf > 0 || this.avis.basiasRayonParcelle.numberOf > 0 || this.avis.basiasProximiteParcelle.numberOf > 0 || this.avis.basiasRaisonSociale.numberOf > 0
+          this.avis.levelWarningBasias = this.avis.basiasParcelle.numberOf > 0 ? 3
+            : this.avis.basiasProximiteParcelle.numberOf > 0 ? 2
+              : this.avis.basiasRayonParcelle.numberOf > 0 ? 1
+                : this.avis.basiasRaisonSociale.numberOf > 0 ? 2
+                  : 0
+
+          this.avis.basolParcelle = avis.getBasolParcelle(value)
+          this.avis.basolProximiteParcelle = avis.getBasolProximiteParcelle(value)
+          this.avis.basolRayonParcelle = avis.getBasolRayonParcelle(value)
+          this.avis.isBasol = this.avis.basolParcelle.numberOf > 0 || this.avis.basolProximiteParcelle.numberOf > 0 || this.avis.basolRayonParcelle.numberOf > 0
+          this.avis.levelWarningBasol = this.avis.basolParcelle.numberOf > 0 ? 3
+            : this.avis.basolProximiteParcelle.numberOf > 0 ? 2
+              : this.avis.basolRayonParcelle.numberOf > 0 ? 1
+                : 0
+
+          this.avis.installationClasseeParcelle = avis.getICSurParcelle(value)
+          this.avis.installationClasseeProximiteParcelle = avis.getICProximiteParcelle(value)
+          this.avis.installationClasseeRayonParcelle = avis.getICRayonParcelle(value)
+          this.avis.installationClasseeCommune = avis.getICNonGeoreferencees(value)
+          this.avis.isS3IC = this.avis.installationClasseeParcelle.numberOf > 0 || this.avis.installationClasseeProximiteParcelle.numberOf > 0 || this.avis.installationClasseeRayonParcelle.numberOf > 0 || this.avis.installationClasseeCommune.numberOf > 0
+          this.avis.levelWarningS3IC = this.avis.installationClasseeParcelle.numberOf > 0 ? 3
+            : this.avis.installationClasseeProximiteParcelle.numberOf > 0 ? 2
+              : this.avis.installationClasseeRayonParcelle.numberOf > 0 ? 1
+                : this.avis.installationClasseeCommune.numberOf > 0 ? 1
+                  : 0
+
           functions.scrollToElement('main', false)
         })
     }
@@ -663,11 +631,44 @@ export default {
 
 <style>
   .panel {
-    overflow : visible;
+    overflow : auto;
     position : relative;
+  }
+
+  .panel:after {
+    content    : ".";
+    visibility : hidden;
+    clear      : both;
+  }
+
+  i {
+    color : #777777;
   }
 
   .section__subtitle {
     margin-bottom : 40px;
+  }
+
+  #summary, #avis {
+    background-color : #FFFFFF;
+    border           : 1px solid #CCCCCC;
+    border-radius    : 2px;
+    float            : left;
+    padding          : 30px 20px;
+  }
+
+  #summary {
+    float      : left;
+    width      : 30%;
+    text-align : left;
+  }
+
+  #avis {
+    float : right;
+    width : 68%;
+  }
+
+  .site-list {
+    list-style : none;
   }
 </style>

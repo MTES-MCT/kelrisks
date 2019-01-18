@@ -8,7 +8,7 @@ export default {
    * l'id est celui du champ visé ou son objet jQuery
    */
   scrollToElement (id, glow) {
-    console.log(id)
+    // console.log(id)
     if (JQuery.type(id) === 'string') {
       id = $('#' + id)
     }

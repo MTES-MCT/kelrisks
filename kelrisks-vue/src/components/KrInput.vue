@@ -200,7 +200,7 @@ export default {
     onOpen () {
     },
     onFocus () {
-      console.log(undefined !== this.source)
+      // console.log(undefined !== this.source)
       this.inputHasFocus = true
 
       if (this.openOnFocus && this.isAutocomplete) {
@@ -215,7 +215,7 @@ export default {
       }
     },
     onChange () {
-      console.log('onChange')
+      // console.log('onChange')
       if (this.isAutocomplete) {
         this.$emit('input', this.code)
         if (!this.query || this.query === '') this.clearField()
@@ -269,7 +269,7 @@ export default {
       this.selectedOption = option
       this.query = option[this.optionLabelProperty]
       this.isOpen = false
-      this.$emit('selected', option[this.optionValueProperty])
+      this.$emit('selected', option)
     },
     onArrowDown () {
       if (this.arrowCounter < this.results.length) {
