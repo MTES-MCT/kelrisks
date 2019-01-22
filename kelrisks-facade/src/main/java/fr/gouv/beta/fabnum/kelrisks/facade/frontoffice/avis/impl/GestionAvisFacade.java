@@ -61,6 +61,9 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             }
             parcelleDTO = parcelleDTOS.get(0);
         }
+    
+        avisDTO.setParcelle(parcelleDTO);
+        avisDTO.setCodeCommune(codeINSEE);
         
         // Recherche d'une éventuelle zone poluée contenant la parcelle
         Geometry        geometry;

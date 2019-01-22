@@ -386,7 +386,14 @@
                 <a @click="flowPrevious()"
                    class="button">
                   <font-awesome-icon icon="undo"/>
-                  Retour</a>
+                  Retour</a><br/>
+                <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio"
+                   class="button warning"
+                   id="pdf"
+                   target="_blank">
+                  <font-awesome-icon icon="file-pdf"/>
+                  Pdf
+                </a>
               </div>
             </div>
             <div id="avis">
@@ -436,7 +443,7 @@
                     <ul class="site-list">
                       <li :key="ic.id"
                           v-for="ic in avis.basolRayonParcelle.liste">
-                        - <a>http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a></li>
+                        - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
                     </ul>
                   </template>
                   <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
