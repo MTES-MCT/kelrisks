@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AdresseDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
@@ -130,7 +131,10 @@ public class ApiAvis extends AbstractBasicApi {
     private void alimenterHtml(Document htmlDocument, AvisDTO avisDTO) {
         
         Element element = htmlDocument.select("#infos").first();
-        element.append(avisDTO.getParcelle().getSection() + "-" + avisDTO.getParcelle().getNumero() + ", INSEE : " + avisDTO.getParcelle().getCommune());
+    
+        AdresseDTO adresseDTO = gestionAdresseFacade.rechercherAdresseIdBan(avisDTO.getIdban());
+    
+        element.append("n°" + avisDTO.getParcelle() + " à " + adresseDTO.getNomCommune() + " (" + adresseDTO.getCodePostal() + ")");
         
         element = htmlDocument.select("#basiasParcelle").first();
         int numberOf = avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size();
@@ -141,6 +145,21 @@ public class ApiAvis extends AbstractBasicApi {
             element.append("est référencée dans l\'inventaire des sites ayant accueilli par le passé une activité susceptible d\'avoir pu généré une pollution des sols (BASIAS).");
             element = element.appendElement("ul");
             for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasSurParcelleDTOs()) {
+                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>" +
+                                                   "http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
+            }
+        }
+    
+        element = htmlDocument.select("#basiasProximiteParcelle").first();
+        numberOf = avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            element.append("Par ailleurs, nous identifions dans le voisinage immédiat de la (ou des) parcelle(s), un site ayant accueilli par le passé une activité susceptible d\'avoir pu générer " +
+                           "une pollution des sols (BASIAS). Vous pouvez consulter la fiche consacrée à cette activité industrielle à l\'adresse suivante : .");
+            element = element.appendElement("ul");
+            for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs()) {
                 element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>" +
                                                    "http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
             }

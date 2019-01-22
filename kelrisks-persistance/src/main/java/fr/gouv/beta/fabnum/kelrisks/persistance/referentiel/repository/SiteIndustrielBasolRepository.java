@@ -37,5 +37,11 @@ public interface SiteIndustrielBasolRepository extends IAbstractRepository<SiteI
                    "FROM SiteIndustrielBasol si " +
                    "WHERE st_within(si.point, :multiPolygon) = TRUE")
     List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    @Query(value = "SELECT si " +
+                   "FROM SiteIndustrielBasol si, Parcelle p " +
+                   "WHERE p.code IN :codes" +
+                   "  AND st_within(si.point, p.multiPolygon) = TRUE")
+    List<SiteIndustrielBasol> rechercherSitesSurParcelles(List<String> codes);
 }
 

@@ -16,4 +16,6 @@ public interface IGestionAdresseFacade {
     List<AutocompleteDTO> rechercherNumeroPartiel(String codeINSEE, String nomVoie, String numero);
     
     String rechercherCodeINSEE(String codePostal);
+    
+    AdresseDTO rechercherAdresseIdBan(String idban);
 }

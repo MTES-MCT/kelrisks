@@ -18,5 +18,7 @@ public interface ISiteIndustrielBasolDAO extends IAbstractDAO<SiteIndustrielBaso
     List<SiteIndustrielBasol> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance);
     
     List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    List<SiteIndustrielBasol> rechercherSitesSurParcelles(List<String> codes);
 }
   

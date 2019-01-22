@@ -22,5 +22,7 @@ public interface ISiteIndustrielBasiasDAO extends IAbstractDAO<SiteIndustrielBas
     List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
     
     List<SiteIndustrielBasias> rechercherRaisonsSociales(String query);
+    
+    List<SiteIndustrielBasias> rechercherSitesSurParcelles(List<String> codes);
 }
   

@@ -51,5 +51,11 @@ public class SiteIndustrielBasolService extends AbstractCRUDService<SiteIndustri
         
         return dao.rechercherSitesDansPolygon(multiPolygon);
     }
+    
+    @Override
+    public List<SiteIndustrielBasol> rechercherSitesSurParcelles(List<String> codes) {
+        
+        return dao.rechercherSitesSurParcelles(codes);
+    }
 }
   

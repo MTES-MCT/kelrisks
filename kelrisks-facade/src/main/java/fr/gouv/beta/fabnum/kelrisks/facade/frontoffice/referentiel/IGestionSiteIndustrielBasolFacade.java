@@ -13,4 +13,6 @@ public interface IGestionSiteIndustrielBasolFacade {
     List<SiteIndustrielBasolDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance);
     
     List<SiteIndustrielBasolDTO> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    List<SiteIndustrielBasolDTO> rechercherSitesSurParcelles(List<String> codes);
 }

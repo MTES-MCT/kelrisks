@@ -68,6 +68,12 @@ public class SiteIndustrielBasolDAO extends AbstractDAO<SiteIndustrielBasol> imp
     }
     
     @Override
+    public List<SiteIndustrielBasol> rechercherSitesSurParcelles(List<String> codes) {
+        
+        return siteIndustrielBasolRepository.rechercherSitesSurParcelles(codes);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }

@@ -57,4 +57,10 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
         
         return installationClasseeDTOs;
     }
+    
+    @Override
+    public List<InstallationClasseeDTO> rechercherInstallationsSurParcelles(List<String> codes) {
+        
+        return installationClasseeMapper.toDTOs(installationClasseeService.rechercherInstallationsSurParcelles(codes));
+    }
 }

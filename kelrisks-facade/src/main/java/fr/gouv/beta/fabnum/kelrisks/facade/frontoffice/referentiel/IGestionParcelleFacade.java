@@ -5,6 +5,8 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
+
 public interface IGestionParcelleFacade {
     
     ParcelleDTO rechercherParcelleAvecAdresse(String commune, String rue, String numero);
@@ -14,4 +16,6 @@ public interface IGestionParcelleFacade {
     List<ParcelleDTO> rechercherAvecCritere(ParcelleQO parcelleQO);
     
     ParcelleDTO rechercherParcelleAvecIdBan(String idBAN);
+    
+    List<ParcelleDTO> rechercherParcellesContigues(Geometry geom);
 }

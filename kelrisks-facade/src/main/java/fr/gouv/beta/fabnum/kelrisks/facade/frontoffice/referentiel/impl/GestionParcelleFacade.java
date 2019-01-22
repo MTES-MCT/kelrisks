@@ -13,6 +13,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,5 +73,11 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
         Parcelle parcelle = parcelleService.rechercherParcelleContenantPoint(adresse.getPoint());
         
         return parcelleMapper.toDTO(parcelle);
+    }
+    
+    @Override
+    public List<ParcelleDTO> rechercherParcellesContigues(Geometry geom) {
+        
+        return parcelleMapper.toDTOs(parcelleService.rechercherParcellesContigues(geom));
     }
 }

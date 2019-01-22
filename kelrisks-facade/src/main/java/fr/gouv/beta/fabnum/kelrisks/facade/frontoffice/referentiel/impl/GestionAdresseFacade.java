@@ -80,4 +80,15 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
         
         return adresseMapper.toDTO(adresses.get(0)).getCodeINSEE();
     }
+    
+    @Override
+    public AdresseDTO rechercherAdresseIdBan(String idban) {
+        
+        AdresseQO adresseQO = new AdresseQO();
+        adresseQO.setIdBan(idban);
+        
+        Adresse adresse = adresseService.rechercherResultatUniqueAvecCritere(adresseQO);
+        
+        return adresseMapper.toDTO(adresse);
+    }
 }

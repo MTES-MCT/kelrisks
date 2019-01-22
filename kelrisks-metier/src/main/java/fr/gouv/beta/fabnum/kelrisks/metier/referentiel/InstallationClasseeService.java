@@ -51,5 +51,11 @@ public class InstallationClasseeService extends AbstractCRUDService<Installation
         
         return dao.rechercherSitesDansPolygon(multiPolygon);
     }
+    
+    @Override
+    public List<InstallationClassee> rechercherInstallationsSurParcelles(List<String> codes) {
+        
+        return dao.rechercherInstallationsSurParcelles(codes);
+    }
 }
   

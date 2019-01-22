@@ -18,9 +18,9 @@ import org.springframework.data.jpa.repository.Query;
 @Qualifier("adresseRepository")
 public interface AdresseRepository extends IAbstractRepository<Adresse> {
     
-    @Query("SELECT a " +
-           "FROM Adresse a " +
-           "WHERE st_contains(:geometry, a.point) = TRUE")
+    @Query(value = "SELECT * " +
+                   " FROM kelrisks.adresse a" +
+                   " WHERE st_contains(:geometry, a.point) = TRUE", nativeQuery = true)
     List<Adresse> rechercherAdresseDansGeometry(Geometry geometry);
     
     @Query("SELECT a FROM Adresse a " +

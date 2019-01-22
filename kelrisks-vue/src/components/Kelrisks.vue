@@ -210,6 +210,7 @@
                         name="codePostal"
                         option-label-property="codePostal"
                         option-value-property="codeINSEE"
+                        :start-at="3"
                         v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'">
                 <template slot="kr-option-label"
                           slot-scope="slotProps">
@@ -415,8 +416,42 @@
               <div style="text-align: left">
                 Nous vous informons que votre parcelle, <br/>
                 <p>{{ avis.basiasParcelle.lib }}</p>
+                <template v-if="avis.basiasParcelle.numberOf > 0">
+                  <ul class="site-list">
+                    <li :key="ic.id"
+                        v-for="ic in avis.basiasParcelle.liste">
+                      - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                           target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                    </li>
+                  </ul>
+                </template>
+                <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
+                  <p class="indent">{{ avis.basiasProximiteParcelle.lib }}</p>
+                  <ul class="site-list">
+                    <li :key="ic.id"
+                        v-for="ic in avis.basiasProximiteParcelle.liste">
+                      - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                           target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                    </li>
+                  </ul>
+                </template>
                 <p>{{ avis.basolParcelle.lib }}</p>
+                <template v-if="avis.basolParcelle.numberOf > 0">
+                  <ul class="site-list">
+                    <li :key="ic.id"
+                        v-for="ic in avis.basolRayonParcelle.liste">
+                      - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
+                  </ul>
+                </template>
                 <p>{{ avis.installationClasseeParcelle.lib }}</p>
+                <template v-if="avis.installationClasseeParcelle.numberOf > 0">
+                  <ul class="site-list">
+                    <li :key="ic.id"
+                        v-for="ic in avis.installationClasseeParcelle.liste">
+                      - {{ ic.nom }}
+                    </li>
+                  </ul>
+                </template>
 
                 <!--<b>Obligations relatives</b><br/>-->
                 <!-- - Lorem Ipsum-->
@@ -673,6 +708,11 @@ export default {
   #avis {
     float : right;
     width : 68%;
+  }
+
+  p {
+    text-indent : 12px;
+    text-align  : justify;
   }
 
   .site-list {

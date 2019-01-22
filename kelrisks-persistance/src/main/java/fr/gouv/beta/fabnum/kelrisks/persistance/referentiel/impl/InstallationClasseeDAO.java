@@ -68,6 +68,12 @@ public class InstallationClasseeDAO extends AbstractDAO<InstallationClassee> imp
     }
     
     @Override
+    public List<InstallationClassee> rechercherInstallationsSurParcelles(List<String> codes) {
+        
+        return installationClasseeRepository.rechercherInstallationsSurParcelles(codes);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }

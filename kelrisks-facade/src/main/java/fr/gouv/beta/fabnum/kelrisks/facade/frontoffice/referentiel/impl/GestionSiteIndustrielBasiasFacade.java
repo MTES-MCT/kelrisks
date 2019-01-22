@@ -5,6 +5,7 @@ import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISiteIndustrielBasiasMapper;
+import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleService;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISiteIndustrielBasiasService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.SiteIndustrielBasiasQO;
 
@@ -19,6 +20,8 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     
     @Autowired
     ISiteIndustrielBasiasService siteIndustrielService;
+    @Autowired
+    IParcelleService             parcelleService;
     @Autowired
     ISiteIndustrielBasiasMapper  siteIndustrielMapper;
     
@@ -71,5 +74,11 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
         List<AutocompleteDTO> autocompleteDTOs = siteIndustrielMapper.toAutocompleteDTOs(siteIndustrielService.rechercherRaisonsSociales(query));
         
         return autocompleteDTOs;
+    }
+    
+    @Override
+    public List<SiteIndustrielBasiasDTO> rechercherSitesSurParcelles(List<String> codes) {
+        
+        return siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesSurParcelles(codes));
     }
 }

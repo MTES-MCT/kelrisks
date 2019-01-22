@@ -4,6 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISiteIndustrielBasolMapper;
+import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleService;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISiteIndustrielBasolService;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public class GestionSiteIndustrielBasolFacade extends AbstractFacade implements 
     
     @Autowired
     ISiteIndustrielBasolService siteIndustrielBasolService;
+    @Autowired
+    IParcelleService            parcelleService;
     @Autowired
     ISiteIndustrielBasolMapper  siteIndustrielBasolMapper;
     
@@ -42,5 +45,14 @@ public class GestionSiteIndustrielBasolFacade extends AbstractFacade implements 
         List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs = siteIndustrielBasolMapper.toDTOs(siteIndustrielBasolService.rechercherSitesDansPolygon(multiPolygon));
     
         return siteIndustrielBasolDTOs;
+    }
+    
+    @Override
+    public List<SiteIndustrielBasolDTO> rechercherSitesSurParcelles(List<String> codesParcelle) {
+        
+        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOS =
+                siteIndustrielBasolMapper.toDTOs(siteIndustrielBasolService.rechercherSitesSurParcelles(codesParcelle));
+        
+        return siteIndustrielBasolDTOS;
     }
 }

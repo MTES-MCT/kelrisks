@@ -18,5 +18,7 @@ public interface IInstallationClasseeDAO extends IAbstractDAO<InstallationClasse
     List<InstallationClassee> rechercherInstallationsDansRayonCentroideParcelle(String codeParcelle, double distance);
     
     List<InstallationClassee> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    List<InstallationClassee> rechercherInstallationsSurParcelles(List<String> codes);
 }
   
