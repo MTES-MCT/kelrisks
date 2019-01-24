@@ -42,8 +42,8 @@ public class SiteSolPolue extends AbstractEntity {
     }
     
     public Long getId() {
-        
-        if (this.id == null) { this.id = 0L; }
+    
+        if (this.id == null) { return 0L; }
         return this.id;
     }
 }
