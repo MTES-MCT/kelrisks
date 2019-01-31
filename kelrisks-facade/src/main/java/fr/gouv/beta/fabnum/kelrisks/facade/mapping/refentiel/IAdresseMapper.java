@@ -5,6 +5,7 @@ import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AdresseDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.ICommonMapperConfig;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Rue;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface IAdresseMapper {
     AdresseDTO toDTO(Adresse adresse);
     
     @IterableMapping(qualifiedByName = "toRueAutoCompleteDTO")
-    List<AutocompleteDTO> toRueAutoCompleteDTOs(List<Adresse> adresses);
+    List<AutocompleteDTO> toRueAutoCompleteDTOs(List<Rue> rues);
     
     @Named("toRueAutoCompleteDTO")
     @Mappings({
@@ -31,7 +32,7 @@ public interface IAdresseMapper {
             @Mapping(target = "code", source = "nomVoie"),
             @Mapping(target = "libelle", source = "nomVoie"),
     })
-    AutocompleteDTO toRueAutoCompleteDTO(Adresse adresse);
+    AutocompleteDTO toRueAutoCompleteDTO(Rue rue);
     
     @IterableMapping(qualifiedByName = "toNumeroVoieCompleteDTO")
     List<AutocompleteDTO> toNumeroVoieAutoCompleteDTOs(List<Adresse> adresses);

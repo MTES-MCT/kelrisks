@@ -46,7 +46,7 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
                    " FROM kelrisks.basias AS si" +
                    " WHERE si.id IN (SELECT min(b.id) FROM kelrisks.basias AS b WHERE lower(b.raison_sociale) LIKE concat('%', lower(:query) , '%')" +
                    " GROUP BY b.raison_sociale)", nativeQuery = true)
-    List<SiteIndustrielBasias> rechercherRaisonsSociales(String codeINSEE, String query);
+    List<SiteIndustrielBasias> rechercherRaisonsSociales(String query);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias si" +

@@ -143,7 +143,7 @@
         <div class="container">
           <div class="panel">
             <h2 class="section__title">Vous êtes ?</h2>
-            <p class="section__subtitle">TODO : Afin de vous délivrer un niveau d'information qui corresponde au mieux à votre besoin</p>
+            <p class="section__subtitle">Afin de vous délivrer un niveau d'information qui corresponde au mieux à votre besoin</p>
 
             <!--<hr/>-->
 

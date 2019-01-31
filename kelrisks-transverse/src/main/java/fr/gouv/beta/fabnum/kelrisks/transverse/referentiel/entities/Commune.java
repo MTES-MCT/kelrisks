@@ -13,13 +13,15 @@ import javax.persistence.Table;
 
 @Entity
 @Data
-@Table(name = "commune")
+@Table(name = "adresse_commune")
 public class Commune extends AbstractEntity {
     
     @Column(name = "code_insee")
     String codeINSEE;
+    
     @Column(name = "code_postal")
     String codePostal;
+    
     @Column(name = "nom_commune")
     String nomCommune;
     

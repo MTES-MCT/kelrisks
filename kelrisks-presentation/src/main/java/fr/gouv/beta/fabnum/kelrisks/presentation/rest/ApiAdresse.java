@@ -72,7 +72,7 @@ public class ApiAdresse extends AbstractBasicApi {
     }
     
     @GetMapping("/api/adresse/voie/autocomplete/{codeINSEE}/{query}")
-    @ApiOperation(value = "Requête retournant des communes à partir d'une recherche partielle.", response = String.class)
+    @ApiOperation(value = "Requête retournant des rues à partir d'une recherche partielle.", response = String.class)
     public Response ruePartielle(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
                                  @PathVariable("codeINSEE") String codeINSEE,
                                  @ApiParam(required = true, name = "query", value = "Terme partiel.")
@@ -84,7 +84,7 @@ public class ApiAdresse extends AbstractBasicApi {
     }
     
     @GetMapping("/api/adresse/numero/autocomplete/{codeINSEE}/{nomVoie}/{query}")
-    @ApiOperation(value = "Requête retournant des communes à partir d'une recherche partielle.", response = String.class)
+    @ApiOperation(value = "Requête retournant des numéros à partir d'une recherche partielle.", response = String.class)
     public Response ruePartielle(@ApiParam(required = true, name = "codeINSEE", value = "Code codeINSEE de la commune.")
                                  @PathVariable("codeINSEE") String codeINSEE,
                                  @ApiParam(required = true, name = "nomVoie", value = "Nom de la voie (Recherche exacte).")

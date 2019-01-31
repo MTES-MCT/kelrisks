@@ -7,11 +7,13 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdres
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IAdresseMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IAdresseService;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleService;
+import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IRueService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.AdresseQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.RueQO;
 
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
     IParcelleService parcelleService;
     @Autowired
     IAdresseService  adresseService;
+    @Autowired
+    IRueService      rueService;
     
     @Override
     public AdresseDTO rechercherAdresseAvecParcelle(String codeParcelle) {
@@ -50,20 +54,28 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
     
     @Override
     public List<AutocompleteDTO> rechercherRuePartielle(String codeINSEE, String query) {
-        
-        return adresseMapper.toRueAutoCompleteDTOs(adresseService.rechercherVoiePartielle(codeINSEE, query));
+    
+        CommuneQO communeQO = new CommuneQO();
+        communeQO.setCodeINSEE(codeINSEE);
+    
+        RueQO rueQO = new RueQO();
+        rueQO.setNomVoiePartiel(query);
+    
+        return adresseMapper.toRueAutoCompleteDTOs(rueService.rechercherAvecCritere(communeQO, rueQO));
     }
     
     @Override
     public List<AutocompleteDTO> rechercherNumeroPartiel(String codeINSEE, String nomVoie, String numero) {
         
         AdresseQO adresseQO = new AdresseQO();
-        adresseQO.setNomVoie(nomVoie);
         adresseQO.setNumero(numero);
     
         CommuneQO communeQO = new CommuneQO();
         communeQO.setCodeINSEE(codeINSEE);
     
+        RueQO rueQO = new RueQO();
+        rueQO.setNomVoie(nomVoie);
+        
         return adresseMapper.toNumeroVoieAutoCompleteDTOs(adresseService.rechercherAvecCritere(adresseQO, communeQO));
     }
     
@@ -77,7 +89,7 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
     
         List<Adresse> adresses = adresseService.rechercherAvecCriterePagination(0, 1, adresseQO, adresseQO);
     
-        return adresseMapper.toDTO(adresses.get(0)).getCommune().getCodeINSEE();
+        return adresseMapper.toDTO(adresses.get(0)).getRue().getCommune().getCodeINSEE();
     }
     
     @Override

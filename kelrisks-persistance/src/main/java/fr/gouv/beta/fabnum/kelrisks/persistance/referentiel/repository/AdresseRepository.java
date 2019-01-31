@@ -22,12 +22,5 @@ public interface AdresseRepository extends IAbstractRepository<Adresse> {
                    " FROM kelrisks.adresse a" +
                    " WHERE st_contains(:geometry, a.point) = TRUE", nativeQuery = true)
     List<Adresse> rechercherAdresseDansGeometry(Geometry geometry);
-    
-    @Query("SELECT a FROM Adresse a " +
-           "WHERE a.id IN ( SELECT min(b.id) " +
-           "                FROM Adresse b " +
-           "                LEFT JOIN b.commune AS c " +
-           "                WHERE c.codeINSEE = :codeINSEE AND LOWER(b.nomVoie) LIKE concat('%',LOWER(:query),'%') GROUP BY b.nomVoie)")
-    List<Adresse> rechercherVoiePartielle(String codeINSEE, String query);
 }
   
