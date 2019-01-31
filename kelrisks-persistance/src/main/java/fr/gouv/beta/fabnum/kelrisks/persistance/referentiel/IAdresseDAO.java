@@ -15,8 +15,6 @@ public interface IAdresseDAO extends IAbstractDAO<Adresse> {
     
     List<Adresse> rechercherAdresseDansGeometry(Geometry geometry);
     
-    List<Adresse> rechercherCommunePartielle(String query);
-    
     List<Adresse> rechercherVoiePartielle(String codePostal, String query);
 }
   

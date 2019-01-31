@@ -6,6 +6,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdres
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,25 +22,17 @@ public class AbstractBasicApi {
     
     String getParcelleCode(String codeINSEE, String parcelleCode) {
     
-        parcelleCode = parcelleCode.replaceAll(" ", "-");
-        
-        Pattern pattern = Pattern.compile("\\w+-\\d+");
+        Pattern pattern = Pattern.compile("([a-zA-Z])+.*?(\\d+)");
         Matcher matcher = pattern.matcher(parcelleCode);
     
-        List<ParcelleDTO> parcelleDTOs;
-        
-        if (matcher.matches()) {
+        List<ParcelleDTO> parcelleDTOs = new ArrayList<>();
+    
+        while (matcher.find()) {
             ParcelleQO parcelleQO = new ParcelleQO();
             parcelleQO.setCodeINSEE(codeINSEE);
-            parcelleQO.setSection(parcelleCode.split("-")[0]);
-            parcelleQO.setNumero(parcelleCode.split("-")[1]);
-    
-            parcelleDTOs = gestionParcelleFacade.rechercherAvecCritere(parcelleQO);
-        }
-        else {
-            ParcelleQO parcelleQO = new ParcelleQO();
-            parcelleQO.setCode(parcelleCode);
-    
+            parcelleQO.setSection(matcher.group(1));
+            parcelleQO.setNumero(matcher.group(2));
+            
             parcelleDTOs = gestionParcelleFacade.rechercherAvecCritere(parcelleQO);
         }
     

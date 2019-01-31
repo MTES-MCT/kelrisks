@@ -9,6 +9,7 @@ import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleServi
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.AdresseQO;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
 import java.util.List;
@@ -31,11 +32,13 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     public ParcelleDTO rechercherParcelleAvecAdresse(String codeINSEE, String rue, String numero) {
         
         AdresseQO adresseQO = new AdresseQO();
-        adresseQO.setCodeINSEE(codeINSEE);
         adresseQO.setNomVoie(rue);
         adresseQO.setNumero(numero);
-        
-        List<Adresse> adresses = adresseService.rechercherAvecCritere(adresseQO);
+    
+        CommuneQO communeQO = new CommuneQO();
+        communeQO.setCodeINSEE(codeINSEE);
+    
+        List<Adresse> adresses = adresseService.rechercherAvecCritere(adresseQO, communeQO);
         
         if (adresses.isEmpty()) {return null;} //TODO
         if (adresses.size() > 1) {return null;} // TODO

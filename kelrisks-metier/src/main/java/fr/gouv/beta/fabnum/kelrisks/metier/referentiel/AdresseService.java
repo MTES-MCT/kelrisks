@@ -41,12 +41,6 @@ public class AdresseService extends AbstractCRUDService<Adresse> implements IAdr
     }
     
     @Override
-    public List<Adresse> rechercherCommunePartielle(String query) {
-        
-        return dao.rechercherCommunePartielle(query);
-    }
-    
-    @Override
     public List<Adresse> rechercherVoiePartielle(String codePostal, String query) {
         
         String codePostalQuery = "";

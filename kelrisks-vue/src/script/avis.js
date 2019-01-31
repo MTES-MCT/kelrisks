@@ -33,7 +33,6 @@ export default {
       }, this)
     }
     return avis
-    return {numberOf: 0, lib: ''}
   },
 
   getBasiasRayonParcelle (value) {

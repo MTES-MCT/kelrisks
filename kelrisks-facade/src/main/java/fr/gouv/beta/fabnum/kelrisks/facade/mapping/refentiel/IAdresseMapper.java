@@ -22,18 +22,6 @@ public interface IAdresseMapper {
     
     AdresseDTO toDTO(Adresse adresse);
     
-    @IterableMapping(qualifiedByName = "toAutoCompleteDTO")
-    List<AutocompleteDTO> toCommuneAutoCompleteDTOs(List<Adresse> adresse);
-    
-    @Named("toAutoCompleteDTO")
-    @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "code", source = "codeINSEE"),
-            @Mapping(target = "libelle", source = "nomCommune"),
-            @Mapping(target = "champSup1", source = "codePostal")
-    })
-    AutocompleteDTO toCommuneAutoCompleteDTO(Adresse adresse);
-    
     @IterableMapping(qualifiedByName = "toRueAutoCompleteDTO")
     List<AutocompleteDTO> toRueAutoCompleteDTOs(List<Adresse> adresses);
     

@@ -124,9 +124,13 @@
     <div class="hero"
          role="banner"
          style="background-image: url('static/images/banner-min.png'); background-size: auto; background-position-y: -30px">
-      <div class="hero__container">
+      <div class="hero__container"
+           v-bind:class="{'contracted':flow.index > 1}">
         <h1 class="hero__white-background">Kelrisks</h1>
-        <p class="hero__white-background">Evaluez simplement et rapidement le risque de pollution votre terrain</p>
+        <p class="hero__white-background"
+           v-bind:class="{'contracted':flow.index > 1}">Evaluez simplement et rapidement le risque de pollution de votre terrain</p>
+        <p class="hero__white-background note"
+           v-bind:class="{'contracted':flow.index > 1}">(Essonne)*</p>
       </div>
     </div>
 
@@ -139,7 +143,7 @@
         <div class="container">
           <div class="panel">
             <h2 class="section__title">Vous êtes ?</h2>
-            <p class="section__subtitle">Identité</p>
+            <p class="section__subtitle">TODO : Afin de vous délivrer un niveau d'information qui corresponde au mieux à votre besoin</p>
 
             <!--<hr/>-->
 
@@ -153,7 +157,7 @@
                        form.categorieDemandeur = 2"
                class="button">
               <font-awesome-icon icon="briefcase"/>
-              Un notaire</a>
+              Un professionnel</a>
           </div>
         </div>
       </section>
@@ -164,7 +168,7 @@
         <div class="container">
           <div class="panel">
             <h2 class="section__title">Votre terrain</h2>
-            <p class="section__subtitle">Informations</p>
+            <p class="section__subtitle">1/2 - Saissez votre commune</p>
 
             <!--<hr/>-->
 
@@ -206,7 +210,7 @@
             <div style="width: 50%; margin-left: 25%">
               <kr-input :errors="checks.codeCommuneError"
                         @selected="onCodePostalChanged"
-                        label="Code postal"
+                        label="Nom de commune ou Code postal"
                         name="codePostal"
                         option-label-property="codePostal"
                         option-value-property="codeINSEE"
@@ -249,7 +253,7 @@
         <div class="container">
           <div class="panel">
             <h2 class="section__title">Votre terrain</h2>
-            <p class="section__subtitle">Informations</p>
+            <p class="section__subtitle">2/2 - Informations complémentaires</p>
 
             <!--<hr/>-->
 
@@ -327,7 +331,7 @@
                         @selected="onNumeroChanged"
                         label="Nom de l'ancien propriétaire / Raison sociale"
                         name="raisonSociale"
-                        v-bind:source="env.apiPath + '/basias/rs/autocomplete/'">
+                        v-bind:source="env.apiPath + '/basias/raison/autocomplete/'">
                 <template slot="kr-no-results"
                           slot-scope="slotProps">
                   Aucun numéro trouvé pour "{{ slotProps.query }}"
@@ -377,7 +381,7 @@
             <br/>
 
             <div id="summary">
-              <div class="section__subtitle"><strong>Résumé : </strong></div>
+              <div class="section__subtitle"><strong>Votre recherche : </strong></div>
               Code postal&nbsp;: <span v-if="form.codePostal && form.codePostal !== ''">{{form.codePostal}}</span><span v-else><i>n/a</i></span><br/>
               Rue&nbsp;: <span v-if="form.nomVoieLib && form.nomVoieLib !== ''">{{form.nomVoieLib}}</span><span v-else><i>n/a</i></span><br/>
               N°&nbsp;: <span v-if="form.numeroVoieLib && form.numeroVoieLib !== ''">{{form.numeroVoieLib}}</span><span v-else><i>n/a</i></span><br/>
@@ -387,7 +391,7 @@
                 <a @click="flowPrevious()"
                    class="button">
                   <font-awesome-icon icon="undo"/>
-                  Retour</a><br/>
+                  Modifier</a><br/>
                 <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio"
                    class="button warning"
                    id="pdf"
@@ -502,6 +506,9 @@
         </div>
       </section>
     </main>
+    <div style="width: 100%;">
+      <p style="font-size: 0.8em; text-align: center;">(Essonne)* - Territoire d'expérimentation.</p>
+    </div>
   </div>
 </template>
 
@@ -672,6 +679,32 @@ export default {
 </script>
 
 <style>
+  .hero__container p {
+    transition : all 0.5s;
+  }
+
+  .hero__container p.contracted {
+    visibility       : collapse;
+    margin           : -0.7em;
+    padding          : 0;
+    background-color : transparent;
+    color            : transparent;
+  }
+
+  .hero__container {
+    transition : height 0.66s;
+    height     : 38vh;
+    min-height : 12vh;
+  }
+
+  .hero__container.contracted {
+    height : 12vh;
+  }
+
+  p.note {
+    font-size : 1em; color : #555555;
+  }
+
   .panel {
     overflow : auto;
     position : relative;

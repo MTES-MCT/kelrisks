@@ -26,13 +26,8 @@ public interface AdresseRepository extends IAbstractRepository<Adresse> {
     @Query("SELECT a FROM Adresse a " +
            "WHERE a.id IN ( SELECT min(b.id) " +
            "                FROM Adresse b " +
-           "                WHERE b.codePostal LIKE concat('%',:query,'%') OR LOWER(b.nomCommune) LIKE LOWER(concat('%',:query,'%')) GROUP BY b.codeINSEE)")
-    List<Adresse> rechercherCommunePartielle(String query);
-    
-    @Query("SELECT a FROM Adresse a " +
-           "WHERE a.id IN ( SELECT min(b.id) " +
-           "                FROM Adresse b " +
-           "                WHERE b.codeINSEE = :codeINSEE AND LOWER(b.nomVoie) LIKE concat('%',LOWER(:query),'%') GROUP BY b.nomVoie)")
+           "                LEFT JOIN b.commune AS c " +
+           "                WHERE c.codeINSEE = :codeINSEE AND LOWER(b.nomVoie) LIKE concat('%',LOWER(:query),'%') GROUP BY b.nomVoie)")
     List<Adresse> rechercherVoiePartielle(String codeINSEE, String query);
 }
   

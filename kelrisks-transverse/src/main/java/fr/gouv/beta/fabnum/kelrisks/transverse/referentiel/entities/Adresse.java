@@ -3,11 +3,14 @@ package fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities;
 import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,17 +24,13 @@ public class Adresse extends AbstractEntity {
     static final long serialVersionUID = 1L;
     
     @Column(name = "nom_voie")
-    String nomVoie;
+    String  nomVoie;
     //    @Column(name = "id_fantoir")
     //    String id_fantoir;
     @Column(name = "numero")
-    String numero;
+    String  numero;
     @Column(name = "rep")
-    String complement;
-    @Column(name = "code_insee")
-    String codeINSEE;
-    @Column(name = "code_post")
-    String codePostal;
+    String  complement;
     //    @Column(name = "alias")
     //    String alias;
     //    @Column(name = "nom_ld")
@@ -48,19 +47,17 @@ public class Adresse extends AbstractEntity {
     //    String lon;
     //    @Column(name = "lat")
     //    String lat;
-    @Column(name = "nom_commune")
-    String nomCommune;
     @Column(name = "id_ban")
-    String idBAN;
-    
+    String  idBAN;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    Commune commune;
     @Column(name = "geog", columnDefinition = "geometry")
     private Geometry point;
-    
     @Id
     @Column(name = "id", updatable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_siteIndustrielBasol")
-    @SequenceGenerator(name = "seq_siteIndustrielBasol", sequenceName = "basol_id_seq", allocationSize = 1)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_adresse")
+    @SequenceGenerator(name = "seq_adresse", sequenceName = "adresse_column_1_seq", allocationSize = 1)
+    private Long     id;
     
     public String getCleFonc() {
         
@@ -73,8 +70,8 @@ public class Adresse extends AbstractEntity {
     }
     
     public Long getId() {
-        
-        if (this.id == null) { this.id = 0L; }
+    
+        if (this.id == null) { return 0L; }
         return this.id;
     }
 }

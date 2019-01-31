@@ -37,7 +37,7 @@ public class ApiRestBasias extends AbstractBasicApi {
     
     @GetMapping("/api/ssp/basias/cadastre/{codeINSEE}/{codeParcelle}")
     @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la zone Sites Sols Polués intersectant la Parcelle.", response = String.class)
-    public Response basiasInSSP(@ApiParam(name = "codeINSEE", value = "Code postal de la commune.")
+    public Response basiasInSSP(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
                                 @PathVariable("codeINSEE") String codeINSEE,
                                 @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                 @PathVariable("codeParcelle") String codeParcelle) {
@@ -50,7 +50,7 @@ public class ApiRestBasias extends AbstractBasicApi {
     
     @GetMapping("/api/basias/cadastre/{codeINSEE}/{codeParcelle}")
     @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la Parcelle.", response = String.class)
-    public Response basiasInCadastre(@ApiParam(name = "codeINSEE", value = "Code postal de la commune.")
+    public Response basiasInCadastre(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
                                      @PathVariable("codeINSEE") String codeINSEE,
                                      @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                      @PathVariable("codeParcelle") String codeParcelle) {
@@ -60,12 +60,14 @@ public class ApiRestBasias extends AbstractBasicApi {
         return Response.ok(siteIndustrielBasiasDTOs).build();
     }
     
-    @GetMapping("/api/basias/rs/autocomplete/{query}")
-    @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la Parcelle.", response = String.class)
-    public Response basiasInCadastre(@ApiParam(name = "query", value = "Terme partiel.")
-                                     @PathVariable("query") String query) {
+    @GetMapping("/api/basias/raison/autocomplete/{codeINSEE}/{query}")
+    @ApiOperation(value = "Requête retournant les raisons sociale des sites Basias dans une commune.", response = String.class)
+    public Response basiasByRaisonSociale(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
+                                          @PathVariable("codeINSEE") String codeINSEE,
+                                          @ApiParam(required = true, name = "query", value = "Terme partiel.")
+                                          @PathVariable("query") String query) {
         
-        List<AutocompleteDTO> autocompleteDTOs = gestionSiteIndustrielBasiasFacade.rechercherRaisonsSociales(query);
+        List<AutocompleteDTO> autocompleteDTOs = gestionSiteIndustrielBasiasFacade.rechercherRaisonsSociales(codeINSEE, query);
         
         return Response.ok(autocompleteDTOs).build();
     }
@@ -84,7 +86,7 @@ public class ApiRestBasias extends AbstractBasicApi {
     
     @GetMapping("/api/basias/cadastre/{codeINSEE}/{codeParcelle}/{distance}")
     @ApiOperation(value = "Requête retournant les sites industiels Basias dans un certain rayon du centroîde de la Parcelle.", response = String.class)
-    public Response basiasWithinCadastreRange(@ApiParam(name = "codeINSEE", value = "Code postal de la commune.")
+    public Response basiasWithinCadastreRange(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
                                               @PathVariable("codeINSEE") String codeINSEE,
                                               @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                               @PathVariable("codeParcelle") String codeParcelle,

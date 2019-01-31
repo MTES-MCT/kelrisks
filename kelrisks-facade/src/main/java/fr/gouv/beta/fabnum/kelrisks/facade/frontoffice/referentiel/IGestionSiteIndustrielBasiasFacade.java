@@ -19,7 +19,7 @@ public interface IGestionSiteIndustrielBasiasFacade {
     
     List<SiteIndustrielBasiasDTO> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
     
-    List<AutocompleteDTO> rechercherRaisonsSociales(String query);
+    List<AutocompleteDTO> rechercherRaisonsSociales(String codeINSEE, String query);
     
     List<SiteIndustrielBasiasDTO> rechercherSitesSurParcelles(List<String> codes);
 }

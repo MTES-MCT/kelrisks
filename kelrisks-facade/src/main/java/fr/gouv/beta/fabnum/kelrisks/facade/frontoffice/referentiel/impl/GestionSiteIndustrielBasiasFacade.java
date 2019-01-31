@@ -69,9 +69,9 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     }
     
     @Override
-    public List<AutocompleteDTO> rechercherRaisonsSociales(String query) {
-        
-        List<AutocompleteDTO> autocompleteDTOs = siteIndustrielMapper.toAutocompleteDTOs(siteIndustrielService.rechercherRaisonsSociales(query));
+    public List<AutocompleteDTO> rechercherRaisonsSociales(String codeINSEE, String query) {
+    
+        List<AutocompleteDTO> autocompleteDTOs = siteIndustrielMapper.toAutocompleteDTOs(siteIndustrielService.rechercherRaisonsSociales(codeINSEE, query));
         
         return autocompleteDTOs;
     }

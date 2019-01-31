@@ -2,8 +2,10 @@ package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AdresseDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +27,8 @@ public class ApiAdresse extends AbstractBasicApi {
     @Autowired
     IGestionAdresseFacade  gestionAdresseFacade;
     @Autowired
+    IGestionCommuneFacade  gestionCommuneFacade;
+    @Autowired
     IGestionParcelleFacade gestionParcelleFacade;
     
     public ApiAdresse() {
@@ -45,14 +49,14 @@ public class ApiAdresse extends AbstractBasicApi {
         return Response.ok(parcelleDTO).build();
     }
     
-    @GetMapping("/api/cadastre/adresse/{codenomVoie}/{codeParcelle}")
-    @ApiOperation(value = "Requête retournant une éventuelle adresse à partir d'un code de Parcelle.", response = String.class)
-    public Response adressFromCadastre(@ApiParam(name = "codenomVoie", value = "Code nomVoie de la commune.")
-                                       @PathVariable("codenomVoie") String codenomVoie,
+    @GetMapping("/api/cadastre/adresse/{codeINSEE}/{codeParcelle}")
+    @ApiOperation(value = "Requête retournant une éventuelle adresse à partir d'une parcelle.", response = String.class)
+    public Response adressFromCadastre(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
+                                       @PathVariable("codeINSEE") String codeINSEE,
                                        @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
-                                        @PathVariable("codeParcelle") String codeParcelle) {
+                                       @PathVariable("codeParcelle") String codeParcelle) {
         
-        AdresseDTO adresseDTO = gestionAdresseFacade.rechercherAdresseAvecParcelle(getParcelleCode(codenomVoie, codeParcelle));
+        AdresseDTO adresseDTO = gestionAdresseFacade.rechercherAdresseAvecParcelle(getParcelleCode(codeINSEE, codeParcelle));
         
         return Response.ok(adresseDTO).build();
     }
@@ -62,8 +66,8 @@ public class ApiAdresse extends AbstractBasicApi {
     public Response communePartielle(@ApiParam(required = true, name = "query", value = "Terme partiel.")
                                      @PathVariable("query") String query) {
     
-        List<AdresseDTO> autocompleteDTOs = gestionAdresseFacade.rechercherCommunePartielle(query);
-    
+        List<CommuneDTO> autocompleteDTOs = gestionCommuneFacade.rechercherCommunePartielle(query);
+        
         return Response.ok(autocompleteDTOs).build();
     }
     

@@ -10,6 +10,7 @@ import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleServi
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.AdresseQO;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
 import java.util.List;
@@ -48,12 +49,6 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
     }
     
     @Override
-    public List<AdresseDTO> rechercherCommunePartielle(String query) {
-    
-        return adresseMapper.toDTOs(adresseService.rechercherCommunePartielle(query));
-    }
-    
-    @Override
     public List<AutocompleteDTO> rechercherRuePartielle(String codeINSEE, String query) {
         
         return adresseMapper.toRueAutoCompleteDTOs(adresseService.rechercherVoiePartielle(codeINSEE, query));
@@ -63,22 +58,26 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
     public List<AutocompleteDTO> rechercherNumeroPartiel(String codeINSEE, String nomVoie, String numero) {
         
         AdresseQO adresseQO = new AdresseQO();
-        adresseQO.setCodeINSEE(codeINSEE);
         adresseQO.setNomVoie(nomVoie);
         adresseQO.setNumero(numero);
-        
-        return adresseMapper.toNumeroVoieAutoCompleteDTOs(adresseService.rechercherAvecCritere(adresseQO));
+    
+        CommuneQO communeQO = new CommuneQO();
+        communeQO.setCodeINSEE(codeINSEE);
+    
+        return adresseMapper.toNumeroVoieAutoCompleteDTOs(adresseService.rechercherAvecCritere(adresseQO, communeQO));
     }
     
     @Override
     public String rechercherCodeINSEE(String codePostal) {
         
         AdresseQO adresseQO = new AdresseQO();
-        adresseQO.setCodePostal(codePostal);
-        
-        List<Adresse> adresses = adresseService.rechercherAvecCriterePagination(0, 1, adresseQO);
-        
-        return adresseMapper.toDTO(adresses.get(0)).getCodeINSEE();
+    
+        CommuneQO communeQO = new CommuneQO();
+        communeQO.setCodePostal(codePostal);
+    
+        List<Adresse> adresses = adresseService.rechercherAvecCriterePagination(0, 1, adresseQO, adresseQO);
+    
+        return adresseMapper.toDTO(adresses.get(0)).getCommune().getCodeINSEE();
     }
     
     @Override

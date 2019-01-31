@@ -59,9 +59,9 @@ public class SiteIndustrielBasiasService extends AbstractCRUDService<SiteIndustr
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherRaisonsSociales(String query) {
-        
-        return dao.rechercherRaisonsSociales(query);
+    public List<SiteIndustrielBasias> rechercherRaisonsSociales(String codeINSEE, String query) {
+    
+        return dao.rechercherRaisonsSociales(codeINSEE, query);
     }
     
     @Override

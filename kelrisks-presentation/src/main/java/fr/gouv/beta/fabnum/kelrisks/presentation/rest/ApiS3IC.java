@@ -2,8 +2,6 @@ package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import java.util.List;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(tags = {"API Installations Classées (S3IC)"}, description = "API permettant les recoupements concernant les Installations Classées (S3IC)")
+//@Api(tags = {"API Installations Classées (S3IC)"}, description = "API permettant les recoupements concernant les Installations Classées (S3IC)")
 public class ApiS3IC extends AbstractBasicApi {
     
     @Autowired
@@ -27,7 +25,7 @@ public class ApiS3IC extends AbstractBasicApi {
     }
     
     @GetMapping("/api/s3ic/cadastre/{codeINSEE}/{codeParcelle}")
-    @ApiOperation(value = "Requête retournant les installations classées liés à une Parcelle.", response = String.class)
+    //    @ApiOperation(value = "Requête retournant les installations classées liés à une Parcelle.", response = String.class)
     public Response installationFromCadastre(@ApiParam(name = "codeINSEE", value = "Code postal de la commune.")
                                              @PathVariable("codeINSEE") String codeINSEE,
                                              @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
@@ -40,7 +38,7 @@ public class ApiS3IC extends AbstractBasicApi {
     
     
     @GetMapping("/api/s3ic/cadastre/{codeINSEE}/{codeParcelle}/{distance}")
-    @ApiOperation(value = "Requête retournant les installations classées dans un certain rayon du centroïde de la Parcelle.", response = String.class)
+    //    @ApiOperation(value = "Requête retournant les installations classées dans un certain rayon du centroïde de la Parcelle.", response = String.class)
     public Response installationWithinCadastreRange(@ApiParam(name = "codeINSEE", value = "Code postal de la commune.")
                                                     @PathVariable("codeINSEE") String codeINSEE,
                                                     @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
@@ -56,7 +54,7 @@ public class ApiS3IC extends AbstractBasicApi {
     }
     
     @GetMapping("/api/s3ic/adresse/{codeINSEE}")
-    @ApiOperation(value = "Requête retournant les installations classées associées au centroïde de la commune.", response = String.class)
+    //    @ApiOperation(value = "Requête retournant les installations classées associées au centroïde de la commune.", response = String.class)
     public Response installationFromAdresse(@ApiParam(required = true, name = "codeINSEE", value = "Code postal de la commune.")
                                             @PathVariable("codeINSEE") String codeINSEE) {
         
