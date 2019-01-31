@@ -380,25 +380,34 @@
 
             <br/>
 
-            <div id="summary">
-              <div class="section__subtitle"><strong>Votre recherche : </strong></div>
-              Code postal&nbsp;: <span v-if="form.codePostal && form.codePostal !== ''">{{form.codePostal}}</span><span v-else><i>n/a</i></span><br/>
-              Rue&nbsp;: <span v-if="form.nomVoieLib && form.nomVoieLib !== ''">{{form.nomVoieLib}}</span><span v-else><i>n/a</i></span><br/>
-              N°&nbsp;: <span v-if="form.numeroVoieLib && form.numeroVoieLib !== ''">{{form.numeroVoieLib}}</span><span v-else><i>n/a</i></span><br/>
-              Code parcelle&nbsp;: <span v-if="form.parcelle && form.parcelle !== ''">{{form.parcelle}}</span><span v-else><i>n/a</i></span><br/>
-              <hr/>
+            <div id="summary_wrapper">
+              <div id="summary">
+                <div class="section__subtitle"><strong>Votre recherche : </strong></div>
+                Code postal&nbsp;: <span v-if="form.codePostal && form.codePostal !== ''">{{form.codePostal}}</span><span v-else><i>n/a</i></span><br/>
+                Rue&nbsp;: <span v-if="form.nomVoieLib && form.nomVoieLib !== ''">{{form.nomVoieLib}}</span><span v-else><i>n/a</i></span><br/>
+                N°&nbsp;: <span v-if="form.numeroVoieLib && form.numeroVoieLib !== ''">{{form.numeroVoieLib}}</span><span v-else><i>n/a</i></span><br/>
+                Code parcelle&nbsp;: <span v-if="form.parcelle && form.parcelle !== ''">{{form.parcelle}}</span><span v-else><i>n/a</i></span><br/>
+                Raison Sociale&nbsp;: <span v-if="form.proprio && form.proprio !== ''">{{form.proprio}}</span><span v-else><i>n/a</i></span><br/>
+                <hr/>
+                <div style="text-align: center; padding-top: 20px;">
+                  <a @click="flowPrevious()"
+                     class="button">
+                    <font-awesome-icon icon="undo"/>
+                    Modifier</a><br/>
+                  <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio"
+                     class="button warning"
+                     id="pdf"
+                     target="_blank">
+                    <font-awesome-icon icon="file-pdf"/>
+                    Pdf
+                  </a>
+                </div>
+              </div>
               <div style="text-align: center; padding-top: 20px;">
-                <a @click="flowPrevious()"
+                <a :href="env.basePath"
                    class="button">
                   <font-awesome-icon icon="undo"/>
-                  Modifier</a><br/>
-                <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio"
-                   class="button warning"
-                   id="pdf"
-                   target="_blank">
-                  <font-awesome-icon icon="file-pdf"/>
-                  Pdf
-                </a>
+                  Nouvelle recherche</a><br/>
               </div>
             </div>
             <div id="avis">
@@ -724,18 +733,18 @@ export default {
     margin-bottom : 40px;
   }
 
+  #summary_wrapper {
+    float      : left;
+    width      : 30%;
+    text-align : left;
+  }
+
   #summary, #avis {
     background-color : #FFFFFF;
     border           : 1px solid #CCCCCC;
     border-radius    : 2px;
-    float            : left;
+    /*float            : left;*/
     padding          : 30px 20px;
-  }
-
-  #summary {
-    float      : left;
-    width      : 30%;
-    text-align : left;
   }
 
   #avis {
