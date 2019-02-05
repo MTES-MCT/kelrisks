@@ -16,6 +16,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.ws.rs.core.Response;
 
@@ -54,7 +57,7 @@ public class ApiAvis extends AbstractBasicApi {
     @ApiOperation(value = "Requête retournant un avis à partir des paramètres.", response = String.class)
     public Response avis(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                          @RequestParam("codeParcelle") String codeParcelle,
-                         @ApiParam(required = true, name = "codeINSEE", value = "Code postal de la commune.")
+                         @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
                          @RequestParam("codeINSEE") String codeINSEE,
                          @ApiParam(name = "nomVoie", value = "Nom de la voie.")
                          @RequestParam(value = "nomVoie", required = false) String nomVoie,
@@ -134,15 +137,60 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     private void redigerAnalyse(Document htmlDocument, AvisDTO avisDTO, String codeINSEE) {
-        
-        Element element = htmlDocument.select("#infos").first();
+    
+        Element element = htmlDocument.select("#date").first();
+    
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.FRANCE);
+        element.text("Avis rendu le " + simpleDateFormat.format(new Date()));
+    
+        element = htmlDocument.select("#infos").first();
         
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         element.append("n°" + avisDTO.getParcelle() + " à " + communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
         
         redigerAnalyseParcelle(htmlDocument, avisDTO);
+    
+        redigerConclusion(htmlDocument, avisDTO);
         
         redigerAnalyseComplementaire(htmlDocument, avisDTO);
+    }
+    
+    private void redigerConclusion(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element;
+        element = htmlDocument.select("#conclusion").first();
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() == 0) {
+            element.append("<p class=\"indent\">Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au " +
+                           "titre des pollutions de sols d’origine industrielle.</p>");
+        }
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 && (avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() > 0 || avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0)) {
+            element.append("<p class=\"indent\">En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur ou au locataire conformément à la réglementation en " +
+                           "vigueur (article L. 514-20 du code de l’environnement et L 125 - 7 du code de l’Environnement si positif SIS)</p>");
+            element.append("<p class=\"indent\">En outre compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
+                           "destination du bien) , la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>");
+            element.append("<p class=\"indent\">Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>");
+            element.appendElement("ul").appendElement("li").append("<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'> - Etudes, assistance et contrôle " +
+                                                                   "(https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr).</a>");
+        }
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0) {
+            element.append("<p class=\"indent\">En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de " +
+                           "l’environnement.</p>");
+            element.append("<p class=\"indent\">Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
+            element.append("<p class=\"indent\">Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
+                           "destination du bien), la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>");
+            element.append("<p class=\"indent\">Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>");
+            element.appendElement("ul").appendElement("li").append("<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'> - Etudes, assistance et contrôle " +
+                                                                   "(https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr).</a>");
+        }
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() > 0) {
+            element.append("<p class=\"indent\">Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
+            element.append("<p class=\"indent\">Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de vente ou de changement d'usage du terrain (travaux, constructions, ou " +
+                           "changement de destination du bien), la réalisation d'une étude historique dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>");
+            element.append("<p class=\"indent\">Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>");
+            element.appendElement("ul").appendElement("li").append("<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'> - Etudes, assistance et contrôle " +
+                                                                   "(https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr).</a>");
+        }
     }
     
     private void redigerAnalyseParcelle(Document htmlDocument, AvisDTO avisDTO) {
@@ -185,8 +233,8 @@ public class ApiAvis extends AbstractBasicApi {
             element.append("Est référencée dans l\'inventaire des sites pollués BASOL.");
             element = element.appendElement("ul");
             for (SiteIndustrielBasolDTO site : avisDTO.getSiteIndustrielBasolSurParcelleDTOs()) {
-                element.appendElement("li").append(" - <a href='https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "'>" +
-                                                   "https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "</a>");
+                element.appendElement("li").append(" - <a href='https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "'>https://basol" +
+                                                   ".developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "</a>");
             }
         }
     }
@@ -204,8 +252,8 @@ public class ApiAvis extends AbstractBasicApi {
                            "une pollution des sols (BASIAS). Vous pouvez consulter la fiche consacrée à cette activité industrielle à l\'adresse suivante : .");
             element = element.appendElement("ul");
             for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs()) {
-                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>" +
-                                                   "http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
+                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>http://fiches-risques.brgm" +
+                                                   ".fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
             }
         }
     }
@@ -222,8 +270,8 @@ public class ApiAvis extends AbstractBasicApi {
             element.append("est référencée dans l\'inventaire des sites ayant accueilli par le passé une activité susceptible d\'avoir pu généré une pollution des sols (BASIAS).");
             element = element.appendElement("ul");
             for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasSurParcelleDTOs()) {
-                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>" +
-                                                   "http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
+                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>http://fiches-risques.brgm" +
+                                                   ".fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
             }
         }
     }
@@ -263,7 +311,7 @@ public class ApiAvis extends AbstractBasicApi {
         Element element;
         int     numberOf = avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size();
         element = htmlDocument.select("#icCommune").first();
-        element.append("Il est à noter que nous avons trouvé " + numberOf + " installation(s) Classée(s) non géoréférencée(s) dans la commune : ");
+        element.append("Le résultat de cette recherche ne tient pas compte des " + numberOf + " sites identifiés sur la commune qui n’ont pu être géolocalisés faute d’une information suffisante : ");
         element = element.appendElement("ul");
         for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeNonGeorerenceesDTOs()) {
             element.appendElement("li").append(" - " + site.getRaisonSociale());
@@ -280,15 +328,15 @@ public class ApiAvis extends AbstractBasicApi {
         }
         else {
             if (numberOf == 1) {
-                element.append("Se trouve 1 site Basias dont la fiche est consultable en cliquant sur le lien suivant :");
+                element.append("Se trouve 1 site Basias dont la fiche est consultable à l'adresse suivante :");
             }
             else {
                 element.append("Se trouvent " + numberOf + " sites Basias dont les fiches sont consultables en cliquant sur les liens suivants :");
             }
             element = element.appendElement("ul");
             for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs()) {
-                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>" +
-                                                   "http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
+                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>http://fiches-risques.brgm" +
+                                                   ".fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
             }
         }
         
@@ -299,15 +347,15 @@ public class ApiAvis extends AbstractBasicApi {
         }
         else {
             if (numberOf == 1) {
-                element.append("Se trouve 1 site Basol dont la fiche est consultable en cliquant sur le lien suivant :");
+                element.append("Se trouve 1 site Basol dont la fiche est consultable à l'adresse suivante :");
             }
             else {
                 element.append("Se trouvent " + numberOf + " sites Basol dont les fiches sont consultables en cliquant sur les liens suivants :");
             }
             element = element.appendElement("ul");
             for (SiteIndustrielBasolDTO site : avisDTO.getSiteIndustrielBasolRayonParcelleDTOs()) {
-                element.appendElement("li").append(" - <a href='https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "'>" +
-                                                   "https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "</a>");
+                element.appendElement("li").append(" - <a href='https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "'>https://basol" +
+                                                   ".developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "</a>");
             }
         }
         

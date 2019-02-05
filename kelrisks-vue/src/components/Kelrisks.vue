@@ -372,9 +372,12 @@
                id="section4"
                v-show="flow.index === 4">
         <div class="container">
-          <div class="panel">
-            <h2 class="section__title">Avis</h2>
-            <p class="section__subtitle">Résumé</p>
+          <div class="panel clearfix">
+            <h2 class="section__title"
+                v-if="concordances && concordances > 0">La recherche Kelrisks a trouvé {{ concordances }} concordance(s) dans les bases de donnée</h2>
+            <h2 class="section__title"
+                v-else>La recherche Kelrisks n'a trouvé aucune concordance dans les bases de données</h2>
+            <p class="section__subtitle">Attention, même en l'absence de concordance, le présent avis peut présenter des informations relatives à l'environnement de votre parcelle</p>
 
             <!--<hr/>-->
 
@@ -413,103 +416,160 @@
             <div id="avis">
               <!--Recherche de sites <br/>-->
 
-              <big-check :checked="!avis.isBasias"
-                         :level="avis.levelWarningBasias"
-                         label-text="Sites polués BASIAS"/>
+              <big-number :number-of="avis.basiasParcelle.numberOf"
+                          label-text="Sites polués BASIAS"/>
 
-              <big-check :checked="!avis.isBasol"
-                         :level="avis.levelWarningBasol"
-                         label-text="Sites polués BASOL"/>
+              <big-number :number-of="avis.basolParcelle.numberOf"
+                          label-text="Sites polués BASOL"/>
 
-              <big-check :checked="!avis.isS3IC"
-                         :level="avis.levelWarningS3IC"
-                         label-text="Installations classées"/>
+              <big-number :number-of="avis.installationClasseeParcelle.numberOf"
+                          label-text="Installations classées"/>
               <br/>
 
-              <div style="text-align: left">
-                Nous vous informons que votre parcelle, <br/>
-                <p>{{ avis.basiasParcelle.lib }}</p>
-                <template v-if="avis.basiasParcelle.numberOf > 0">
-                  <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.basiasParcelle.liste">
-                      - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                           target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
-                    </li>
-                  </ul>
-                </template>
-                <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
-                  <p class="indent">{{ avis.basiasProximiteParcelle.lib }}</p>
-                  <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.basiasProximiteParcelle.liste">
-                      - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                           target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
-                    </li>
-                  </ul>
-                </template>
-                <p>{{ avis.basolParcelle.lib }}</p>
-                <template v-if="avis.basolParcelle.numberOf > 0">
-                  <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.basolRayonParcelle.liste">
-                      - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
-                  </ul>
-                </template>
-                <p>{{ avis.installationClasseeParcelle.lib }}</p>
-                <template v-if="avis.installationClasseeParcelle.numberOf > 0">
-                  <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.installationClasseeParcelle.liste">
-                      - {{ ic.nom }}
-                    </li>
-                  </ul>
-                </template>
+              <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
+                <p class="indent">{{ avis.basiasProximiteParcelle.lib }}</p>
+                <ul class="site-list">
+                  <li :key="ic.id"
+                      v-for="ic in avis.basiasProximiteParcelle.liste">
+                    - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                  </li>
+                </ul>
+                <br/>
+              </template>
 
-                <!--<b>Obligations relatives</b><br/>-->
-                <!-- - Lorem Ipsum-->
+              <div id="conclusion0"
+                   style="text-align: justify"
+                   v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf === 0">
+                <p>Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au titre des pollutions de sols
+                   d’origine industrielle.</p>
+              </div>
+              <div id="conclusion1"
+                   style="text-align: justify"
+                   v-if="avis.basiasParcelle.numberOf > 0 && (avis.basolParcelle.numberOf > 0 || avis.installationClasseeParcelle.numberOf > 0)">
+                <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur ou au locataire conformément à la réglementation en vigueur (article L. 514-20 du code
+                   de l’environnement et L 125-7 du code de l’Environnement si positif SIS).</p>
+                <p>En outre compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien) , la réalisation
+                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
+                <p>Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>
+                <ul>
+                  <li><a href="https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr">Etudes, assistance et contrôle.</a></li>
+                </ul>
+              </div>
+              <div id="conclusion2"
+                   style="text-align: justify"
+                   v-if="avis.basiasParcelle.numberOf > 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0">
+                <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de l’environnement.</p>
+                <p>Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
+                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
+                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
+                <p>Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>
+                <ul>
+                  <li><a href="https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr">Etudes, assistance et contrôle.</a></li>
+                </ul>
+              </div>
+              <div id="conclusion3"
+                   style="text-align: justify"
+                   v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf > 0">
+                <p>Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
+                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de vente ou de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la
+                   réalisation d'une étude historique dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
+                <p>Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>
+                <ul>
+                  <li><a href="https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr">Etudes, assistance et contrôle.</a></li>
+                </ul>
+              </div>
 
-                <p class="section__subtitle">Analyse complémentaire</p>
+              <br/>
 
-                <template v-if="avis.basiasRayonParcelle.numberOf > 0 || avis.basolRayonParcelle.numberOf > 0 || avis.installationClasseeRayonParcelle.numberOf > 0">
-                  <p>Pour information, dans un rayon de 100m&nbsp;:</p>
+              <section class="section section-white"
+                       id="details"
+                       style="text-align: left">
 
-                  <template v-if="avis.basiasRayonParcelle.numberOf > 0">
-                    <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basias dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
-                    <p v-else>Se trouvent {{ avis.basiasRayonParcelle.numberOf }} sites Basias dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                <p @click="showHideContent"
+                   class="section__subtitle"
+                   style="margin-bottom: 0; cursor: pointer;">Détails et analyse à 100m</p>
+                <a @click="showHideContent"
+                   style="position: absolute; top: 25px; right: 25px; text-decoration: none; background: none">
+                  <font-awesome-icon icon="caret-down"
+                                     size="2x"
+                                     v-if="!visibility.details"/>
+                  <font-awesome-icon icon="caret-up"
+                                     size="2x"
+                                     v-else/>
+                </a>
+                <div class="section_content"
+                     v-if="visibility.details">
+                  <br/>
+                  Votre parcelle, <br/>
+                  <p>{{ avis.basiasParcelle.lib }}</p>
+                  <template v-if="avis.basiasParcelle.numberOf > 0">
                     <ul class="site-list">
                       <li :key="ic.id"
-                          v-for="ic in avis.basiasRayonParcelle.liste">
+                          v-for="ic in avis.basiasParcelle.liste">
                         - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
                              target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
                       </li>
                     </ul>
                   </template>
-                  <template v-if="avis.basolRayonParcelle.numberOf > 0">
-                    <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basol dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
-                    <p v-else>Se trouvent {{ avis.basolRayonParcelle.numberOf }} sites Basol dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                  <p>{{ avis.basolParcelle.lib }}</p>
+                  <template v-if="avis.basolParcelle.numberOf > 0">
                     <ul class="site-list">
                       <li :key="ic.id"
                           v-for="ic in avis.basolRayonParcelle.liste">
                         - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
                     </ul>
                   </template>
-                  <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
-                    <p v-if="avis.installationClasseeRayonParcelle.numberOf === 1">Se trouve 1 installation classée&nbsp;: </p>
-                    <p v-else>Se trouvent {{ avis.installationClasseeRayonParcelle.numberOf }} installations classées&nbsp;: </p>
+                  <p>{{ avis.installationClasseeParcelle.lib }}</p>
+                  <template v-if="avis.installationClasseeParcelle.numberOf > 0">
                     <ul class="site-list">
                       <li :key="ic.id"
-                          v-for="ic in avis.installationClasseeRayonParcelle.liste">
+                          v-for="ic in avis.installationClasseeParcelle.liste">
                         - {{ ic.nom }}
                       </li>
                     </ul>
                   </template>
-                </template>
-                <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
 
-                <template v-if="avis.installationClasseeCommune.numberOf > 0"><p>Enfin, nous avons trouvé {{ avis.installationClasseeCommune.numberOf }} installation(s) classée(s) non géoréférencées
-                                                                                 dans la commune.</p></template>
-              </div>
+                  <template v-if="avis.basiasRayonParcelle.numberOf > 0 || avis.basolRayonParcelle.numberOf > 0 || avis.installationClasseeRayonParcelle.numberOf > 0">
+                    <p>Pour information, dans un rayon de 100m&nbsp;:</p>
+
+                    <template v-if="avis.basiasRayonParcelle.numberOf > 0">
+                      <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basias dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
+                      <p v-else>Se trouvent {{ avis.basiasRayonParcelle.numberOf }} sites Basias dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                      <ul class="site-list">
+                        <li :key="ic.id"
+                            v-for="ic in avis.basiasRayonParcelle.liste">
+                          - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                               target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                        </li>
+                      </ul>
+                    </template>
+                    <template v-if="avis.basolRayonParcelle.numberOf > 0">
+                      <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basol dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
+                      <p v-else>Se trouvent {{ avis.basolRayonParcelle.numberOf }} sites Basol dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                      <ul class="site-list">
+                        <li :key="ic.id"
+                            v-for="ic in avis.basolRayonParcelle.liste">
+                          - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
+                      </ul>
+                    </template>
+                    <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
+                      <p v-if="avis.installationClasseeRayonParcelle.numberOf === 1">Se trouve 1 installation classée&nbsp;: </p>
+                      <p v-else>Se trouvent {{ avis.installationClasseeRayonParcelle.numberOf }} installations classées&nbsp;: </p>
+                      <ul class="site-list">
+                        <li :key="ic.id"
+                            v-for="ic in avis.installationClasseeRayonParcelle.liste">
+                          - {{ ic.nom }}
+                        </li>
+                      </ul>
+                    </template>
+                  </template>
+                  <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+
+                  <template v-if="avis.installationClasseeCommune.numberOf > 0"><p>Enfin, nous avons trouvé {{ avis.installationClasseeCommune.numberOf }} installation(s) classée(s) non géoréférencées
+                                                                                   dans la commune.</p></template>
+                </div>
+              </section>
             </div>
           </div>
         </div>
@@ -522,7 +582,7 @@
 </template>
 
 <script>
-import BigCheck from './BigCheck'
+import BigNumber from './BigNumber'
 import functions from '../script/fonctions'
 import avis from '../script/avis'
 import KrInput from './KrInput'
@@ -530,6 +590,9 @@ import KrInput from './KrInput'
 export default {
   name: 'Kelrisks',
   data: () => ({
+    visibility: {
+      details: false
+    },
     informations: {
       hasError: false,
       errorList: [],
@@ -565,19 +628,16 @@ export default {
     avis: {
       querying: false,
       rendered: false,
-      isBasias: true,
-      levelWarningBasias: 1,
+      basiasNbOf: 0,
       basiasParcelle: {},
       basiasProximiteParcelle: {},
       basiasRayonParcelle: {},
       basiasRaisonSociale: {},
-      isBasol: true,
-      levelWarningBasol: 2,
+      basolNbOf: 0,
       basolParcelle: {},
       basolProximiteParcelle: {},
       basolRayonParcelle: {},
-      isS3IC: true,
-      levelWarningS3IC: 3,
+      s3ICNbOf: 0,
       installationClasseeParcelle: {},
       installationClasseeProximiteParcelle: {},
       installationClasseeRayonParcelle: {},
@@ -590,9 +650,14 @@ export default {
   }),
   components: {
     KrInput,
-    BigCheck
+    BigNumber
   },
   methods: {
+    showHideContent () {
+      console.log(this.visibility.details)
+      this.visibility.details = !this.visibility.details
+      console.log(this.visibility.details)
+    },
     onCodePostalChanged (value) {
       this.form.codeINSEE = value.codeINSEE
       this.form.codePostal = value.codePostal
@@ -683,11 +748,20 @@ export default {
           functions.scrollToElement('main', false)
         })
     }
+  },
+  computed: {
+    concordances: function () {
+      return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
+    }
   }
 }
 </script>
 
 <style>
+  body {
+    overflow-y : scroll;
+  }
+
   .hero__container p {
     transition : all 0.5s;
   }
@@ -715,18 +789,16 @@ export default {
   }
 
   .panel {
-    overflow : auto;
+    overflow : visible;
     position : relative;
-  }
-
-  .panel:after {
-    content    : ".";
-    visibility : hidden;
-    clear      : both;
   }
 
   i {
     color : #777777;
+  }
+
+  section {
+    position : relative;
   }
 
   .section__subtitle {
@@ -739,7 +811,7 @@ export default {
     text-align : left;
   }
 
-  #summary, #avis {
+  #summary, #avis, #details {
     background-color : #FFFFFF;
     border           : 1px solid #CCCCCC;
     border-radius    : 2px;
@@ -759,5 +831,13 @@ export default {
 
   .site-list {
     list-style : none;
+  }
+
+  .clearfix:after {
+    content    : '';
+    display    : block;
+    height     : 0;
+    clear      : both;
+    visibility : hidden;
   }
 </style>

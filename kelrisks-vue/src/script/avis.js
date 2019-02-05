@@ -147,7 +147,7 @@ export default {
     if (avis.numberOf === 0) {
       avis.lib = 'Aucune Installation Classée non géoréférencée dans la commune'
     } else {
-      avis.lib = 'Installation(s) Classée(s) non géoréférencée(s) trouvée(s) dans la commune : '
+      avis.lib = 'Le résultat de cette recherche ne tient pas compte des ' + avis.numberOf + ' sites identifiés sur la commune qui n’ont pu être géolocalisés faute d’une information suffisante : '
       value.entity.installationClasseeNonGeorerenceesDTOs.forEach(function (element) {
         avis.liste.push(element)
       }, this)
