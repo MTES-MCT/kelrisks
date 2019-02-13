@@ -21,6 +21,7 @@ public class SwaggerConfig {
     public Docket api() {
         
         return new Docket(DocumentationType.SWAGGER_2)
+                       .host("kelrisks.beta.gouv.fr")
                        .select()
                        .apis(RequestHandlerSelectors.basePackage("fr.gouv.beta.fabnum.kelrisks.presentation.rest"))
                        .paths(PathSelectors.any())

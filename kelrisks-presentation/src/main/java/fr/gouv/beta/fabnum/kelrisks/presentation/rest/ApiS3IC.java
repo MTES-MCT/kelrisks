@@ -3,6 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import io.swagger.annotations.ApiParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@ApiIgnore
 //@Api(tags = {"API Installations Classées (S3IC)"}, description = "API permettant les recoupements concernant les Installations Classées (S3IC)")
 public class ApiS3IC extends AbstractBasicApi {
     

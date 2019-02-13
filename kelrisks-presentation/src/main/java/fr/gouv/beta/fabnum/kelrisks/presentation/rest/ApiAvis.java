@@ -141,7 +141,7 @@ public class ApiAvis extends AbstractBasicApi {
         Element element = htmlDocument.select("#date").first();
     
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.FRANCE);
-        element.text("Avis rendu le " + simpleDateFormat.format(new Date()));
+        element.text("Le " + simpleDateFormat.format(new Date()));
     
         element = htmlDocument.select("#infos").first();
         

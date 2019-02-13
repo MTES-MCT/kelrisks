@@ -374,10 +374,10 @@
         <div class="container">
           <div class="panel clearfix">
             <h2 class="section__title"
-                v-if="concordances && concordances > 0">La recherche Kelrisks a trouvé {{ concordances }} concordance(s) dans les bases de donnée</h2>
+                v-if="concordances && concordances > 0">La recherche Kelrisks a trouvé {{ concordances }} concordance{{ concordances > 1 ? 's': ''}} dans les bases de données</h2>
             <h2 class="section__title"
                 v-else>La recherche Kelrisks n'a trouvé aucune concordance dans les bases de données</h2>
-            <p class="section__subtitle">Attention, même en l'absence de concordance, le présent avis peut présenter des informations relatives à l'environnement de votre parcelle</p>
+            <p class="section__subtitle">Attention, même en l'absence de concordance, la présente recherche peut présenter des informations relatives à l'environnement de votre parcelle</p>
 
             <!--<hr/>-->
 
@@ -437,6 +437,8 @@
                 </ul>
                 <br/>
               </template>
+
+              <p class="section__subtitle"><strong>Conséquences</strong></p>
 
               <div id="conclusion0"
                    style="text-align: justify"

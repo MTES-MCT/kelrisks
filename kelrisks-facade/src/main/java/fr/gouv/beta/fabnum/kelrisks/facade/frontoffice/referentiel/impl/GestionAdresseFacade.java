@@ -75,8 +75,8 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
     
         RueQO rueQO = new RueQO();
         rueQO.setNomVoie(nomVoie);
-        
-        return adresseMapper.toNumeroVoieAutoCompleteDTOs(adresseService.rechercherAvecCritere(adresseQO, communeQO));
+    
+        return adresseMapper.toNumeroVoieAutoCompleteDTOs(adresseService.rechercherAvecCritere(adresseQO, communeQO, rueQO));
     }
     
     @Override
