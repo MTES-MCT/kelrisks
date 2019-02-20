@@ -328,10 +328,11 @@
 
             <div style="width: 90%; margin-left: 5%">
               <kr-input :start-at="3"
-                        @selected="onNumeroChanged"
                         label="Nom de l'ancien propriétaire / Raison sociale"
                         name="raisonSociale"
-                        v-bind:source="env.apiPath + '/basias/raison/autocomplete/'">
+                        @query="onNomProprietaireChanged"
+                        @selected="onNomProprietaireSelected"
+                        v-bind:source="env.apiPath + '/raison/autocomplete/' + form.codeINSEE + '/'">
                 <template slot="kr-no-results"
                           slot-scope="slotProps">
                   Aucun numéro trouvé pour "{{ slotProps.query }}"
@@ -423,18 +424,40 @@
                           label-text="Sites polués BASOL"/>
 
               <big-number :number-of="avis.installationClasseeParcelle.numberOf"
+                          Compte
+                          ce
+                          de
+                          précède
+                          qui
+                          tenu
                           label-text="Installations classées"/>
+
+              <big-number :number-of="avis.installationClasseeParcelle.numberOf"
+                          label-text="SIS"/>
               <br/>
 
-              <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
-                <p class="indent">{{ avis.basiasProximiteParcelle.lib }}</p>
-                <ul class="site-list">
-                  <li :key="ic.id"
-                      v-for="ic in avis.basiasProximiteParcelle.liste">
-                    - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+              <template v-if="avis.basiasProximiteParcelle.numberOf > 0 || avis.basiasRaisonSociale > 0">
+                <p class="indent">Par ailleurs nous identifions : </p>
+                <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
+                  <p class="indent"> - {{ avis.basiasProximiteParcelle.lib }}</p>
+                  <ul class="site-list">
+                    <li :key="ic.id"
+                        v-for="ic in avis.basiasProximiteParcelle.liste">
+                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
                          target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
-                  </li>
-                </ul>
+                    </li>
+                  </ul>
+                </template>
+                <template v-if="avis.basiasRaisonSociale.numberOf > 0">
+                  <p class="indent"> - {{ avis.basiasRaisonSociale.lib }}</p>
+                  <ul class="site-list">
+                    <li :key="ic.id"
+                        v-for="ic in avis.basiasRaisonSociale.liste">
+                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                    </li>
+                  </ul>
+                </template>
                 <br/>
               </template>
 
@@ -453,10 +476,9 @@
                    de l’environnement et L 125-7 du code de l’Environnement si positif SIS).</p>
                 <p>En outre compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien) , la réalisation
                    d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
-                <p>Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>
-                <ul>
-                  <li><a href="https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr">Etudes, assistance et contrôle.</a></li>
-                </ul>
+                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
+                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
+                   la liste de ces bureaux d'étude</p>
               </div>
               <div id="conclusion2"
                    style="text-align: justify"
@@ -465,10 +487,9 @@
                 <p>Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
                 <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
                    d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
-                <p>Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>
-                <ul>
-                  <li><a href="https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr">Etudes, assistance et contrôle.</a></li>
-                </ul>
+                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
+                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
+                   la liste de ces bureaux d'étude</p>
               </div>
               <div id="conclusion3"
                    style="text-align: justify"
@@ -476,10 +497,9 @@
                 <p>Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
                 <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de vente ou de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la
                    réalisation d'une étude historique dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
-                <p>Vous trouverez aux adresses suivantes des sites qui proposent des bureaux d'études compétents dans le domaine des sites et sols pollués.</p>
-                <ul>
-                  <li><a href="https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr">Etudes, assistance et contrôle.</a></li>
-                </ul>
+                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
+                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
+                   la liste de ces bureaux d'étude</p>
               </div>
 
               <br/>
@@ -531,6 +551,7 @@
                       </li>
                     </ul>
                   </template>
+                  <p>{{ avis.sisParcelle.lib }}</p>
 
                   <template v-if="avis.basiasRayonParcelle.numberOf > 0 || avis.basolRayonParcelle.numberOf > 0 || avis.installationClasseeRayonParcelle.numberOf > 0">
                     <p>Pour information, dans un rayon de 100m&nbsp;:</p>
@@ -643,7 +664,8 @@ export default {
       installationClasseeParcelle: {},
       installationClasseeProximiteParcelle: {},
       installationClasseeRayonParcelle: {},
-      installationClasseeCommune: {}
+      installationClasseeCommune: {},
+      sisParcelle: {}
     },
     env: {
       basePath: process.env.VUE_APP_PATH,
@@ -677,6 +699,12 @@ export default {
     onNumeroChanged (value) {
       this.form.idBAN = value.code
       this.form.numeroVoieLib = value.libelle
+    },
+    onNomProprietaireSelected (value) {
+      this.form.proprio = value.code
+    },
+    onNomProprietaireChanged (value) {
+      this.form.proprio = value
     },
     flowNext () {
       this.flow.index++
@@ -717,35 +745,20 @@ export default {
           this.flow.index++
 
           this.avis.basiasParcelle = avis.getBasiasParcelle(value)
-          this.avis.basiasRaisonSociale = avis.getBasiasRaisonSociale(value)
           this.avis.basiasProximiteParcelle = avis.getBasiasProximiteParcelle(value)
+          this.avis.basiasRaisonSociale = avis.getBasiasRaisonSocialeParcelle(value)
           this.avis.basiasRayonParcelle = avis.getBasiasRayonParcelle(value)
-          this.avis.isBasias = this.avis.basiasParcelle.numberOf > 0 || this.avis.basiasRayonParcelle.numberOf > 0 || this.avis.basiasProximiteParcelle.numberOf > 0 || this.avis.basiasRaisonSociale.numberOf > 0
-          this.avis.levelWarningBasias = this.avis.basiasParcelle.numberOf > 0 ? 3
-            : this.avis.basiasProximiteParcelle.numberOf > 0 ? 2
-              : this.avis.basiasRayonParcelle.numberOf > 0 ? 1
-                : this.avis.basiasRaisonSociale.numberOf > 0 ? 2
-                  : 0
 
           this.avis.basolParcelle = avis.getBasolParcelle(value)
           this.avis.basolProximiteParcelle = avis.getBasolProximiteParcelle(value)
           this.avis.basolRayonParcelle = avis.getBasolRayonParcelle(value)
-          this.avis.isBasol = this.avis.basolParcelle.numberOf > 0 || this.avis.basolProximiteParcelle.numberOf > 0 || this.avis.basolRayonParcelle.numberOf > 0
-          this.avis.levelWarningBasol = this.avis.basolParcelle.numberOf > 0 ? 3
-            : this.avis.basolProximiteParcelle.numberOf > 0 ? 2
-              : this.avis.basolRayonParcelle.numberOf > 0 ? 1
-                : 0
 
           this.avis.installationClasseeParcelle = avis.getICSurParcelle(value)
           this.avis.installationClasseeProximiteParcelle = avis.getICProximiteParcelle(value)
           this.avis.installationClasseeRayonParcelle = avis.getICRayonParcelle(value)
           this.avis.installationClasseeCommune = avis.getICNonGeoreferencees(value)
-          this.avis.isS3IC = this.avis.installationClasseeParcelle.numberOf > 0 || this.avis.installationClasseeProximiteParcelle.numberOf > 0 || this.avis.installationClasseeRayonParcelle.numberOf > 0 || this.avis.installationClasseeCommune.numberOf > 0
-          this.avis.levelWarningS3IC = this.avis.installationClasseeParcelle.numberOf > 0 ? 3
-            : this.avis.installationClasseeProximiteParcelle.numberOf > 0 ? 2
-              : this.avis.installationClasseeRayonParcelle.numberOf > 0 ? 1
-                : this.avis.installationClasseeCommune.numberOf > 0 ? 1
-                  : 0
+
+          this.avis.sisParcelle = avis.getSISSurParcelle(value)
 
           functions.scrollToElement('main', false)
         })

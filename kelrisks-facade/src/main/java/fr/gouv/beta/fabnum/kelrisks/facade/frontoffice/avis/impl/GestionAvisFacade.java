@@ -2,10 +2,12 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
@@ -34,12 +36,19 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     @Autowired
     IGestionAdresseFacade              gestionAdresseFacade;
     @Autowired
+    IGestionCommuneFacade              gestionCommuneFacade;
+    @Autowired
     IGestionParcelleFacade             gestionParcelleFacade;
     
     @Override
     public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String rue, String idBAN, String nomProprietaire) {
         
         AvisDTO avisDTO = new AvisDTO();
+    
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
+        avisDTO.setCommune(communeDTO);
+    
+        avisDTO.setNomProprietaire(nomProprietaire);
         
         // Recherche d'une parcelle à partir de l'adresse si aucune n'a été fournie
         ParcelleDTO parcelleDTO;
@@ -78,7 +87,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setSiteIndustrielBasiasProximiteParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesSurParcelles(codesParcellesContigues));
         avisDTO.setSiteIndustrielBasiasRayonParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, 100D));
         if (!nomProprietaire.equals("")) {
-            avisDTO.setSiteIndustrielBasiasParRaisonSocialeDTOs(gestionSiteIndustrielBasiasFacade.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, 200D));
+            avisDTO.setSiteIndustrielBasiasParRaisonSocialeDTOs(gestionSiteIndustrielBasiasFacade.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, 5000D));
         }
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs());

@@ -27,8 +27,27 @@ export default {
     avis.numberOf = value.entity.siteIndustrielBasiasProximiteParcelleDTOs.length
     if (avis.numberOf === 0) {
     } else {
-      avis.lib = 'Par ailleurs, nous identifions dans le voisinage immédiat de la (ou des) parcelle(s), un site ayant accueilli par le passé une activité susceptible d\'avoir pu générer une pollution des sols (BASIAS). Vous pouvez consulter la fiche consacrée à cette activité industrielle à l\'adresse suivante : '
+      avis.lib = avis.numberOf === 1
+        ? 'dans le voisinage immédiat de la (ou des) parcelle(s), un site  ayant accueilli par le passé une activité susceptible d\'avoir pu générer une pollution des sols (BASIAS). Vous pouvez consulter la fiche consacrée à cette activité industrielle à l\'adresse suivante : '
+        : 'dans le voisinage immédiat de la (ou des) parcelle(s), des sites  ayant accueilli par le passé une activité susceptible d\'avoir pu générer une pollution des sols (BASIAS). Vous pouvez consulter les fiches consacrée à cette activité industrielle à l\'adresse suivante : '
       value.entity.siteIndustrielBasiasProximiteParcelleDTOs.forEach(function (element) {
+        avis.liste.push(element)
+      }, this)
+    }
+    return avis
+  },
+
+  getBasiasRaisonSocialeParcelle (value) {
+    console.log('getBasiasRaisonSociale')
+    let avis = {
+      lib: '',
+      liste: []
+    }
+    avis.numberOf = value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.length
+    if (avis.numberOf === 0) {
+    } else {
+      avis.lib = 'un site dont la localisation est imprécise mais ayant potentiellement appartenu au même propriétaire (' + value.entity.nomProprietaire + ') : '
+      value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.forEach(function (element) {
         avis.liste.push(element)
       }, this)
     }
@@ -47,24 +66,6 @@ export default {
       }, this)
     }
     // console.log(avis)
-    return avis
-  },
-
-  getBasiasRaisonSociale (value) {
-    console.log('getBasiasRaisonSociale')
-    let avis = {
-      lib: '',
-      liste: []
-    }
-    avis.numberOf = value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.length
-    if (avis.numberOf === 0) {
-      avis.lib = 'Aucun site Basias trouvé par raison sociale'
-    } else {
-      avis.lib = 'Sites Basias trouvé par raison sociale : '
-      value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.forEach(function (element) {
-        avis.liste.push(element)
-      }, this)
-    }
     return avis
   },
 
@@ -117,6 +118,24 @@ export default {
         avis.liste.push(element)
       }, this)
     }
+    return avis
+  },
+
+  getSISSurParcelle (value) {
+    let avis = {
+      lib: '',
+      liste: []
+    }
+    // avis.numberOf = value.entity.installationClasseeSurParcelleDTOs.length
+    avis.numberOf = 0
+    // if (avis.numberOf === 0) {
+    avis.lib = 'N’est pas situé en secteur d’information sur les sols (SIS).'
+    // } else {
+    //   avis.lib = 'Est référencée dans l\'inventaire des installations classées sous le nom de + nom de l’activité'
+    //   value.entity.installationClasseeSurParcelleDTOs.forEach(function (element) {
+    //     avis.liste.push(element)
+    //   }, this)
+    // }
     return avis
   },
 

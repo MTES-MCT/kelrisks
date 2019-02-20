@@ -44,5 +44,11 @@ public interface InstallationClasseeRepository extends IAbstractRepository<Insta
                    " LEFT JOIN kelrisks.cadastre p ON st_within(ic.geog, p.geog)" +
                    " WHERE p.code IN :codes ", nativeQuery = true)
     List<InstallationClassee> rechercherInstallationsSurParcelles(List<String> codes);
+    
+    @Query(value = "SELECT * " +
+                   " FROM kelrisks.s3ic AS si" +
+                   " WHERE si.id IN (SELECT min(siiic.id) FROM kelrisks.s3ic AS siiic WHERE lower(siiic.raison_sociale) LIKE concat('%', lower(:query) , '%') AND siiic.code_insee = :codeINSEE" +
+                   " GROUP BY siiic.raison_sociale)", nativeQuery = true)
+    List<InstallationClassee> rechercherRaisonsSociales(String codeINSEE, String query);
 }
   

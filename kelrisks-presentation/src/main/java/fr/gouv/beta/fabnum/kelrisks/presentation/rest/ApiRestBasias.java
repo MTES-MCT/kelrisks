@@ -3,12 +3,14 @@ package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.Comparator;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -28,6 +30,8 @@ public class ApiRestBasias extends AbstractBasicApi {
     
     @Autowired
     IGestionSiteIndustrielBasiasFacade gestionSiteIndustrielBasiasFacade;
+    @Autowired
+    IGestionInstallationClasseeFacade  gestionInstallationClasseeFacade;
     @Autowired
     IGestionSiteSolPolueFacade         gestionSiteSolPolueFacade;
     
@@ -60,14 +64,16 @@ public class ApiRestBasias extends AbstractBasicApi {
         return Response.ok(siteIndustrielBasiasDTOs).build();
     }
     
-    @GetMapping("/api/basias/raison/autocomplete/{codeINSEE}/{query}")
-    @ApiOperation(value = "Requête retournant les raisons sociale des sites Basias dans une commune.", response = String.class)
-    public Response basiasByRaisonSociale(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
+    @GetMapping("/api/raison/autocomplete/{codeINSEE}/{query}")
+    @ApiOperation(value = "Requête retournant les raisons sociale des sites Basias/S3IC dans une commune.", response = String.class)
+    public Response installationsByRaisonSociale(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
                                           @PathVariable("codeINSEE") String codeINSEE,
                                           @ApiParam(required = true, name = "query", value = "Terme partiel.")
                                           @PathVariable("query") String query) {
         
         List<AutocompleteDTO> autocompleteDTOs = gestionSiteIndustrielBasiasFacade.rechercherRaisonsSociales(codeINSEE, query);
+        autocompleteDTOs.addAll(gestionInstallationClasseeFacade.rechercherRaisonsSociales(codeINSEE, query));
+        autocompleteDTOs.sort(Comparator.comparing(AutocompleteDTO::getLibelle));
         
         return Response.ok(autocompleteDTOs).build();
     }

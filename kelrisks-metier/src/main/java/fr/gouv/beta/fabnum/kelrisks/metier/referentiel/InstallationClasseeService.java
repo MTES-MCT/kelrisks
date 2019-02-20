@@ -57,5 +57,11 @@ public class InstallationClasseeService extends AbstractCRUDService<Installation
         
         return dao.rechercherInstallationsSurParcelles(codes);
     }
+    
+    @Override
+    public List<InstallationClassee> rechercherRaisonsSociales(String codeINSEE, String query) {
+        
+        return dao.rechercherRaisonsSociales(codeINSEE, query);
+    }
 }
   

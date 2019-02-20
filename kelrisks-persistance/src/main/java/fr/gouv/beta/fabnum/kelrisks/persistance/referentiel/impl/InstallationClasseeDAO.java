@@ -74,6 +74,12 @@ public class InstallationClasseeDAO extends AbstractDAO<InstallationClassee> imp
     }
     
     @Override
+    public List<InstallationClassee> rechercherRaisonsSociales(String codeINSEE, String query) {
+        
+        return installationClasseeRepository.rechercherRaisonsSociales(codeINSEE, query);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }

@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel;
 
+import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface IGestionInstallationClasseeFacade {
     List<InstallationClasseeDTO> rechercherInstallationsDansPolygon(Geometry codeParcelle);
     
     List<InstallationClasseeDTO> rechercherInstallationsSurParcelles(List<String> codes);
+    
+    List<AutocompleteDTO> rechercherRaisonsSociales(String codeINSEE, String query);
 }
