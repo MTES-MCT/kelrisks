@@ -149,11 +149,13 @@
 
             <br/>
             <a @click="flowNext()
+                       _paq.push(['trackEvent', 'Flow', 'Demandeur', 'Particulier'])
                        form.categorieDemandeur = 1"
                class="button">
               <font-awesome-icon icon="user"/>
               Un particulier</a>
             <a @click="flowNext()
+                       _paq.push(['trackEvent', 'Flow', 'Demandeur', 'Professionnel'])
                        form.categorieDemandeur = 2"
                class="button">
               <font-awesome-icon icon="briefcase"/>
@@ -236,7 +238,8 @@
                  class="button">
                 <font-awesome-icon icon="chevron-left"/>
                 Précédent</a>
-              <a @click="checkCodePostal"
+              <a @click="checkCodePostal
+                         _paq.push(['trackEvent', 'Flow', 'Informations', '1/2'])"
                  class="button">Suivant
                 <font-awesome-icon :style="{margin : '0 0 0 10px'}"
                                    icon="chevron-right"/>
@@ -353,7 +356,8 @@
                                    spin/>
                 Recherche en cours...
               </button>
-              <button @click="getAvis"
+              <button @click="getAvis
+                              _paq.push(['trackEvent', 'Flow', 'Informations', '2/2'])"
                       class="button"
                       id="submit"
                       name="subscribe"
@@ -394,12 +398,14 @@
                 Raison Sociale&nbsp;: <span v-if="form.proprio && form.proprio !== ''">{{form.proprio}}</span><span v-else><i>n/a</i></span><br/>
                 <hr/>
                 <div style="text-align: center; padding-top: 20px;">
-                  <a @click="flowPrevious()"
+                  <a @click="flowPrevious()
+                             _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])"
                      class="button">
                     <font-awesome-icon icon="undo"/>
                     Modifier</a><br/>
                   <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio"
                      class="button warning"
+                     @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
                      id="pdf"
                      target="_blank">
                     <font-awesome-icon icon="file-pdf"/>
@@ -409,6 +415,7 @@
               </div>
               <div style="text-align: center; padding-top: 20px;">
                 <a :href="env.basePath"
+                   @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
                    class="button">
                   <font-awesome-icon icon="undo"/>
                   Nouvelle recherche</a><br/>
@@ -508,10 +515,12 @@
                        id="details"
                        style="text-align: left">
 
-                <p @click="showHideContent"
+                <p @click="showHideContent
+                           _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
                    class="section__subtitle"
                    style="margin-bottom: 0; cursor: pointer;">Détails et analyse à 100m</p>
-                <a @click="showHideContent"
+                <a @click="showHideContent
+                           _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
                    style="position: absolute; top: 25px; right: 25px; text-decoration: none; background: none">
                   <font-awesome-icon icon="caret-down"
                                      size="2x"
@@ -761,6 +770,7 @@ export default {
           this.avis.sisParcelle = avis.getSISSurParcelle(value)
 
           functions.scrollToElement('main', false)
+          _paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
         })
     }
   },

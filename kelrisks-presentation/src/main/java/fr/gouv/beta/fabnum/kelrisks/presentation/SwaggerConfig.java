@@ -5,10 +5,13 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.paths.RelativePathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Collections;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +21,17 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
     
     @Bean
-    public Docket api() {
+    public Docket api(ServletContext servletContext) {
         
         return new Docket(DocumentationType.SWAGGER_2)
+                       .pathProvider(new RelativePathProvider(servletContext) {
+            
+                           @Override
+                           public String getApplicationBasePath() {
+                
+                               return "/";
+                           }
+                       })
                        .host("kelrisks.beta.gouv.fr")
                        .select()
                        .apis(RequestHandlerSelectors.basePackage("fr.gouv.beta.fabnum.kelrisks.presentation.rest"))
@@ -35,9 +46,9 @@ public class SwaggerConfig {
                            "Description de l'API.",
                            "v1.0",
                            "Terms of service",
-                           new Contact("John Doe",
-                                       "www.example.com",
-                                       "myeaddress@company.com"),
+                           new Contact("Kelrisks",
+                                       "kelrisks.beta.gouv.fr",
+                                       "thomas.bouchardon@developpement-durable.gouv.fr"),
                            "License of API",
                            "API license URL", Collections.emptyList());
     }
