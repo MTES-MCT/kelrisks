@@ -238,8 +238,7 @@
                  class="button">
                 <font-awesome-icon icon="chevron-left"/>
                 Précédent</a>
-              <a @click="checkCodePostal
-                         _paq.push(['trackEvent', 'Flow', 'Informations', '1/2'])"
+              <a @click="checkCodePostal()"
                  class="button">Suivant
                 <font-awesome-icon :style="{margin : '0 0 0 10px'}"
                                    icon="chevron-right"/>
@@ -356,8 +355,7 @@
                                    spin/>
                 Recherche en cours...
               </button>
-              <button @click="getAvis
-                              _paq.push(['trackEvent', 'Flow', 'Informations', '2/2'])"
+              <button @click="getAvis()"
                       class="button"
                       id="submit"
                       name="subscribe"
@@ -515,11 +513,11 @@
                        id="details"
                        style="text-align: left">
 
-                <p @click="showHideContent
+                <p @click="showHideContent()
                            _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
                    class="section__subtitle"
                    style="margin-bottom: 0; cursor: pointer;">Détails et analyse à 100m</p>
-                <a @click="showHideContent
+                <a @click="showHideContent()
                            _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
                    style="position: absolute; top: 25px; right: 25px; text-decoration: none; background: none">
                   <font-awesome-icon icon="caret-down"
@@ -606,10 +604,26 @@
           </div>
         </div>
       </section>
+
     </main>
+
     <div style="width: 100%;">
       <p style="font-size: 0.8em; text-align: center;">(Essonne)* - Territoire d'expérimentation.</p>
     </div>
+
+    <div class="panel"
+         id="contact">
+      <font-awesome-icon @click="closeContact()"
+                         class="close"
+                         icon="times"/>
+      <p class="section__subtitle">Une remarque? Une suggestion?</p>
+      <textarea id="contactContent"
+                title="Remarque/Suggestion/Problème?"></textarea>
+      <button @click="sendMail()"
+              class="button">Envoyer
+      </button>
+    </div>
+
   </div>
 </template>
 
@@ -618,6 +632,9 @@ import BigNumber from './BigNumber'
 import functions from '../script/fonctions'
 import avis from '../script/avis'
 import KrInput from './KrInput'
+import JQuery from 'jquery'
+
+let $ = JQuery
 
 export default {
   name: 'Kelrisks',
@@ -686,10 +703,25 @@ export default {
     BigNumber
   },
   methods: {
+    closeContact () {
+      $('#contact').hide()
+    },
+    sendMail () {
+      fetch(this.env.basePath + 'mail', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({content: $('#contactContent').val()})
+      }).then(stream => stream.json())
+        .then(value => {
+          console.log(value)
+        })
+    },
     showHideContent () {
-      console.log(this.visibility.details)
+      // console.log(this.visibility.details)
       this.visibility.details = !this.visibility.details
-      console.log(this.visibility.details)
+      // console.log(this.visibility.details)
     },
     onCodePostalChanged (value) {
       this.form.codeINSEE = value.codeINSEE
@@ -727,9 +759,11 @@ export default {
       this.informations.errorList = []
       if (/^\d{5}$/.test(this.form.codeINSEE)) {
         this.checks.codeCommuneError = []
-        this.flowNext('section3')
+        this.flowNext()
+        this._paq.push(['trackEvent', 'Flow', 'Informations 1/2', 'OK'])
       } else {
         this.checks.codeCommuneError = ['Merci de bien vouloir sélectionner une commune au moyen de l\'autocomplétion.']
+        this._paq.push(['trackEvent', 'Flow', 'Informations 1/2', 'Erreur Autocomplétion'])
       }
     },
     checkInformations: function (info) {
@@ -749,7 +783,12 @@ export default {
         .then(value => {
           this.avis.querying = false
           this.checkInformations(value.entity)
-          if (this.informations.hasError) return
+          if (this.informations.hasError) {
+            this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'Erreur'])
+            return
+          }
+
+          this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'OK'])
 
           this.flow.index++
 
@@ -770,13 +809,16 @@ export default {
           this.avis.sisParcelle = avis.getSISSurParcelle(value)
 
           functions.scrollToElement('main', false)
-          _paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
+          this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
         })
     }
   },
   computed: {
     concordances: function () {
       return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
+    },
+    _paq: function () {
+      return window._paq
     }
   }
 }
@@ -864,5 +906,28 @@ export default {
     height     : 0;
     clear      : both;
     visibility : hidden;
+  }
+
+  #contact {
+    width    : 400px;
+    /*height   : 300px;*/
+    position : fixed;
+    bottom   : 10px;
+    right    : 10px;
+  }
+
+  #contact .close {
+    position : absolute;
+    top      : 10px;
+    right    : 0;
+    cursor   : pointer;
+  }
+
+  #contact p.section__subtitle {
+    margin-bottom : 20px;
+  }
+
+  #contact textarea {
+    margin-bottom : 20px;
   }
 </style>
