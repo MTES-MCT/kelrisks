@@ -611,12 +611,20 @@
       <p style="font-size: 0.8em; text-align: center;">(Essonne)* - Territoire d'expérimentation.</p>
     </div>
 
-    <div class="panel"
+    <div class="panel hidden"
          id="contact">
-      <font-awesome-icon @click="closeContact()"
+      <font-awesome-icon @click="openCloseContact()"
                          class="close"
-                         icon="times"/>
-      <p class="section__subtitle">Une remarque? Une suggestion?</p>
+                         icon="caret-down"
+                         size="lg"
+                         v-show="contact.opened"/>
+      <font-awesome-icon @click="openCloseContact()"
+                         icon="caret-up"
+                         size="lg"
+                         class="close"
+                         v-show="!contact.opened"/>
+      <p @click="openCloseContact()"
+         class="section__subtitle">Une remarque? Une suggestion?</p>
       <textarea id="contactContent"
                 title="Remarque/Suggestion/Problème?"></textarea>
       <button @click="sendMail()"
@@ -630,6 +638,7 @@
 <script>
 import BigNumber from './BigNumber'
 import functions from '../script/fonctions'
+import konami from '../script/konami'
 import avis from '../script/avis'
 import KrInput from './KrInput'
 import JQuery from 'jquery'
@@ -693,9 +702,15 @@ export default {
       installationClasseeCommune: {},
       sisParcelle: {}
     },
+    contact: {
+      opened: false,
+      timesUp: false,
+      countDown: null
+    },
     env: {
       basePath: process.env.VUE_APP_PATH,
-      apiPath: process.env.VUE_APP_API_PATH
+      apiPath: process.env.VUE_APP_API_PATH,
+      startTime: (new Date()).getTime()
     }
   }),
   components: {
@@ -703,8 +718,24 @@ export default {
     BigNumber
   },
   methods: {
+    openCloseContact () {
+      if (this.contact.opened) this.closeContact()
+      else this.openContact()
+    },
     closeContact () {
-      $('#contact').hide()
+      $('#contact').addClass('hidden')
+      this.contact.opened = false
+    },
+    openContact () {
+      $('#contact').removeClass('hidden')
+      this.contact.opened = true
+    },
+    countDown () {
+      this.contact.timesUp = (new Date()).getTime() - this.env.startTime > 1000 * 30
+      if (this.contact.timesUp) {
+        this.openContact()
+        clearInterval(this.contact.countDown)
+      }
     },
     sendMail () {
       fetch(this.env.basePath + 'mail', {
@@ -715,6 +746,8 @@ export default {
         body: JSON.stringify({content: $('#contactContent').val()})
       }).then(stream => stream.json())
         .then(value => {
+          this.closeContact()
+          $('#contactContent').val('')
           console.log(value)
         })
     },
@@ -820,6 +853,15 @@ export default {
     _paq: function () {
       return window._paq
     }
+  },
+  mounted () {
+    this.contact.countDown = setInterval(() => {
+      this.countDown()
+    }, 1000)
+    konami.init()
+  },
+  beforeDestroy () {
+    clearInterval(this.contact.countDown)
   }
 }
 </script>
@@ -909,25 +951,32 @@ export default {
   }
 
   #contact {
-    width    : 400px;
-    /*height   : 300px;*/
-    position : fixed;
-    bottom   : 10px;
-    right    : 10px;
+    transition : bottom 0.33s ease;
+    width      : 400px;
+    position   : fixed;
+    bottom     : -1px;
+    right      : 10px;
+  }
+
+  #contact.hidden {
+    bottom : -167px;
   }
 
   #contact .close {
     position : absolute;
-    top      : 10px;
-    right    : 0;
+    top      : 15px;
+    right    : 6px;
     cursor   : pointer;
   }
 
   #contact p.section__subtitle {
-    margin-bottom : 20px;
+    cursor        : pointer;
+    margin-bottom : 15px;
+    margin-top    : -10px;
   }
 
   #contact textarea {
     margin-bottom : 20px;
+    resize        : none;
   }
 </style>
