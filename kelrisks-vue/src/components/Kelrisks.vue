@@ -130,7 +130,7 @@
         <p class="hero__white-background"
            v-bind:class="{'contracted':flow.index > 1}">Evaluez simplement et rapidement le risque de pollution de votre terrain</p>
         <p class="hero__white-background note"
-           v-bind:class="{'contracted':flow.index > 1}">(Essonne)*</p>
+           v-bind:class="{'contracted':flow.index > 1}">(Île-de-France)*</p>
       </div>
     </div>
 
@@ -608,7 +608,7 @@
     </main>
 
     <div style="width: 100%;">
-      <p style="font-size: 0.8em; text-align: center;">(Essonne)* - Territoire d'expérimentation.</p>
+      <p style="font-size: 0.8em; text-align: center;">(Île-de-France)* - Territoire d'expérimentation.</p>
     </div>
 
     <div class="panel hidden"
