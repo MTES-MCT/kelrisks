@@ -10,20 +10,24 @@ import {
   faCaretDown,
   faCaretUp,
   faCheck,
+  faCheckCircle,
   faChevronLeft,
   faChevronRight,
   faExclamationTriangle,
   faFilePdf,
+  faHome,
+  faMapMarkedAlt,
   faSearch,
   faSpinner,
   faTimes,
+  faTruckMoving,
   faUndo,
   faUser
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 // Vue Material @ https://vuematerial.io/getting-started
 
-library.add(faUser, faBriefcase, faChevronLeft, faChevronRight, faSearch, faSpinner, faUndo, faCheck, faTimes, faExclamationTriangle, faFilePdf, faCaretDown, faCaretUp)
+library.add(faUser, faBriefcase, faChevronLeft, faTruckMoving, faChevronRight, faSearch, faSpinner, faUndo, faCheck, faTimes, faExclamationTriangle, faFilePdf, faCaretDown, faCaretUp, faCheckCircle, faMapMarkedAlt, faHome)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 // Vue.use(VueMaterial)
