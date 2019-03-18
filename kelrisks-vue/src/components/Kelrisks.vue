@@ -130,7 +130,7 @@
         <p class="hero__white-background"
            v-bind:class="{'contracted':flow.index > 1}">Evaluez simplement et rapidement le risque de pollution de votre terrain</p>
         <p class="hero__white-background note"
-           v-bind:class="{'contracted':flow.index > 1}">(Essonne)*</p>
+           v-bind:class="{'contracted':flow.index > 1}">(Île-de-France)*</p>
       </div>
     </div>
 
@@ -238,8 +238,7 @@
                  class="button">
                 <font-awesome-icon icon="chevron-left"/>
                 Précédent</a>
-              <a @click="checkCodePostal
-                         _paq.push(['trackEvent', 'Flow', 'Informations', '1/2'])"
+              <a @click="checkCodePostal()"
                  class="button">Suivant
                 <font-awesome-icon :style="{margin : '0 0 0 10px'}"
                                    icon="chevron-right"/>
@@ -356,8 +355,7 @@
                                    spin/>
                 Recherche en cours...
               </button>
-              <button @click="getAvis
-                              _paq.push(['trackEvent', 'Flow', 'Informations', '2/2'])"
+              <button @click="getAvis()"
                       class="button"
                       id="submit"
                       name="subscribe"
@@ -493,20 +491,24 @@
                 <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de l’environnement.</p>
                 <p>Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
                 <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
-                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
-                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
-                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
-                   la liste de ces bureaux d'étude</p>
+                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions. Nous vous rappelons que l'obligation de faire appel à un
+                   bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne concerne que les attestations prévues aux articles L. 556-1
+                   et L. 556-2 du code de l'environnement.</p>
+                <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
+                   (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
+                   (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
               </div>
               <div id="conclusion3"
                    style="text-align: justify"
                    v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf > 0">
                 <p>Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
-                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de vente ou de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la
-                   réalisation d'une étude historique dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
-                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
-                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
-                   la liste de ces bureaux d'étude</p>
+                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
+                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions. Nous vous rappelons que l'obligation de faire appel à un
+                   bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne concerne que les attestations prévues aux articles L. 556-1
+                   et L. 556-2 du code de l'environnement.</p>
+                <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
+                   (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
+                   (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
               </div>
 
               <br/>
@@ -515,11 +517,11 @@
                        id="details"
                        style="text-align: left">
 
-                <p @click="showHideContent
+                <p @click="showHideContent()
                            _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
                    class="section__subtitle"
                    style="margin-bottom: 0; cursor: pointer;">Détails et analyse à 100m</p>
-                <a @click="showHideContent
+                <a @click="showHideContent()
                            _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
                    style="position: absolute; top: 25px; right: 25px; text-decoration: none; background: none">
                   <font-awesome-icon icon="caret-down"
@@ -604,18 +606,52 @@
               </section>
             </div>
           </div>
+          <div class="note_pied_page">
+            <p>(1) L'obligation de faire appel à un bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 concerne les attestations
+               prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement et exigées à l'article R 431-16 du code de l'urbanisme (alinéa n et o).</p>
+            <p>(2) Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
+               (www.cofrac.fr). A ce jour seul le LNE est accrédité pour délivrer la certification relative aux sols pollués et la liste des bureaux d'études certifiés par le LNE est disponible en
+               cliquant sur ce lien (https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr)</p>
+          </div>
         </div>
       </section>
     </main>
-    <div style="width: 100%;">
-      <p style="font-size: 0.8em; text-align: center;">(Essonne)* - Territoire d'expérimentation.</p>
-    </div>
+
+    <how-to class="clearfix"
+            v-show="flow.index === 1"/>
+
+    <p style="font-size: 0.8em; width: 53%; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
+
+    <footer>
+      <div>
+        <div class="column">
+          <who-are-we ref="haw"/>
+          <a @click="$refs.haw.open()">Qui sommes nous ?</a>
+        </div>
+        <div class="column">
+          <c-g-u ref="cgu"/>
+          <a @click="$refs.cgu.open()">CGU</a>
+        </div>
+        <div class="column">
+          <a href="swagger-ui.html">API</a>
+        </div>
+      </div>
+    </footer>
+
+    <contact/>
+    <konami/>
+
   </div>
 </template>
 
 <script>
 import BigNumber from './BigNumber'
+import Contact from './Contact'
+import CGU from './CGU'
+import HowTo from './HowTo'
+import WhoAreWe from './WhoAreWe'
 import functions from '../script/fonctions'
+import Konami from './Konami'
 import avis from '../script/avis'
 import KrInput from './KrInput'
 
@@ -676,20 +712,30 @@ export default {
       installationClasseeCommune: {},
       sisParcelle: {}
     },
+    contact: {
+      opened: false,
+      timesUp: false,
+      countDown: null
+    },
     env: {
       basePath: process.env.VUE_APP_PATH,
       apiPath: process.env.VUE_APP_API_PATH
     }
   }),
   components: {
+    Contact,
     KrInput,
-    BigNumber
+    BigNumber,
+    CGU,
+    HowTo,
+    WhoAreWe,
+    Konami
   },
   methods: {
     showHideContent () {
-      console.log(this.visibility.details)
+      // console.log(this.visibility.details)
       this.visibility.details = !this.visibility.details
-      console.log(this.visibility.details)
+      // console.log(this.visibility.details)
     },
     onCodePostalChanged (value) {
       this.form.codeINSEE = value.codeINSEE
@@ -727,9 +773,11 @@ export default {
       this.informations.errorList = []
       if (/^\d{5}$/.test(this.form.codeINSEE)) {
         this.checks.codeCommuneError = []
-        this.flowNext('section3')
+        this.flowNext()
+        this._paq.push(['trackEvent', 'Flow', 'Informations 1/2', 'OK'])
       } else {
         this.checks.codeCommuneError = ['Merci de bien vouloir sélectionner une commune au moyen de l\'autocomplétion.']
+        this._paq.push(['trackEvent', 'Flow', 'Informations 1/2', 'Erreur Autocomplétion'])
       }
     },
     checkInformations: function (info) {
@@ -749,7 +797,12 @@ export default {
         .then(value => {
           this.avis.querying = false
           this.checkInformations(value.entity)
-          if (this.informations.hasError) return
+          if (this.informations.hasError) {
+            this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'Erreur'])
+            return
+          }
+
+          this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'OK'])
 
           this.flow.index++
 
@@ -770,14 +823,20 @@ export default {
           this.avis.sisParcelle = avis.getSISSurParcelle(value)
 
           functions.scrollToElement('main', false)
-          _paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
+          this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
         })
     }
   },
   computed: {
     concordances: function () {
       return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
+    },
+    _paq: function () {
+      return window._paq
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.contact.countDown)
   }
 }
 </script>
@@ -822,8 +881,9 @@ export default {
     color : #777777;
   }
 
-  section {
-    position : relative;
+  section.section {
+    position       : relative;
+    padding-bottom : 25px;
   }
 
   .section__subtitle {
@@ -864,5 +924,37 @@ export default {
     height     : 0;
     clear      : both;
     visibility : hidden;
+  }
+
+  .note_pied_page {
+    /*width  : 53%;*/
+    margin : 0 auto;
+  }
+
+  .note_pied_page p {
+    font-size : 0.8em;
+    color     : #999999;
+  }
+
+  footer {
+    /*border-top: #CCCCCC solid 1px;*/
+    width  : 60%;
+    margin : 30px auto;
+  }
+
+  footer a {
+    text-decoration : none;
+    /*color           : #2C3E50;*/
+  }
+
+  footer .column {
+    width   : 33.33%;
+    float   : left;
+    padding : 15px;
+  }
+
+  footer .column:nth-child(2) {
+    border-right : #CCCCCC solid 1px;
+    border-left  : #CCCCCC solid 1px;
   }
 </style>

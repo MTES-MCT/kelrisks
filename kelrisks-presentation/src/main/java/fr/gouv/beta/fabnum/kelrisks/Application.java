@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks;
 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -40,6 +39,8 @@ public class Application extends SpringBootServletInitializer {
     
                 registry.addMapping("/**/api/**");
                 registry.addMapping("/api/**");
+                // TODO : enlever en prod !!!
+                registry.addMapping("/mail");
             }
         };
     }
