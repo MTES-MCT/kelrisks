@@ -11,6 +11,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.AdresseQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.RueQO;
 
 import java.util.List;
 
@@ -32,9 +33,11 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     public ParcelleDTO rechercherParcelleAvecAdresse(String codeINSEE, String rue, String numero) {
         
         AdresseQO adresseQO = new AdresseQO();
-        adresseQO.setNomVoie(rue);
         adresseQO.setNumero(numero);
     
+        RueQO rueQO = new RueQO();
+        rueQO.setNomVoie(rue);
+        
         CommuneQO communeQO = new CommuneQO();
         communeQO.setCodeINSEE(codeINSEE);
     

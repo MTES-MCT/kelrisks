@@ -12,9 +12,9 @@ export default {
     if (JQuery.type(id) === 'string') {
       id = $('#' + id)
     }
-    $('html, body').animate({
+    $('html, body').delay(500).animate({
       scrollTop: (id.offset().top - 125)
-    }, 750)
+    }, 500)
 
     if (glow) {
       this.targetGlow(id)

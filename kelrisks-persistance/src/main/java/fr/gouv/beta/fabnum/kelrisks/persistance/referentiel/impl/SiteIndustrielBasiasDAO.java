@@ -74,9 +74,9 @@ public class SiteIndustrielBasiasDAO extends AbstractDAO<SiteIndustrielBasias> i
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherRaisonsSociales(String codeINSEE, String query) {
+    public List<SiteIndustrielBasias> rechercherRaisonsSociales(String query) {
     
-        return siteIndustrielBasiasRepository.rechercherRaisonsSociales(codeINSEE, query);
+        return siteIndustrielBasiasRepository.rechercherRaisonsSociales(query);
     }
     
     @Override

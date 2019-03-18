@@ -9,7 +9,9 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.AdresseRe
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QAdresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QCommune;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QRue;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.RueQO;
 
 import java.util.List;
 
@@ -58,19 +60,19 @@ public class AdresseDAO extends AbstractDAO<Adresse> implements IAdresseDAO {
     }
     
     @Override
-    public List<Adresse> rechercherVoiePartielle(String codePostal, String query) {
-        
-        return adresseRepository.rechercherVoiePartielle(codePostal, query);
-    }
-    
-    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
         for (AbstractQO abstractQO : leCritere) {
         
             if (abstractQO instanceof CommuneQO) {
             
-                query.leftJoin(QAdresse.adresse.commune(), QCommune.commune).fetchJoin();
+                query.leftJoin(QAdresse.adresse.rue(), QRue.rue).fetchJoin();
+                query.leftJoin(QRue.rue.commune(), QCommune.commune).fetchJoin();
+            }
+        
+            if (abstractQO instanceof RueQO) {
+            
+                query.leftJoin(QAdresse.adresse.rue(), QRue.rue).fetchJoin();
             }
         }
     }

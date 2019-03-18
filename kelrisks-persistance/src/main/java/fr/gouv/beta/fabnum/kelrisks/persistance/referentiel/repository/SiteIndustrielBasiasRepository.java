@@ -39,14 +39,14 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +
                    " WHERE st_dwithin(si.geog, st_centroid(:geometry), :distance)" +
-                   " AND si.raison_sociale LIKE concat('%',:nomProprietaire,'%')", nativeQuery = true)
+                   " AND lower(si.raison_sociale) LIKE lower(concat('%',:nomProprietaire,'%'))", nativeQuery = true)
     List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +
                    " WHERE si.id IN (SELECT min(b.id) FROM kelrisks.basias AS b WHERE lower(b.raison_sociale) LIKE concat('%', lower(:query) , '%')" +
                    " GROUP BY b.raison_sociale)", nativeQuery = true)
-    List<SiteIndustrielBasias> rechercherRaisonsSociales(String codeINSEE, String query);
+    List<SiteIndustrielBasias> rechercherRaisonsSociales(String query);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias si" +

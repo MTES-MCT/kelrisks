@@ -14,7 +14,5 @@ import org.geolatte.geom.Geometry;
 public interface IAdresseDAO extends IAbstractDAO<Adresse> {
     
     List<Adresse> rechercherAdresseDansGeometry(Geometry geometry);
-    
-    List<Adresse> rechercherVoiePartielle(String codePostal, String query);
 }
   

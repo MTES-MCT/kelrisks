@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
+import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IInstallationClasseeMapper;
@@ -62,5 +63,12 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
     public List<InstallationClasseeDTO> rechercherInstallationsSurParcelles(List<String> codes) {
         
         return installationClasseeMapper.toDTOs(installationClasseeService.rechercherInstallationsSurParcelles(codes));
+    }
+    
+    @Override
+    public List<AutocompleteDTO> rechercherRaisonsSociales(String codeINSEE, String query) {
+        
+        
+        return installationClasseeMapper.toAutocompleteDTOs(installationClasseeService.rechercherRaisonsSociales(codeINSEE, query));
     }
 }

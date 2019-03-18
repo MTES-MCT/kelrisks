@@ -143,17 +143,19 @@
         <div class="container">
           <div class="panel">
             <h2 class="section__title">Vous êtes ?</h2>
-            <p class="section__subtitle">TODO : Afin de vous délivrer un niveau d'information qui corresponde au mieux à votre besoin</p>
+            <p class="section__subtitle">Afin de vous délivrer un niveau d'information qui corresponde au mieux à votre besoin</p>
 
             <!--<hr/>-->
 
             <br/>
             <a @click="flowNext()
+                       _paq.push(['trackEvent', 'Flow', 'Demandeur', 'Particulier'])
                        form.categorieDemandeur = 1"
                class="button">
               <font-awesome-icon icon="user"/>
               Un particulier</a>
             <a @click="flowNext()
+                       _paq.push(['trackEvent', 'Flow', 'Demandeur', 'Professionnel'])
                        form.categorieDemandeur = 2"
                class="button">
               <font-awesome-icon icon="briefcase"/>
@@ -236,7 +238,8 @@
                  class="button">
                 <font-awesome-icon icon="chevron-left"/>
                 Précédent</a>
-              <a @click="checkCodePostal"
+              <a @click="checkCodePostal
+                         _paq.push(['trackEvent', 'Flow', 'Informations', '1/2'])"
                  class="button">Suivant
                 <font-awesome-icon :style="{margin : '0 0 0 10px'}"
                                    icon="chevron-right"/>
@@ -328,10 +331,11 @@
 
             <div style="width: 90%; margin-left: 5%">
               <kr-input :start-at="3"
-                        @selected="onNumeroChanged"
                         label="Nom de l'ancien propriétaire / Raison sociale"
                         name="raisonSociale"
-                        v-bind:source="env.apiPath + '/basias/raison/autocomplete/'">
+                        @query="onNomProprietaireChanged"
+                        @selected="onNomProprietaireSelected"
+                        v-bind:source="env.apiPath + '/raison/autocomplete/' + form.codeINSEE + '/'">
                 <template slot="kr-no-results"
                           slot-scope="slotProps">
                   Aucun numéro trouvé pour "{{ slotProps.query }}"
@@ -352,7 +356,8 @@
                                    spin/>
                 Recherche en cours...
               </button>
-              <button @click="getAvis"
+              <button @click="getAvis
+                              _paq.push(['trackEvent', 'Flow', 'Informations', '2/2'])"
                       class="button"
                       id="submit"
                       name="subscribe"
@@ -372,135 +377,231 @@
                id="section4"
                v-show="flow.index === 4">
         <div class="container">
-          <div class="panel">
-            <h2 class="section__title">Avis</h2>
-            <p class="section__subtitle">Résumé</p>
+          <div class="panel clearfix">
+            <h2 class="section__title"
+                v-if="concordances && concordances > 0">La recherche Kelrisks a trouvé {{ concordances }} concordance{{ concordances > 1 ? 's': ''}} dans les bases de données</h2>
+            <h2 class="section__title"
+                v-else>La recherche Kelrisks n'a trouvé aucune concordance dans les bases de données</h2>
+            <p class="section__subtitle">Attention, même en l'absence de concordance, la présente recherche peut présenter des informations relatives à l'environnement de votre parcelle</p>
 
             <!--<hr/>-->
 
             <br/>
 
-            <div id="summary">
-              <div class="section__subtitle"><strong>Votre recherche : </strong></div>
-              Code postal&nbsp;: <span v-if="form.codePostal && form.codePostal !== ''">{{form.codePostal}}</span><span v-else><i>n/a</i></span><br/>
-              Rue&nbsp;: <span v-if="form.nomVoieLib && form.nomVoieLib !== ''">{{form.nomVoieLib}}</span><span v-else><i>n/a</i></span><br/>
-              N°&nbsp;: <span v-if="form.numeroVoieLib && form.numeroVoieLib !== ''">{{form.numeroVoieLib}}</span><span v-else><i>n/a</i></span><br/>
-              Code parcelle&nbsp;: <span v-if="form.parcelle && form.parcelle !== ''">{{form.parcelle}}</span><span v-else><i>n/a</i></span><br/>
-              <hr/>
+            <div id="summary_wrapper">
+              <div id="summary">
+                <div class="section__subtitle"><strong>Votre recherche : </strong></div>
+                Code postal&nbsp;: <span v-if="form.codePostal && form.codePostal !== ''">{{form.codePostal}}</span><span v-else><i>n/a</i></span><br/>
+                Rue&nbsp;: <span v-if="form.nomVoieLib && form.nomVoieLib !== ''">{{form.nomVoieLib}}</span><span v-else><i>n/a</i></span><br/>
+                N°&nbsp;: <span v-if="form.numeroVoieLib && form.numeroVoieLib !== ''">{{form.numeroVoieLib}}</span><span v-else><i>n/a</i></span><br/>
+                Code parcelle&nbsp;: <span v-if="form.parcelle && form.parcelle !== ''">{{form.parcelle}}</span><span v-else><i>n/a</i></span><br/>
+                Raison Sociale&nbsp;: <span v-if="form.proprio && form.proprio !== ''">{{form.proprio}}</span><span v-else><i>n/a</i></span><br/>
+                <hr/>
+                <div style="text-align: center; padding-top: 20px;">
+                  <a @click="flowPrevious()
+                             _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])"
+                     class="button">
+                    <font-awesome-icon icon="undo"/>
+                    Modifier</a><br/>
+                  <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio"
+                     class="button warning"
+                     @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
+                     id="pdf"
+                     target="_blank">
+                    <font-awesome-icon icon="file-pdf"/>
+                    Pdf
+                  </a>
+                </div>
+              </div>
               <div style="text-align: center; padding-top: 20px;">
-                <a @click="flowPrevious()"
+                <a :href="env.basePath"
+                   @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
                    class="button">
                   <font-awesome-icon icon="undo"/>
-                  Modifier</a><br/>
-                <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio"
-                   class="button warning"
-                   id="pdf"
-                   target="_blank">
-                  <font-awesome-icon icon="file-pdf"/>
-                  Pdf
-                </a>
+                  Nouvelle recherche</a><br/>
               </div>
             </div>
             <div id="avis">
               <!--Recherche de sites <br/>-->
 
-              <big-check :checked="!avis.isBasias"
-                         :level="avis.levelWarningBasias"
-                         label-text="Sites polués BASIAS"/>
+              <big-number :number-of="avis.basiasParcelle.numberOf"
+                          label-text="Sites polués BASIAS"/>
 
-              <big-check :checked="!avis.isBasol"
-                         :level="avis.levelWarningBasol"
-                         label-text="Sites polués BASOL"/>
+              <big-number :number-of="avis.basolParcelle.numberOf"
+                          label-text="Sites polués BASOL"/>
 
-              <big-check :checked="!avis.isS3IC"
-                         :level="avis.levelWarningS3IC"
-                         label-text="Installations classées"/>
+              <big-number :number-of="avis.installationClasseeParcelle.numberOf"
+                          Compte
+                          ce
+                          de
+                          précède
+                          qui
+                          tenu
+                          label-text="Installations classées"/>
+
+              <big-number :number-of="avis.installationClasseeParcelle.numberOf"
+                          label-text="SIS"/>
               <br/>
 
-              <div style="text-align: left">
-                Nous vous informons que votre parcelle, <br/>
-                <p>{{ avis.basiasParcelle.lib }}</p>
-                <template v-if="avis.basiasParcelle.numberOf > 0">
-                  <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.basiasParcelle.liste">
-                      - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                           target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
-                    </li>
-                  </ul>
-                </template>
+              <template v-if="avis.basiasProximiteParcelle.numberOf > 0 || avis.basiasRaisonSociale > 0">
+                <p class="indent">Par ailleurs nous identifions : </p>
                 <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
-                  <p class="indent">{{ avis.basiasProximiteParcelle.lib }}</p>
+                  <p class="indent"> - {{ avis.basiasProximiteParcelle.lib }}</p>
                   <ul class="site-list">
                     <li :key="ic.id"
                         v-for="ic in avis.basiasProximiteParcelle.liste">
-                      - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                           target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
                     </li>
                   </ul>
                 </template>
-                <p>{{ avis.basolParcelle.lib }}</p>
-                <template v-if="avis.basolParcelle.numberOf > 0">
+                <template v-if="avis.basiasRaisonSociale.numberOf > 0">
+                  <p class="indent"> - {{ avis.basiasRaisonSociale.lib }}</p>
                   <ul class="site-list">
                     <li :key="ic.id"
-                        v-for="ic in avis.basolRayonParcelle.liste">
-                      - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
-                  </ul>
-                </template>
-                <p>{{ avis.installationClasseeParcelle.lib }}</p>
-                <template v-if="avis.installationClasseeParcelle.numberOf > 0">
-                  <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.installationClasseeParcelle.liste">
-                      - {{ ic.nom }}
+                        v-for="ic in avis.basiasRaisonSociale.liste">
+                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
                     </li>
                   </ul>
                 </template>
+                <br/>
+              </template>
 
-                <!--<b>Obligations relatives</b><br/>-->
-                <!-- - Lorem Ipsum-->
+              <p class="section__subtitle"><strong>Conséquences</strong></p>
 
-                <p class="section__subtitle">Analyse complémentaire</p>
+              <div id="conclusion0"
+                   style="text-align: justify"
+                   v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf === 0">
+                <p>Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au titre des pollutions de sols
+                   d’origine industrielle.</p>
+              </div>
+              <div id="conclusion1"
+                   style="text-align: justify"
+                   v-if="avis.basiasParcelle.numberOf > 0 && (avis.basolParcelle.numberOf > 0 || avis.installationClasseeParcelle.numberOf > 0)">
+                <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur ou au locataire conformément à la réglementation en vigueur (article L. 514-20 du code
+                   de l’environnement et L 125-7 du code de l’Environnement si positif SIS).</p>
+                <p>En outre compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien) , la réalisation
+                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
+                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
+                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
+                   la liste de ces bureaux d'étude</p>
+              </div>
+              <div id="conclusion2"
+                   style="text-align: justify"
+                   v-if="avis.basiasParcelle.numberOf > 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0">
+                <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de l’environnement.</p>
+                <p>Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
+                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
+                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
+                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
+                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
+                   la liste de ces bureaux d'étude</p>
+              </div>
+              <div id="conclusion3"
+                   style="text-align: justify"
+                   v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf > 0">
+                <p>Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
+                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de vente ou de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la
+                   réalisation d'une étude historique dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
+                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
+                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
+                   la liste de ces bureaux d'étude</p>
+              </div>
 
-                <template v-if="avis.basiasRayonParcelle.numberOf > 0 || avis.basolRayonParcelle.numberOf > 0 || avis.installationClasseeRayonParcelle.numberOf > 0">
-                  <p>Pour information, dans un rayon de 100m&nbsp;:</p>
+              <br/>
 
-                  <template v-if="avis.basiasRayonParcelle.numberOf > 0">
-                    <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basias dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
-                    <p v-else>Se trouvent {{ avis.basiasRayonParcelle.numberOf }} sites Basias dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+              <section class="section section-white"
+                       id="details"
+                       style="text-align: left">
+
+                <p @click="showHideContent
+                           _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
+                   class="section__subtitle"
+                   style="margin-bottom: 0; cursor: pointer;">Détails et analyse à 100m</p>
+                <a @click="showHideContent
+                           _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
+                   style="position: absolute; top: 25px; right: 25px; text-decoration: none; background: none">
+                  <font-awesome-icon icon="caret-down"
+                                     size="2x"
+                                     v-if="!visibility.details"/>
+                  <font-awesome-icon icon="caret-up"
+                                     size="2x"
+                                     v-else/>
+                </a>
+                <div class="section_content"
+                     v-if="visibility.details">
+                  <br/>
+                  Votre parcelle, <br/>
+                  <p>{{ avis.basiasParcelle.lib }}</p>
+                  <template v-if="avis.basiasParcelle.numberOf > 0">
                     <ul class="site-list">
                       <li :key="ic.id"
-                          v-for="ic in avis.basiasRayonParcelle.liste">
+                          v-for="ic in avis.basiasParcelle.liste">
                         - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
                              target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
                       </li>
                     </ul>
                   </template>
-                  <template v-if="avis.basolRayonParcelle.numberOf > 0">
-                    <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basol dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
-                    <p v-else>Se trouvent {{ avis.basolRayonParcelle.numberOf }} sites Basol dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                  <p>{{ avis.basolParcelle.lib }}</p>
+                  <template v-if="avis.basolParcelle.numberOf > 0">
                     <ul class="site-list">
                       <li :key="ic.id"
                           v-for="ic in avis.basolRayonParcelle.liste">
                         - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
                     </ul>
                   </template>
-                  <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
-                    <p v-if="avis.installationClasseeRayonParcelle.numberOf === 1">Se trouve 1 installation classée&nbsp;: </p>
-                    <p v-else>Se trouvent {{ avis.installationClasseeRayonParcelle.numberOf }} installations classées&nbsp;: </p>
+                  <p>{{ avis.installationClasseeParcelle.lib }}</p>
+                  <template v-if="avis.installationClasseeParcelle.numberOf > 0">
                     <ul class="site-list">
                       <li :key="ic.id"
-                          v-for="ic in avis.installationClasseeRayonParcelle.liste">
+                          v-for="ic in avis.installationClasseeParcelle.liste">
                         - {{ ic.nom }}
                       </li>
                     </ul>
                   </template>
-                </template>
-                <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+                  <p>{{ avis.sisParcelle.lib }}</p>
 
-                <template v-if="avis.installationClasseeCommune.numberOf > 0"><p>Enfin, nous avons trouvé {{ avis.installationClasseeCommune.numberOf }} installation(s) classée(s) non géoréférencées
-                                                                                 dans la commune.</p></template>
-              </div>
+                  <template v-if="avis.basiasRayonParcelle.numberOf > 0 || avis.basolRayonParcelle.numberOf > 0 || avis.installationClasseeRayonParcelle.numberOf > 0">
+                    <p>Pour information, dans un rayon de 100m&nbsp;:</p>
+
+                    <template v-if="avis.basiasRayonParcelle.numberOf > 0">
+                      <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basias dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
+                      <p v-else>Se trouvent {{ avis.basiasRayonParcelle.numberOf }} sites Basias dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                      <ul class="site-list">
+                        <li :key="ic.id"
+                            v-for="ic in avis.basiasRayonParcelle.liste">
+                          - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
+                               target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                        </li>
+                      </ul>
+                    </template>
+                    <template v-if="avis.basolRayonParcelle.numberOf > 0">
+                      <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basol dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
+                      <p v-else>Se trouvent {{ avis.basolRayonParcelle.numberOf }} sites Basol dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
+                      <ul class="site-list">
+                        <li :key="ic.id"
+                            v-for="ic in avis.basolRayonParcelle.liste">
+                          - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
+                      </ul>
+                    </template>
+                    <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
+                      <p v-if="avis.installationClasseeRayonParcelle.numberOf === 1">Se trouve 1 installation classée&nbsp;: </p>
+                      <p v-else>Se trouvent {{ avis.installationClasseeRayonParcelle.numberOf }} installations classées&nbsp;: </p>
+                      <ul class="site-list">
+                        <li :key="ic.id"
+                            v-for="ic in avis.installationClasseeRayonParcelle.liste">
+                          - {{ ic.nom }}
+                        </li>
+                      </ul>
+                    </template>
+                  </template>
+                  <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+
+                  <template v-if="avis.installationClasseeCommune.numberOf > 0"><p>Enfin, nous avons trouvé {{ avis.installationClasseeCommune.numberOf }} installation(s) classée(s) non géoréférencées
+                                                                                   dans la commune.</p></template>
+                </div>
+              </section>
             </div>
           </div>
         </div>
@@ -513,7 +614,7 @@
 </template>
 
 <script>
-import BigCheck from './BigCheck'
+import BigNumber from './BigNumber'
 import functions from '../script/fonctions'
 import avis from '../script/avis'
 import KrInput from './KrInput'
@@ -521,6 +622,9 @@ import KrInput from './KrInput'
 export default {
   name: 'Kelrisks',
   data: () => ({
+    visibility: {
+      details: false
+    },
     informations: {
       hasError: false,
       errorList: [],
@@ -556,23 +660,21 @@ export default {
     avis: {
       querying: false,
       rendered: false,
-      isBasias: true,
-      levelWarningBasias: 1,
+      basiasNbOf: 0,
       basiasParcelle: {},
       basiasProximiteParcelle: {},
       basiasRayonParcelle: {},
       basiasRaisonSociale: {},
-      isBasol: true,
-      levelWarningBasol: 2,
+      basolNbOf: 0,
       basolParcelle: {},
       basolProximiteParcelle: {},
       basolRayonParcelle: {},
-      isS3IC: true,
-      levelWarningS3IC: 3,
+      s3ICNbOf: 0,
       installationClasseeParcelle: {},
       installationClasseeProximiteParcelle: {},
       installationClasseeRayonParcelle: {},
-      installationClasseeCommune: {}
+      installationClasseeCommune: {},
+      sisParcelle: {}
     },
     env: {
       basePath: process.env.VUE_APP_PATH,
@@ -581,9 +683,14 @@ export default {
   }),
   components: {
     KrInput,
-    BigCheck
+    BigNumber
   },
   methods: {
+    showHideContent () {
+      console.log(this.visibility.details)
+      this.visibility.details = !this.visibility.details
+      console.log(this.visibility.details)
+    },
     onCodePostalChanged (value) {
       this.form.codeINSEE = value.codeINSEE
       this.form.codePostal = value.codePostal
@@ -601,6 +708,12 @@ export default {
     onNumeroChanged (value) {
       this.form.idBAN = value.code
       this.form.numeroVoieLib = value.libelle
+    },
+    onNomProprietaireSelected (value) {
+      this.form.proprio = value.code
+    },
+    onNomProprietaireChanged (value) {
+      this.form.proprio = value
     },
     flowNext () {
       this.flow.index++
@@ -641,44 +754,39 @@ export default {
           this.flow.index++
 
           this.avis.basiasParcelle = avis.getBasiasParcelle(value)
-          this.avis.basiasRaisonSociale = avis.getBasiasRaisonSociale(value)
           this.avis.basiasProximiteParcelle = avis.getBasiasProximiteParcelle(value)
+          this.avis.basiasRaisonSociale = avis.getBasiasRaisonSocialeParcelle(value)
           this.avis.basiasRayonParcelle = avis.getBasiasRayonParcelle(value)
-          this.avis.isBasias = this.avis.basiasParcelle.numberOf > 0 || this.avis.basiasRayonParcelle.numberOf > 0 || this.avis.basiasProximiteParcelle.numberOf > 0 || this.avis.basiasRaisonSociale.numberOf > 0
-          this.avis.levelWarningBasias = this.avis.basiasParcelle.numberOf > 0 ? 3
-            : this.avis.basiasProximiteParcelle.numberOf > 0 ? 2
-              : this.avis.basiasRayonParcelle.numberOf > 0 ? 1
-                : this.avis.basiasRaisonSociale.numberOf > 0 ? 2
-                  : 0
 
           this.avis.basolParcelle = avis.getBasolParcelle(value)
           this.avis.basolProximiteParcelle = avis.getBasolProximiteParcelle(value)
           this.avis.basolRayonParcelle = avis.getBasolRayonParcelle(value)
-          this.avis.isBasol = this.avis.basolParcelle.numberOf > 0 || this.avis.basolProximiteParcelle.numberOf > 0 || this.avis.basolRayonParcelle.numberOf > 0
-          this.avis.levelWarningBasol = this.avis.basolParcelle.numberOf > 0 ? 3
-            : this.avis.basolProximiteParcelle.numberOf > 0 ? 2
-              : this.avis.basolRayonParcelle.numberOf > 0 ? 1
-                : 0
 
           this.avis.installationClasseeParcelle = avis.getICSurParcelle(value)
           this.avis.installationClasseeProximiteParcelle = avis.getICProximiteParcelle(value)
           this.avis.installationClasseeRayonParcelle = avis.getICRayonParcelle(value)
           this.avis.installationClasseeCommune = avis.getICNonGeoreferencees(value)
-          this.avis.isS3IC = this.avis.installationClasseeParcelle.numberOf > 0 || this.avis.installationClasseeProximiteParcelle.numberOf > 0 || this.avis.installationClasseeRayonParcelle.numberOf > 0 || this.avis.installationClasseeCommune.numberOf > 0
-          this.avis.levelWarningS3IC = this.avis.installationClasseeParcelle.numberOf > 0 ? 3
-            : this.avis.installationClasseeProximiteParcelle.numberOf > 0 ? 2
-              : this.avis.installationClasseeRayonParcelle.numberOf > 0 ? 1
-                : this.avis.installationClasseeCommune.numberOf > 0 ? 1
-                  : 0
+
+          this.avis.sisParcelle = avis.getSISSurParcelle(value)
 
           functions.scrollToElement('main', false)
+          _paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
         })
+    }
+  },
+  computed: {
+    concordances: function () {
+      return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
     }
   }
 }
 </script>
 
 <style>
+  body {
+    overflow-y : scroll;
+  }
+
   .hero__container p {
     transition : all 0.5s;
   }
@@ -706,36 +814,34 @@ export default {
   }
 
   .panel {
-    overflow : auto;
+    overflow : visible;
     position : relative;
-  }
-
-  .panel:after {
-    content    : ".";
-    visibility : hidden;
-    clear      : both;
   }
 
   i {
     color : #777777;
   }
 
+  section {
+    position : relative;
+  }
+
   .section__subtitle {
     margin-bottom : 40px;
   }
 
-  #summary, #avis {
-    background-color : #FFFFFF;
-    border           : 1px solid #CCCCCC;
-    border-radius    : 2px;
-    float            : left;
-    padding          : 30px 20px;
-  }
-
-  #summary {
+  #summary_wrapper {
     float      : left;
     width      : 30%;
     text-align : left;
+  }
+
+  #summary, #avis, #details {
+    background-color : #FFFFFF;
+    border           : 1px solid #CCCCCC;
+    border-radius    : 2px;
+    /*float            : left;*/
+    padding          : 30px 20px;
   }
 
   #avis {
@@ -750,5 +856,13 @@ export default {
 
   .site-list {
     list-style : none;
+  }
+
+  .clearfix:after {
+    content    : '';
+    display    : block;
+    height     : 0;
+    clear      : both;
+    visibility : hidden;
   }
 </style>
