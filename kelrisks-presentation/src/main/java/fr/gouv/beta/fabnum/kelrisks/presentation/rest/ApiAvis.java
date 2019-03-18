@@ -182,20 +182,24 @@ public class ApiAvis extends AbstractBasicApi {
                            "l’environnement.</p>");
             element.append("<p class=\"indent\">Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
             element.append("<p class=\"indent\">Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
-                           "destination du bien), la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>");
-            element.append("<p class=\"indent\">Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations " +
-                           "exigées au titre du code de l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne" +
-                           ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>) la liste" +
-                           " de ces bureaux d'étude.</p>");
+                           "destination du bien), la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.  Nous vous" +
+                           " rappelons que l'obligation de faire appel à un bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne " +
+                           "concerne que les attestations prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement.</p>");
+            element.append("<p class=\"indent\">Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont " +
+                           "répertoriés par le COFRAC (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce " +
+                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne" +
+                           ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)</p>");
         }
         if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() > 0) {
             element.append("<p class=\"indent\">Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
-            element.append("<p class=\"indent\">Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de vente ou de changement d'usage du terrain (travaux, constructions, ou " +
-                           "changement de destination du bien), la réalisation d'une étude historique dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>");
-            element.append("<p class=\"indent\">Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations " +
-                           "exigées au titre du code de l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne" +
-                           ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>) la liste" +
-                           " de ces bureaux d'étude.</p>");
+            element.append("<p class=\"indent\">Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
+                           "destination du bien), la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.  Nous vous" +
+                           " rappelons que l'obligation de faire appel à un bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne " +
+                           "concerne que les attestations prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement.</p>");
+            element.append("<p class=\"indent\">Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont " +
+                           "répertoriés par le COFRAC (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce " +
+                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne" +
+                           ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)</p>");
         }
     }
     
