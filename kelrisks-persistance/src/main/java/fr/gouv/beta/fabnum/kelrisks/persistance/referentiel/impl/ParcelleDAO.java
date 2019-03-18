@@ -9,6 +9,9 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.ParcelleR
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QParcelle;
 
+import java.util.List;
+
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -61,6 +64,18 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     protected EntityPathBase<Parcelle> getQueryObject() {
         
         return parcelle;
+    }
+    
+    @Override
+    public Parcelle rechercherParcelleContenantPoint(Geometry point) {
+        
+        return parcelleRepository.rechercherParcelleContenantPoint(point);
+    }
+    
+    @Override
+    public List<Parcelle> rechercherParcellesContigues(Geometry point) {
+        
+        return parcelleRepository.rechercherParcellesContigues(point);
     }
 }
   

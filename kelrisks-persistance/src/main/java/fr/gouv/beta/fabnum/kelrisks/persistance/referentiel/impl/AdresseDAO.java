@@ -8,7 +8,12 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.IAdresseDAO;
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.AdresseRepository;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QAdresse;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QCommune;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
 
+import java.util.List;
+
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -47,8 +52,27 @@ public class AdresseDAO extends AbstractDAO<Adresse> implements IAdresseDAO {
     }
     
     @Override
+    public List<Adresse> rechercherAdresseDansGeometry(Geometry geometry) {
+        
+        return adresseRepository.rechercherAdresseDansGeometry(geometry);
+    }
+    
+    @Override
+    public List<Adresse> rechercherVoiePartielle(String codePostal, String query) {
+        
+        return adresseRepository.rechercherVoiePartielle(codePostal, query);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
+        for (AbstractQO abstractQO : leCritere) {
+        
+            if (abstractQO instanceof CommuneQO) {
+            
+                query.leftJoin(QAdresse.adresse.commune(), QCommune.commune).fetchJoin();
+            }
+        }
     }
     
     @Override

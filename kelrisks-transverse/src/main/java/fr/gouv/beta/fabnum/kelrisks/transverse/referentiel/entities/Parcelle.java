@@ -26,6 +26,9 @@ public class Parcelle extends AbstractEntity {
     private String   commune;
     @Column(name = "geog", columnDefinition = "geometry")
     private Geometry multiPolygon;
+    private String   prefixe;
+    private String   section;
+    private String   numero;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -44,8 +47,8 @@ public class Parcelle extends AbstractEntity {
     }
     
     public Long getId() {
-        
-        if (this.id == null) { this.id = 0L; }
+    
+        if (this.id == null) { return 0L; }
         return this.id;
     }
 }

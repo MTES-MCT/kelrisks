@@ -6,6 +6,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustri
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -19,7 +20,7 @@ public interface SiteIndustrielBasolRepository extends IAbstractRepository<SiteI
     @Query(value = "SELECT si " +
                    "FROM SiteIndustrielBasol si, Parcelle p " +
                    "WHERE p.code = :codeParcelle" +
-                   "  AND st_intersects(si.point, p.multiPolygon) = TRUE")
+                   "  AND st_within(si.point, p.multiPolygon) = TRUE")
     List<SiteIndustrielBasol> rechercherSiteSurParcelle(@Param("codeParcelle") String codeParcelle);
     
     @Query("SELECT si " +
@@ -30,6 +31,17 @@ public interface SiteIndustrielBasolRepository extends IAbstractRepository<SiteI
            "                             WHERE p.code = :codeParcelle)), " +
            "                 :distance) = TRUE")
     List<SiteIndustrielBasol> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
-                                                                       @Param("distance") Double distance);
+                                                                       @Param("distance") double distance);
+    
+    @Query(value = "SELECT si " +
+                   "FROM SiteIndustrielBasol si " +
+                   "WHERE st_within(si.point, :multiPolygon) = TRUE")
+    List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    @Query(value = "SELECT si " +
+                   "FROM SiteIndustrielBasol si, Parcelle p " +
+                   "WHERE p.code IN :codes" +
+                   "  AND st_within(si.point, p.multiPolygon) = TRUE")
+    List<SiteIndustrielBasol> rechercherSitesSurParcelles(List<String> codes);
 }
-  
+

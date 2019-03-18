@@ -1,5 +1,5 @@
 
-# IDE specifics
+### IDE specifics
 
 # Intellij
 **/.idea
@@ -11,8 +11,8 @@
 **/.checkstyle
 **/.classpath
 
-# Project
+### Project
 
+**/resources/public/
 **/target
 **/out
-/bdpammgen

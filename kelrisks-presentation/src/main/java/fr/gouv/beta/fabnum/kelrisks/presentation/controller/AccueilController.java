@@ -9,8 +9,6 @@ public class AccueilController {
     @RequestMapping("/")
     public String accueil() {
         
-        System.out.println("test");
-        
         return "redirect:/swagger-ui.html";
     }
 }

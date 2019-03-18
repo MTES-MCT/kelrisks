@@ -6,6 +6,8 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustri
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
+
 /**
  * Interface du Service qui gère les entités SiteIndustrielBasol
  */
@@ -13,6 +15,10 @@ public interface ISiteIndustrielBasolService extends IAbstractCRUDService<SiteIn
     
     List<SiteIndustrielBasol> rechercherSiteSurParcelle(String codeParcelle);
     
-    List<SiteIndustrielBasol> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance);
+    List<SiteIndustrielBasol> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance);
+    
+    List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    List<SiteIndustrielBasol> rechercherSitesSurParcelles(List<String> codes);
 }
   

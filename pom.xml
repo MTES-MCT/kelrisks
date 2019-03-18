@@ -7,15 +7,16 @@
     <groupId>fr.gouv.beta.fabnum</groupId>
     <artifactId>kelrisks</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
 
     <modules>
+        <module>kelrisks-vue</module>
         <module>kelrisks-data</module>
         <module>kelrisks-facade</module>
         <module>kelrisks-metier</module>
         <module>kelrisks-persistance</module>
-        <module>kelrisks-presentation</module>
         <module>kelrisks-transverse</module>
+        <module>kelrisks-presentation</module>
     </modules>
 
     <parent>
@@ -59,6 +60,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

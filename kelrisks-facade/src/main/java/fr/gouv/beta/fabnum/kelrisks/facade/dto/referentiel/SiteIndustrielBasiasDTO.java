@@ -8,7 +8,8 @@ public class SiteIndustrielBasiasDTO {
     private Long   id;
     private String identifiant;
     private String adresse;
-    private String code_activite;
+    private String codeActivite;
+    private String raisonSociale;
     private String geolocalisation;
     private String precision;
 }

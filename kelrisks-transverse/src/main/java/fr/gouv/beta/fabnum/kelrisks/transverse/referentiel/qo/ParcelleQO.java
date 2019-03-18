@@ -10,10 +10,20 @@ import com.querydsl.core.BooleanBuilder;
 @Data
 public class ParcelleQO extends AbstractQO {
     
+    private String code;
+    private String section;
+    private String numero;
+    private String codePostal;
+    private String codeINSEE;
+    
     @Override
     public void feedBuilder(BooleanBuilder builder) {
         
         if (id != null) {builder.and(QParcelle.parcelle.id.eq(id));}
+        if (code != null) {builder.and(QParcelle.parcelle.code.eq(code));}
+        if (section != null) {builder.and(QParcelle.parcelle.section.equalsIgnoreCase(section));}
+        if (numero != null) {builder.and(QParcelle.parcelle.numero.eq(numero));}
+        if (codeINSEE != null) {builder.and(QParcelle.parcelle.commune.eq(codeINSEE));}
     }
 }
   

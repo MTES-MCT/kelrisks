@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta content="text/html; charset=utf-8"
+              http-equiv="Content-Type"/>
+        <title>Avis Kelrisks</title>
+        <style>
+            h1 {
+                color : #2C3E50;
+                /*background-color : #E8FFF4;*/
+            }
+
+            h2 {
+                color          : #53657D;
+                padding-bottom : 50px;
+                /*background-color : #E8F7FF;*/
+            }
+
+            .contentWrapper {
+                text-align     : justify;
+                padding-bottom : 30px;
+                /*background-color : #FFE6E6;*/
+            }
+
+            p {
+                line-height : 1.2em;
+                padding     : 0;
+                margin      : 5px 0;
+                /*background-color : #FFFBE8;*/
+            }
+
+            p.indent {
+                text-indent : 25px;
+            }
+
+            ul {
+                list-style : none;
+                padding    : 0;
+                margin     : 5px 12px;
+            }
+
+            a {
+                color : #000000;
+            }
+
+            @page {
+                @bottom-center {
+                    content : "kelrisks.beta.gouv.fr";
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div style="text-align: center">
+            <h1>Kelrisks</h1>
+            <h2>Avis</h2>
+        </div>
+        <div class="contentWrapper">
+            <p class="indent">Nous vous informons que la parcelle <span id="infos"></span>,</p>
+            <p id="basiasParcelle"></p>
+            <p class="indent"
+               id="basiasProximiteParcelle"></p>
+            <p id="basolParcelle"></p>
+            <p id="icParcelle"></p>
+        </div>
+        <div id="analyseComplementaireWrapper">
+            <div style="text-align: center">
+                <h2>Analyse complémentaire</h2>
+            </div>
+            <div class="contentWrapper"
+                 id="rayonWrapper">
+                <p class="indent">Pour information, dans un rayon de 100m :</p>
+                <p id="basiasRayon"></p>
+                <p id="basolRayon"></p>
+                <p id="icRayon"></p>
+            </div>
+            <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+            <div class="contentWrapper"
+                 id="icCommuneWrapper">
+                <p class="indent"
+                   id="icCommune"></p>
+            </div>
+        </div>
+    </body>
+</html>
