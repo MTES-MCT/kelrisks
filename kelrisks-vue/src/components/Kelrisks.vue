@@ -491,20 +491,24 @@
                 <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de l’environnement.</p>
                 <p>Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
                 <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
-                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
-                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
-                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
-                   la liste de ces bureaux d'étude</p>
+                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions. Nous vous rappelons que l'obligation de faire appel à un
+                   bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne concerne que les attestations prévues aux articles L. 556-1
+                   et L. 556-2 du code de l'environnement.</p>
+                <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
+                   (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
+                   (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
               </div>
               <div id="conclusion3"
                    style="text-align: justify"
                    v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf > 0">
                 <p>Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
-                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de vente ou de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la
-                   réalisation d'une étude historique dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
-                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
-                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
-                   la liste de ces bureaux d'étude</p>
+                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
+                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions. Nous vous rappelons que l'obligation de faire appel à un
+                   bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne concerne que les attestations prévues aux articles L. 556-1
+                   et L. 556-2 du code de l'environnement.</p>
+                <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
+                   (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
+                   (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
               </div>
 
               <br/>
@@ -602,48 +606,54 @@
               </section>
             </div>
           </div>
+          <div class="note_pied_page">
+            <p>(1) L'obligation de faire appel à un bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 concerne les attestations
+               prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement et exigées à l'article R 431-16 du code de l'urbanisme (alinéa n et o).</p>
+            <p>(2) Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
+               (www.cofrac.fr). A ce jour seul le LNE est accrédité pour délivrer la certification relative aux sols pollués et la liste des bureaux d'études certifiés par le LNE est disponible en
+               cliquant sur ce lien (https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr)</p>
+          </div>
         </div>
       </section>
-
     </main>
 
-    <div style="width: 100%;">
-      <p style="font-size: 0.8em; text-align: center;">(Île-de-France)* - Territoire d'expérimentation.</p>
-    </div>
+    <how-to class="clearfix"
+            v-show="flow.index === 1"/>
 
-    <div class="panel hidden"
-         id="contact">
-      <font-awesome-icon @click="openCloseContact()"
-                         class="close"
-                         icon="caret-down"
-                         size="lg"
-                         v-show="contact.opened"/>
-      <font-awesome-icon @click="openCloseContact()"
-                         icon="caret-up"
-                         size="lg"
-                         class="close"
-                         v-show="!contact.opened"/>
-      <p @click="openCloseContact()"
-         class="section__subtitle">Une remarque? Une suggestion?</p>
-      <textarea id="contactContent"
-                title="Remarque/Suggestion/Problème?"></textarea>
-      <button @click="sendMail()"
-              class="button">Envoyer
-      </button>
-    </div>
+    <p style="font-size: 0.8em; width: 53%; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
+
+    <footer>
+      <div>
+        <div class="column">
+          <who-are-we ref="haw"/>
+          <a @click="$refs.haw.open()">Qui sommes nous ?</a>
+        </div>
+        <div class="column">
+          <c-g-u ref="cgu"/>
+          <a @click="$refs.cgu.open()">CGU</a>
+        </div>
+        <div class="column">
+          <a href="swagger-ui.html">API</a>
+        </div>
+      </div>
+    </footer>
+
+    <contact/>
+    <konami/>
 
   </div>
 </template>
 
 <script>
 import BigNumber from './BigNumber'
+import Contact from './Contact'
+import CGU from './CGU'
+import HowTo from './HowTo'
+import WhoAreWe from './WhoAreWe'
 import functions from '../script/fonctions'
-import konami from '../script/konami'
+import Konami from './Konami'
 import avis from '../script/avis'
 import KrInput from './KrInput'
-import JQuery from 'jquery'
-
-let $ = JQuery
 
 export default {
   name: 'Kelrisks',
@@ -709,48 +719,19 @@ export default {
     },
     env: {
       basePath: process.env.VUE_APP_PATH,
-      apiPath: process.env.VUE_APP_API_PATH,
-      startTime: (new Date()).getTime()
+      apiPath: process.env.VUE_APP_API_PATH
     }
   }),
   components: {
+    Contact,
     KrInput,
-    BigNumber
+    BigNumber,
+    CGU,
+    HowTo,
+    WhoAreWe,
+    Konami
   },
   methods: {
-    openCloseContact () {
-      if (this.contact.opened) this.closeContact()
-      else this.openContact()
-    },
-    closeContact () {
-      $('#contact').addClass('hidden')
-      this.contact.opened = false
-    },
-    openContact () {
-      $('#contact').removeClass('hidden')
-      this.contact.opened = true
-    },
-    countDown () {
-      this.contact.timesUp = (new Date()).getTime() - this.env.startTime > 1000 * 30
-      if (this.contact.timesUp) {
-        this.openContact()
-        clearInterval(this.contact.countDown)
-      }
-    },
-    sendMail () {
-      fetch(this.env.basePath + 'mail', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({content: $('#contactContent').val()})
-      }).then(stream => stream.json())
-        .then(value => {
-          this.closeContact()
-          $('#contactContent').val('')
-          console.log(value)
-        })
-    },
     showHideContent () {
       // console.log(this.visibility.details)
       this.visibility.details = !this.visibility.details
@@ -854,12 +835,6 @@ export default {
       return window._paq
     }
   },
-  mounted () {
-    this.contact.countDown = setInterval(() => {
-      this.countDown()
-    }, 1000)
-    konami.init()
-  },
   beforeDestroy () {
     clearInterval(this.contact.countDown)
   }
@@ -906,8 +881,9 @@ export default {
     color : #777777;
   }
 
-  section {
-    position : relative;
+  section.section {
+    position       : relative;
+    padding-bottom : 25px;
   }
 
   .section__subtitle {
@@ -950,33 +926,35 @@ export default {
     visibility : hidden;
   }
 
-  #contact {
-    transition : bottom 0.33s ease;
-    width      : 400px;
-    position   : fixed;
-    bottom     : -1px;
-    right      : 10px;
+  .note_pied_page {
+    /*width  : 53%;*/
+    margin : 0 auto;
   }
 
-  #contact.hidden {
-    bottom : -167px;
+  .note_pied_page p {
+    font-size : 0.8em;
+    color     : #999999;
   }
 
-  #contact .close {
-    position : absolute;
-    top      : 15px;
-    right    : 6px;
-    cursor   : pointer;
+  footer {
+    /*border-top: #CCCCCC solid 1px;*/
+    width  : 60%;
+    margin : 30px auto;
   }
 
-  #contact p.section__subtitle {
-    cursor        : pointer;
-    margin-bottom : 15px;
-    margin-top    : -10px;
+  footer a {
+    text-decoration : none;
+    /*color           : #2C3E50;*/
   }
 
-  #contact textarea {
-    margin-bottom : 20px;
-    resize        : none;
+  footer .column {
+    width   : 33.33%;
+    float   : left;
+    padding : 15px;
+  }
+
+  footer .column:nth-child(2) {
+    border-right : #CCCCCC solid 1px;
+    border-left  : #CCCCCC solid 1px;
   }
 </style>
