@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta content="text/html; charset=utf-8"
+              http-equiv="Content-Type"/>
+        <title>Avis Kelrisks</title>
+        <style>
+            body {
+                font-size : 0.9em;
+            }
+
+            #marianne_wrapper {
+                width         : 100%;
+                height        : 90px;
+                align-content : center;
+            }
+
+            img {
+                margin-left  : auto;
+                margin-right : auto;
+                display      : block;
+            }
+
+            h1 {
+                color : #2C3E50;
+                /*background-color : #E8FFF4;*/
+            }
+
+            h2 {
+                color          : #53657D;
+                padding-bottom : 20px;
+                /*background-color : #E8F7FF;*/
+            }
+
+            .contentWrapper {
+                text-align     : justify;
+                padding-bottom : 30px;
+                margin-left    : 50px;
+                /*background-color : #FFE6E6;*/
+            }
+
+            p {
+                line-height : 1.2em;
+                padding     : 0;
+                margin      : 5px 0;
+                /*background-color : #FFFBE8;*/
+            }
+
+            p.indent {
+                text-indent : 25px;
+            }
+
+            ul {
+                list-style : none;
+                padding    : 0;
+                margin     : 5px 12px;
+                text-align : left;
+            }
+
+            a {
+                color : #000000;
+            }
+
+            @page {
+                @bottom-center {
+                    font-size : 0.6em;
+                    width     : 500px;
+                    color     : #777777;
+                    content   : "Kelrisks - Evaluez simplement et rapidement le risque de pollution de votre terrain - kelrisks.beta.gouv.fr";
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="marianne_wrapper">
+            <img height="80px"
+                 src="http://kelrisks.beta.gouv.fr/api/image/marianne"
+                 style="margin : 0 auto;"
+                 width="134px"/>
+        </div>
+        <div style="text-align: center">
+            <h1 style="color: #CCCCCC; font-size: 0.9em; margin-bottom: 50px;">MINISTÈRE DE LA TRANSITION ÉCOLOGIQUE ET SOLIDAIRE</h1>
+            <h1 style="font-size: 1.5em; margin-bottom: 50px;">Kelrisks</h1>
+        </div>
+        <div id="date"
+             style="text-align: right; width: 100%; margin-bottom: 50px;">Le
+        </div>
+        <!--<div style="text-align: center">-->
+        <!--<h2>Avis</h2>-->
+        <!--</div>-->
+        <div class="contentWrapper">
+            <p class="indent">Nous vous informons que la parcelle <span id="infos"></span> :</p>
+            <p id="basiasParcelle"></p>
+            <p class="indent"
+               id="basiasProximiteParcelle"></p>
+            <p id="basolParcelle"></p>
+            <p id="icParcelle"></p>
+            <p id="sisParcelle"></p><br/>
+            <div style="text-align: center">
+                <h2>Conséquences</h2>
+            </div>
+            <div id="conclusion"></div>
+        </div>
+        <div id="analyseComplementaireWrapper">
+            <div style="text-align: center; margin-left : 50px;">
+                <h2>Analyse complémentaire</h2>
+            </div>
+            <div class="contentWrapper"
+                 id="rayonWrapper">
+                <p class="indent">Pour information, dans un rayon de 100m :</p>
+                <p id="basiasRayon"></p>
+                <p id="basolRayon"></p>
+                <p id="icRayon"></p>
+            </div>
+            <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+            <div class="contentWrapper"
+                 id="icCommuneWrapper">
+                <p class="indent"
+                   id="icCommune"></p>
+            </div>
+        </div>
+    </body>
+</html>

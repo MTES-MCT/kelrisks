@@ -1,8 +1,6 @@
 package fr.gouv.beta.fabnum.commun.transverse.qo;
 
 
-import fr.gouv.beta.fabnum.commun.transverse.referentiel.ConstantesCommunes;
-import fr.gouv.beta.fabnum.commun.utils.InitManager;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.StringPath;
 
 @Data
 public class CritereTri implements Serializable {
@@ -18,6 +17,8 @@ public class CritereTri implements Serializable {
      * Champ serialVersionUID
      */
     private static final long serialVersionUID = 7914369229164646504L;
+    //    @Autowired
+    //    ApplicationProperties applicationProperties;
     
     /**
      * La version typée grâce à QueryDSL
@@ -33,6 +34,8 @@ public class CritereTri implements Serializable {
      * Champ ascendant : true = croissant, false = decroissant
      */
     private boolean ascendant;
+    
+    private StringPath distinct;
     
     /**
      * Constructeur
@@ -50,8 +53,10 @@ public class CritereTri implements Serializable {
      * Constructeur par défaut : tri ascendant sur "id"
      */
     public CritereTri() {
-        
-        this(InitManager.getProperty(ConstantesCommunes.CRITERE_TRI_DEFAUT), true);
+    
+        //        setPropriete(applicationProperties.getCritere().getTri().getDefaut()); TODO : Comprendre pourquoi les prop ne sont pas injectées (Problème d'ordre ?)
+        setPropriete("id");
+        setAscendant(true);
     }
     
     public void ajouteOrdre(OrderSpecifier<?> ordre) {

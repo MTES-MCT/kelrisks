@@ -8,6 +8,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustri
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -40,9 +41,33 @@ public class SiteIndustrielBasiasService extends AbstractCRUDService<SiteIndustr
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance) {
+    public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance) {
+    
+        return dao.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance / 100000D); // Conversion en mètres
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon) {
         
-        return dao.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance);
+        return dao.rechercherSitesDansPolygon(multiPolygon);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance) {
+        
+        return dao.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, distance);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherRaisonsSociales(String query) {
+    
+        return dao.rechercherRaisonsSociales(query);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherSitesSurParcelles(List<String> codes) {
+        
+        return dao.rechercherSitesSurParcelles(codes);
     }
 }
   

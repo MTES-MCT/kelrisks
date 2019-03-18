@@ -6,6 +6,9 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.IParcelleDAO;
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl.ParcelleDAO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 
+import java.util.List;
+
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,18 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
         
         this.setFdao(fdao);
         dao = fdao;
+    }
+    
+    @Override
+    public Parcelle rechercherParcelleContenantPoint(Geometry point) {
+        
+        return dao.rechercherParcelleContenantPoint(point);
+    }
+    
+    @Override
+    public List<Parcelle> rechercherParcellesContigues(Geometry geom) {
+        
+        return dao.rechercherParcellesContigues(geom);
     }
 }
   

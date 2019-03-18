@@ -6,6 +6,9 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.IAdresseDAO;
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl.AdresseDAO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 
+import java.util.List;
+
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,12 @@ public class AdresseService extends AbstractCRUDService<Adresse> implements IAdr
         
         this.setFdao(fdao);
         dao = fdao;
+    }
+    
+    @Override
+    public List<Adresse> rechercherAdresseDansGeometry(Geometry geometry) {
+        
+        return dao.rechercherAdresseDansGeometry(geometry);
     }
 }
   

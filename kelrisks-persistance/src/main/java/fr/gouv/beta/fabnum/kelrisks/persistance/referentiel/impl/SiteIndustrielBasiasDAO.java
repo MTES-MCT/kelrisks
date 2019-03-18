@@ -11,6 +11,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustri
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -55,9 +56,33 @@ public class SiteIndustrielBasiasDAO extends AbstractDAO<SiteIndustrielBasias> i
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, Double distance) {
+    public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance) {
         
         return siteIndustrielBasiasRepository.rechercherSiteDansRayonCentroideParcelle(codeParcelle, distance);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon) {
+        
+        return siteIndustrielBasiasRepository.rechercherSitesDansPolygon(multiPolygon);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance) {
+        
+        return siteIndustrielBasiasRepository.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, distance);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherRaisonsSociales(String query) {
+    
+        return siteIndustrielBasiasRepository.rechercherRaisonsSociales(query);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasias> rechercherSitesSurParcelles(List<String> codes) {
+        
+        return siteIndustrielBasiasRepository.rechercherSitesSurParcelles(codes);
     }
     
     @Override
