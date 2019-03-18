@@ -7,7 +7,7 @@
     <groupId>fr.gouv.beta.fabnum</groupId>
     <artifactId>kelrisks</artifactId>
     <packaging>pom</packaging>
-    <version>0.1-SNAPSHOT</version>
+    <version>v1.0.1</version>
 
     <modules>
         <module>kelrisks-vue</module>
