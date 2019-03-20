@@ -429,12 +429,6 @@
                           label-text="Sites polués BASOL"/>
 
               <big-number :number-of="avis.installationClasseeParcelle.numberOf"
-                          Compte
-                          ce
-                          de
-                          précède
-                          qui
-                          tenu
                           label-text="Installations classées"/>
 
               <big-number :number-of="avis.installationClasseeParcelle.numberOf"

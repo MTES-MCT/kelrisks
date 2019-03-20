@@ -35,6 +35,7 @@ export default {
     border-radius : 2px;
     display       : inline-block;
     margin        : 0 7px 30px 7px;
+    width         : 22%;
   }
 
   .bc-label {
@@ -42,13 +43,14 @@ export default {
     background-color : #555555;
     color            : #FFFFFF;
     padding          : 10px;
+    min-height       : 70px;
   }
 
   .bc-number {
     margin      : 10px;
     display     : inline-block;
-    width       : 150px;
-    font-size   : 7em;
+    /*width       : 150px;*/
+    font-size   : 6em;
     line-height : 1.2em;
   }
 </style>
