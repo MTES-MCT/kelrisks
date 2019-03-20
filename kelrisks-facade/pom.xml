@@ -5,24 +5,25 @@
     <parent>
         <artifactId>kelrisks</artifactId>
         <groupId>fr.gouv.beta.fabnum</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>v1.0.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kelrisk-facade</artifactId>
+    <artifactId>kelrisks-facade</artifactId>
 
     <dependencies>
 
         <!-- Dépendances avec les autres modules -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>kelrisk-metier</artifactId>
+            <artifactId>kelrisks-metier</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>kelrisk-transverse</artifactId>
+            <artifactId>kelrisks-transverse</artifactId>
             <version>${project.version}</version>
         </dependency>
 

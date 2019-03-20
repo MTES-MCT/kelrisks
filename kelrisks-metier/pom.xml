@@ -6,18 +6,19 @@
     <parent>
         <artifactId>kelrisks</artifactId>
         <groupId>fr.gouv.beta.fabnum</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>v1.0.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kelrisk-metier</artifactId>
+    <artifactId>kelrisks-metier</artifactId>
 
     <dependencies>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>kelrisk-persistance</artifactId>
+            <artifactId>kelrisks-persistance</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
