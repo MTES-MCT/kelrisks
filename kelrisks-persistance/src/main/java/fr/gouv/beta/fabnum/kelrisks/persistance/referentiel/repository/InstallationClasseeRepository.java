@@ -36,8 +36,13 @@ public interface InstallationClasseeRepository extends IAbstractRepository<Insta
     
     @Query(value = "SELECT ic " +
                    "FROM InstallationClassee ic " +
+                   "WHERE st_within(ic.point, :multiPolygon) = TRUE")
+    List<InstallationClassee> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    @Query(value = "SELECT ic " +
+                   "FROM InstallationClassee ic " +
                    "WHERE st_within(ic.point, st_union(:multiPolygon)) = TRUE")
-    List<InstallationClassee> rechercherSitesDansPolygon(List<Geometry> multiPolygon);
+    List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.s3ic ic " +

@@ -33,10 +33,15 @@ public interface SiteIndustrielBasolRepository extends IAbstractRepository<SiteI
     List<SiteIndustrielBasol> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
                                                                        @Param("distance") double distance);
     
-    @Query(value = "SELECT si " +
-                   "FROM SiteIndustrielBasol si " +
-                   "WHERE st_within(si.point, st_union(:multiPolygon)) = TRUE")
-    List<SiteIndustrielBasol> rechercherSitesDansPolygon(List<Geometry> multiPolygon);
+    @Query(value = "SELECT sib " +
+                   "FROM SiteIndustrielBasol sib " +
+                   "WHERE st_within(sib.point, :multiPolygon) = TRUE")
+    List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    @Query(value = "SELECT sib " +
+                   "FROM SiteIndustrielBasol sib " +
+                   "WHERE st_within(sib.point, st_union(:multiPolygon)) = TRUE")
+    List<SiteIndustrielBasol> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
     
     @Query(value = "SELECT si " +
                    "FROM SiteIndustrielBasol si, Parcelle p " +

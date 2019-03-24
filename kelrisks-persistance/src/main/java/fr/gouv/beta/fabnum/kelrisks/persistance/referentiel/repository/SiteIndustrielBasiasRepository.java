@@ -31,10 +31,15 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
                                                                         @Param("distance") double distance);
     
-    @Query(value = "SELECT * " +
-                   " FROM kelrisks.basias AS si" +
-                   " WHERE st_within(si.geog, st_union(:multiPolygon))", nativeQuery = true)
-    List<SiteIndustrielBasias> rechercherSitesDansPolygon(List<Geometry> multiPolygon);
+    @Query(value = "SELECT sib " +
+                   " FROM SiteIndustrielBasias AS sib" +
+                   " WHERE st_within(sib.point, st_union(:multiPolygon)) = TRUE")
+    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    
+    @Query(value = "SELECT sib " +
+                   " FROM SiteIndustrielBasias AS sib" +
+                   " WHERE st_within(sib.point, :multiPolygon) = TRUE")
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +
