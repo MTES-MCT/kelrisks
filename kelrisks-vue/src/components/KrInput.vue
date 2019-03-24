@@ -178,9 +178,12 @@ export default {
     infos: {
       type: [String, Array],
       default: ''
+    },
+    searchDelay: {
+      type: Number,
+      default: 500
     }
   },
-
   data () {
     return {
       isOpen: false,
@@ -192,6 +195,7 @@ export default {
       query: '',
       arrowCounter: 0,
       hasNoResults: false,
+      delayInstance: null,
       isAutocomplete: undefined !== this.source
     }
   },
@@ -226,30 +230,33 @@ export default {
       this.$emit('query', this.query)
     },
     search () {
-      if (this.query && this.query.length >= this.startAt) {
-        if (typeof this.source === 'string') {
-          this.hasNoResults = false
-          this.isLoading = true
-          this.isOpen = false
-          fetch(this.source + this.query)
-            .then(stream => stream.json())
-            .then(value => {
-              this.isLoading = false
-              // console.log(value)
-              if (value.entity.length > 0) {
-                this.isOpen = true
-                this.results = value.entity
-              } else {
-                this.hasNoResults = true
-                this.isOpen = false
-              }
-            })
-          // TODO : Else, let's filter our flat array
-        } else {
-          this.filterResults()
-          this.isOpen = true
+      if (this.delayInstance) clearTimeout(this.delayInstance)
+      this.delayInstance = setTimeout(() => {
+        if (this.query && this.query.length >= this.startAt) {
+          if (typeof this.source === 'string') {
+            this.hasNoResults = false
+            this.isLoading = true
+            this.isOpen = false
+            fetch(this.source + this.query)
+              .then(stream => stream.json())
+              .then(value => {
+                this.isLoading = false
+                // console.log(value)
+                if (value.entity.length > 0) {
+                  this.isOpen = true
+                  this.results = value.entity
+                } else {
+                  this.hasNoResults = true
+                  this.isOpen = false
+                }
+              })
+            // TODO : Else, let's filter our flat array
+          } else {
+            this.filterResults()
+            this.isOpen = true
+          }
         }
-      }
+      }, this.searchDelay)
     },
     clearField () {
       this.selectedOption = null
