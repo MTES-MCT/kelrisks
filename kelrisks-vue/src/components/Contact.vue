@@ -28,6 +28,12 @@ let $ = JQuery
 
 export default {
   name: 'Contact',
+  props: {
+    timeout: {
+      type: Number,
+      default: 30
+    }
+  },
   data: () => ({
     opened: false,
     timesUp: false,
@@ -52,7 +58,7 @@ export default {
       clearInterval(this.countDownInstance)
     },
     countDown () {
-      this.timesUp = (new Date()).getTime() - this.env.startTime > 1000 * 30
+      this.timesUp = (new Date()).getTime() - this.env.startTime > 1000 * this.timeout
       if (this.timesUp) {
         this.openContact()
       }

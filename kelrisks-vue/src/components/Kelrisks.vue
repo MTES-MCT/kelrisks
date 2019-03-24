@@ -632,7 +632,7 @@
       </div>
     </footer>
 
-    <contact/>
+    <contact timeout="45"/>
     <konami/>
 
   </div>
