@@ -611,10 +611,12 @@
       </section>
     </main>
 
-    <how-to class="clearfix"
+    <how-to class="clearfix container"
             v-show="flow.index === 1"/>
 
-    <p style="font-size: 0.8em; width: 53%; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
+    <div class="container">
+      <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
+    </div>
 
     <footer>
       <div>
@@ -632,7 +634,7 @@
       </div>
     </footer>
 
-    <contact timeout="45"/>
+    <contact :timeout="45"/>
     <konami/>
 
   </div>

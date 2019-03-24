@@ -22,21 +22,39 @@
         <font-awesome-icon icon="check-circle"
                            size="3x"/>
         <p>Hop, Kelrisks affiche le résultat de la recherche parmi les bases de données* de l'État !</p>
-        <p style="color: #AAAAAA; font-size: 0.75em">* voir CGU pour les détails</p>
+        <p class="subtext"
+           style="color: #AAAAAA; font-size: 0.75em">* voir CGU pour les détails</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import JQuery from 'jquery'
+
+let $ = JQuery
+
 export default {
-  name: 'HowTo'
+  name: 'HowTo',
+  mounted: function () {
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.handleResize)
+  },
+  methods: {
+    handleResize () {
+      let width = $('#howto_wrapper div.box:first').width()
+      $('#howto_wrapper svg').css('font-size', width / 247 * 3 + 'em')
+      $('#howto_wrapper p').css('font-size', width / 247 + 'em').css('line-height', width / 247 * 1.5 + 'em')
+      $('#howto_wrapper p.subtext').css('font-size', width / 247 * 0.75 + 'em')
+    }
+  }
 }
 </script>
 
 <style scoped>
   #howto_wrapper {
-    width  : 52.5%;
     height : 25%;
     margin : 0 auto 25px;
   }
