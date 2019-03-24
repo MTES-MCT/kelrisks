@@ -4,6 +4,8 @@ package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository;
 import fr.gouv.beta.fabnum.commun.persistance.IAbstractRepository;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteSolPolue;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,6 +23,6 @@ public interface SiteSolPolueRepository extends IAbstractRepository<SiteSolPolue
            "                       FROM Parcelle AS p " +
            "                       WHERE p.code = :codeParcelle), " +
            "                     ssp.multiPolygon) = TRUE")
-    SiteSolPolue rechercherZoneContenantParcelle(String codeParcelle);
+    List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle);
 }
   

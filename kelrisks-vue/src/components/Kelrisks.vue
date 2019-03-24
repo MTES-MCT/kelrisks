@@ -431,7 +431,7 @@
               <big-number :number-of="avis.installationClasseeParcelle.numberOf"
                           label-text="Installations classées"/>
 
-              <big-number :number-of="avis.installationClasseeParcelle.numberOf"
+              <big-number :number-of="avis.sisParcelle.numberOf"
                           label-text="SIS"/>
               <br/>
 

@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Response;
 
@@ -38,7 +39,6 @@ public class ApiRestBasol extends AbstractBasicApi {
         return Response.ok(siteIndustrielBasolDTOs).build();
     }
     
-    
     @GetMapping("/api/basol/cadastre/{codeINSEE}/{codeParcelle}/{distance}")
     @ApiOperation(value = "Requête retournant les sites industiels Basol dans un certain rayon du centroîde de la Parcelle.", response = String.class)
     public Response basolWithinCadastreRange(@ApiParam(name = "codeINSEE", value = "Code postal de la commune.")
@@ -61,9 +61,10 @@ public class ApiRestBasol extends AbstractBasicApi {
                                @PathVariable("codeINSEE") String codeINSEE,
                                @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                @PathVariable("codeParcelle") String codeParcelle) {
-        
-        SiteSolPolueDTO              siteSolPolueDTO         = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
-        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs = gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(siteSolPolueDTO.getMultiPolygon());
+    
+        List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
+        List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs =
+                gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(siteSolPolueDTO.stream().map(SiteSolPolueDTO::getMultiPolygon).collect(Collectors.toList()));
         
         return Response.ok(siteIndustrielBasolDTOs).build();
     }

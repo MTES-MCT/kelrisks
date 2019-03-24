@@ -33,8 +33,8 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +
-                   " WHERE st_within(si.geog, :geog)", nativeQuery = true)
-    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry geog);
+                   " WHERE st_within(si.geog, st_union(:multiPolygon))", nativeQuery = true)
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(List<Geometry> multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +

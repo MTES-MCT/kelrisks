@@ -9,6 +9,8 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.SiteSolPo
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QSiteSolPolue;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteSolPolue;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -47,7 +49,7 @@ public class SiteSolPolueDAO extends AbstractDAO<SiteSolPolue> implements ISiteS
     }
     
     @Override
-    public SiteSolPolue rechercherZoneContenantParcelle(String codeParcelle) {
+    public List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle) {
         
         return siteSolPolueRepository.rechercherZoneContenantParcelle(codeParcelle);
     }
