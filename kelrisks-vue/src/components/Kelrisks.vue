@@ -436,24 +436,24 @@
               <br/>
 
               <template v-if="avis.basiasProximiteParcelle.numberOf > 0 || avis.basiasRaisonSociale > 0">
-                <p class="indent">Par ailleurs nous identifions : </p>
+                <p class="indent">Par ailleurs nous identifions&nbsp;: </p>
                 <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
                   <p class="indent"> - {{ avis.basiasProximiteParcelle.lib }}</p>
                   <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.basiasProximiteParcelle.liste">
-                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                    <li :key="sibasias.id"
+                        v-for="sibasias in avis.basiasProximiteParcelle.liste">
+                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + sibasias.identifiant"
+                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ sibasias.identifiant }}</a>
                     </li>
                   </ul>
                 </template>
                 <template v-if="avis.basiasRaisonSociale.numberOf > 0">
                   <p class="indent"> - {{ avis.basiasRaisonSociale.lib }}</p>
                   <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.basiasRaisonSociale.liste">
-                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                    <li :key="sibasias.id"
+                        v-for="sibasias in avis.basiasRaisonSociale.liste">
+                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + sibasias.identifiant"
+                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ sibasias.identifiant }}</a>
                     </li>
                   </ul>
                 </template>
@@ -532,19 +532,20 @@
                   <p>{{ avis.basiasParcelle.lib }}</p>
                   <template v-if="avis.basiasParcelle.numberOf > 0">
                     <ul class="site-list">
-                      <li :key="ic.id"
-                          v-for="ic in avis.basiasParcelle.liste">
-                        - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                             target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                      <li :key="sibasias.id"
+                          v-for="sibasias in avis.basiasParcelle.liste">
+                        - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + sibasias.identifiant"
+                             target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ sibasias.identifiant }}</a>
                       </li>
                     </ul>
                   </template>
                   <p>{{ avis.basolParcelle.lib }}</p>
                   <template v-if="avis.basolParcelle.numberOf > 0">
                     <ul class="site-list">
-                      <li :key="ic.id"
-                          v-for="ic in avis.basolRayonParcelle.liste">
-                        - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
+                      <li :key="sibasol.id"
+                          v-for="sibasol in avis.basolParcelle.liste">
+                        - <a :href="'https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=' + sibasol.numerobasol"
+                             target="_blank">https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ sibasol.numerobasol }}</a></li>
                     </ul>
                   </template>
                   <p>{{ avis.installationClasseeParcelle.lib }}</p>
@@ -565,10 +566,10 @@
                       <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basias dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
                       <p v-else>Se trouvent {{ avis.basiasRayonParcelle.numberOf }} sites Basias dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
                       <ul class="site-list">
-                        <li :key="ic.id"
-                            v-for="ic in avis.basiasRayonParcelle.liste">
-                          - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                               target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
+                        <li :key="sibasol.id"
+                            v-for="sibasol in avis.basiasRayonParcelle.liste">
+                          - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + sibasol.numerobasol"
+                               target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ sibasol.numerobasol }}</a>
                         </li>
                       </ul>
                     </template>
@@ -576,9 +577,10 @@
                       <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basol dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
                       <p v-else>Se trouvent {{ avis.basolRayonParcelle.numberOf }} sites Basol dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
                       <ul class="site-list">
-                        <li :key="ic.id"
-                            v-for="ic in avis.basolRayonParcelle.liste">
-                          - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
+                        <li :key="sib.id"
+                            v-for="sib in avis.basolRayonParcelle.liste">
+                          - <a :href="'https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=' + sib.identifiant"
+                               target="_blank">https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ sib.identifiant }}</a></li>
                       </ul>
                     </template>
                     <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
