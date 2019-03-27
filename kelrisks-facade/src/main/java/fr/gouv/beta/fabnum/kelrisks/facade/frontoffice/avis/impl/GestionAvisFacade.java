@@ -79,7 +79,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         // Recherche d'une éventuelle zone poluée contenant la parcelle
         List<Geometry>        geometries       = new ArrayList<>();
         List<SiteSolPolueDTO> siteSolPolueDTOs = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
-        if (siteSolPolueDTOs != null) {siteSolPolueDTOs.forEach(siteSolPolueDTO -> geometries.add(siteSolPolueDTO.getMultiPolygon()));}
+        if (!siteSolPolueDTOs.isEmpty()) {siteSolPolueDTOs.forEach(siteSolPolueDTO -> geometries.add(siteSolPolueDTO.getMultiPolygon()));}
         else { geometries.add(parcelleDTO.getMultiPolygon()); }
         
         List<String> codesParcellesContigues = gestionParcelleFacade.rechercherParcellesContigues(parcelleDTO.getMultiPolygon()).stream().map(ParcelleDTO::getCode).collect(Collectors.toList());
