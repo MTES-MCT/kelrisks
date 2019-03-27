@@ -309,7 +309,7 @@
                 </template>
                 <template slot="kr-helper"
                           slot-scope="slotProps">
-                  IBAN&nbsp;: {{ slotProps.option.id }}
+                  IBAN&nbsp;: {{ slotProps.option.code }}
                 </template>
               </kr-input>
             </div>
@@ -464,13 +464,13 @@
 
               <div id="conclusion0"
                    style="text-align: justify"
-                   v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf === 0">
+                   v-if="conclusion === 0">
                 <p>Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au titre des pollutions de sols
                    d’origine industrielle.</p>
               </div>
               <div id="conclusion1"
                    style="text-align: justify"
-                   v-if="avis.basiasParcelle.numberOf > 0 && (avis.basolParcelle.numberOf > 0 || avis.installationClasseeParcelle.numberOf > 0)">
+                   v-if="conclusion === 1">
                 <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur ou au locataire conformément à la réglementation en vigueur (article L. 514-20 du code
                    de l’environnement et L 125-7 du code de l’Environnement si positif SIS).</p>
                 <p>En outre compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien) , la réalisation
@@ -481,7 +481,7 @@
               </div>
               <div id="conclusion2"
                    style="text-align: justify"
-                   v-if="avis.basiasParcelle.numberOf > 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0">
+                   v-if="conclusion === 2">
                 <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de l’environnement.</p>
                 <p>Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
                 <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
@@ -494,7 +494,7 @@
               </div>
               <div id="conclusion3"
                    style="text-align: justify"
-                   v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf > 0">
+                   v-if="conclusion === 3">
                 <p>Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
                 <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
                    d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions. Nous vous rappelons que l'obligation de faire appel à un
@@ -826,6 +826,32 @@ export default {
     }
   },
   computed: {
+    conclusion: function () {
+      let conclusionNumber = 0
+
+      if (this.avis.basiasParcelle.numberOf === 0 &&
+        this.avis.basolParcelle.numberOf === 0 &&
+        this.avis.installationClasseeParcelle.numberOf === 0 &&
+        this.avis.sisParcelle.numberOf === 0) conclusionNumber = 0
+
+      if (this.avis.basiasParcelle.numberOf === 0 &&
+        this.avis.basolParcelle.numberOf === 0 &&
+        this.avis.installationClasseeParcelle.numberOf === 0 &&
+        this.avis.sisParcelle.numberOf === 0 &&
+        this.avis.basiasProximiteParcelle.numberOf > 0) conclusionNumber = 3
+
+      if (this.avis.basiasParcelle.numberOf > 0 ||
+        this.avis.basolParcelle.numberOf > 0 ||
+        this.avis.installationClasseeParcelle.numberOf > 0 ||
+        this.avis.sisParcelle.numberOf > 0) conclusionNumber = 1
+
+      if (this.avis.basiasParcelle.numberOf > 0 &&
+        this.avis.basolParcelle.numberOf === 0 &&
+        this.avis.installationClasseeParcelle.numberOf === 0 &&
+        this.avis.sisParcelle.numberOf === 0) conclusionNumber = 2
+
+      return conclusionNumber
+    },
     concordances: function () {
       return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
     },

@@ -159,15 +159,17 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     private void redigerConclusion(Document htmlDocument, AvisDTO avisDTO) {
+    
+        int conclusionNumber = getConclusionNumber(avisDTO);
         
         Element element;
         element = htmlDocument.select("#conclusion").first();
-        
-        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() == 0) {
+    
+        if (conclusionNumber == 0) {
             element.append("<p class=\"indent\">Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au " +
                            "titre des pollutions de sols d’origine industrielle.</p>");
         }
-        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 && (avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() > 0 || avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0)) {
+        if (conclusionNumber == 1) {
             element.append("<p class=\"indent\">En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur ou au locataire conformément à la réglementation en " +
                            "vigueur (article L. 514-20 du code de l’environnement et L 125 - 7 du code de l’Environnement si positif SIS)</p>");
             element.append("<p class=\"indent\">En outre compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
@@ -177,7 +179,7 @@ public class ApiAvis extends AbstractBasicApi {
                            ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>) la liste" +
                            " de ces bureaux d'étude.</p>");
         }
-        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0) {
+        if (conclusionNumber == 2) {
             element.append("<p class=\"indent\">En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de " +
                            "l’environnement.</p>");
             element.append("<p class=\"indent\">Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
@@ -190,7 +192,7 @@ public class ApiAvis extends AbstractBasicApi {
                            "lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne" +
                            ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)</p>");
         }
-        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() > 0) {
+        if (conclusionNumber == 3) {
             element.append("<p class=\"indent\">Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
             element.append("<p class=\"indent\">Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
                            "destination du bien), la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.  Nous vous" +
@@ -201,6 +203,34 @@ public class ApiAvis extends AbstractBasicApi {
                            "lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne" +
                            ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)</p>");
         }
+    }
+    
+    private int getConclusionNumber(AvisDTO avisDTO) {
+        
+        int conclusionNumber = -1;
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 &&
+            avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().size() == 0) { conclusionNumber = 0; }
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 &&
+            avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() > 0) { conclusionNumber = 3; }
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 ||
+            avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() > 0 ||
+            avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0 ||
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0) { conclusionNumber = 1; }
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 &&
+            avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 &&
+            avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().size() == 0) { conclusionNumber = 2; }
+        
+        return conclusionNumber;
     }
     
     private void redigerAnalyseParcelle(Document htmlDocument, AvisDTO avisDTO) {
