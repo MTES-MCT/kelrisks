@@ -55,7 +55,7 @@ export default {
     openContact () {
       $('#contact').removeClass('hidden')
       this.opened = true
-      clearInterval(this.countDownInstance)
+      clearTimeout(this.countDownInstance)
     },
     countDown () {
       this.timesUp = (new Date()).getTime() - this.env.startTime > 1000 * this.timeout
@@ -79,7 +79,7 @@ export default {
     }
   },
   mounted () {
-    this.countDownInstance = setInterval(() => {
+    this.countDownInstance = setTimeout(() => {
       this.countDown()
     }, 1000)
   }
