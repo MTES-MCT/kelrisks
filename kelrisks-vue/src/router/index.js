@@ -7,6 +7,12 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/:codeAvis',
+      props: true,
+      name: 'Kelrisks',
+      component: Kelrisks
+    },
+    {
       path: '/',
       name: 'Kelrisks',
       component: Kelrisks

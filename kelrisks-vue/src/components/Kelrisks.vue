@@ -138,6 +138,10 @@
           role="main">
 
       <section class="section section-white"
+               id="section0"
+               v-show="flow.index === 0"></section>
+
+      <section class="section section-white"
                id="section1"
                v-show="flow.index === 1">
         <div class="container">
@@ -389,11 +393,11 @@
             <div id="summary_wrapper">
               <div id="summary">
                 <div class="section__subtitle"><strong>Votre recherche : </strong></div>
-                Code postal&nbsp;: <span v-if="form.codePostal && form.codePostal !== ''">{{form.codePostal}}</span><span v-else><i>n/a</i></span><br/>
-                Rue&nbsp;: <span v-if="form.nomVoieLib && form.nomVoieLib !== ''">{{form.nomVoieLib}}</span><span v-else><i>n/a</i></span><br/>
-                N°&nbsp;: <span v-if="form.numeroVoieLib && form.numeroVoieLib !== ''">{{form.numeroVoieLib}}</span><span v-else><i>n/a</i></span><br/>
-                Code parcelle&nbsp;: <span v-if="form.parcelle && form.parcelle !== ''">{{form.parcelle}}</span><span v-else><i>n/a</i></span><br/>
-                Raison Sociale&nbsp;: <span v-if="form.proprio && form.proprio !== ''">{{form.proprio}}</span><span v-else><i>n/a</i></span><br/>
+                Code postal&nbsp;: <span v-if="avis.summary.commune.codePostal && avis.summary.commune.codePostal !== ''">{{avis.summary.commune.codePostal}}</span><span v-else><i>n/a</i></span><br/>
+                Rue&nbsp;: <span v-if="avis.summary.adresse.rue.nomVoie && avis.summary.adresse.rue.nomVoie !== ''">{{avis.summary.adresse.rue.nomVoie}}</span><span v-else><i>n/a</i></span><br/>
+                N°&nbsp;: <span v-if="avis.summary.adresse.numero && avis.summary.adresse.numero !== ''">{{avis.summary.adresse.numero}}</span><span v-else><i>n/a</i></span><br/>
+                Code parcelle&nbsp;: <span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
+                Raison Sociale&nbsp;: <span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
                 <hr/>
                 <div style="text-align: center; padding-top: 20px;">
                   <a @click="flowPrevious()
@@ -409,6 +413,9 @@
                     <font-awesome-icon icon="file-pdf"/>
                     Pdf
                   </a>
+                  <hr/>
+                  <p style="font-size: 0.9em;text-indent: 0; text-align: center; margin-bottom: 0;"><strong>Lien rapide</strong></p>
+                  <p style="font-size: 0.9em;text-indent: 0; text-align: center; margin-top: 0;">{{ env.basePath }}#/{{ avis.summary.codeUrl }}</p>
                 </div>
               </div>
               <div style="text-align: center; padding-top: 20px;">
@@ -616,7 +623,7 @@
     </main>
 
     <how-to class="clearfix container"
-            v-show="flow.index === 1"/>
+            v-show="flow.index <= 1 "/>
 
     <div class="container">
       <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
@@ -639,7 +646,17 @@
     </footer>
 
     <contact :timeout="45"/>
+
     <konami/>
+
+    <div id="loading"
+         v-show="avis.loading">
+      <p>
+        <font-awesome-icon icon="spinner"
+                           spin/>
+        Chargement de votre recherche, merci de patienter...
+      </p>
+    </div>
 
   </div>
 </template>
@@ -694,7 +711,14 @@ export default {
       message: 'API'
     },
     avis: {
+      summary: {
+        adresse: {
+          rue: {}
+        },
+        commune: {}
+      },
       querying: false,
+      loading: false,
       rendered: false,
       basiasNbOf: 0,
       basiasParcelle: {},
@@ -711,11 +735,6 @@ export default {
       installationClasseeRayonParcelle: {},
       installationClasseeCommune: {},
       sisParcelle: {}
-    },
-    contact: {
-      opened: false,
-      timesUp: false,
-      countDown: null
     },
     env: {
       basePath: process.env.VUE_APP_PATH,
@@ -795,8 +814,10 @@ export default {
       fetch(this.env.apiPath + '/avis?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio)
         .then(stream => stream.json())
         .then(value => {
+          this.avis.loading = false
           this.avis.querying = false
           this.checkInformations(value.entity)
+          this.avis.summary = value.entity.summary
           if (this.informations.hasError) {
             this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'Erreur'])
             return
@@ -804,7 +825,7 @@ export default {
 
           this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'OK'])
 
-          this.flow.index++
+          this.flow.index = 4
 
           this.avis.basiasParcelle = avis.getBasiasParcelle(value)
           this.avis.basiasProximiteParcelle = avis.getBasiasProximiteParcelle(value)
@@ -824,6 +845,25 @@ export default {
 
           functions.scrollToElement('main', false)
           this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
+        })
+    },
+    loadAvis (codeAvis) {
+      // console.log('loadAvis')
+      this.avis.loading = true
+      this.flow.index = 0
+      fetch(this.env.apiPath + '/url?' + 'code=' + codeAvis)
+        .then(stream => stream.json())
+        .then(value => {
+          console.log(value.entity.url)
+          let array = value.entity.url.split('|&|')
+          this.form.parcelle = array[0]
+          this.form.codeINSEE = array[1]
+          this.form.nomVoie = array[2]
+          this.form.idBAN = array[3]
+          this.form.proprio = array[4]
+          console.log(array)
+
+          this.getAvis()
         })
     }
   },
@@ -862,12 +902,20 @@ export default {
     }
   },
   beforeDestroy () {
-    clearInterval(this.contact.countDown)
+  },
+  mounted () {
+    let codeAvis = this.$route.params.codeAvis
+    console.log('codeAvis : ' + codeAvis + ' && is undefined ? ' + (codeAvis === undefined))
+    if (this.$route.params.codeAvis !== undefined) this.loadAvis(this.$route.params.codeAvis)
   }
 }
 </script>
 
 <style>
+  html, body {
+    height : 100%;
+  }
+
   body {
     overflow-y : scroll;
   }
@@ -916,6 +964,10 @@ export default {
     margin-bottom : 40px;
   }
 
+  #section0 {
+    min-height : 100px;
+  }
+
   #summary_wrapper {
     float      : left;
     width      : 30%;
@@ -928,6 +980,10 @@ export default {
     border-radius    : 2px;
     /*float            : left;*/
     padding          : 30px 20px;
+  }
+
+  #summary {
+    padding : 30px 20px 0;
   }
 
   #avis {
@@ -960,6 +1016,22 @@ export default {
   .note_pied_page p {
     font-size : 0.8em;
     color     : #999999;
+  }
+
+  #loading {
+    position         : fixed;
+    width            : 100%;
+    height           : 100%;
+    background-color : #000000BB;
+    top              : 0;
+    left             : 0;
+  }
+
+  #loading p {
+    color      : white;
+    text-align : center;
+    font-size  : 2em;
+    margin-top : 25.5%;
   }
 
   footer {

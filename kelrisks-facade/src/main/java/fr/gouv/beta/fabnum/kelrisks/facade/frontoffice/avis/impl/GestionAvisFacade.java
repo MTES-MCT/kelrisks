@@ -2,7 +2,6 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
@@ -46,15 +45,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         AvisDTO avisDTO = new AvisDTO();
     
-        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
-        avisDTO.setCommune(communeDTO);
-    
-        avisDTO.setNomProprietaire(nomProprietaire);
+        avisDTO.getSummary().setCommune(gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE));
+        avisDTO.getSummary().setNomProprietaire(nomProprietaire);
         
         // Recherche d'une parcelle à partir de l'adresse si aucune n'a été fournie
         ParcelleDTO parcelleDTO;
         if (codeParcelle == null || codeParcelle.equals("")) {
             parcelleDTO = gestionParcelleFacade.rechercherParcelleAvecIdBan(idBAN);
+            avisDTO.getSummary().setAdresse(gestionAdresseFacade.rechercherAdresseIdBan(idBAN));
             codeParcelle = parcelleDTO.getCode();
         }
         else {
@@ -73,8 +71,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             parcelleDTO = parcelleDTOS.get(0);
         }
     
-        avisDTO.setParcelle(parcelleDTO.getSection() + "-" + parcelleDTO.getNumero());
-        avisDTO.setIdban(idBAN);
+        avisDTO.getSummary().setCodeParcelle(parcelleDTO.getSection() + "-" + parcelleDTO.getNumero());
         
         // Recherche d'une éventuelle zone poluée contenant la parcelle
         List<Geometry>        geometries       = new ArrayList<>();
