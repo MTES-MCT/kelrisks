@@ -265,6 +265,7 @@ export default {
       this.hasNoResults = false
       this.$emit('selected', '')
       this.$emit('input', '')
+      this.$emit('query', '')
     },
     filterResults () {
       // first uncapitalize all the things

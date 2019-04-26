@@ -143,14 +143,16 @@
 
       <search-form-part1-vous-etes @flow="updateflow"
                                    v-show="flow.index === 1"/>
-      <search-form-part2-commune @codeinsee="updateCodeINSEE"
+      <search-form-part2-commune @codeinsee="form.codeInsee = $event"
                                  @flow="updateflow"
                                  v-show="flow.index === 2"/>
       <search-form-part3-parcelle :code-insee="form.codeInsee"
                                   :querying="flow.querying"
-                                  @codenumero="updateCodeNumero"
-                                  @codeproprio="updateCodeProprio"
-                                  @codevoie="updateCodeVoie"
+                                  :errors="errors.search"
+                                  @codenumero="form.codeNumero = $event"
+                                  @codeparcelle="form.codeParcelle = $event"
+                                  @codeproprio="form.codeProprio = $event"
+                                  @codevoie="form.codeVoie = $event"
                                   @flow="updateflow"
                                   @getavis="getAvis"
                                   v-show="flow.index === 3"/>
@@ -163,12 +165,13 @@
                       @loading="loading"
                       @requestfocus="renderAvis"
                       @setflow="setflow"
+                      @errors="searchErrors"
                       ref="results"
                       v-show="flow.index === 4"/>
     </main>
 
     <how-to class="clearfix container"
-            v-show="flow.index <= 1 "/>
+            v-show="flow.index <= 1"/>
 
     <div class="container">
       <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
@@ -225,6 +228,9 @@ export default {
       querying: false,
       loading: false
     },
+    errors: {
+      search: []
+    },
     form: {
       codeInsee: '',
       codeVoie: '',
@@ -254,22 +260,6 @@ export default {
     setflow (value) {
       this.flow.index = value
     },
-    updateCodeINSEE (value) {
-      console.log(value)
-      this.form.codeInsee = value
-    },
-    updateCodeVoie (value) {
-      console.log(value)
-      this.form.codeVoie = value
-    },
-    updateCodeNumero (value) {
-      console.log(value)
-      this.form.codeNumero = value
-    },
-    updateCodeProprio (value) {
-      console.log(value)
-      this.form.codeProprio = value
-    },
     getAvis () {
       this.flow.querying = true
       this.$refs.results.getAvis()
@@ -281,7 +271,17 @@ export default {
     },
     loading () {
       console.log('loading')
+      this.errors.search = []
       this.flow.loading = true
+    },
+    debug (value) {
+      console.log(value)
+    },
+    searchErrors (value) {
+      if (value.length > 0) {
+        this.flow.querying = false
+      }
+      this.errors.search = value
     }
   },
   computed: {

@@ -6,7 +6,7 @@
         <h2 class="section__title">Votre terrain</h2>
         <p class="section__subtitle">2/2 - Informations complémentaires</p>
 
-        <errors :error-list="informations.errorList"
+        <errors :error-list="getErrors"
                 :info-list="informations.infoList"
                 :success-list="informations.successList"
                 :warning-list="informations.warningList"/>
@@ -48,7 +48,7 @@
           <kr-input label="Code Parcelle"
                     name="codeparcelle"
                     placeholder="BA-115 ou 912250000A0352"
-                    v-model="codeParcelle"/>
+                    @query="onCodeParcelleChanged"/>
         </div>
 
         <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
@@ -112,6 +112,11 @@ export default {
   computed: {
     _paq: function () {
       return window._paq
+    },
+    getErrors: function () {
+      let errorSum = this.informations.errorList.concat(this.errors)
+      console.log(errorSum)
+      return errorSum
     }
   },
   props: {
@@ -122,6 +127,10 @@ export default {
     codeInsee: {
       type: String,
       default: ''
+    },
+    errors: {
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
@@ -146,6 +155,11 @@ export default {
       this.$emit('nomnumero', value.libelle)
       this.codeNumero = value.code
     },
+    onCodeParcelleChanged (value) {
+      this.$emit('codeparcellechanged')
+      this.$emit('codeparcelle', value)
+      this.codeParcelle = value
+    },
     onNomProprietaireSelected (value) {
       this.$emit('nomproprietaireselected')
       this.$emit('codeproprio', value.code)
@@ -155,12 +169,7 @@ export default {
       this.$emit('codeproprio', value)
     },
     getAvis () {
-      this.informations.errorList = []
-      if (this.codeParcelle === '' && this.codeNumero === '') {
-        this.informations.errorList.push('Merci de bien vouloir sélectionner une rue/numéro ou entrer une parcelle.')
-      } else {
-        this.$emit('getavis')
-      }
+      this.$emit('getavis')
     }
   }
 }

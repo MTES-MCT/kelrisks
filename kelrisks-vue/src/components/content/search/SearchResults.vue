@@ -250,6 +250,7 @@
 <script>
 import BigNumber from '../../ui/BigNumber'
 import avis from '../../../script/avis'
+import fetchWithError from '../../../script/fetchWithError'
 import functions from '../../../script/fonctions'
 import mixinErrors from '../../mixins/errors'
 
@@ -322,16 +323,24 @@ export default {
       // console.log(this.visibility.details)
     },
     getAvis () {
-      fetch(this.env.apiPath + '/avis?' + 'codeINSEE=' + this.codeInsee + '&' + 'nomVoie=' + this.codeVoie + '&' + 'idBAN=' + this.idBan + '&' + 'codeParcelle=' + this.codeParcelle + '&' + 'nomProprietaire=' + this.codeProprio)
+
+      this.clearErrors()
+
+      if (this.codeParcelle === '' && this.idBan === '') {
+        this.sendError('Merci de bien vouloir choisir une rue/numéro ou entrer une parcelle.')
+      }
+
+      let url = this.env.apiPath + '/avis?' + 'codeINSEE=' + this.codeInsee + '&' + 'nomVoie=' + this.codeVoie + '&' + 'idBAN=' + this.idBan + '&' + 'codeParcelle=' + this.codeParcelle + '&' + 'nomProprietaire=' + this.codeProprio
+      fetchWithError(url, null, 1000 * 20)
         .then(stream => stream.json())
         .then(value => {
           this.checkInformations(value.entity)
-          this.avis.summary = value.entity.summary
           if (this.informations.hasError) {
             this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'Erreur'])
+            this.emitErrors()
             return
           }
-
+          this.avis.summary = value.entity.summary
           this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'OK'])
 
           this.$emit('requestfocus')
@@ -355,6 +364,9 @@ export default {
           functions.scrollToElement('main', false)
           this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
         })
+        .catch((e) => {
+          this.sendError('Votre requête n\'a pu aboutir dans un délais raisonnable, merci de réessayer ou de nous le signaler au moyen du formulaire de contact.')
+        })
     },
     loadAvis (codeAvis) {
       // console.log('loadAvis')
@@ -364,7 +376,7 @@ export default {
       fetch(this.env.apiPath + '/url?' + 'code=' + codeAvis)
         .then(stream => stream.json())
         .then(value => {
-          console.log(value.entity.url)
+          // console.log(value.entity.url)
           let array = value.entity.url.split('|&|')
           this.codeParcelle = array[0]
           this.codeInsee = array[1]
