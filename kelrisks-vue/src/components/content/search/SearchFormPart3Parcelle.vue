@@ -72,7 +72,9 @@
         <div style="width: 90%; margin-left: 5%">
           <input @change="acceptCGU"
                  type="checkbox"
-                 v-model="cgu"><label style="display: inline">J'accepte les <a v-on:click="$emit('cgu')">CGU</a></label>
+                 id="cgu"
+                 v-model="cgu"><label for="cgu"
+                                      style="display: inline">J'accepte les <a v-on:click="$emit('cgu')">CGU</a></label>
         </div>
 
         <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
@@ -180,7 +182,10 @@ export default {
     },
     getAvis () {
       this.clearWarnings()
-      if (!this.cgu) this.sendWarning('Merci de bien vouloir accepter les CGU.')
+      if (!this.cgu) {
+        this.sendWarning('Merci de bien vouloir accepter les Conditions générales d’utilisation.')
+        return
+      }
       this.$emit('getavis')
     }
   },
