@@ -12,6 +12,7 @@ import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IRueService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QAdresse;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QRue;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.AdresseQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
@@ -63,7 +64,10 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
         RueQO rueQO = new RueQO();
         rueQO.setNomVoiePartiel(query);
     
-        return adresseMapper.toRueAutoCompleteDTOs(rueService.rechercherAvecCritere(communeQO, rueQO));
+        CritereTri critereTri = new CritereTri();
+        critereTri.ajouteOrdre(QRue.rue.nomVoie.asc());
+    
+        return adresseMapper.toRueAutoCompleteDTOs(rueService.rechercherAvecCritere(critereTri, communeQO, rueQO));
     }
     
     @Override
