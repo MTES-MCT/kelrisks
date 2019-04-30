@@ -323,7 +323,6 @@ export default {
       // console.log(this.visibility.details)
     },
     getAvis () {
-
       this.clearErrors()
 
       if (this.codeParcelle === '' && this.idBan === '') {
