@@ -69,6 +69,12 @@
           </kr-input>
         </div>
 
+        <div style="width: 90%; margin-left: 5%">
+          <input @change="acceptCGU"
+                 type="checkbox"
+                 v-model="cgu"><label style="display: inline">J'accepte les <a v-on:click="$emit('cgu')">CGU</a></label>
+        </div>
+
         <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
           <a @click="$emit('flow', -1)"
              class="button">
@@ -137,12 +143,16 @@ export default {
     codeVoie: '',
     codeNumero: '',
     codeParcelle: '',
+    cgu: false,
     env: {
       basePath: process.env.VUE_APP_PATH,
       apiPath: process.env.VUE_APP_API_PATH
     }
   }),
   methods: {
+    acceptCGU (value) {
+      // sessionStorage.cguChecked = value.target.checked
+    },
     onNomVoieChanged (value) {
       this.$emit('nomvoiechanged')
       this.$emit('codevoie', value.code)
@@ -169,8 +179,13 @@ export default {
       this.$emit('codeproprio', value)
     },
     getAvis () {
+      this.clearWarnings()
+      if (!this.cgu) this.sendWarning('Merci de bien vouloir accepter les CGU.')
       this.$emit('getavis')
     }
+  },
+  mounted () {
+    // if (sessionStorage.cguChecked !== undefined) this.cgu = sessionStorage.cguChecked
   }
 }
 </script>

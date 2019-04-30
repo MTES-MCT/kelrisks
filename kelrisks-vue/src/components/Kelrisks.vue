@@ -154,6 +154,7 @@
                                   @codeproprio="form.codeProprio = $event"
                                   @codevoie="form.codeVoie = $event"
                                   @flow="updateflow"
+                                  @cgu="$refs.cgu.open()"
                                   @getavis="getAvis"
                                   v-show="flow.index === 3"/>
       <search-results :code-insee="form.codeInsee"
