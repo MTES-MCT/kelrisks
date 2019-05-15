@@ -112,7 +112,8 @@
                et L. 556-2 du code de l'environnement.</p>
             <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
                (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
-               (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
+               (<a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
+                   href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
           </div>
           <div id="conclusion2"
                style="text-align: justify"
@@ -125,7 +126,8 @@
                et L. 556-2 du code de l'environnement.</p>
             <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
                (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
-               (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
+               (<a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
+                   href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
           </div>
           <div id="conclusion3"
                style="text-align: justify"
@@ -137,7 +139,8 @@
                et L. 556-2 du code de l'environnement.</p>
             <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
                (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
-               (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
+               (<a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
+                   href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
           </div>
 
           <br/>

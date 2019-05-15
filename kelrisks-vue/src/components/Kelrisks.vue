@@ -113,6 +113,8 @@
 
         <nav>
           <ul class="nav__links">
+            <li class="nav__item"><a @click="showStats()"
+                                     id="stats">Stats</a></li>
             <li class="nav__item"><a href="swagger-ui.html"
                                      id="api">{{ api.message }}</a></li>
           </ul>
@@ -169,6 +171,8 @@
                       @errors="searchErrors"
                       ref="results"
                       v-show="flow.index === 4"/>
+
+      <stats v-show="flow.index === 666"/>
     </main>
 
     <how-to class="clearfix container"
@@ -220,6 +224,7 @@ import SearchFormPart1VousEtes from './content/search/SearchFormPart1VousEtes'
 import SearchFormPart2Commune from './content/search/SearchFormPart2Commune'
 import SearchFormPart3Parcelle from './content/search/SearchFormPart3Parcelle'
 import SearchResults from './content/search/SearchResults'
+import Stats from './content/Stats'
 
 export default {
   name: 'Kelrisks',
@@ -244,6 +249,7 @@ export default {
     }
   }),
   components: {
+    Stats,
     SearchResults,
     SearchFormPart3Parcelle,
     SearchFormPart2Commune,
@@ -283,6 +289,9 @@ export default {
         this.flow.querying = false
       }
       this.errors.search = value
+    },
+    showStats () {
+      this.flow.index = 666
     }
   },
   computed: {
@@ -297,7 +306,8 @@ export default {
 
 <style>
   html, body {
-    height : 100%;
+    height           : 100%;
+    background-color : #FAFAFA;
   }
 
   body {
