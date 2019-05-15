@@ -17,8 +17,9 @@
           <div id="summary">
             <div class="section__subtitle"><strong>Votre recherche : </strong></div>
             Code postal&nbsp;: <span v-if="avis.summary.commune.codePostal && avis.summary.commune.codePostal !== ''">{{avis.summary.commune.codePostal}}</span><span v-else><i>n/a</i></span><br/>
-            Rue&nbsp;: <span v-if="avis.summary.adresse.rue.nomVoie && avis.summary.adresse.rue.nomVoie !== ''">{{avis.summary.adresse.rue.nomVoie}}</span><span v-else><i>n/a</i></span><br/>
-            N°&nbsp;: <span v-if="avis.summary.adresse.numero && avis.summary.adresse.numero !== ''">{{avis.summary.adresse.numero}}</span><span v-else><i>n/a</i></span><br/>
+            Rue&nbsp;:
+            <span v-if="avis.summary.adresse && avis.summary.adresse.rue.nomVoie && avis.summary.adresse.rue.nomVoie !== ''">{{avis.summary.adresse.rue.nomVoie}}</span><span v-else><i>n/a</i></span><br/>
+            N°&nbsp;: <span v-if="avis.summary.adresse && avis.summary.adresse.numero && avis.summary.adresse.numero !== ''">{{avis.summary.adresse.numero}}</span><span v-else><i>n/a</i></span><br/>
             Code parcelle&nbsp;: <span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
             Raison Sociale&nbsp;: <span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
             <hr/>
