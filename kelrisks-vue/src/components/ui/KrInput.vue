@@ -106,6 +106,8 @@
 </template>
 
 <script>
+import fetchWithError from '../../script/fetchWithError'
+
 export default {
   name: 'kr-input',
 
@@ -237,7 +239,7 @@ export default {
             this.hasNoResults = false
             this.isLoading = true
             this.isOpen = false
-            fetch(this.source + this.query)
+            fetchWithError(this.source + this.query, null, 1000 * 10)
               .then(stream => stream.json())
               .then(value => {
                 this.isLoading = false

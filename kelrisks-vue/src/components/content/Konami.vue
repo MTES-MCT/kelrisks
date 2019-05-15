@@ -36,10 +36,10 @@ export default {
       $('#konami').html('<a href="https://fr.wikipedia.org/wiki/Code_Konami" style="margin-left: 10px; color: black; font-size: 0.5em; font-family: \'Press Start 2P\', cursive; text-decoration: none;;">Code Konami</a>')
       $('#egg')
         .queue(function (next) {
-          $(this).css('color', '#555555')
+          $(this).css('color', 'rgba(85,85,85,1)')
           next()
         })
-        .animate({left: '100%'}, 5000, 'swing')
+        .animate({left: '100%'}, 1000, 'swing')
     },
     isCode (which) {
       if (which === codeKey[index]) {
@@ -62,9 +62,9 @@ export default {
 <style scoped>
   svg {
     position   : fixed;
-    left       : 0;
+    left       : 10px;
     bottom     : 0;
-    transition : all 1s;
-    color      : #55555500;
+    transition : all 2s linear;
+    color      : rgba(85, 85, 85, 0);
   }
 </style>

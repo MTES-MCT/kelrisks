@@ -69,29 +69,29 @@ export default {
 
   ul.error {
     color         : #7F0000;
-    background    : #7F000022;
-    border        : #7F000088 2px solid;
+    background    : rgba(127, 0, 0, 0.13);
+    border        : rgba(127, 0, 0, 0.53) 2px solid;
     border-radius : 3px;
   }
 
   ul.success {
     color         : #1B5E20;
-    background    : #1B5E2022;
-    border        : #1B5E2088 2px solid;
+    background    : rgba(27, 94, 32, 0.13);
+    border        : rgba(27, 94, 32, 0.53) 2px solid;
     border-radius : 3px;
   }
 
   ul.warning {
     color         : #BC5100;
-    background    : #BC510022;
-    border        : #BC510088 2px solid;
+    background    : rgba(188, 81, 0, 0.13);
+    border        : rgba(188, 81, 0, 0.53) 2px solid;
     border-radius : 3px;
   }
 
   ul.info {
     color         : #0D47A1;
-    background    : #0D47A122;
-    border        : #0D47A188 2px solid;
+    background    : rgba(13, 71, 161, 0.13);
+    border        : rgba(13, 71, 161, 0.53) 2px solid;
     border-radius : 3px;
   }
 </style>

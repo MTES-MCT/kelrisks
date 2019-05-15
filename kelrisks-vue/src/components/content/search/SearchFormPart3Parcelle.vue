@@ -123,7 +123,7 @@ export default {
     },
     getErrors: function () {
       let errorSum = this.informations.errorList.concat(this.errors)
-      console.log(errorSum)
+      // console.log(errorSum)
       return errorSum
     }
   },

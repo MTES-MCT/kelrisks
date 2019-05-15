@@ -82,15 +82,15 @@ export default {
           this.particulier_pct = 100 / demandeurs.nb_events_sum * demandeurs.events.Particulier.nb_events
 
           let avis = this.getEventAction('Avis')
-          this.avis_rendu_nb = avis.events.Rendu.nb_events
+          if (avis.events.Rendu) this.avis_rendu_nb = avis.events.Rendu.nb_events
 
           let pdf = this.getEventAction('Pdf')
           // console.log(pdf)
-          this.pdf_nb = pdf.events.undefined.nb_events
+          if (pdf.events.undefined) this.pdf_nb = pdf.events.undefined.nb_events
 
           let bureauEtude = this.getEventAction('Bureau_Etude')
           // console.log(bureauEtude)
-          this.bureau_etude_nb = bureauEtude.events.Bureau_Etude.nb_events
+          if (bureauEtude.events.Bureau_Etude) this.bureau_etude_nb = bureauEtude.events.Bureau_Etude.nb_events
         })
     },
     getEventAction (actionName) {
