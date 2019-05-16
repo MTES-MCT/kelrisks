@@ -9,7 +9,7 @@ export default new Router({
     {
       path: '/:codeAvis',
       props: true,
-      name: 'Kelrisks Avis',
+      name: 'Kelrisks TinyURL',
       component: Kelrisks
     },
     {

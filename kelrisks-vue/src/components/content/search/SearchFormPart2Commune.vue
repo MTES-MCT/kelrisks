@@ -21,7 +21,7 @@
                     name="codePostal"
                     option-label-property="codePostal"
                     option-value-property="codeINSEE"
-                    v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'">
+                    v-bind:source="env.apiPath + 'adresse/commune/autocomplete/'">
             <template slot="kr-option-label"
                       slot-scope="slotProps">
               {{ slotProps.option.codePostal + ' - ' + slotProps.option.nomCommune}}

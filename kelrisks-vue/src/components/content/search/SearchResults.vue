@@ -31,7 +31,7 @@
                 <font-awesome-icon icon="undo"/>
                 Modifier</a>
               <br v-show="visibility.modifier"/>
-              <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + codeInsee + '&' + 'nomVoie=' + codeVoie + '&' + 'idBAN=' + idBan + '&' + 'codeParcelle=' + codeParcelle + '&' + 'nomProprietaire=' + codeProprio"
+              <a :href="this.env.apiPath + 'avis/pdf?' + 'codeINSEE=' + codeInsee + '&' + 'nomVoie=' + codeVoie + '&' + 'idBAN=' + idBan + '&' + 'codeParcelle=' + codeParcelle + '&' + 'nomProprietaire=' + codeProprio"
                  @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
                  class="button warning"
                  id="pdf"
@@ -333,7 +333,7 @@ export default {
         this.sendError('Merci de bien vouloir choisir une rue/numéro ou entrer une parcelle.')
       }
 
-      let url = this.env.apiPath + '/avis?' + 'codeINSEE=' + this.codeInsee + '&' + 'nomVoie=' + this.codeVoie + '&' + 'idBAN=' + this.idBan + '&' + 'codeParcelle=' + this.codeParcelle + '&' + 'nomProprietaire=' + this.codeProprio
+      let url = this.env.apiPath + 'avis?' + 'codeINSEE=' + this.codeInsee + '&' + 'nomVoie=' + this.codeVoie + '&' + 'idBAN=' + this.idBan + '&' + 'codeParcelle=' + this.codeParcelle + '&' + 'nomProprietaire=' + this.codeProprio
       fetchWithError(url, null, 1000 * 20)
         .then(stream => stream.json())
         .then(value => {
@@ -376,7 +376,7 @@ export default {
       this.visibility.modifier = false
       this.$emit('loading')
       this.$emit('setflow', 0)
-      fetch(this.env.apiPath + '/url?' + 'code=' + codeAvis)
+      fetch(this.env.apiPath + 'url?' + 'code=' + codeAvis)
         .then(stream => stream.json())
         .then(value => {
           // console.log(value.entity.url)

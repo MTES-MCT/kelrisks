@@ -307,7 +307,7 @@ export default {
   beforeDestroy () {
   },
   mounted () {
-    fetchWithError(this.env.apiPath + '/appversion/')
+    fetchWithError(this.env.apiPath + 'appversion/')
       .then(stream => stream.json())
       .then(value => {
         let currentAppVersion = value.entity
