@@ -17,7 +17,7 @@
          l'information.</p>
 
       <p>Le présent document a pour objet de régler les relations entre les différents intervenants sur le service. Il définit les conditions et modalités d’utilisation des services
-         http://kelrisks.beta.gouv.fr/index.html#/ et http://kelrisks.beta.gouv.fr/swagger-ui.html sur Internet.</p>
+         https://kelrisks.beta.gouv.fr/index.html#/ et https://kelrisks.beta.gouv.fr/swagger-ui.html sur Internet.</p>
 
       <p>Le service est développé et opéré par la Fabrique numérique des ministères de la Transition écologique et solidaire et de la Cohésion des territoires, avec l’appui de l’incubateur
          de
@@ -89,7 +89,7 @@
          paternité de
          l’information et la date de dernière mise à jour de l’information utilisée. Par exemple sur la forme « Ministère de la Transition écologique et solidaire – Données originales
          téléchargées sur
-         http://kelrisks.beta.gouv.fr, mise à jour du 01 septembre 2018 ».</p>
+         https://kelrisks.beta.gouv.fr, mise à jour du 01 septembre 2018 ».</p>
 
       <h3 style="text-align: center">Vie privée</h3>
 

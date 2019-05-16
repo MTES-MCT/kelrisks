@@ -225,6 +225,7 @@ import SearchFormPart2Commune from './content/search/SearchFormPart2Commune'
 import SearchFormPart3Parcelle from './content/search/SearchFormPart3Parcelle'
 import SearchResults from './content/search/SearchResults'
 import Stats from './content/Stats'
+import fetchWithError from '../script/fetchWithError'
 
 export default {
   name: 'Kelrisks',
@@ -246,6 +247,10 @@ export default {
     },
     api: {
       message: 'API'
+    },
+    env: {
+      version: '',
+      apiPath: process.env.VUE_APP_API_PATH
     }
   }),
   components: {
@@ -300,6 +305,29 @@ export default {
     }
   },
   beforeDestroy () {
+  },
+  mounted () {
+    fetchWithError(this.env.apiPath + '/appversion/')
+      .then(stream => stream.json())
+      .then(value => {
+        let currentAppVersion = value.entity
+        let localAppVersion = localStorage.getItem('localKelrisksVersion')
+        console.log('localAppVersion : ' + localAppVersion)
+        console.log('currentAppVersion : ' + currentAppVersion)
+        if (localAppVersion !== 'undefined') {
+          console.log('Version Found !')
+          if (localAppVersion !== currentAppVersion) {
+            console.log('Is mismatch :-(')
+            localStorage.setItem('localKelrisksVersion', currentAppVersion)
+            window.location.reload(true)
+          } else {
+            console.log('Is match :-)')
+          }
+        } else {
+          console.log('Version NOT Found !')
+          localStorage.setItem('localKelrisksVersion', currentAppVersion)
+        }
+      })
   }
 }
 </script>
