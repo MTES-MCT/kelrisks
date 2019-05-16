@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
+import fr.gouv.beta.fabnum.commun.transverse.qo.CritereTri;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AdresseDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IAdresseMapper;
@@ -10,6 +11,8 @@ import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleServi
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IRueService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Adresse;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QAdresse;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QRue;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.AdresseQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
@@ -61,7 +64,10 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
         RueQO rueQO = new RueQO();
         rueQO.setNomVoiePartiel(query);
     
-        return adresseMapper.toRueAutoCompleteDTOs(rueService.rechercherAvecCritere(communeQO, rueQO));
+        CritereTri critereTri = new CritereTri();
+        critereTri.ajouteOrdre(QRue.rue.nomVoie.asc());
+    
+        return adresseMapper.toRueAutoCompleteDTOs(rueService.rechercherAvecCritere(critereTri, communeQO, rueQO));
     }
     
     @Override
@@ -76,7 +82,10 @@ public class GestionAdresseFacade extends AbstractFacade implements IGestionAdre
         RueQO rueQO = new RueQO();
         rueQO.setNomVoie(nomVoie);
     
-        return adresseMapper.toNumeroVoieAutoCompleteDTOs(adresseService.rechercherAvecCritere(adresseQO, communeQO, rueQO));
+        CritereTri critereTri = new CritereTri();
+        critereTri.ajouteOrdre(QAdresse.adresse.numero.asc());
+    
+        return adresseMapper.toNumeroVoieAutoCompleteDTOs(adresseService.rechercherAvecCritere(critereTri, adresseQO, communeQO, rueQO));
     }
     
     @Override

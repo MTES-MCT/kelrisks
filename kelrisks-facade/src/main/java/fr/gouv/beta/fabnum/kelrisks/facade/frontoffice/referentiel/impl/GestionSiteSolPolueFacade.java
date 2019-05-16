@@ -6,6 +6,8 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteS
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISiteSolPolueMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISiteSolPolueService;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,10 @@ public class GestionSiteSolPolueFacade extends AbstractFacade implements IGestio
     ISiteSolPolueService siteSolPolueService;
     
     @Override
-    public SiteSolPolueDTO rechercherZoneContenantParcelle(String codeParcelle) {
-        
-        SiteSolPolueDTO siteSolPolueDTO = siteSolPolueMapper.toDTO(siteSolPolueService.rechercherZoneContenantParcelle(codeParcelle));
-        
-        return siteSolPolueDTO;
+    public List<SiteSolPolueDTO> rechercherZoneContenantParcelle(String codeParcelle) {
+    
+        List<SiteSolPolueDTO> siteSolPolueDTOs = siteSolPolueMapper.toDTOs(siteSolPolueService.rechercherZoneContenantParcelle(codeParcelle));
+    
+        return siteSolPolueDTOs;
     }
 }

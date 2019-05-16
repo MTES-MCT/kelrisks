@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.impl.AbstractDAO;
 import fr.gouv.beta.fabnum.commun.transverse.exception.technique.TechniqueException;
 import fr.gouv.beta.fabnum.commun.transverse.qo.AbstractQO;
@@ -62,9 +61,10 @@ public class SiteIndustrielBasiasDAO extends AbstractDAO<SiteIndustrielBasias> i
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon) {
-        
-        return siteIndustrielBasiasRepository.rechercherSitesDansPolygon(multiPolygon);
+    public List<SiteIndustrielBasias> rechercherSitesDansPolygon(List<Geometry> multiPolygon) {
+    
+        if (multiPolygon.size() == 1) { return siteIndustrielBasiasRepository.rechercherSitesDansPolygon(multiPolygon.get(0)); }
+        else { return siteIndustrielBasiasRepository.rechercherSitesDansPolygons(multiPolygon); }
     }
     
     @Override

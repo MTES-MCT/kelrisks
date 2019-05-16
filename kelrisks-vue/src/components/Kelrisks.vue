@@ -113,6 +113,8 @@
 
         <nav>
           <ul class="nav__links">
+            <li class="nav__item"><a @click="showStats()"
+                                     id="stats">Stats</a></li>
             <li class="nav__item"><a href="swagger-ui.html"
                                      id="api">{{ api.message }}</a></li>
           </ul>
@@ -138,489 +140,47 @@
           role="main">
 
       <section class="section section-white"
-               id="section1"
-               v-show="flow.index === 1">
-        <div class="container">
-          <div class="panel">
-            <h2 class="section__title">Vous êtes ?</h2>
-            <p class="section__subtitle">Afin de vous délivrer un niveau d'information qui corresponde au mieux à votre besoin</p>
+               id="section0"
+               v-show="flow.index === 0"></section>
 
-            <!--<hr/>-->
+      <search-form-part1-vous-etes @flow="updateflow"
+                                   v-show="flow.index === 1"/>
+      <search-form-part2-commune @codeinsee="form.codeInsee = $event"
+                                 @flow="updateflow"
+                                 v-show="flow.index === 2"/>
+      <search-form-part3-parcelle :code-insee="form.codeInsee"
+                                  :querying="flow.querying"
+                                  :errors="errors.search"
+                                  @codenumero="form.codeNumero = $event"
+                                  @codeparcelle="form.codeParcelle = $event"
+                                  @codeproprio="form.codeProprio = $event"
+                                  @codevoie="form.codeVoie = $event"
+                                  @flow="updateflow"
+                                  @cgu="$refs.cgu.open()"
+                                  @getavis="getAvis"
+                                  v-show="flow.index === 3"/>
+      <search-results :code-insee="form.codeInsee"
+                      :code-parcelle="form.codeParcelle"
+                      :code-proprio="form.codeProprio"
+                      :code-voie="form.codeVoie"
+                      :id-ban="form.codeNumero"
+                      @flow="updateflow"
+                      @loading="loading"
+                      @requestfocus="renderAvis"
+                      @setflow="setflow"
+                      @errors="searchErrors"
+                      ref="results"
+                      v-show="flow.index === 4"/>
 
-            <br/>
-            <a @click="flowNext()
-                       _paq.push(['trackEvent', 'Flow', 'Demandeur', 'Particulier'])
-                       form.categorieDemandeur = 1"
-               class="button">
-              <font-awesome-icon icon="user"/>
-              Un particulier</a>
-            <a @click="flowNext()
-                       _paq.push(['trackEvent', 'Flow', 'Demandeur', 'Professionnel'])
-                       form.categorieDemandeur = 2"
-               class="button">
-              <font-awesome-icon icon="briefcase"/>
-              Un professionnel</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-white"
-               id="section2"
-               v-show="flow.index === 2">
-        <div class="container">
-          <div class="panel">
-            <h2 class="section__title">Votre terrain</h2>
-            <p class="section__subtitle">1/2 - Saissez votre commune</p>
-
-            <!--<hr/>-->
-
-            <ul class="error">
-              <li :key="error"
-                  v-for="error in informations.errorList">
-                {{ error }}
-              </li>
-            </ul>
-            <ul class="warning">
-              <li :key="warning"
-                  v-for="warning in informations.warningList">
-                {{ warning }}
-              </li>
-            </ul>
-            <ul class="info">
-              <li :key="info"
-                  v-for="info in informations.infoList">
-                {{ info }}
-              </li>
-            </ul>
-            <ul class="success">
-              <li :key="success"
-                  v-for="success in informations.successList">
-                {{ success }}
-              </li>
-            </ul>
-
-            <br/>
-
-            <!--<div style="width: 100%; display: flex; justify-content: center;">-->
-            <!--<autocomplete @result="onCodePostalChanged"-->
-            <!--id="codepostal"-->
-            <!--label-text="Code Postal"-->
-            <!--name="codePostal"-->
-            <!--v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'"/>-->
-            <!--</div>-->
-
-            <div style="width: 50%; margin-left: 25%">
-              <kr-input :errors="checks.codeCommuneError"
-                        @selected="onCodePostalChanged"
-                        label="Nom de commune ou Code postal"
-                        name="codePostal"
-                        option-label-property="codePostal"
-                        option-value-property="codeINSEE"
-                        :start-at="3"
-                        v-bind:source="env.apiPath + '/adresse/commune/autocomplete/'">
-                <template slot="kr-option-label"
-                          slot-scope="slotProps">
-                  {{ slotProps.option.codePostal + ' - ' + slotProps.option.nomCommune}}
-                </template>
-                <template slot="kr-helper"
-                          slot-scope="slotProps">
-                  {{ slotProps.option.nomCommune }}
-                </template>
-                <template slot="kr-no-results"
-                          slot-scope="slotProps">
-                  Aucune commune trouvé pour "{{ slotProps.query }}"
-                </template>
-              </kr-input>
-            </div>
-
-            <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
-              <a @click="flowPrevious()"
-                 class="button">
-                <font-awesome-icon icon="chevron-left"/>
-                Précédent</a>
-              <a @click="checkCodePostal()"
-                 class="button">Suivant
-                <font-awesome-icon :style="{margin : '0 0 0 10px'}"
-                                   icon="chevron-right"/>
-              </a>
-            </div>
-            <!--</form>-->
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-white"
-               id="section3"
-               v-show="flow.index === 3">
-        <div class="container">
-          <div class="panel">
-            <h2 class="section__title">Votre terrain</h2>
-            <p class="section__subtitle">2/2 - Informations complémentaires</p>
-
-            <!--<hr/>-->
-
-            <ul class="error">
-              <li :key="error"
-                  v-for="error in informations.errorList">
-                {{ error }}
-              </li>
-            </ul>
-            <ul class="warning">
-              <li :key="warning"
-                  v-for="warning in informations.warningList">
-                {{ warning }}
-              </li>
-            </ul>
-            <ul class="info">
-              <li :key="info"
-                  v-for="info in informations.infoList">
-                {{ info }}
-              </li>
-            </ul>
-            <ul class="success">
-              <li :key="success"
-                  v-for="success in informations.successList">
-                {{ success }}
-              </li>
-            </ul>
-
-            <br/>
-
-            <div style="width: 40%; float: left; margin-left: 5%">
-              <kr-input :start-at="2"
-                        @selected="onNomVoieChanged"
-                        label="Nom voie"
-                        name="nomVoie"
-                        v-bind:source="env.apiPath + '/adresse/voie/autocomplete/' + form.codeINSEE + '/'">
-                <template slot="kr-no-results"
-                          slot-scope="slotProps">
-                  Aucune voie trouvée pour "{{ slotProps.query }}"
-                </template>
-              </kr-input>
-
-              <kr-input :start-at="1"
-                        @selected="onNumeroChanged"
-                        label="Numéro voie"
-                        name="numero"
-                        v-bind:source="env.apiPath + '/adresse/numero/autocomplete/' + form.codeINSEE + '/' + form.nomVoie + '/'">
-                <template slot="kr-no-results"
-                          slot-scope="slotProps">
-                  Aucun numéro trouvé pour "{{ slotProps.query }}"
-                </template>
-                <template slot="kr-helper"
-                          slot-scope="slotProps">
-                  IBAN&nbsp;: {{ slotProps.option.id }}
-                </template>
-              </kr-input>
-            </div>
-
-            <div style="width: 10%; float: left; margin-top: 35px">
-              <p class="section__subtitle">Ou</p>
-            </div>
-            <div style="width: 40%; float: left; margin-right: 5%">
-              <kr-input label="Code Parcelle"
-                        name="codeparcelle"
-                        placeholder="BA-115 ou 912250000A0352"
-                        v-model="form.parcelle"/>
-            </div>
-
-            <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
-              <p class="section__subtitle">Optionnel</p>
-            </div>
-
-            <div style="width: 90%; margin-left: 5%">
-              <kr-input :start-at="3"
-                        label="Nom de l'ancien propriétaire / Raison sociale"
-                        name="raisonSociale"
-                        @query="onNomProprietaireChanged"
-                        @selected="onNomProprietaireSelected"
-                        v-bind:source="env.apiPath + '/raison/autocomplete/' + form.codeINSEE + '/'">
-                <template slot="kr-no-results"
-                          slot-scope="slotProps">
-                  Aucun numéro trouvé pour "{{ slotProps.query }}"
-                </template>
-              </kr-input>
-            </div>
-
-            <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
-              <a @click="flowPrevious()"
-                 class="button">
-                <font-awesome-icon icon="chevron-left"/>
-                Précédent</a>
-              <button type="submit"
-                      class="button"
-                      name="subscribe"
-                      v-if="avis.querying">
-                <font-awesome-icon icon="spinner"
-                                   spin/>
-                Recherche en cours...
-              </button>
-              <button @click="getAvis()"
-                      class="button"
-                      id="submit"
-                      name="subscribe"
-                      type="submit"
-                      v-else>
-                <font-awesome-icon icon="search"/>
-                Rechercher
-              </button>
-              <!--<i class="fas fa-search left"></i>-->
-            </div>
-            <!--</form>-->
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-white"
-               id="section4"
-               v-show="flow.index === 4">
-        <div class="container">
-          <div class="panel clearfix">
-            <h2 class="section__title"
-                v-if="concordances && concordances > 0">La recherche Kelrisks a trouvé {{ concordances }} concordance{{ concordances > 1 ? 's': ''}} dans les bases de données</h2>
-            <h2 class="section__title"
-                v-else>La recherche Kelrisks n'a trouvé aucune concordance dans les bases de données</h2>
-            <p class="section__subtitle">Attention, même en l'absence de concordance, la présente recherche peut présenter des informations relatives à l'environnement de votre parcelle</p>
-
-            <!--<hr/>-->
-
-            <br/>
-
-            <div id="summary_wrapper">
-              <div id="summary">
-                <div class="section__subtitle"><strong>Votre recherche : </strong></div>
-                Code postal&nbsp;: <span v-if="form.codePostal && form.codePostal !== ''">{{form.codePostal}}</span><span v-else><i>n/a</i></span><br/>
-                Rue&nbsp;: <span v-if="form.nomVoieLib && form.nomVoieLib !== ''">{{form.nomVoieLib}}</span><span v-else><i>n/a</i></span><br/>
-                N°&nbsp;: <span v-if="form.numeroVoieLib && form.numeroVoieLib !== ''">{{form.numeroVoieLib}}</span><span v-else><i>n/a</i></span><br/>
-                Code parcelle&nbsp;: <span v-if="form.parcelle && form.parcelle !== ''">{{form.parcelle}}</span><span v-else><i>n/a</i></span><br/>
-                Raison Sociale&nbsp;: <span v-if="form.proprio && form.proprio !== ''">{{form.proprio}}</span><span v-else><i>n/a</i></span><br/>
-                <hr/>
-                <div style="text-align: center; padding-top: 20px;">
-                  <a @click="flowPrevious()
-                             _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])"
-                     class="button">
-                    <font-awesome-icon icon="undo"/>
-                    Modifier</a><br/>
-                  <a :href="this.env.apiPath + '/avis/pdf?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio"
-                     class="button warning"
-                     @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
-                     id="pdf"
-                     target="_blank">
-                    <font-awesome-icon icon="file-pdf"/>
-                    Pdf
-                  </a>
-                </div>
-              </div>
-              <div style="text-align: center; padding-top: 20px;">
-                <a :href="env.basePath"
-                   @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
-                   class="button">
-                  <font-awesome-icon icon="undo"/>
-                  Nouvelle recherche</a><br/>
-              </div>
-            </div>
-            <div id="avis">
-              <!--Recherche de sites <br/>-->
-
-              <big-number :number-of="avis.basiasParcelle.numberOf"
-                          label-text="Sites polués BASIAS"/>
-
-              <big-number :number-of="avis.basolParcelle.numberOf"
-                          label-text="Sites polués BASOL"/>
-
-              <big-number :number-of="avis.installationClasseeParcelle.numberOf"
-                          Compte
-                          ce
-                          de
-                          précède
-                          qui
-                          tenu
-                          label-text="Installations classées"/>
-
-              <big-number :number-of="avis.installationClasseeParcelle.numberOf"
-                          label-text="SIS"/>
-              <br/>
-
-              <template v-if="avis.basiasProximiteParcelle.numberOf > 0 || avis.basiasRaisonSociale > 0">
-                <p class="indent">Par ailleurs nous identifions : </p>
-                <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
-                  <p class="indent"> - {{ avis.basiasProximiteParcelle.lib }}</p>
-                  <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.basiasProximiteParcelle.liste">
-                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
-                    </li>
-                  </ul>
-                </template>
-                <template v-if="avis.basiasRaisonSociale.numberOf > 0">
-                  <p class="indent"> - {{ avis.basiasRaisonSociale.lib }}</p>
-                  <ul class="site-list">
-                    <li :key="ic.id"
-                        v-for="ic in avis.basiasRaisonSociale.liste">
-                      <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                         target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
-                    </li>
-                  </ul>
-                </template>
-                <br/>
-              </template>
-
-              <p class="section__subtitle"><strong>Conséquences</strong></p>
-
-              <div id="conclusion0"
-                   style="text-align: justify"
-                   v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf === 0">
-                <p>Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au titre des pollutions de sols
-                   d’origine industrielle.</p>
-              </div>
-              <div id="conclusion1"
-                   style="text-align: justify"
-                   v-if="avis.basiasParcelle.numberOf > 0 && (avis.basolParcelle.numberOf > 0 || avis.installationClasseeParcelle.numberOf > 0)">
-                <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur ou au locataire conformément à la réglementation en vigueur (article L. 514-20 du code
-                   de l’environnement et L 125-7 du code de l’Environnement si positif SIS).</p>
-                <p>En outre compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien) , la réalisation
-                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>
-                <p>Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations exigées au titre du code de
-                   l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)
-                   la liste de ces bureaux d'étude</p>
-              </div>
-              <div id="conclusion2"
-                   style="text-align: justify"
-                   v-if="avis.basiasParcelle.numberOf > 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0">
-                <p>En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de l’environnement.</p>
-                <p>Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
-                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
-                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions. Nous vous rappelons que l'obligation de faire appel à un
-                   bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne concerne que les attestations prévues aux articles L. 556-1
-                   et L. 556-2 du code de l'environnement.</p>
-                <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
-                   (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
-                   (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
-              </div>
-              <div id="conclusion3"
-                   style="text-align: justify"
-                   v-if="avis.basiasParcelle.numberOf === 0 && avis.basolParcelle.numberOf === 0 && avis.installationClasseeParcelle.numberOf === 0 && avis.basiasProximiteParcelle.numberOf > 0">
-                <p>Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>
-                <p>Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de destination du bien), la réalisation
-                   d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions. Nous vous rappelons que l'obligation de faire appel à un
-                   bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne concerne que les attestations prévues aux articles L. 556-1
-                   et L. 556-2 du code de l'environnement.</p>
-                <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
-                   (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce lien
-                   (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>www.lne.fr</a>)</p>
-              </div>
-
-              <br/>
-
-              <section class="section section-white"
-                       id="details"
-                       style="text-align: left">
-
-                <p @click="showHideContent()
-                           _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
-                   class="section__subtitle"
-                   style="margin-bottom: 0; cursor: pointer;">Détails et analyse à 100m</p>
-                <a @click="showHideContent()
-                           _paq.push(['trackEvent', 'Flow', 'Avis', 'Détails'])"
-                   style="position: absolute; top: 25px; right: 25px; text-decoration: none; background: none">
-                  <font-awesome-icon icon="caret-down"
-                                     size="2x"
-                                     v-if="!visibility.details"/>
-                  <font-awesome-icon icon="caret-up"
-                                     size="2x"
-                                     v-else/>
-                </a>
-                <div class="section_content"
-                     v-if="visibility.details">
-                  <br/>
-                  Votre parcelle, <br/>
-                  <p>{{ avis.basiasParcelle.lib }}</p>
-                  <template v-if="avis.basiasParcelle.numberOf > 0">
-                    <ul class="site-list">
-                      <li :key="ic.id"
-                          v-for="ic in avis.basiasParcelle.liste">
-                        - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                             target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
-                      </li>
-                    </ul>
-                  </template>
-                  <p>{{ avis.basolParcelle.lib }}</p>
-                  <template v-if="avis.basolParcelle.numberOf > 0">
-                    <ul class="site-list">
-                      <li :key="ic.id"
-                          v-for="ic in avis.basolRayonParcelle.liste">
-                        - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
-                    </ul>
-                  </template>
-                  <p>{{ avis.installationClasseeParcelle.lib }}</p>
-                  <template v-if="avis.installationClasseeParcelle.numberOf > 0">
-                    <ul class="site-list">
-                      <li :key="ic.id"
-                          v-for="ic in avis.installationClasseeParcelle.liste">
-                        - {{ ic.nom }}
-                      </li>
-                    </ul>
-                  </template>
-                  <p>{{ avis.sisParcelle.lib }}</p>
-
-                  <template v-if="avis.basiasRayonParcelle.numberOf > 0 || avis.basolRayonParcelle.numberOf > 0 || avis.installationClasseeRayonParcelle.numberOf > 0">
-                    <p>Pour information, dans un rayon de 100m&nbsp;:</p>
-
-                    <template v-if="avis.basiasRayonParcelle.numberOf > 0">
-                      <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basias dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
-                      <p v-else>Se trouvent {{ avis.basiasRayonParcelle.numberOf }} sites Basias dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
-                      <ul class="site-list">
-                        <li :key="ic.id"
-                            v-for="ic in avis.basiasRayonParcelle.liste">
-                          - <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + ic.identifiant"
-                               target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ ic.identifiant }}</a>
-                        </li>
-                      </ul>
-                    </template>
-                    <template v-if="avis.basolRayonParcelle.numberOf > 0">
-                      <p v-if="avis.basiasRayonParcelle.numberOf === 1">Se trouve 1 site Basol dont la fiche est consultable en cliquant sur le lien suivant&nbsp;:</p>
-                      <p v-else>Se trouvent {{ avis.basolRayonParcelle.numberOf }} sites Basol dont les fiches sont consultables en cliquant sur les liens suivants&nbsp;:</p>
-                      <ul class="site-list">
-                        <li :key="ic.id"
-                            v-for="ic in avis.basolRayonParcelle.liste">
-                          - <a>https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ ic.identifiant }}</a></li>
-                      </ul>
-                    </template>
-                    <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
-                      <p v-if="avis.installationClasseeRayonParcelle.numberOf === 1">Se trouve 1 installation classée&nbsp;: </p>
-                      <p v-else>Se trouvent {{ avis.installationClasseeRayonParcelle.numberOf }} installations classées&nbsp;: </p>
-                      <ul class="site-list">
-                        <li :key="ic.id"
-                            v-for="ic in avis.installationClasseeRayonParcelle.liste">
-                          - {{ ic.nom }}
-                        </li>
-                      </ul>
-                    </template>
-                  </template>
-                  <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
-
-                  <template v-if="avis.installationClasseeCommune.numberOf > 0"><p>Enfin, nous avons trouvé {{ avis.installationClasseeCommune.numberOf }} installation(s) classée(s) non géoréférencées
-                                                                                   dans la commune.</p></template>
-                </div>
-              </section>
-            </div>
-          </div>
-          <div class="note_pied_page">
-            <p>(1) L'obligation de faire appel à un bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 concerne les attestations
-               prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement et exigées à l'article R 431-16 du code de l'urbanisme (alinéa n et o).</p>
-            <p>(2) Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le COFRAC
-               (www.cofrac.fr). A ce jour seul le LNE est accrédité pour délivrer la certification relative aux sols pollués et la liste des bureaux d'études certifiés par le LNE est disponible en
-               cliquant sur ce lien (https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr)</p>
-          </div>
-        </div>
-      </section>
+      <stats v-show="flow.index === 666"/>
     </main>
 
-    <how-to class="clearfix"
-            v-show="flow.index === 1"/>
+    <how-to class="clearfix container"
+            v-show="flow.index <= 1"/>
 
-    <p style="font-size: 0.8em; width: 53%; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
+    <div class="container">
+      <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
+    </div>
 
     <footer>
       <div>
@@ -638,210 +198,146 @@
       </div>
     </footer>
 
-    <contact/>
+    <contact :timeout="45"/>
+
     <konami/>
+
+    <div id="loading"
+         v-show="flow.loading">
+      <p>
+        <font-awesome-icon icon="spinner"
+                           spin/>
+        Chargement de votre recherche, merci de patienter...
+      </p>
+    </div>
 
   </div>
 </template>
 
 <script>
-import BigNumber from './BigNumber'
-import Contact from './Contact'
-import CGU from './CGU'
-import HowTo from './HowTo'
-import WhoAreWe from './WhoAreWe'
-import functions from '../script/fonctions'
-import Konami from './Konami'
-import avis from '../script/avis'
-import KrInput from './KrInput'
+import Contact from './content/Contact'
+import CGU from './content/CGU'
+import HowTo from './content/HowTo'
+import WhoAreWe from './content/WhoAreWe'
+import Konami from './content/Konami'
+import SearchFormPart1VousEtes from './content/search/SearchFormPart1VousEtes'
+import SearchFormPart2Commune from './content/search/SearchFormPart2Commune'
+import SearchFormPart3Parcelle from './content/search/SearchFormPart3Parcelle'
+import SearchResults from './content/search/SearchResults'
+import Stats from './content/Stats'
+import fetchWithError from '../script/fetchWithError'
 
 export default {
   name: 'Kelrisks',
   data: () => ({
-    visibility: {
-      details: false
-    },
-    informations: {
-      hasError: false,
-      errorList: [],
-      hasWarning: false,
-      warningList: [],
-      hasInfo: false,
-      infoList: [],
-      hasSuccess: false,
-      successList: []
-    },
     flow: {
-      index: 1
+      index: 1,
+      querying: false,
+      loading: false
+    },
+    errors: {
+      search: []
     },
     form: {
-      categorieDemandeur: 0,
-      communes: [],
-      communeLib: '',
-      codePostal: null,
-      codeINSEE: null,
-      nomVoieLib: '',
-      nomVoie: '',
-      numeroVoieLib: '',
-      idBAN: '',
-      parcelle: '',
-      proprio: ''
-    },
-    checks: {
-      codeCommuneError: []
+      codeInsee: '',
+      codeVoie: '',
+      codeNumero: '',
+      codeProprio: '',
+      codeParcelle: ''
     },
     api: {
       message: 'API'
     },
-    avis: {
-      querying: false,
-      rendered: false,
-      basiasNbOf: 0,
-      basiasParcelle: {},
-      basiasProximiteParcelle: {},
-      basiasRayonParcelle: {},
-      basiasRaisonSociale: {},
-      basolNbOf: 0,
-      basolParcelle: {},
-      basolProximiteParcelle: {},
-      basolRayonParcelle: {},
-      s3ICNbOf: 0,
-      installationClasseeParcelle: {},
-      installationClasseeProximiteParcelle: {},
-      installationClasseeRayonParcelle: {},
-      installationClasseeCommune: {},
-      sisParcelle: {}
-    },
-    contact: {
-      opened: false,
-      timesUp: false,
-      countDown: null
-    },
     env: {
-      basePath: process.env.VUE_APP_PATH,
+      version: '',
       apiPath: process.env.VUE_APP_API_PATH
     }
   }),
   components: {
+    Stats,
+    SearchResults,
+    SearchFormPart3Parcelle,
+    SearchFormPart2Commune,
+    SearchFormPart1VousEtes,
     Contact,
-    KrInput,
-    BigNumber,
     CGU,
     HowTo,
     WhoAreWe,
     Konami
   },
   methods: {
-    showHideContent () {
-      // console.log(this.visibility.details)
-      this.visibility.details = !this.visibility.details
-      // console.log(this.visibility.details)
+    updateflow (value) {
+      this.flow.index += value
     },
-    onCodePostalChanged (value) {
-      this.form.codeINSEE = value.codeINSEE
-      this.form.codePostal = value.codePostal
-      this.form.nomVoie = ''
-      this.form.nomVoieLib = ''
-      this.form.idBAN = ''
-      this.form.numeroVoieLib = ''
-    },
-    onNomVoieChanged (value) {
-      this.form.nomVoie = value.code
-      this.form.nomVoieLib = value.libelle
-      this.form.idBAN = ''
-      this.form.numeroVoieLib = ''
-    },
-    onNumeroChanged (value) {
-      this.form.idBAN = value.code
-      this.form.numeroVoieLib = value.libelle
-    },
-    onNomProprietaireSelected (value) {
-      this.form.proprio = value.code
-    },
-    onNomProprietaireChanged (value) {
-      this.form.proprio = value
-    },
-    flowNext () {
-      this.flow.index++
-      functions.scrollToElement('main', false)
-    },
-    flowPrevious () {
-      this.flow.index--
-      functions.scrollToElement('main', false)
-    },
-    checkCodePostal () {
-      this.informations.errorList = []
-      if (/^\d{5}$/.test(this.form.codeINSEE)) {
-        this.checks.codeCommuneError = []
-        this.flowNext()
-        this._paq.push(['trackEvent', 'Flow', 'Informations 1/2', 'OK'])
-      } else {
-        this.checks.codeCommuneError = ['Merci de bien vouloir sélectionner une commune au moyen de l\'autocomplétion.']
-        this._paq.push(['trackEvent', 'Flow', 'Informations 1/2', 'Erreur Autocomplétion'])
-      }
-    },
-    checkInformations: function (info) {
-      this.informations.hasError = info.hasError
-      this.informations.errorList = info.errorList
-      this.informations.hasInfo = info.hasInfo
-      this.informations.infoList = info.infoList
-      this.informations.hasSuccess = info.hasSuccess
-      this.informations.successList = info.successList
-      this.informations.hasWarning = info.hasWarning
-      this.informations.warningList = info.warningList
+    setflow (value) {
+      this.flow.index = value
     },
     getAvis () {
-      this.avis.querying = true
-      fetch(this.env.apiPath + '/avis?' + 'codeINSEE=' + this.form.codeINSEE + '&' + 'nomVoie=' + this.form.nomVoie + '&' + 'idBAN=' + this.form.idBAN + '&' + 'codeParcelle=' + this.form.parcelle + '&' + 'nomProprietaire=' + this.form.proprio)
-        .then(stream => stream.json())
-        .then(value => {
-          this.avis.querying = false
-          this.checkInformations(value.entity)
-          if (this.informations.hasError) {
-            this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'Erreur'])
-            return
-          }
-
-          this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'OK'])
-
-          this.flow.index++
-
-          this.avis.basiasParcelle = avis.getBasiasParcelle(value)
-          this.avis.basiasProximiteParcelle = avis.getBasiasProximiteParcelle(value)
-          this.avis.basiasRaisonSociale = avis.getBasiasRaisonSocialeParcelle(value)
-          this.avis.basiasRayonParcelle = avis.getBasiasRayonParcelle(value)
-
-          this.avis.basolParcelle = avis.getBasolParcelle(value)
-          this.avis.basolProximiteParcelle = avis.getBasolProximiteParcelle(value)
-          this.avis.basolRayonParcelle = avis.getBasolRayonParcelle(value)
-
-          this.avis.installationClasseeParcelle = avis.getICSurParcelle(value)
-          this.avis.installationClasseeProximiteParcelle = avis.getICProximiteParcelle(value)
-          this.avis.installationClasseeRayonParcelle = avis.getICRayonParcelle(value)
-          this.avis.installationClasseeCommune = avis.getICNonGeoreferencees(value)
-
-          this.avis.sisParcelle = avis.getSISSurParcelle(value)
-
-          functions.scrollToElement('main', false)
-          this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
-        })
+      this.flow.querying = true
+      this.$refs.results.getAvis()
+    },
+    renderAvis () {
+      this.flow.loading = false
+      this.flow.querying = false
+      this.flow.index = 4
+    },
+    loading () {
+      console.log('loading')
+      this.errors.search = []
+      this.flow.loading = true
+    },
+    debug (value) {
+      console.log(value)
+    },
+    searchErrors (value) {
+      if (value.length > 0) {
+        this.flow.querying = false
+      }
+      this.errors.search = value
+    },
+    showStats () {
+      this.flow.index = 666
     }
   },
   computed: {
-    concordances: function () {
-      return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
-    },
     _paq: function () {
       return window._paq
     }
   },
   beforeDestroy () {
-    clearInterval(this.contact.countDown)
+  },
+  mounted () {
+    fetchWithError(this.env.apiPath + '/appversion/')
+      .then(stream => stream.json())
+      .then(value => {
+        let currentAppVersion = value.entity
+        let localAppVersion = localStorage.getItem('localKelrisksVersion')
+        console.log('localAppVersion : ' + localAppVersion)
+        console.log('currentAppVersion : ' + currentAppVersion)
+        if (localAppVersion !== 'undefined') {
+          console.log('Version Found !')
+          if (localAppVersion !== currentAppVersion) {
+            console.log('Is mismatch :-(')
+            localStorage.setItem('localKelrisksVersion', currentAppVersion)
+            window.location.reload(true)
+          } else {
+            console.log('Is match :-)')
+          }
+        } else {
+          console.log('Version NOT Found !')
+          localStorage.setItem('localKelrisksVersion', currentAppVersion)
+        }
+      })
   }
 }
 </script>
 
 <style>
+  html, body {
+    height           : 100%;
+    background-color : #FAFAFA;
+  }
+
   body {
     overflow-y : scroll;
   }
@@ -890,23 +386,8 @@ export default {
     margin-bottom : 40px;
   }
 
-  #summary_wrapper {
-    float      : left;
-    width      : 30%;
-    text-align : left;
-  }
-
-  #summary, #avis, #details {
-    background-color : #FFFFFF;
-    border           : 1px solid #CCCCCC;
-    border-radius    : 2px;
-    /*float            : left;*/
-    padding          : 30px 20px;
-  }
-
-  #avis {
-    float : right;
-    width : 68%;
+  #section0 {
+    min-height : 100px;
   }
 
   p {
@@ -934,6 +415,22 @@ export default {
   .note_pied_page p {
     font-size : 0.8em;
     color     : #999999;
+  }
+
+  #loading {
+    position         : fixed;
+    width            : 100%;
+    height           : 100%;
+    background-color : rgba(0, 0, 0, 0.73);
+    top              : 0;
+    left             : 0;
+  }
+
+  #loading p {
+    color      : white;
+    text-align : center;
+    font-size  : 2em;
+    margin-top : 25.5%;
   }
 
   footer {

@@ -6,6 +6,8 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.ISiteSolPolueDAO;
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl.SiteSolPolueDAO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteSolPolue;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class SiteSolPolueService extends AbstractCRUDService<SiteSolPolue> imple
     }
     
     @Override
-    public SiteSolPolue rechercherZoneContenantParcelle(String codeParcelle) {
+    public List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle) {
         
         return dao.rechercherZoneContenantParcelle(codeParcelle);
     }

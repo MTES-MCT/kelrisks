@@ -6,6 +6,7 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.IInstallationClassee
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl.InstallationClasseeDAO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.InstallationClassee;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.geolatte.geom.Geometry;
@@ -47,7 +48,9 @@ public class InstallationClasseeService extends AbstractCRUDService<Installation
     }
     
     @Override
-    public List<InstallationClassee> rechercherSitesDansPolygon(Geometry multiPolygon) {
+    public List<InstallationClassee> rechercherSitesDansPolygon(List<Geometry> multiPolygon) {
+    
+        if (multiPolygon == null || multiPolygon.isEmpty()) { return new ArrayList<>(); }
         
         return dao.rechercherSitesDansPolygon(multiPolygon);
     }

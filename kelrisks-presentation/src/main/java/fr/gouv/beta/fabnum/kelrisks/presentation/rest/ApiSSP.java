@@ -6,6 +6,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,11 @@ public class ApiSSP extends AbstractBasicApi {
                                         @PathVariable("codeINSEE") String codeINSEE,
                                         @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                         @PathVariable("codeParcelle") String codeParcelle) {
-        
-        SiteSolPolueDTO siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
-        
-        siteSolPolueDTO.setMultiPolygon(null); // TODO : com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Direct self-reference leading to cycle
+    
+        List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
+    
+        // TODO : com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Direct self-reference leading to cycle
+        siteSolPolueDTO.forEach(siteSolPolueDTO1 -> siteSolPolueDTO1.setMultiPolygon(null));
         
         return Response.ok(siteSolPolueDTO).build();
     }

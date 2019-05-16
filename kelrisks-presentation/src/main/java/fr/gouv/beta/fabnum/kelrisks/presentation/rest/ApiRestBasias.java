@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -45,9 +46,10 @@ public class ApiRestBasias extends AbstractBasicApi {
                                 @PathVariable("codeINSEE") String codeINSEE,
                                 @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                 @PathVariable("codeParcelle") String codeParcelle) {
-        
-        SiteSolPolueDTO               siteSolPolueDTO          = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(siteSolPolueDTO.getMultiPolygon());
+    
+        List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs =
+                gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(siteSolPolueDTO.stream().map(SiteSolPolueDTO::getMultiPolygon).collect(Collectors.toList()));
         
         return Response.ok(siteIndustrielBasiasDTOs).build();
     }
@@ -67,9 +69,9 @@ public class ApiRestBasias extends AbstractBasicApi {
     @GetMapping("/api/raison/autocomplete/{codeINSEE}/{query}")
     @ApiOperation(value = "Requête retournant les raisons sociale des sites Basias/S3IC dans une commune.", response = String.class)
     public Response installationsByRaisonSociale(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
-                                          @PathVariable("codeINSEE") String codeINSEE,
-                                          @ApiParam(required = true, name = "query", value = "Terme partiel.")
-                                          @PathVariable("query") String query) {
+                                                 @PathVariable("codeINSEE") String codeINSEE,
+                                                 @ApiParam(required = true, name = "query", value = "Terme partiel.")
+                                                 @PathVariable("query") String query) {
         
         List<AutocompleteDTO> autocompleteDTOs = gestionSiteIndustrielBasiasFacade.rechercherRaisonsSociales(codeINSEE, query);
         autocompleteDTOs.addAll(gestionInstallationClasseeFacade.rechercherRaisonsSociales(codeINSEE, query));
@@ -77,7 +79,6 @@ public class ApiRestBasias extends AbstractBasicApi {
         
         return Response.ok(autocompleteDTOs).build();
     }
-    
     
     @GetMapping("/api/basias/proprietaire/{nomProprietaire}")
     @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la Parcelle.", response = String.class)
@@ -88,7 +89,6 @@ public class ApiRestBasias extends AbstractBasicApi {
     
         return Response.ok(siteIndustrielBasiasDTOs).build();
     }
-    
     
     @GetMapping("/api/basias/cadastre/{codeINSEE}/{codeParcelle}/{distance}")
     @ApiOperation(value = "Requête retournant les sites industiels Basias dans un certain rayon du centroîde de la Parcelle.", response = String.class)

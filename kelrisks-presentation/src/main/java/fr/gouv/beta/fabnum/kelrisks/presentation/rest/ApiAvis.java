@@ -2,12 +2,14 @@ package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.avis.ShortUrlDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionShortUrlFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -22,6 +24,7 @@ import java.util.Locale;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -44,14 +47,22 @@ import com.itextpdf.kernel.pdf.WriterProperties;
 public class ApiAvis extends AbstractBasicApi {
     
     @Autowired
-    IGestionAvisFacade    gestionAvisFacade;
+    IGestionAvisFacade     gestionAvisFacade;
     @Autowired
-    IGestionCommuneFacade gestionCommuneFacade;
-    //    @Value(value = "classpath:/avis.html")
-    //    private File baseAvis;
+    IGestionCommuneFacade  gestionCommuneFacade;
+    @Autowired
+    IGestionShortUrlFacade gestionShortUrlFacade;
     
     public ApiAvis() {
         // Rien à faire
+    }
+    
+    @GetMapping("/api/url")
+    public Response getUrl(@RequestParam("code") String code) {
+        
+        ShortUrlDTO shortUrlDTO = gestionShortUrlFacade.rechercherResultatAvecCode(code);
+        
+        return Response.ok(shortUrlDTO).build();
     }
     
     @GetMapping("/api/avis")
@@ -67,10 +78,19 @@ public class ApiAvis extends AbstractBasicApi {
                          @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                          @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
     
+        String      url         = codeParcelle + "|&|" + codeINSEE + "|&|" + nomVoie + "|&|" + idBAN + "|&|" + nomProprietaire;
+        ShortUrlDTO shortUrlDTO = gestionShortUrlFacade.rechercherResultatAvecUrl(url);
+    
+        if (shortUrlDTO == null) {
+            shortUrlDTO = new ShortUrlDTO();
+            shortUrlDTO.setCode(RandomStringUtils.random(5, true, true));
+            shortUrlDTO.setUrl(url);
+        }
+        
         if (codeParcelle != null && !codeParcelle.equals("")) {
             
             codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
-        
+    
             if (codeParcelle == null) {
                 JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
                 jsonInfoDTO.addError("Le code parcelle n'a pas été trouvé.");
@@ -86,6 +106,10 @@ public class ApiAvis extends AbstractBasicApi {
         }
         
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomVoie, idBAN, nomProprietaire);
+    
+        avisDTO.getSummary().setCodeUrl(shortUrlDTO.getCode());
+    
+        if (shortUrlDTO.getId() == null) { gestionShortUrlFacade.save(shortUrlDTO); }
         
         return Response.ok(avisDTO).build();
     }
@@ -128,7 +152,8 @@ public class ApiAvis extends AbstractBasicApi {
             HtmlConverter.convertToPdf(byteArrayInputStream, pdfWriter, converterProperties);
     
             return ResponseEntity.ok()
-                           .header("Content-Disposition", "attachment; filename=Kelrisks_Parcelle_" + avisDTO.getParcelle() + "_(" + avisDTO.getCommune().getCodePostal() + ").pdf")
+                           .header("Content-Disposition",
+                                   "attachment; filename=Kelrisks_Parcelle_" + avisDTO.getSummary().getCodeParcelle() + "_(" + avisDTO.getSummary().getCommune().getCodePostal() + ").pdf")
                            .body(byteArrayOutputStream.toByteArray());
         }
         catch (Exception e) {
@@ -149,7 +174,7 @@ public class ApiAvis extends AbstractBasicApi {
         element = htmlDocument.select("#infos").first();
         
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
-        element.append("n°" + avisDTO.getParcelle() + " à " + communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
+        element.append("n°" + avisDTO.getSummary().getCodeParcelle() + " à " + communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
         
         redigerAnalyseParcelle(htmlDocument, avisDTO);
     
@@ -159,25 +184,29 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     private void redigerConclusion(Document htmlDocument, AvisDTO avisDTO) {
+    
+        int conclusionNumber = getConclusionNumber(avisDTO);
         
         Element element;
         element = htmlDocument.select("#conclusion").first();
-        
-        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() == 0) {
+    
+        if (conclusionNumber == 0) {
             element.append("<p class=\"indent\">Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au " +
                            "titre des pollutions de sols d’origine industrielle.</p>");
         }
-        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 && (avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() > 0 || avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0)) {
+        if (conclusionNumber == 1) {
             element.append("<p class=\"indent\">En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur ou au locataire conformément à la réglementation en " +
                            "vigueur (article L. 514-20 du code de l’environnement et L 125 - 7 du code de l’Environnement si positif SIS)</p>");
-            element.append("<p class=\"indent\">En outre compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
-                           "destination du bien) , la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.</p>");
-            element.append("<p class=\"indent\">Nous vous rappellons que seul les bureau d'études disposant de la certification à la norme NF 31-620 sont compétent pour délivrer les attestations " +
-                           "exigées au titre du code de l'urbanisme. Vous trouverez en cliquant sur ce lien (<a href='https://www.lne" +
-                           ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>) la liste" +
-                           " de ces bureaux d'étude.</p>");
+            element.append("<p class=\"indent\">En outre, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
+                           "destination du bien), la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.  Nous vous" +
+                           " rappelons que l'obligation de faire appel à un bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 ne " +
+                           "concerne que les attestations prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement.</p>");
+            element.append("<p class=\"indent\">Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont " +
+                           "répertoriés par le COFRAC (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce " +
+                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne" +
+                           ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)</p>");
         }
-        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0) {
+        if (conclusionNumber == 2) {
             element.append("<p class=\"indent\">En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de " +
                            "l’environnement.</p>");
             element.append("<p class=\"indent\">Par ailleurs, ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
@@ -190,7 +219,7 @@ public class ApiAvis extends AbstractBasicApi {
                            "lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne" +
                            ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)</p>");
         }
-        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 && avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 && avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() > 0) {
+        if (conclusionNumber == 3) {
             element.append("<p class=\"indent\">Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
             element.append("<p class=\"indent\">Toutefois, compte tenu de ce qui précède, nous recommandons, en cas de changement d'usage du terrain (travaux, constructions, ou changement de " +
                            "destination du bien), la réalisation d'une étude historique ou d'un diagnostic de sols dans un souci d'une meilleure prise en compte d'éventuelles pollutions.  Nous vous" +
@@ -201,6 +230,34 @@ public class ApiAvis extends AbstractBasicApi {
                            "lien (<a href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>https://www.lne" +
                            ".fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr</a>)</p>");
         }
+    }
+    
+    private int getConclusionNumber(AvisDTO avisDTO) {
+        
+        int conclusionNumber = -1;
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 &&
+            avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().size() == 0) { conclusionNumber = 0; }
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 &&
+            avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() > 0) { conclusionNumber = 3; }
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 ||
+            avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() > 0 ||
+            avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0 ||
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0) { conclusionNumber = 1; }
+        
+        if (avisDTO.getSiteIndustrielBasiasSurParcelleDTOs().size() > 0 &&
+            avisDTO.getSiteIndustrielBasolSurParcelleDTOs().size() == 0 &&
+            avisDTO.getInstallationClasseeSurParcelleDTOs().size() == 0 &&
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().size() == 0) { conclusionNumber = 2; }
+        
+        return conclusionNumber;
     }
     
     private void redigerAnalyseParcelle(Document htmlDocument, AvisDTO avisDTO) {
@@ -292,7 +349,7 @@ public class ApiAvis extends AbstractBasicApi {
                 }
             }
             if (avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().size() > 0) {
-                element.append("un site dont la localisation est imprécise mais ayant potentiellement appartenu au même propriétaire (" + avisDTO.getNomProprietaire() + ") : ");
+                element.append("un site dont la localisation est imprécise mais ayant potentiellement appartenu au même propriétaire (" + avisDTO.getSummary().getNomProprietaire() + ") : ");
                 element = element.appendElement("ul");
                 for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs()) {
                     element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>http://fiches-risques.brgm" +

@@ -62,9 +62,10 @@ public class InstallationClasseeDAO extends AbstractDAO<InstallationClassee> imp
     }
     
     @Override
-    public List<InstallationClassee> rechercherSitesDansPolygon(Geometry multiPolygon) {
-        
-        return installationClasseeRepository.rechercherSitesDansPolygon(multiPolygon);
+    public List<InstallationClassee> rechercherSitesDansPolygon(List<Geometry> multiPolygon) {
+    
+        if (multiPolygon.size() == 1) { return installationClasseeRepository.rechercherSitesDansPolygon(multiPolygon.get(0)); }
+        else { return installationClasseeRepository.rechercherSitesDansPolygons(multiPolygon); }
     }
     
     @Override

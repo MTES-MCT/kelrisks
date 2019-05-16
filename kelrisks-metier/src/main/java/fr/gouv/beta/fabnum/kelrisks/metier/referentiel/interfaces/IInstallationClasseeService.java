@@ -17,7 +17,7 @@ public interface IInstallationClasseeService extends IAbstractCRUDService<Instal
     
     List<InstallationClassee> rechercherInstallationsDansRayonCentroideParcelle(String codeParcelle, double distance);
     
-    List<InstallationClassee> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<InstallationClassee> rechercherSitesDansPolygon(List<Geometry> multiPolygon);
     
     List<InstallationClassee> rechercherInstallationsSurParcelles(List<String> codes);
     

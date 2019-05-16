@@ -78,7 +78,7 @@ export default {
     if (avis.numberOf === 0) {
       avis.lib = 'N’est pas référencée dans l\'inventaire des sites pollués BASOL.'
     } else {
-      avis.lib = 'Est référencée dans l\'inventaire des sites pollués BASOL  + lien vers fiche Basol.'
+      avis.lib = 'Est référencée dans l\'inventaire des sites pollués BASOL.'
       value.entity.siteIndustrielBasolSurParcelleDTOs.forEach(function (element) {
         avis.liste.push(element)
       }, this)
@@ -113,7 +113,7 @@ export default {
     if (avis.numberOf === 0) {
       avis.lib = 'N’est pas référencée dans l\'inventaire des installations classées en fonctionnement ou arrêtées.'
     } else {
-      avis.lib = 'Est référencée dans l\'inventaire des installations classées sous le nom de + nom de l’activité'
+      avis.lib = 'Est référencée dans l\'inventaire des installations classées sous le nom de :'
       value.entity.installationClasseeSurParcelleDTOs.forEach(function (element) {
         avis.liste.push(element)
       }, this)

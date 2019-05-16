@@ -15,7 +15,7 @@ public interface IGestionSiteIndustrielBasiasFacade {
     
     List<SiteIndustrielBasiasDTO> rechercherSitesParRaisonSociale(String nomProprietaire);
     
-    List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygons);
     
     List<SiteIndustrielBasiasDTO> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
     

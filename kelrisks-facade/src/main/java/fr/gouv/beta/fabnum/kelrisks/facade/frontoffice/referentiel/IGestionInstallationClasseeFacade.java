@@ -15,7 +15,7 @@ public interface IGestionInstallationClasseeFacade {
     
     List<InstallationClasseeDTO> rechercherInstallationsAuCentroideCommune(String codePostal);
     
-    List<InstallationClasseeDTO> rechercherInstallationsDansPolygon(Geometry codeParcelle);
+    List<InstallationClasseeDTO> rechercherInstallationsDansPolygon(List<Geometry> codeParcelle);
     
     List<InstallationClasseeDTO> rechercherInstallationsSurParcelles(List<String> codes);
     

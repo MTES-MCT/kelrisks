@@ -52,7 +52,7 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
     }
     
     @Override
-    public List<InstallationClasseeDTO> rechercherInstallationsDansPolygon(Geometry multiPolygon) {
+    public List<InstallationClasseeDTO> rechercherInstallationsDansPolygon(List<Geometry> multiPolygon) {
         
         List<InstallationClasseeDTO> installationClasseeDTOs = installationClasseeMapper.toDTOs(installationClasseeService.rechercherSitesDansPolygon(multiPolygon));
         
