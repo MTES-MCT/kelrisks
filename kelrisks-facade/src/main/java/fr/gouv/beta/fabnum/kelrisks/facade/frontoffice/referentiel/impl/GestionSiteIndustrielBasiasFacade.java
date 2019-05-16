@@ -53,7 +53,7 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     }
     
     @Override
-    public List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry multiPolygon) {
+    public List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
     
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygon(multiPolygon));
     

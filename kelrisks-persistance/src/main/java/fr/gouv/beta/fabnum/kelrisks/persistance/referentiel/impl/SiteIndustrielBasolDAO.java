@@ -62,9 +62,10 @@ public class SiteIndustrielBasolDAO extends AbstractDAO<SiteIndustrielBasol> imp
     }
     
     @Override
-    public List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon) {
-        
-        return siteIndustrielBasolRepository.rechercherSitesDansPolygon(multiPolygon);
+    public List<SiteIndustrielBasol> rechercherSitesDansPolygon(List<Geometry> multiPolygon) {
+    
+        if (multiPolygon.size() == 1) { return siteIndustrielBasolRepository.rechercherSitesDansPolygon(multiPolygon.get(0)); }
+        else { return siteIndustrielBasolRepository.rechercherSitesDansPolygons(multiPolygon); }
     }
     
     @Override

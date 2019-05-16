@@ -5,23 +5,24 @@
     <parent>
         <artifactId>kelrisks</artifactId>
         <groupId>fr.gouv.beta.fabnum</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>v1.0.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kelrisk-data</artifactId>
+    <artifactId>kelrisks-data</artifactId>
     <packaging>jar</packaging>
+
+    <properties>
+        <relative.path.to.parent>..</relative.path.to.parent>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
-
-    <properties>
-        <relative.path.to.parent>..</relative.path.to.parent>
-    </properties>
 
     <build>
         <plugins>

@@ -5,24 +5,25 @@
     <parent>
         <artifactId>kelrisks</artifactId>
         <groupId>fr.gouv.beta.fabnum</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>v1.0.4</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kelrisk-presentation</artifactId>
+    <artifactId>kelrisks-presentation</artifactId>
     <packaging>war</packaging>
 
     <dependencies>
         <!-- Dépendances avec les autres modules -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>kelrisk-facade</artifactId>
+            <artifactId>kelrisks-facade</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>kelrisk-transverse</artifactId>
+            <artifactId>kelrisks-transverse</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -157,7 +158,7 @@
                             <overwrite>true</overwrite>
                             <resources>
                                 <resource>
-                                    <directory>${project.parent.basedir}/kelrisks-vue/target/dist</directory>
+                                    <directory>./../kelrisks-vue/target/dist</directory>
                                     <includes>
                                         <include>static/</include>
                                         <include>index.html</include>
@@ -173,8 +174,11 @@
 
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>application.properties</include>
+                </includes>
             </resource>
             <resource>
                 <directory>../kelrisks-vue/target/dist</directory>

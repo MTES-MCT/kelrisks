@@ -6,6 +6,7 @@ import router from './router'
 // Font Awesome @ https://fontawesome.com/how-to-use/on-the-web/using-with/vuejs
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {
+  faBomb,
   faBriefcase,
   faCaretDown,
   faCaretUp,
@@ -13,12 +14,15 @@ import {
   faCheckCircle,
   faChevronLeft,
   faChevronRight,
+  faExclamation,
   faExclamationTriangle,
   faFilePdf,
   faHome,
+  faInfo,
   faMapMarkedAlt,
   faSearch,
   faSpinner,
+  faThumbsUp,
   faTimes,
   faTruckMoving,
   faUndo,
@@ -27,7 +31,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 // Vue Material @ https://vuematerial.io/getting-started
 
-library.add(faUser, faBriefcase, faChevronLeft, faTruckMoving, faChevronRight, faSearch, faSpinner, faUndo, faCheck, faTimes, faExclamationTriangle, faFilePdf, faCaretDown, faCaretUp, faCheckCircle, faMapMarkedAlt, faHome)
+library.add(faUser, faInfo, faThumbsUp, faBomb, faExclamation, faBriefcase, faChevronLeft, faTruckMoving, faChevronRight, faSearch, faSpinner, faUndo, faCheck, faTimes, faExclamationTriangle, faFilePdf, faCaretDown, faCaretUp, faCheckCircle, faMapMarkedAlt, faHome)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 // Vue.use(VueMaterial)

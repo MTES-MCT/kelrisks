@@ -6,6 +6,7 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.ISiteIndustrielBasol
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl.SiteIndustrielBasolDAO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustrielBasol;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.geolatte.geom.Geometry;
@@ -47,7 +48,9 @@ public class SiteIndustrielBasolService extends AbstractCRUDService<SiteIndustri
     }
     
     @Override
-    public List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon) {
+    public List<SiteIndustrielBasol> rechercherSitesDansPolygon(List<Geometry> multiPolygon) {
+    
+        if (multiPolygon == null || multiPolygon.isEmpty()) { return new ArrayList<>(); }
         
         return dao.rechercherSitesDansPolygon(multiPolygon);
     }
