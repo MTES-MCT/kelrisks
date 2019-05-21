@@ -217,8 +217,8 @@
                   <ul class="site-list">
                     <li :key="sibasol.id"
                         v-for="sibasol in avis.basolRayonParcelle.liste">
-                      - <a :href="'https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=' + sibasol.identifiant"
-                           target="_blank">https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ sibasol.identifiant }}</a></li>
+                      - <a :href="'https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=' + sibasol.numerobasol"
+                           target="_blank">https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ sibasol.numerobasol }}</a></li>
                   </ul>
                 </template>
                 <template v-if="avis.installationClasseeRayonParcelle.numberOf > 0">
