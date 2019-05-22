@@ -26,9 +26,9 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +
                    " WHERE st_dwithin(si.geog," +
-                   " st_centroid((SELECT p.geog FROM kelrisks.cadastre AS p WHERE p.code = :codeParcelle))," +
+                   " st_centroid(:geom)," +
                    " :distance)", nativeQuery = true)
-    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
+    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("geom") Geometry geom,
                                                                         @Param("distance") double distance);
     
     @Query(value = "SELECT sib " +

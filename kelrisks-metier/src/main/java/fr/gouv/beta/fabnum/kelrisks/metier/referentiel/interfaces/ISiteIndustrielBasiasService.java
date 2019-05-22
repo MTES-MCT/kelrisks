@@ -15,7 +15,7 @@ public interface ISiteIndustrielBasiasService extends IAbstractCRUDService<SiteI
     
     List<SiteIndustrielBasias> rechercherSiteSurParcelle(String codeParcelle);
     
-    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance);
+    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideGeometry(Geometry codeParcelle, double distance);
     
     List<SiteIndustrielBasias> rechercherSitesDansPolygon(List<Geometry> multiPolygon);
     
