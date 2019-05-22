@@ -111,8 +111,8 @@ import mixinErrors from '../../mixins/errors'
 import KrInput from '../../ui/KrInput'
 
 export default {
-  mixins: [mixinErrors],
   name: 'SearchFormPart3',
+  mixins: [mixinErrors],
   components: {
     Errors,
     KrInput

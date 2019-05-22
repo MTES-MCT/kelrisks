@@ -379,6 +379,13 @@ export default {
       fetch(this.env.apiPath + 'url?' + 'code=' + codeAvis)
         .then(stream => stream.json())
         .then(value => {
+          if (value.status === 422) {
+            console.log('Wrong code')
+            this.sendError("Oups! Votre recherche n'a pas été trouvée :-(.")
+            this.sendError("Si vous l'avons perdue, veuillez bien vouloir nous en excuser.")
+            this.$emit('loaded')
+            return
+          }
           // console.log(value.entity.url)
           let array = value.entity.url.split('|&|')
           this.codeParcelle = array[0]

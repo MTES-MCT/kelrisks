@@ -61,6 +61,8 @@ public class ApiAvis extends AbstractBasicApi {
     public Response getUrl(@RequestParam("code") String code) {
         
         ShortUrlDTO shortUrlDTO = gestionShortUrlFacade.rechercherResultatAvecCode(code);
+    
+        if (shortUrlDTO == null) { return Response.status(422).build(); }
         
         return Response.ok(shortUrlDTO).build();
     }
