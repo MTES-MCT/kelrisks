@@ -141,7 +141,16 @@
 
       <section class="section section-white"
                id="section0"
-               v-show="flow.index === 0"></section>
+               v-show="flow.index === 0">
+        <div class="container">
+          <div class="panel">
+            <h2 class="section__title">{{informations.errorList[0]}}</h2>
+            <p class="section__subtitle">{{informations.errorList[1]}}</p>
+          </div>
+        </div>
+        <br/>
+        <br/>
+      </section>
 
       <search-form-part1-vous-etes @flow="updateflow"
                                    v-show="flow.index === 1"/>
@@ -150,7 +159,7 @@
                                  v-show="flow.index === 2"/>
       <search-form-part3-parcelle :code-insee="form.codeInsee"
                                   :querying="flow.querying"
-                                  :errors="errors.search"
+                                  :errors="searchResults.errors"
                                   @codenumero="form.codeNumero = $event"
                                   @codeparcelle="form.codeParcelle = $event"
                                   @codeproprio="form.codeProprio = $event"
@@ -166,6 +175,7 @@
                       :id-ban="form.codeNumero"
                       @flow="updateflow"
                       @loading="loading"
+                      @loaded="loaded"
                       @requestfocus="renderAvis"
                       @setflow="setflow"
                       @errors="searchErrors"
@@ -220,23 +230,26 @@ import CGU from './content/CGU'
 import HowTo from './content/HowTo'
 import WhoAreWe from './content/WhoAreWe'
 import Konami from './content/Konami'
+import mixinErrors from './mixins/errors'
 import SearchFormPart1VousEtes from './content/search/SearchFormPart1VousEtes'
 import SearchFormPart2Commune from './content/search/SearchFormPart2Commune'
 import SearchFormPart3Parcelle from './content/search/SearchFormPart3Parcelle'
 import SearchResults from './content/search/SearchResults'
 import Stats from './content/Stats'
 import fetchWithError from '../script/fetchWithError'
+import Errors from './content/base/Errors'
 
 export default {
   name: 'Kelrisks',
+  mixins: [mixinErrors],
   data: () => ({
     flow: {
       index: 1,
       querying: false,
       loading: false
     },
-    errors: {
-      search: []
+    searchResults: {
+      errors: []
     },
     form: {
       codeInsee: '',
@@ -254,6 +267,7 @@ export default {
     }
   }),
   components: {
+    Errors,
     Stats,
     SearchResults,
     SearchFormPart3Parcelle,
@@ -277,14 +291,16 @@ export default {
       this.$refs.results.getAvis()
     },
     renderAvis () {
-      this.flow.loading = false
+      this.loaded()
       this.flow.querying = false
       this.flow.index = 4
     },
     loading () {
-      console.log('loading')
-      this.errors.search = []
+      this.searchResults.errors = []
       this.flow.loading = true
+    },
+    loaded () {
+      this.flow.loading = false
     },
     debug (value) {
       console.log(value)
@@ -293,7 +309,8 @@ export default {
       if (value.length > 0) {
         this.flow.querying = false
       }
-      this.errors.search = value
+      if (this.flow.loading) this.informations.errorList = value
+      else this.searchResults.errors = value
     },
     showStats () {
       this.flow.index = 666
@@ -307,7 +324,7 @@ export default {
   beforeDestroy () {
   },
   mounted () {
-    fetchWithError(this.env.apiPath + '/appversion/')
+    fetchWithError(this.env.apiPath + 'appversion/')
       .then(stream => stream.json())
       .then(value => {
         let currentAppVersion = value.entity

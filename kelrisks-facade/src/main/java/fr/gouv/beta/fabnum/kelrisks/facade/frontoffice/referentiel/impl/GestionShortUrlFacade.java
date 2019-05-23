@@ -5,6 +5,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.avis.ShortUrlDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionShortUrlFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IShortUrlMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IShortUrlService;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.ShortUrl;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ShortUrlQO;
 
 import java.util.Date;
@@ -26,8 +27,10 @@ public class GestionShortUrlFacade extends AbstractFacade implements IGestionSho
         
         ShortUrlQO shortUrlQO = new ShortUrlQO();
         shortUrlQO.setCode(code);
-        
-        ShortUrlDTO shortUrlDTO = shortUrlMapper.toDTO(shortUrlService.rechercherResultatUniqueAvecCritere(shortUrlQO));
+    
+        List<ShortUrl> shortUrls = shortUrlService.rechercherAvecCritere(shortUrlQO);
+        if (shortUrls.isEmpty()) { return null; }
+        ShortUrlDTO shortUrlDTO = shortUrlMapper.toDTO(shortUrls.get(0));
         
         shortUrlDTO.setDateMaj(new Date());
         
