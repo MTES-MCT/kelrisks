@@ -18,7 +18,7 @@
                     @selected="onNomVoieChanged"
                     label="Nom voie"
                     name="nomVoie"
-                    v-bind:source="env.apiPath + '/adresse/voie/autocomplete/' + codeInsee + '/'">
+                    v-bind:source="env.apiPath + 'adresse/voie/autocomplete/' + codeInsee + '/'">
             <template slot="kr-no-results"
                       slot-scope="slotProps">
               Aucune voie trouvée pour "{{ slotProps.query }}"
@@ -29,7 +29,7 @@
                     @selected="onNumeroChanged"
                     label="Numéro voie"
                     name="numero"
-                    v-bind:source="env.apiPath + '/adresse/numero/autocomplete/' + codeInsee + '/' + codeVoie + '/'">
+                    v-bind:source="env.apiPath + 'adresse/numero/autocomplete/' + codeInsee + '/' + codeVoie + '/'">
             <template slot="kr-no-results"
                       slot-scope="slotProps">
               Aucun numéro trouvé pour "{{ slotProps.query }}"
@@ -61,7 +61,7 @@
                     @selected="onNomProprietaireSelected"
                     label="Nom de l'ancien propriétaire / Raison sociale"
                     name="raisonSociale"
-                    v-bind:source="env.apiPath + '/raison/autocomplete/' + codeInsee + '/'">
+                    v-bind:source="env.apiPath + 'raison/autocomplete/' + codeInsee + '/'">
             <template slot="kr-no-results"
                       slot-scope="slotProps">
               Aucun numéro trouvé pour "{{ slotProps.query }}"
@@ -111,8 +111,8 @@ import mixinErrors from '../../mixins/errors'
 import KrInput from '../../ui/KrInput'
 
 export default {
-  mixins: [mixinErrors],
   name: 'SearchFormPart3',
+  mixins: [mixinErrors],
   components: {
     Errors,
     KrInput

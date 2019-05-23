@@ -5,7 +5,7 @@
     <parent>
         <artifactId>kelrisks</artifactId>
         <groupId>fr.gouv.beta.fabnum</groupId>
-        <version>v1.0.4</version>
+        <version>v1.0.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -144,46 +144,18 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy Vue.js frontend content</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/main/resources/public</outputDirectory>
-                            <overwrite>true</overwrite>
-                            <resources>
-                                <resource>
-                                    <directory>./../kelrisks-vue/target/dist</directory>
-                                    <includes>
-                                        <include>static/</include>
-                                        <include>index.html</include>
-                                        <include>favicon.ico</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
 
         <resources>
             <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
-                <includes>
-                    <include>application.properties</include>
-                </includes>
             </resource>
             <resource>
+                <!-- copy Vue.js frontend content -->
                 <directory>../kelrisks-vue/target/dist</directory>
                 <!-- We put this into the static directory so that Spring Boot serves it through HTTP as static content -->
-                <targetPath>static</targetPath>
+                <targetPath>public</targetPath>
             </resource>
         </resources>
     </build>
