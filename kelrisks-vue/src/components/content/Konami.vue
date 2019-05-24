@@ -29,6 +29,7 @@ export default {
         }
       })
       jqBody.append('<div style="position: fixed; bottom: 0; left: 0" id="konami"></div>')
+      // eslint-disable-next-line
       console.log('►►◄◄▲▲▼▼BA')
     },
     easterEgg () {

@@ -50,7 +50,7 @@
   </div>
 </template>
 <script>
-import fetchWithError from '../../script/fetchWithError'
+import fetchWithError from '@/script/fetchWithError'
 
 export default {
   name: 'Stats',
