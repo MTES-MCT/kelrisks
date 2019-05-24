@@ -106,16 +106,16 @@
            href="index.html">
           <img alt="template.data.gouv.fr"
                class="navbar__logo"
-               src="static/images/logo-marianne.svg"/><span class="navbar__domain">kelrisks</span><img alt="data.gouv.fr"
-                                                                                                       class="navbar__gouvfr"
-                                                                                                       src="static/images/pointdatagouvfr.svg"/>
+               src="/images/logo-marianne.svg"/><span class="navbar__domain">kelrisks</span><img alt="data.gouv.fr"
+                                                                                                 class="navbar__gouvfr"
+                                                                                                 src="/images/pointdatagouvfr.svg"/>
         </a>
 
         <nav>
           <ul class="nav__links">
             <li class="nav__item"><a @click="showStats()"
                                      id="stats">Stats</a></li>
-            <li class="nav__item"><a href="swagger-ui.html"
+            <li class="nav__item"><a href="/swagger-ui.html"
                                      id="api">{{ api.message }}</a></li>
           </ul>
         </nav>
@@ -125,7 +125,7 @@
     <!--suppress CssUnknownTarget -->
     <div class="hero"
          role="banner"
-         style="background-image: url('static/images/banner-min.png'); background-size: auto; background-position-y: -30px">
+         style="background-image: url('/images/banner-min.png'); background-size: auto; background-position-y: -30px">
       <div class="hero__container"
            v-bind:class="{'contracted':flow.index > 1}">
         <h1 class="hero__white-background">Kelrisks</h1>
@@ -203,9 +203,10 @@
           <a @click="$refs.cgu.open()">CGU</a>
         </div>
         <div class="column">
-          <a href="swagger-ui.html">API</a>
+          <a href="/swagger-ui.html">API</a>
         </div>
       </div>
+      <div id="version">{{env.presentationVersion}}</div>
     </footer>
 
     <contact :timeout="45"/>
@@ -225,19 +226,18 @@
 </template>
 
 <script>
-import Contact from './content/Contact'
-import CGU from './content/CGU'
-import HowTo from './content/HowTo'
-import WhoAreWe from './content/WhoAreWe'
-import Konami from './content/Konami'
-import mixinErrors from './mixins/errors'
-import SearchFormPart1VousEtes from './content/search/SearchFormPart1VousEtes'
-import SearchFormPart2Commune from './content/search/SearchFormPart2Commune'
-import SearchFormPart3Parcelle from './content/search/SearchFormPart3Parcelle'
-import SearchResults from './content/search/SearchResults'
-import Stats from './content/Stats'
-import fetchWithError from '../script/fetchWithError'
-import Errors from './content/base/Errors'
+import Contact from '@/components/content/Contact'
+import CGU from '@/components/content/CGU'
+import HowTo from '@/components/content/HowTo'
+import WhoAreWe from '@/components/content/WhoAreWe'
+import Konami from '@/components/content/Konami'
+import mixinErrors from '@/components/mixins/errors'
+import SearchFormPart1VousEtes from '@/components/content/search/SearchFormPart1VousEtes'
+import SearchFormPart2Commune from '@/components/content/search/SearchFormPart2Commune'
+import SearchFormPart3Parcelle from '@/components/content/search/SearchFormPart3Parcelle'
+import SearchResults from '@/components/content/search/SearchResults'
+import Stats from '@/components/content/Stats'
+import fetchWithError from '@/script/fetchWithError'
 
 export default {
   name: 'Kelrisks',
@@ -262,12 +262,12 @@ export default {
       message: 'API'
     },
     env: {
+      presentationVersion: process.env.VUE_APP_VERSION,
       version: '',
       apiPath: process.env.VUE_APP_API_PATH
     }
   }),
   components: {
-    Errors,
     Stats,
     SearchResults,
     SearchFormPart3Parcelle,
@@ -302,8 +302,8 @@ export default {
     loaded () {
       this.flow.loading = false
     },
-    debug (value) {
-      console.log(value)
+    debug () {
+      // console.log(value)
     },
     searchErrors (value) {
       if (value.length > 0) {
@@ -329,19 +329,19 @@ export default {
       .then(value => {
         let currentAppVersion = value.entity
         let localAppVersion = localStorage.getItem('localKelrisksVersion')
-        console.log('localAppVersion : ' + localAppVersion)
-        console.log('currentAppVersion : ' + currentAppVersion)
+        // console.log('localAppVersion : ' + localAppVersion)
+        // console.log('currentAppVersion : ' + currentAppVersion)
         if (localAppVersion !== 'undefined') {
-          console.log('Version Found !')
+          // console.log('Version Found !')
           if (localAppVersion !== currentAppVersion) {
-            console.log('Is mismatch :-(')
+            // console.log('Is mismatch :-(')
             localStorage.setItem('localKelrisksVersion', currentAppVersion)
             window.location.reload(true)
           } else {
-            console.log('Is match :-)')
+            // console.log('Is match :-)')
           }
         } else {
-          console.log('Version NOT Found !')
+          // console.log('Version NOT Found !')
           localStorage.setItem('localKelrisksVersion', currentAppVersion)
         }
       })
@@ -470,5 +470,10 @@ export default {
   footer .column:nth-child(2) {
     border-right : #CCCCCC solid 1px;
     border-left  : #CCCCCC solid 1px;
+  }
+
+  #version {
+    font-family : "Bradley Hand ITC", Arial, sans-serif;
+    padding-top : 65px;
   }
 </style>
