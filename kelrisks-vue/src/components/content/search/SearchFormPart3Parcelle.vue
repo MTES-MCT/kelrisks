@@ -106,9 +106,9 @@
 </template>
 
 <script>
-import Errors from '../base/errors'
-import mixinErrors from '../../mixins/errors'
-import KrInput from '../../ui/KrInput'
+import Errors from '@/components/content/base/Errors'
+import mixinErrors from '@/components/mixins/errors'
+import KrInput from '@/components/ui/KrInput'
 
 export default {
   name: 'SearchFormPart3',
@@ -152,7 +152,7 @@ export default {
     }
   }),
   methods: {
-    acceptCGU (value) {
+    acceptCGU () {
       // sessionStorage.cguChecked = value.target.checked
     },
     onNomVoieChanged (value) {

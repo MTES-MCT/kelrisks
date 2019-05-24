@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import mixinErrors from '../../mixins/errors'
+import mixinErrors from '@/components/mixins/errors'
 
 export default {
   mixins: [mixinErrors],

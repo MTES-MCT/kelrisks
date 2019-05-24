@@ -1,7 +1,7 @@
 export default {
 
   getBasiasParcelle (value) {
-    console.log('getBasiasParcelle')
+    // console.log('getBasiasParcelle')
     let avis = {
       lib: '',
       liste: []
@@ -19,17 +19,16 @@ export default {
   },
 
   getBasiasProximiteParcelle (value) {
-    console.log('getBasiasProximiteParcelle')
+    // console.log('getBasiasProximiteParcelle')
     let avis = {
       lib: '',
       liste: []
     }
     avis.numberOf = value.entity.siteIndustrielBasiasProximiteParcelleDTOs.length
-    if (avis.numberOf === 0) {
-    } else {
+    if (avis.numberOf !== 0) {
       avis.lib = avis.numberOf === 1
-        ? 'dans le voisinage immédiat de la (ou des) parcelle(s), un site  ayant accueilli par le passé une activité susceptible d\'avoir pu générer une pollution des sols (BASIAS). Vous pouvez consulter la fiche consacrée à cette activité industrielle à l\'adresse suivante : '
-        : 'dans le voisinage immédiat de la (ou des) parcelle(s), des sites  ayant accueilli par le passé une activité susceptible d\'avoir pu générer une pollution des sols (BASIAS). Vous pouvez consulter les fiches consacrée à cette activité industrielle à l\'adresse suivante : '
+          ? 'dans le voisinage immédiat de la (ou des) parcelle(s), un site  ayant accueilli par le passé une activité susceptible d\'avoir pu générer une pollution des sols (BASIAS). Vous pouvez consulter la fiche consacrée à cette activité industrielle à l\'adresse suivante : '
+          : 'dans le voisinage immédiat de la (ou des) parcelle(s), des sites  ayant accueilli par le passé une activité susceptible d\'avoir pu générer une pollution des sols (BASIAS). Vous pouvez consulter les fiches consacrée à cette activité industrielle à l\'adresse suivante : '
       value.entity.siteIndustrielBasiasProximiteParcelleDTOs.forEach(function (element) {
         avis.liste.push(element)
       }, this)
@@ -38,14 +37,13 @@ export default {
   },
 
   getBasiasRaisonSocialeParcelle (value) {
-    console.log('getBasiasRaisonSociale')
+    // console.log('getBasiasRaisonSociale')
     let avis = {
       lib: '',
       liste: []
     }
     avis.numberOf = value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.length
-    if (avis.numberOf === 0) {
-    } else {
+    if (avis.numberOf !== 0) {
       avis.lib = 'un site dont la localisation est imprécise mais ayant potentiellement appartenu au même propriétaire (' + value.entity.nomProprietaire + ') : '
       value.entity.siteIndustrielBasiasParRaisonSocialeDTOs.forEach(function (element) {
         avis.liste.push(element)
@@ -86,7 +84,7 @@ export default {
     return avis
   },
 
-  getBasolProximiteParcelle (value) {
+  getBasolProximiteParcelle () {
     return {numberOf: 0, lib: ''}
   },
 
@@ -121,7 +119,7 @@ export default {
     return avis
   },
 
-  getSISSurParcelle (value) {
+  getSISSurParcelle () {
     let avis = {
       lib: '',
       liste: []
@@ -139,7 +137,7 @@ export default {
     return avis
   },
 
-  getICProximiteParcelle (value) {
+  getICProximiteParcelle () {
     return {numberOf: 0, lib: ''}
   },
 

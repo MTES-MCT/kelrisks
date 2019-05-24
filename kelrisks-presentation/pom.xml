@@ -153,7 +153,7 @@
             </resource>
             <resource>
                 <!-- copy Vue.js frontend content -->
-                <directory>../kelrisks-vue/target/dist</directory>
+                <directory>../kelrisks-vue/dist</directory>
                 <!-- We put this into the static directory so that Spring Boot serves it through HTTP as static content -->
                 <targetPath>public</targetPath>
             </resource>
