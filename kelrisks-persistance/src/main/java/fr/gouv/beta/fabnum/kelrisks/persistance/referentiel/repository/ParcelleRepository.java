@@ -27,5 +27,11 @@ public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
     @Query(value = "SELECT * FROM kelrisks.cadastre AS p" +
                    " WHERE public.st_touches(p.geog, :geog)", nativeQuery = true)
     List<Parcelle> rechercherParcellesContigues(Geometry geog);
+    
+    @Query(value = "SELECT * FROM kelrisks.cadastre AS p" +
+                   " WHERE public.st_dwithin(public.st_setsrid(public.st_point(:x, :y),4326), p.geog, (100. / 100000.))" +
+                   " ORDER BY st_distance(p.geog, public.st_setsrid(public.st_point(:x, :y),4326))" +
+                   " LIMIT 1 ", nativeQuery = true)
+    Parcelle rechercherParcelleAvecCoordonnees(double x, double y);
 }
   

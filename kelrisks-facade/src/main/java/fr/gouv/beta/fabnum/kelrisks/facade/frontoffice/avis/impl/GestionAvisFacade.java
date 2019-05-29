@@ -41,9 +41,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionParcelleFacade             gestionParcelleFacade;
     
     @Override
-    public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String rue, String idBAN, String nomProprietaire) {
+    public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String nomAdresse, String geolocAdresse, String nomProprietaire) {
         
         AvisDTO avisDTO = new AvisDTO();
+    
+        if (!codeINSEE.matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
+            avisDTO.addWarning("Le territoire d'expérimentation de Kelrisks est pour l'instant limité à l'Île de France.");
+            return avisDTO;
+        }
     
         avisDTO.getSummary().setCommune(gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE));
         avisDTO.getSummary().setNomProprietaire(nomProprietaire);
@@ -51,8 +56,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         // Recherche d'une parcelle à partir de l'adresse si aucune n'a été fournie
         ParcelleDTO parcelleDTO;
         if (codeParcelle == null || codeParcelle.equals("")) {
-            parcelleDTO = gestionParcelleFacade.rechercherParcelleAvecIdBan(idBAN);
-            avisDTO.getSummary().setAdresse(gestionAdresseFacade.rechercherAdresseIdBan(idBAN));
+    
+            parcelleDTO = gestionParcelleFacade.rechercherParcelleAvecCoordonnees(Double.parseDouble(geolocAdresse.split("\\|")[0]),
+                                                                                  Double.parseDouble(geolocAdresse.split("\\|")[1]));
+            avisDTO.getSummary().setAdresse(nomAdresse);
             codeParcelle = parcelleDTO.getCode();
         }
         else {
@@ -113,3 +120,5 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         return avisDTO;
     }
 }
+
+
