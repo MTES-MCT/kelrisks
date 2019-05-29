@@ -1,7 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.avis;
 
 import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AdresseDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
@@ -39,8 +38,8 @@ public class AvisDTO extends JsonInfoDTO {
     public class Summary {
         
         private String codeUrl = "";
-        
-        private AdresseDTO adresse;
+    
+        private String     adresse;
         private CommuneDTO commune;
         
         private String codeParcelle = "";

@@ -86,4 +86,12 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
         
         return parcelleMapper.toDTOs(parcelleService.rechercherParcellesContigues(geom));
     }
+    
+    @Override
+    public ParcelleDTO rechercherParcelleAvecCoordonnees(double x, double y) {
+        
+        ParcelleDTO parcelleDTO = parcelleMapper.toDTO(parcelleService.rechercherParcelleAvecCoordonnees(x, y));
+        
+        return parcelleDTO;
+    }
 }

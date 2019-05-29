@@ -16,5 +16,7 @@ public interface IParcelleService extends IAbstractCRUDService<Parcelle> {
     Parcelle rechercherParcelleContenantPoint(Geometry point);
     
     List<Parcelle> rechercherParcellesContigues(Geometry geom);
+    
+    Parcelle rechercherParcelleAvecCoordonnees(double x, double y);
 }
   

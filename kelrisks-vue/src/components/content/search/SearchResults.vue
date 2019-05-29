@@ -16,15 +16,10 @@
                 <div id="summary_wrapper">
                     <div id="summary">
                         <div class="section__subtitle"><strong>Votre recherche : </strong></div>
-                        Code postal&nbsp;:
-                        <span v-if="avis.summary.commune.codePostal && avis.summary.commune.codePostal !== ''">{{avis.summary.commune.codePostal}}</span><span v-else><i>n/a</i></span><br/>
-                        Rue&nbsp;:
-                        <span v-if="avis.summary.adresse && avis.summary.adresse.rue.nomVoie && avis.summary.adresse.rue.nomVoie !== ''">{{avis.summary.adresse.rue.nomVoie}}</span><span v-else><i>n/a</i></span><br/>
-                        N°&nbsp;:
-                        <span v-if="avis.summary.adresse && avis.summary.adresse.numero && avis.summary.adresse.numero !== ''">{{avis.summary.adresse.numero}}</span><span v-else><i>n/a</i></span><br/>
-                        Code parcelle&nbsp;: <span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
-                        Raison Sociale&nbsp;:
-                        <span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
+                        <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
+                        <b>Code parcelle&nbsp;: </b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
+                        <b>Raison
+                           Sociale&nbsp;: </b><span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
                         <hr/>
                         <div style="text-align: center; padding-top: 20px;">
                             <a @click="$emit('flow', -1)
@@ -34,7 +29,12 @@
                                 <font-awesome-icon icon="undo"/>
                                 Modifier</a>
                             <br v-show="visibility.modifier"/>
-                            <a :href="this.env.apiPath + 'avis/pdf?' + 'codeINSEE=' + codeInsee + '&' + 'nomVoie=' + codeVoie + '&' + 'idBAN=' + idBan + '&' + 'codeParcelle=' + codeParcelle + '&' + 'nomProprietaire=' + codeProprio"
+                            <a :href="this.env.apiPath + 'avis/pdf?' +
+                            'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : codeInsee) + '&' +
+                            'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : nomAdresse) + '&' +
+                            'geolocAdresse=' + (tinyUrl.geolocAdresse ? tinyUrl.geolocAdresse.replace(/\|/, '%7C') : geolocAdresse.replace(/\|/, '%7C')) + '&' +
+                            'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : codeParcelle) + '&' +
+                            'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : codeProprio)"
                                @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
                                class="button warning"
                                id="pdf"
@@ -286,11 +286,11 @@ export default {
             type: String,
             default: ''
         },
-        codeVoie: {
+        nomAdresse: {
             type: String,
             default: ''
         },
-        idBan: {
+        geolocAdresse: {
             type: String,
             default: ''
         },
@@ -333,6 +333,13 @@ export default {
             installationClasseeRayonParcelle: {},
             installationClasseeCommune: {},
             sisParcelle: {}
+        },
+        tinyUrl: {
+            codeParcelle: undefined,
+            codeInsee: undefined,
+            nomAdresse: undefined,
+            geolocAdresse: undefined,
+            codeProprio: undefined
         }
     }),
     methods: {
@@ -342,24 +349,35 @@ export default {
             // console.log(this.visibility.details)
         },
         getAvis () {
-            this.clearErrors()
+            this.clearAll()
 
-            if (this.codeParcelle === '' && this.idBan === '') {
+            if (this.codeParcelle === '' && this.geolocAdresse === '') {
                 this.sendError('Merci de bien vouloir choisir une rue/numéro ou entrer une parcelle.')
             }
 
-            let url = this.env.apiPath + 'avis?' + 'codeINSEE=' + this.codeInsee + '&' + 'nomVoie=' + this.codeVoie + '&' + 'idBAN=' + this.idBan + '&' + 'codeParcelle=' + this.codeParcelle + '&' + 'nomProprietaire=' + this.codeProprio
+            let parcelle = this.tinyUrl.codeParcelle ? this.tinyUrl.codeParcelle : this.codeParcelle
+            let insee = this.tinyUrl.codeInsee ? this.tinyUrl.codeInsee : this.codeInsee
+            let nom = this.tinyUrl.nomAdresse ? this.tinyUrl.nomAdresse : this.nomAdresse
+            let geoloc = this.tinyUrl.geolocAdresse ? this.tinyUrl.geolocAdresse : this.geolocAdresse
+            let proprio = this.tinyUrl.codeProprio ? this.tinyUrl.codeProprio : this.codeProprio
+
+            let url = this.env.apiPath + 'avis?' + 'codeINSEE=' + insee + '&' + 'codeParcelle=' + parcelle + '&' + 'nomAdresse=' + nom + '&' + 'geolocAdresse=' + geoloc.replace(/\|/, '%7C') + '&' + 'nomProprietaire=' + proprio
             fetchWithError(url, null, 1000 * 20)
                 .then(stream => stream.json())
                 .then(value => {
                     this.checkInformations(value.entity)
                     if (this.informations.hasError) {
-                        this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'Erreur'])
+                        this._paq.push(['trackEvent', 'Flow', 'Informations', 'Erreur'])
                         this.emitErrors()
                         return
                     }
+                    if (this.informations.hasWarning) {
+                        this._paq.push(['trackEvent', 'Flow', 'Informations', 'Warning'])
+                        this.emitWarnings()
+                        return
+                    }
                     this.avis.summary = value.entity.summary
-                    this._paq.push(['trackEvent', 'Flow', 'Informations 2/2', 'OK'])
+                    this._paq.push(['trackEvent', 'Flow', 'Informations', 'OK'])
 
                     this.$emit('requestfocus')
 
@@ -383,6 +401,7 @@ export default {
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
                 })
                 .catch(() => {
+                    // console.log(e)
                     this.sendError('Votre requête n\'a pu aboutir dans un délais raisonnable, merci de réessayer ou de nous le signaler au moyen du formulaire de contact.')
                 })
         },
@@ -403,12 +422,13 @@ export default {
                     }
                     // console.log(value.entity.url)
                     let array = value.entity.url.split('|&|')
-                    this.codeParcelle = array[0]
-                    this.codeInsee = array[1]
-                    this.codeVoie = array[2]
-                    this.idBan = array[3]
-                    this.codeProprio = array[4]
                     // console.log(array)
+
+                    this.tinyUrl.codeParcelle = array[0]
+                    this.tinyUrl.codeInsee = array[1]
+                    this.tinyUrl.nomAdresse = array[2]
+                    this.tinyUrl.geolocAdresse = array[3]
+                    this.tinyUrl.codeProprio = array[4]
 
                     this.getAvis()
                 })
