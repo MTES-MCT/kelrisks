@@ -45,6 +45,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         AvisDTO avisDTO = new AvisDTO();
     
+        if (!codeINSEE.matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
+            avisDTO.addWarning("Le territoire d'expérimentation de Kelrisks est pour l'instant limité à l'Île de France.");
+            return avisDTO;
+        }
+    
         avisDTO.getSummary().setCommune(gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE));
         avisDTO.getSummary().setNomProprietaire(nomProprietaire);
         
@@ -115,3 +120,5 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         return avisDTO;
     }
 }
+
+
