@@ -41,7 +41,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionParcelleFacade             gestionParcelleFacade;
     
     @Override
-    public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String rue, String idBAN, String nomProprietaire) {
+    public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String nomAdresse, String geolocAdresse, String nomProprietaire) {
         
         AvisDTO avisDTO = new AvisDTO();
     
@@ -51,8 +51,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         // Recherche d'une parcelle à partir de l'adresse si aucune n'a été fournie
         ParcelleDTO parcelleDTO;
         if (codeParcelle == null || codeParcelle.equals("")) {
-            parcelleDTO = gestionParcelleFacade.rechercherParcelleAvecIdBan(idBAN);
-            avisDTO.getSummary().setAdresse(gestionAdresseFacade.rechercherAdresseIdBan(idBAN));
+    
+            parcelleDTO = gestionParcelleFacade.rechercherParcelleAvecCoordonnees(Double.parseDouble(geolocAdresse.split("\\|")[0]),
+                                                                                  Double.parseDouble(geolocAdresse.split("\\|")[1]));
+            avisDTO.getSummary().setAdresse(nomAdresse);
             codeParcelle = parcelleDTO.getCode();
         }
         else {

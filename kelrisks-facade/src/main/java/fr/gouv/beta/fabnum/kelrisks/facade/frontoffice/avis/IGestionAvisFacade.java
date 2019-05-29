@@ -4,5 +4,5 @@ import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 
 public interface IGestionAvisFacade {
     
-    AvisDTO rendreAvis(String codeParcelle, String codePostal, String rue, String numero, String nomProprietaire);
+    AvisDTO rendreAvis(String codeParcelle, String codePostal, String nomAdresse, String geolocAdresse, String nomProprietaire);
 }

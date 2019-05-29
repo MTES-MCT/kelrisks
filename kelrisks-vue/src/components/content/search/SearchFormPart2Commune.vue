@@ -19,8 +19,8 @@
                               @selected="onCodePostalChanged"
                               label="Nom de commune ou Code postal"
                               name="codePostal"
-                              option-label-property="codePostal"
-                              option-value-property="codeINSEE"
+                              :get-option-label-function="data => { return data['codePostal'] }"
+                              :get-option-value-function="data => { return data['codeINSEE'] }"
                               v-bind:source="env.apiPath + 'adresse/commune/autocomplete/'">
                         <template slot="kr-option-label"
                                   slot-scope="slotProps">
@@ -56,7 +56,7 @@
 
 <script>
 import Errors from '@/components/content/base/Errors'
-import KrInput from '@/components/ui/KrInput'
+import KrInput from '../../../components/ui/KrInput'
 import mixinErrors from '@/components/mixins/errors'
 
 export default {
@@ -89,7 +89,6 @@ export default {
             }
         },
         onCodePostalChanged (value) {
-            this.$emit('codepostalchanged')
             this.checks.codeCommuneError = []
             this.codeINSEE = value.codeINSEE
         }

@@ -45,5 +45,11 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
         
         return dao.rechercherParcellesContigues(geom);
     }
+    
+    @Override
+    public Parcelle rechercherParcelleAvecCoordonnees(double x, double y) {
+        
+        return dao.rechercherParcelleAvecCoordonnees(x, y);
+    }
 }
   

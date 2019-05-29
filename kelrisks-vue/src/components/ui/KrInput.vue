@@ -96,7 +96,7 @@
                     class="kr-autocomplete-option"
                     v-for="(option, i) in results">
                     <slot name="kr-option-label"
-                          v-bind:option="option">{{ option[optionLabelProperty] }}
+                          v-bind:option="option">{{ getOptionLabelFunction(option) }}
                     </slot>
                 </li>
             </ul>
@@ -155,13 +155,23 @@ export default {
             type: Number,
             default: 3
         },
-        optionValueProperty: {
-            type: String,
-            default: 'code'
+        getOptionValueFunction: {
+            type: Function,
+            default: function (option) {
+                console.log(option)
+                console.log(option['code'])
+                return option['code']
+            },
+            required: false
         },
-        optionLabelProperty: {
-            type: String,
-            default: 'libelle'
+        getOptionLabelFunction: {
+            type: Function,
+            default: function (option) {
+                console.log(option)
+                console.log(option['libelle'])
+                return option['libelle']
+            },
+            required: false
         },
         openOnFocus: {
             type: Boolean,
@@ -186,6 +196,18 @@ export default {
         searchDelay: {
             type: Number,
             default: 500
+        },
+        getResultsListFunction: {
+            type: Function,
+            default: function (data) {
+                return data['entity']
+            },
+            required: false
+        },
+        searchQuerySeparator: {
+            type: String,
+            default: ' ',
+            required: false
         }
     },
     data () {
@@ -208,7 +230,6 @@ export default {
         onOpen () {
         },
         onFocus () {
-            // console.log(undefined !== this.source)
             this.inputHasFocus = true
 
             if (this.openOnFocus && this.isAutocomplete) {
@@ -241,14 +262,13 @@ export default {
                         this.hasNoResults = false
                         this.isLoading = true
                         this.isOpen = false
-                        fetchWithError(this.source + this.query, null, 1000 * 10)
+                        fetchWithError(this.source + this.query.replace(/ /g, this.searchQuerySeparator), null, 1000 * 10)
                             .then(stream => stream.json())
-                            .then(value => {
+                            .then(data => {
                                 this.isLoading = false
-                                // console.log(value)
-                                if (value.entity.length > 0) {
+                                if (this.getResultsListFunction(data).length > 0) {
                                     this.isOpen = true
-                                    this.results = value.entity
+                                    this.results = this.getResultsListFunction(data)
                                 } else {
                                     this.hasNoResults = true
                                     this.isOpen = false
@@ -279,7 +299,8 @@ export default {
         },
         setResult (option) {
             this.selectedOption = option
-            this.query = option[this.optionLabelProperty]
+            this.query = this.getOptionLabelFunction(option)
+            this.code = this.getOptionValueFunction(option)
             this.isOpen = false
             this.$emit('selected', option)
         },

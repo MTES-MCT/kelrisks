@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.impl.AbstractDAO;
 import fr.gouv.beta.fabnum.commun.transverse.exception.technique.TechniqueException;
 import fr.gouv.beta.fabnum.commun.transverse.qo.AbstractQO;
@@ -50,6 +49,24 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     }
     
     @Override
+    public Parcelle rechercherParcelleContenantPoint(Geometry point) {
+        
+        return parcelleRepository.rechercherParcelleContenantPoint(point);
+    }
+    
+    @Override
+    public List<Parcelle> rechercherParcellesContigues(Geometry point) {
+        
+        return parcelleRepository.rechercherParcellesContigues(point);
+    }
+    
+    @Override
+    public Parcelle rechercherParcelleAvecCoordonnees(double x, double y) {
+        
+        return parcelleRepository.rechercherParcelleAvecCoordonnees(x, y);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }
@@ -64,18 +81,6 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     protected EntityPathBase<Parcelle> getQueryObject() {
         
         return parcelle;
-    }
-    
-    @Override
-    public Parcelle rechercherParcelleContenantPoint(Geometry point) {
-        
-        return parcelleRepository.rechercherParcelleContenantPoint(point);
-    }
-    
-    @Override
-    public List<Parcelle> rechercherParcellesContigues(Geometry point) {
-        
-        return parcelleRepository.rechercherParcellesContigues(point);
     }
 }
   

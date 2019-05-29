@@ -16,5 +16,7 @@ public interface IParcelleDAO extends IAbstractDAO<Parcelle> {
     Parcelle rechercherParcelleContenantPoint(Geometry point);
     
     List<Parcelle> rechercherParcellesContigues(Geometry point);
+    
+    Parcelle rechercherParcelleAvecCoordonnees(double x, double y);
 }
   

@@ -25,6 +25,7 @@ import java.util.Locale;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -67,22 +68,74 @@ public class ApiAvis extends AbstractBasicApi {
         return Response.ok(shortUrlDTO).build();
     }
     
+    @GetMapping("/api/avis/adresse")
+    @ApiOperation(value = "Requête retournant un avis à partir de la parcelle.", response = String.class)
+    public Response avisParAdresse(@ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                                   @RequestParam(value = "geolocAdresse") String geolocAdresse,
+                                   @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
+                                   @RequestParam("codeINSEE") String codeINSEE,
+                                   @ApiParam(name = "nomAdresse", value = "Adresse.")
+                                   @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
+                                   @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
+                                   @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
+        
+        return avis(codeINSEE, geolocAdresse, nomAdresse, null, nomProprietaire);
+    }
+    
+    @GetMapping("/api/avis/parcelle")
+    @ApiOperation(value = "Requête retournant un avis à partir de l'adresse.", response = String.class)
+    public Response avisParParcelle(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
+                                    @RequestParam("codeParcelle") String codeParcelle,
+                                    @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
+                                    @RequestParam("codeINSEE") String codeINSEE,
+                                    @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
+                                    @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
+        
+        return avis(codeINSEE, null, null, codeParcelle, nomProprietaire);
+    }
+    
+    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de l'adresse.", response = String.class)
+    @GetMapping(value = "/api/avis/adresse/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @ResponseBody
+    public ResponseEntity<byte[]> avisParAdressePdf(@ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                                                    @RequestParam(value = "geolocAdresse") String geolocAdresse,
+                                                    @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
+                                                    @RequestParam("codeINSEE") String codeINSEE,
+                                                    @ApiParam(name = "nomAdresse", value = "Adresse.")
+                                                    @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
+                                                    @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
+                                                    @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
+        
+        return avisPdf(null, geolocAdresse, nomAdresse, null, nomProprietaire);
+    }
+    
+    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de la parcelle.", response = String.class)
+    @GetMapping(value = "/api/avis/parcelle/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @ResponseBody
+    public ResponseEntity<byte[]> avisParParcellePdf(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
+                                                     @RequestParam("codeParcelle") String codeParcelle,
+                                                     @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
+                                                     @RequestParam("codeINSEE") String codeINSEE,
+                                                     @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
+                                                     @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
+        
+        return avisPdf(codeINSEE, null, null, codeParcelle, nomProprietaire);
+    }
+    
     @GetMapping("/api/avis")
-    @ApiOperation(value = "Requête retournant un avis à partir des paramètres.", response = String.class)
-    public Response avis(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
+    public Response avis(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
+                         @RequestParam("codeINSEE") String codeINSEE, @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                         @RequestParam(value = "geolocAdresse") String geolocAdresse,
+                         @ApiParam(name = "nomAdresse", value = "Adresse.")
+                         @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
+                         @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                          @RequestParam("codeParcelle") String codeParcelle,
-                         @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                         @RequestParam("codeINSEE") String codeINSEE,
-                         @ApiParam(name = "nomVoie", value = "Nom de la voie.")
-                         @RequestParam(value = "nomVoie", required = false) String nomVoie,
-                         @ApiParam(name = "idBAN", value = "Id BAN (e.g. ADRNIVX_0000002009679805).")
-                         @RequestParam(value = "idBAN", required = false) String idBAN,
                          @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                          @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
-    
-        String      url         = codeParcelle + "|&|" + codeINSEE + "|&|" + nomVoie + "|&|" + idBAN + "|&|" + nomProprietaire;
+        
+        String      url         = getUrl(codeINSEE, geolocAdresse, nomAdresse, codeParcelle, nomProprietaire);
         ShortUrlDTO shortUrlDTO = gestionShortUrlFacade.rechercherResultatAvecUrl(url);
-    
+        
         if (shortUrlDTO == null) {
             shortUrlDTO = new ShortUrlDTO();
             shortUrlDTO.setCode(RandomStringUtils.random(5, true, true));
@@ -90,48 +143,53 @@ public class ApiAvis extends AbstractBasicApi {
         }
         
         if (codeParcelle != null && !codeParcelle.equals("")) {
+    
+            if (StringUtils.isEmpty(codeINSEE)) {
+                JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
+                jsonInfoDTO.addWarning("Dans le cas d'une recherche par code parcelle, merci de choisir une commune parmi les résultats proposés dans le champ.");
+                return Response.ok(jsonInfoDTO).build();
+            }
             
             codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
     
             if (codeParcelle == null) {
                 JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
-                jsonInfoDTO.addError("Le code parcelle n'a pas été trouvé.");
+                jsonInfoDTO.addError("La parcelle n'a pas été trouvée ¯\\_(ツ)_/¯");
                 return Response.ok(jsonInfoDTO).build();
             }
         }
-    
-        if ((codeParcelle == null || codeParcelle.equals("")) && (idBAN == null || idBAN.equals(""))) {
         
+        if ((codeParcelle == null || codeParcelle.equals("")) && (geolocAdresse == null || geolocAdresse.equals(""))) {
+            
             JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
-            jsonInfoDTO.addError("Merci d'entrer un code parcelle ou une adresse complète.");
+            jsonInfoDTO.addError("Merci d'entrer un code parcelle ou de choisir une adresse parmi les résultats proposés dans le champ.");
             return Response.ok(jsonInfoDTO).build();
         }
         
-        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomVoie, idBAN, nomProprietaire);
-    
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomAdresse, geolocAdresse, nomProprietaire);
+        
         avisDTO.getSummary().setCodeUrl(shortUrlDTO.getCode());
-    
+        
         if (shortUrlDTO.getId() == null) { gestionShortUrlFacade.save(shortUrlDTO); }
         
         return Response.ok(avisDTO).build();
     }
     
-    @GetMapping(value = "/api/avis/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping("/api/avis/pdf")
     @ResponseBody
-    public ResponseEntity<byte[]> avisPdf(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
+    public ResponseEntity<byte[]> avisPdf(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
+                                          @RequestParam("codeINSEE") String codeINSEE, @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                                          @RequestParam(value = "geolocAdresse") String geolocAdresse,
+                                          @ApiParam(name = "nomAdresse", value = "Adresse.")
+                                          @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
+                                          @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                           @RequestParam("codeParcelle") String codeParcelle,
-                                          @ApiParam(required = true, name = "codeINSEE", value = "Code postal de la commune.")
-                                          @RequestParam("codeINSEE") String codeINSEE,
-                                          @ApiParam(name = "nomVoie", value = "Nom de la voie.")
-                                          @RequestParam(value = "nomVoie", required = false) String nomVoie,
-                                          @ApiParam(name = "idBAN", value = "Id BAN (e.g. ADRNIVX_0000002009679805).")
-                                          @RequestParam(value = "idBAN", required = false) String idBAN,
                                           @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                                           @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
         
-        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomVoie, idBAN, nomProprietaire);
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomAdresse, geolocAdresse, nomProprietaire);
         
         try {
             File baseAvis = ResourceUtils.getFile("classpath:avis.html");
@@ -164,6 +222,21 @@ public class ApiAvis extends AbstractBasicApi {
         }
         
         return null;
+    }
+    
+    private String getUrl(String codeINSEE,
+                          String geolocAdresse,
+                          String nomAdresse,
+                          String codeParcelle,
+                          String nomProprietaire) {
+        
+        codeINSEE = codeINSEE.equalsIgnoreCase("null") || codeINSEE.equalsIgnoreCase("undefined") ? "" : codeINSEE;
+        geolocAdresse = geolocAdresse.equalsIgnoreCase("null") || geolocAdresse.equalsIgnoreCase("undefined") ? "" : geolocAdresse;
+        nomAdresse = nomAdresse.equalsIgnoreCase("null") || nomAdresse.equalsIgnoreCase("undefined") ? "" : nomAdresse;
+        codeParcelle = codeParcelle.equalsIgnoreCase("null") || codeParcelle.equalsIgnoreCase("undefined") ? "" : codeParcelle;
+        nomProprietaire = nomProprietaire.equalsIgnoreCase("null") || nomProprietaire.equalsIgnoreCase("undefined") ? "" : nomProprietaire;
+        
+        return codeParcelle + "|&|" + codeINSEE + "|&|" + nomAdresse + "|&|" + geolocAdresse + "|&|" + nomProprietaire;
     }
     
     private void redigerAnalyse(Document htmlDocument, AvisDTO avisDTO, String codeINSEE) {

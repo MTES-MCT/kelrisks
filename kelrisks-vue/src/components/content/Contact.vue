@@ -71,7 +71,7 @@ export default {
         },
         body: JSON.stringify({content: $('#contactContent').val()})
       }).then(stream => stream.json())
-        .then(value => {
+          .then(() => {
           this.closeContact()
           $('#contactContent').val('')
           // console.log(value)

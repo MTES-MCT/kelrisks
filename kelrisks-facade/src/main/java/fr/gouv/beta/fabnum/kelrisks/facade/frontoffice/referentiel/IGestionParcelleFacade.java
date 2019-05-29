@@ -18,4 +18,6 @@ public interface IGestionParcelleFacade {
     ParcelleDTO rechercherParcelleAvecIdBan(String idBAN);
     
     List<ParcelleDTO> rechercherParcellesContigues(Geometry geom);
+    
+    ParcelleDTO rechercherParcelleAvecCoordonnees(double x, double y);
 }
