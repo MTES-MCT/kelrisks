@@ -13,10 +13,14 @@ import org.geolatte.geom.Geometry;
  */
 public interface IParcelleService extends IAbstractCRUDService<Parcelle> {
     
-    Parcelle rechercherParcelleContenantPoint(Geometry point);
+    Parcelle rechercherClosestParcelleAvecPoint(Geometry point);
     
     List<Parcelle> rechercherParcellesContigues(Geometry geom);
     
-    Parcelle rechercherParcelleAvecCoordonnees(double x, double y);
+    Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y);
+    
+    Geometry rechercherExpendedParcelle(String code, double distance);
+    
+    Geometry rechercherUnionParcellesContigues(Geometry polygon);
 }
   

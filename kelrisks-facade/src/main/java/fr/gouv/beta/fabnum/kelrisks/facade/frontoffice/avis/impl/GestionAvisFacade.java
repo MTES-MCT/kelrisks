@@ -16,7 +16,6 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         AvisDTO avisDTO = new AvisDTO();
     
+        //        TODO : Modifier si le périmètre change
         if (!codeINSEE.matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
             avisDTO.addWarning("Le territoire d'expérimentation de Kelrisks est pour l'instant limité à l'Île de France.");
             return avisDTO;
@@ -78,21 +78,56 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             parcelleDTO = parcelleDTOS.get(0);
         }
     
+        Geometry expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcelleDTO.getCode(), 100);
+        Geometry touchesParcelle  = gestionParcelleFacade.rechercherUnionParcellesContigues(parcelleDTO.getMultiPolygon());
+        
         avisDTO.getSummary().setCodeParcelle(parcelleDTO.getSection() + "-" + parcelleDTO.getNumero());
         
         // Recherche d'une éventuelle zone poluée contenant la parcelle
-        List<Geometry>        geometries       = new ArrayList<>();
-        List<SiteSolPolueDTO> siteSolPolueDTOs = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
-        if (!siteSolPolueDTOs.isEmpty()) {siteSolPolueDTOs.forEach(siteSolPolueDTO -> geometries.add(siteSolPolueDTO.getMultiPolygon()));}
-        else { geometries.add(parcelleDTO.getMultiPolygon()); }
-        
-        List<String> codesParcellesContigues = gestionParcelleFacade.rechercherParcellesContigues(parcelleDTO.getMultiPolygon()).stream().map(ParcelleDTO::getCode).collect(Collectors.toList());
+        List<Geometry>        parcelleSitesSolsPolues = new ArrayList<>();
+        List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
+        if (!siteSolPolueDTOs.isEmpty()) {siteSolPolueDTOs.forEach(siteSolPolueDTO -> parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon()));}
+        else { parcelleSitesSolsPolues.add(parcelleDTO.getMultiPolygon()); }
     
-        avisDTO.setSiteIndustrielBasiasSurParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(geometries));
-        avisDTO.setSiteIndustrielBasiasProximiteParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesSurParcelles(codesParcellesContigues));
-        avisDTO.setSiteIndustrielBasiasRayonParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, 100D));
+        getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire);
+    
+        getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle);
+    
+        getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
+    
+        return avisDTO;
+    }
+    
+    private void getAvisICPE(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String codeINSEE) {
+        
+        avisDTO.setInstallationClasseeSurParcelleDTOs(gestionInstallationClasseeFacade.rechercherInstallationsDansPolygons(parcelleSitesSolsPolues));
+        avisDTO.setInstallationClasseeProximiteParcelleDTOs(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(touchesParcelle));
+        avisDTO.setInstallationClasseeRayonParcelleDTOs(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(expendedParcelle));
+        
+        avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
+        avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeProximiteParcelleDTOs());
+        
+        avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAuCentroideCommune(codeINSEE));
+    }
+    
+    private void getAvisBasol(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle) {
+        
+        avisDTO.setSiteIndustrielBasolSurParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
+        avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(touchesParcelle));
+        avisDTO.setSiteIndustrielBasolRayonParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(expendedParcelle));
+        
+        avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolSurParcelleDTOs());
+        avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolProximiteParcelleDTOs());
+    }
+    
+    private void getAvisBasias(AvisDTO avisDTO, Geometry parcelle, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String nomProprietaire) {
+        
+        avisDTO.setSiteIndustrielBasiasSurParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
+        avisDTO.setSiteIndustrielBasiasProximiteParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(touchesParcelle));
+        avisDTO.setSiteIndustrielBasiasRayonParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(expendedParcelle));
+        
         if (!nomProprietaire.equals("")) {
-            avisDTO.setSiteIndustrielBasiasParRaisonSocialeDTOs(gestionSiteIndustrielBasiasFacade.rechercherParNomProprietaireDansRayonGeometry(parcelleDTO.getMultiPolygon(), nomProprietaire, 5000D));
+            avisDTO.setSiteIndustrielBasiasParRaisonSocialeDTOs(gestionSiteIndustrielBasiasFacade.rechercherParNomProprietaireDansRayonGeometry(parcelle, nomProprietaire, 5000D));
         }
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs());
@@ -100,24 +135,6 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs());
-    
-        avisDTO.setSiteIndustrielBasolSurParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(geometries));
-        avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesSurParcelles(codesParcellesContigues));
-        avisDTO.setSiteIndustrielBasolRayonParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSiteDansRayonCentroideParcelle(codeParcelle, 100D));
-    
-        avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolSurParcelleDTOs());
-        avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolProximiteParcelleDTOs());
-    
-        avisDTO.setInstallationClasseeSurParcelleDTOs(gestionInstallationClasseeFacade.rechercherInstallationsDansPolygon(geometries));
-        avisDTO.setInstallationClasseeProximiteParcelleDTOs(gestionInstallationClasseeFacade.rechercherInstallationsSurParcelles(codesParcellesContigues));
-        avisDTO.setInstallationClasseeRayonParcelleDTOs(gestionInstallationClasseeFacade.rechercherInstallationsDansRayonCentroideParcelle(codeParcelle, 100D));
-    
-        avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
-        avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeProximiteParcelleDTOs());
-        
-        avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAuCentroideCommune(codeINSEE));
-        
-        return avisDTO;
     }
 }
 

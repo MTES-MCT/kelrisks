@@ -52,11 +52,9 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
     }
     
     @Override
-    public List<InstallationClasseeDTO> rechercherInstallationsDansPolygon(List<Geometry> multiPolygon) {
-        
-        List<InstallationClasseeDTO> installationClasseeDTOs = installationClasseeMapper.toDTOs(installationClasseeService.rechercherSitesDansPolygon(multiPolygon));
-        
-        return installationClasseeDTOs;
+    public List<InstallationClasseeDTO> rechercherInstallationsDansPolygons(List<Geometry> multiPolygon) {
+    
+        return installationClasseeMapper.toDTOs(installationClasseeService.rechercherSitesDansPolygons(multiPolygon));
     }
     
     @Override
@@ -70,5 +68,11 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
         
         
         return installationClasseeMapper.toAutocompleteDTOs(installationClasseeService.rechercherRaisonsSociales(codeINSEE, query));
+    }
+    
+    @Override
+    public List<InstallationClasseeDTO> rechercherSitesDansPolygon(Geometry polygon) {
+        
+        return installationClasseeMapper.toDTOs(installationClasseeService.rechercherSitesDansPolygon(polygon));
     }
 }

@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces;
 
-
 import fr.gouv.beta.fabnum.commun.metier.IAbstractCRUDService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustrielBasias;
 
@@ -17,7 +16,9 @@ public interface ISiteIndustrielBasiasService extends IAbstractCRUDService<SiteI
     
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideGeometry(Geometry codeParcelle, double distance);
     
-    List<SiteIndustrielBasias> rechercherSitesDansPolygon(List<Geometry> multiPolygon);
+    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
     
     List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
     

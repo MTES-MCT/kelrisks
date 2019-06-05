@@ -20,4 +20,8 @@ public interface IGestionParcelleFacade {
     List<ParcelleDTO> rechercherParcellesContigues(Geometry geom);
     
     ParcelleDTO rechercherParcelleAvecCoordonnees(double x, double y);
+    
+    Geometry rechercherExpendedParcelle(String code, double distance);
+    
+    Geometry rechercherUnionParcellesContigues(Geometry multiPolygon);
 }

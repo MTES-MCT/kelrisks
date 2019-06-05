@@ -13,10 +13,14 @@ import org.geolatte.geom.Geometry;
  */
 public interface IParcelleDAO extends IAbstractDAO<Parcelle> {
     
-    Parcelle rechercherParcelleContenantPoint(Geometry point);
+    Parcelle rechercherClosestParcelleAvecPoint(Geometry point);
+    
+    Geometry rechercherExpendedParcelle(String code, double distance);
     
     List<Parcelle> rechercherParcellesContigues(Geometry point);
     
-    Parcelle rechercherParcelleAvecCoordonnees(double x, double y);
+    Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y);
+    
+    Geometry rechercherUnionParcellesContigues(Geometry polygon);
 }
   
