@@ -18,5 +18,6 @@ public class InstallationClasseeDTO {
     private String  complementAdresse;
     private String  departement;
     private boolean centroideCommune;
+    private String  ewkt;
 }
   

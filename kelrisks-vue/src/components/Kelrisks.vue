@@ -225,18 +225,19 @@
 </template>
 
 <script>
-import Contact from '@/components/content/Contact'
-import CGU from '@/components/content/CGU'
-import HowTo from '@/components/content/HowTo'
-import WhoAreWe from '@/components/content/WhoAreWe'
-import Konami from '@/components/content/Konami'
-import mixinErrors from '@/components/mixins/errors'
-import SearchFormPart1VousEtes from '@/components/content/search/SearchFormPart1VousEtes'
-// import SearchFormPart2Commune from '@/components/content/search/SearchFormPart2Commune'
+import Contact from '../components/content/Contact'
+import CGU from '../components/content/CGU'
+import HowTo from '../components/content/HowTo'
+import WhoAreWe from '../components/content/WhoAreWe'
+import Konami from '../components/content/Konami'
+import mixinErrors from '../components/mixins/errors'
+import SearchFormPart1VousEtes from '../components/content/search/SearchFormPart1VousEtes'
 import SearchFormPart3Parcelle from '../components/content/search/SearchFormPart3Parcelle'
 import SearchResults from '../components/content/search/SearchResults'
-import Stats from '@/components/content/Stats'
-import fetchWithError from '@/script/fetchWithError'
+import Stats from '../components/content/Stats'
+import fetchWithError from '../script/fetchWithError'
+// import KrSelect from '../components/ui/KrSelect'
+// import KrInput from './ui/KrInput';
 
 export default {
     name: 'Kelrisks',
@@ -271,7 +272,6 @@ export default {
         Stats,
         SearchResults,
         SearchFormPart3Parcelle,
-        // SearchFormPart2Commune,
         SearchFormPart1VousEtes,
         Contact,
         CGU,

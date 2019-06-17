@@ -39,6 +39,7 @@
         <javax.ws.rs.version>2.0.1</javax.ws.rs.version>
 
         <org.geolatte.version>1.4.0</org.geolatte.version>
+        <org.geolatte.common.version>0.8</org.geolatte.common.version>
         <com.vividsolutions.version>1.13</com.vividsolutions.version>
     </properties>
 
@@ -91,6 +92,16 @@
             <groupId>org.geolatte</groupId>
             <artifactId>geolatte-geom</artifactId>
             <version>${org.geolatte.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geolatte</groupId>
+            <artifactId>geolatte-geojson</artifactId>
+            <version>${org.geolatte.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geolatte</groupId>
+            <artifactId>geolatte-common</artifactId>
+            <version>0.8</version>
         </dependency>
 
         <!-- (Parsing des Geoms) Caused by: java.lang.ClassNotFoundException: com.vividsolutions.jts.io.ParseException -->

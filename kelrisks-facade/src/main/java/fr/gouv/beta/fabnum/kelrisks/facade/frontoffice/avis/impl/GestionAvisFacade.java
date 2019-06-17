@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
+import fr.gouv.beta.fabnum.commun.utils.GeoJsonUtils;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geolatte.geom.Geometry;
+import org.geolatte.geom.crs.CoordinateSystemAxis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,11 +84,19 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         Geometry touchesParcelle  = gestionParcelleFacade.rechercherUnionParcellesContigues(parcelleDTO.getMultiPolygon());
         
         avisDTO.getSummary().setCodeParcelle(parcelleDTO.getSection() + "-" + parcelleDTO.getNumero());
+        avisDTO.getLeaflet().setParcelle(GeoJsonUtils.toGeoJson(parcelleDTO.getMultiPolygon()));
+        avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(parcelleDTO.getMultiPolygon().getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
+                                                                 Double.toString(parcelleDTO.getMultiPolygon().getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
         
         // Recherche d'une éventuelle zone poluée contenant la parcelle
         List<Geometry>        parcelleSitesSolsPolues = new ArrayList<>();
         List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
-        if (!siteSolPolueDTOs.isEmpty()) {siteSolPolueDTOs.forEach(siteSolPolueDTO -> parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon()));}
+        if (!siteSolPolueDTOs.isEmpty()) {
+            siteSolPolueDTOs.forEach(siteSolPolueDTO -> {
+                parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon());
+                avisDTO.getLeaflet().getSsp().add(siteSolPolueDTO.getEwkt());
+            });
+        }
         else { parcelleSitesSolsPolues.add(parcelleDTO.getMultiPolygon()); }
     
         getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire);
@@ -103,6 +113,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setInstallationClasseeSurParcelleDTOs(gestionInstallationClasseeFacade.rechercherInstallationsDansPolygons(parcelleSitesSolsPolues));
         avisDTO.setInstallationClasseeProximiteParcelleDTOs(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(touchesParcelle));
         avisDTO.setInstallationClasseeRayonParcelleDTOs(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(expendedParcelle));
+    
+        avisDTO.getInstallationClasseeRayonParcelleDTOs().forEach(icpe -> avisDTO.getLeaflet().getIcpe().add(icpe.getEwkt()));
         
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeProximiteParcelleDTOs());
@@ -115,6 +127,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setSiteIndustrielBasolSurParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
         avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(touchesParcelle));
         avisDTO.setSiteIndustrielBasolRayonParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(expendedParcelle));
+    
+        avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getBasol().add(sib.getEwkt()));
         
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolProximiteParcelleDTOs());
@@ -125,6 +139,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setSiteIndustrielBasiasSurParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
         avisDTO.setSiteIndustrielBasiasProximiteParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(touchesParcelle));
         avisDTO.setSiteIndustrielBasiasRayonParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(expendedParcelle));
+    
+        avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getBasias().add(sib.getEwkt()));
         
         if (!nomProprietaire.equals("")) {
             avisDTO.setSiteIndustrielBasiasParRaisonSocialeDTOs(gestionSiteIndustrielBasiasFacade.rechercherParNomProprietaireDansRayonGeometry(parcelle, nomProprietaire, 5000D));

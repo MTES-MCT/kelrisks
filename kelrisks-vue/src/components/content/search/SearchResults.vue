@@ -255,6 +255,10 @@
                     </section>
                 </div>
             </div>
+
+            <leaflet :center="leaflet.center"
+                     :data="leaflet.data"/>
+
             <div class="note_pied_page">
                 <p>(1) L'obligation de faire appel à un bureau d'étude certifié (ou équivalent) dans le domaine des sites et sols pollués conformément à la norme NF X 31-620 concerne les attestations
                    prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement et exigées à l'article R 431-16 du code de l'urbanisme (alinéa n et o).</p>
@@ -267,16 +271,20 @@
 </template>
 
 <script>
-import BigNumber from '@/components/ui/BigNumber'
-import avis from '@/script/avis'
-import fetchWithError from '@/script/fetchWithError'
-import functions from '@/script/fonctions'
-import mixinErrors from '@/components/mixins/errors'
+import BigNumber from '../../../components/ui/BigNumber'
+import avis from '../../../script/avis'
+import fetchWithError from '../../../script/fetchWithError'
+import functions from '../../../script/fonctions'
+import mixinErrors from '../../mixins/errors'
+import Leaflet from "../Leaflet";
 
 export default {
     mixins: [mixinErrors],
     name: 'SearchResults',
-    components: {BigNumber},
+    components: {
+        Leaflet,
+        BigNumber
+    },
     props: {
         codeParcelle: {
             type: String,
@@ -340,6 +348,10 @@ export default {
             nomAdresse: undefined,
             geolocAdresse: undefined,
             codeProprio: undefined
+        },
+        leaflet: {
+            data: undefined,
+            center: [0, 0]
         }
     }),
     methods: {
@@ -365,6 +377,7 @@ export default {
             fetchWithError(url, null, 1000 * 20)
                 .then(stream => stream.json())
                 .then(value => {
+                    console.log(value.entity)
                     this.checkInformations(value.entity)
                     if (this.informations.hasError) {
                         this._paq.push(['trackEvent', 'Flow', 'Informations', 'Erreur'])
@@ -396,6 +409,9 @@ export default {
                     this.avis.installationClasseeCommune = avis.getICNonGeoreferencees(value)
 
                     this.avis.sisParcelle = avis.getSISSurParcelle(value)
+
+                    this.leaflet.data = value.entity.leaflet
+                    this.leaflet.center = [parseFloat(value.entity.leaflet.center.y), parseFloat(value.entity.leaflet.center.x)]
 
                     functions.scrollToElement('main', false)
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])

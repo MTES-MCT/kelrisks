@@ -94,6 +94,13 @@
             <version>v1-rev83-1.23.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.bedatadriven/jackson-datatype-jts -->
+        <dependency>
+            <groupId>com.bedatadriven</groupId>
+            <artifactId>jackson-datatype-jts</artifactId>
+            <version>2.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
