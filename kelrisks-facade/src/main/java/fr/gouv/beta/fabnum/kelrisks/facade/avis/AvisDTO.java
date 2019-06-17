@@ -50,9 +50,10 @@ public class AvisDTO extends JsonInfoDTO {
     
     @Data
     public static class Leaflet {
-        
+    
         private Point        center   = new Point();
         private String       parcelle = "";
+        private String       adresse  = "";
         private List<String> basias   = new ArrayList<>();
         private List<String> basol    = new ArrayList<>();
         private List<String> sis      = new ArrayList<>();

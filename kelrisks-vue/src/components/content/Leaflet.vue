@@ -4,7 +4,10 @@
                :zoom="zoom"
                ref="leafletMap">
             <l-tile-layer :url="url"></l-tile-layer>
+            <l-geo-json :geojson="JSON.parse(data.adresse)"
+                        :options="adresseOptions"></l-geo-json>
             <l-geo-json :geojson="JSON.parse(data.parcelle)"
+                        :options="parcelleOptions"
                         :options-style="styleFunction"></l-geo-json>
             <l-geo-json :geojson="data.basias.map(x => JSON.parse(x))"
                         :options="basiasOptions"></l-geo-json>
@@ -52,7 +55,7 @@ export default {
     },
     data: () => ({
         url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-        zoom: 20,
+        zoom: 17,
         bounds: null
     }),
     methods: {
@@ -68,6 +71,11 @@ export default {
         }
     },
     computed: {
+        parcelleOptions () {
+            return {
+                onEachFeature: this.onEachFeatureFunction,
+            };
+        },
         icpeOptions () {
             return {
                 onEachFeature: this.onEachFeatureFunction,
@@ -78,6 +86,12 @@ export default {
             return {
                 onEachFeature: this.onEachFeatureFunction,
                 pointToLayer: this.createBasiasIcon
+            };
+        },
+        adresseOptions () {
+            return {
+                onEachFeature: this.onEachFeatureFunction,
+                pointToLayer: this.createAdresseIcon
             };
         },
         styleFunction () {
@@ -95,10 +109,36 @@ export default {
         onEachFeatureFunction () {
             return (feature, layer) => {
                 layer.bindTooltip(
-                    "<div>Code : " + feature.properties.code + "</div>" +
-                    "<div>Nom : " + feature.properties.nom + "</div>",
+                    () => {
+                        let divs = ''
+                        for (let property in feature.properties) {
+                            let value = feature.properties[property]
+                            let label = property.replace(/([A-Z])/gm, function (v) {
+                                return ' ' + v.toLowerCase()
+                            }).replace(/(^.)/gm, function (v) {
+                                return v.toUpperCase()
+                            })
+                            divs = divs.concat('<div>', label, ' : ', value, '</div>')
+                        }
+
+                        return divs
+                    },
                     {permanent: false, sticky: true}
                 );
+            };
+        },
+        createAdresseIcon () {
+            return (feature, latlng) => {
+                let myIcon = icon({
+                    iconUrl: '/images/leaflet/adresse.svg',
+                    shadowUrl: '/images/leaflet/shadow.png',
+                    iconSize: [35, 35], // width and height of the image in pixels
+                    shadowSize: [30, 22], // width, height of optional shadow image
+                    iconAnchor: [17, 35], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [0, 24],  // anchor point of the shadow. should be offset
+                    popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+                })
+                return marker(latlng, {icon: myIcon})
             };
         },
         createIcpeIcon () {

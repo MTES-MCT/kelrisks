@@ -15,10 +15,18 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteI
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.geolatte.geom.G2D;
 import org.geolatte.geom.Geometry;
+import org.geolatte.geom.Point;
+import org.geolatte.geom.Positions;
+import org.geolatte.geom.crs.CoordinateReferenceSystems;
 import org.geolatte.geom.crs.CoordinateSystemAxis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +69,15 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
             parcelleDTO = gestionParcelleFacade.rechercherParcelleAvecCoordonnees(Double.parseDouble(geolocAdresse.split("\\|")[0]),
                                                                                   Double.parseDouble(geolocAdresse.split("\\|")[1]));
+    
+            Positions.CanMakeG2D canMakeG2D = new Positions.CanMakeG2D();
+            G2D g2D = canMakeG2D.mkPosition(Double.parseDouble(geolocAdresse.split("\\|")[0]),
+                                            Double.parseDouble(geolocAdresse.split("\\|")[1]));
+            Point point = new Point(g2D, CoordinateReferenceSystems.WGS84);
+            avisDTO.getLeaflet().setAdresse(GeoJsonUtils.toGeoJson(point, Stream.of(new AbstractMap.SimpleEntry<>("adresse", nomAdresse))
+                                                                                  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
             avisDTO.getSummary().setAdresse(nomAdresse);
+    
             codeParcelle = parcelleDTO.getCode();
         }
         else {
@@ -84,7 +100,9 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         Geometry touchesParcelle  = gestionParcelleFacade.rechercherUnionParcellesContigues(parcelleDTO.getMultiPolygon());
         
         avisDTO.getSummary().setCodeParcelle(parcelleDTO.getSection() + "-" + parcelleDTO.getNumero());
-        avisDTO.getLeaflet().setParcelle(GeoJsonUtils.toGeoJson(parcelleDTO.getMultiPolygon()));
+        avisDTO.getLeaflet().setParcelle(GeoJsonUtils.toGeoJson(parcelleDTO.getMultiPolygon(),
+                                                                Stream.of(new AbstractMap.SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
+                                                                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
         avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(parcelleDTO.getMultiPolygon().getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                  Double.toString(parcelleDTO.getMultiPolygon().getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
         
