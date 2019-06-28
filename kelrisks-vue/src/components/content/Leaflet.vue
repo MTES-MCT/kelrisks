@@ -5,6 +5,7 @@
                ref="leafletMap">
             <l-tile-layer :url="url"></l-tile-layer>
             <l-geo-json :geojson="JSON.parse(data.adresse)"
+                        v-if="data.adresse"
                         :options="adresseOptions"></l-geo-json>
             <l-geo-json :geojson="JSON.parse(data.parcelle)"
                         :options="parcelleOptions"
@@ -172,9 +173,10 @@ export default {
     },
     mounted () {
         this.$nextTick(() => {
-            // const map = this.$refs.leafletMap.mapObject
-            // console.log(map)
-            // this.crippleMap(map)
+            const map = this.$refs.leafletMap.mapObject
+            map.LGeoJson()
+            console.log(map)
+            this.crippleMap(map)
         })
     }
 }
