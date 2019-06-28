@@ -82,7 +82,8 @@
                             label-text="SIS"/>
             </div>
 
-            <a class="lien big">Signaler une erreur</a>
+            <a class="lien big"
+               href="mailto:Contact%20Kelrisks%20<contact@kelrisks.beta.gouv.fr>?subject=Signaler%20une%20erreur%20Kelrisks">Signaler une erreur</a>
         </div>
 
         <div class="container bordered conclusion_wrapper">
