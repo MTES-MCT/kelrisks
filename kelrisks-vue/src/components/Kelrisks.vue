@@ -415,12 +415,8 @@ export default {
     }
 
     p {
-        text-indent : 12px;
-        text-align  : justify;
-    }
-
-    .site-list {
-        list-style : none;
+        /*text-indent : 12px;*/
+        text-align : justify;
     }
 
     .clearfix:after {

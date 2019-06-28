@@ -23,17 +23,14 @@
 
 <script>
 import {icon, marker} from "leaflet";
-import {LCircle, LGeoJson, LIcon, LMap, LPolygon, LTileLayer} from 'vue2-leaflet';
+import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
 
 export default {
     name: "Leaflet",
     components: {
         LMap,
         LTileLayer,
-        LCircle,
-        LPolygon,
-        LGeoJson,
-        LIcon
+        LGeoJson
     },
     props: {
         center: {
@@ -175,7 +172,7 @@ export default {
         this.$nextTick(() => {
             const map = this.$refs.leafletMap.mapObject
             map.LGeoJson()
-            console.log(map)
+            // console.log(map)
             this.crippleMap(map)
         })
     }
@@ -185,6 +182,6 @@ export default {
 <style scoped>
     .leaflet {
         width  : 100%;
-        height : 300px;
+        height : 100%;
     }
 </style>
