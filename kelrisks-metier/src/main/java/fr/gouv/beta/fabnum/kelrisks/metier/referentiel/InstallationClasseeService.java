@@ -48,11 +48,11 @@ public class InstallationClasseeService extends AbstractCRUDService<Installation
     }
     
     @Override
-    public List<InstallationClassee> rechercherSitesDansPolygon(List<Geometry> multiPolygon) {
+    public List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
     
         if (multiPolygon == null || multiPolygon.isEmpty()) { return new ArrayList<>(); }
-        
-        return dao.rechercherSitesDansPolygon(multiPolygon);
+    
+        return dao.rechercherSitesDansPolygons(multiPolygon);
     }
     
     @Override
@@ -65,6 +65,12 @@ public class InstallationClasseeService extends AbstractCRUDService<Installation
     public List<InstallationClassee> rechercherRaisonsSociales(String codeINSEE, String query) {
         
         return dao.rechercherRaisonsSociales(codeINSEE, query);
+    }
+    
+    @Override
+    public List<InstallationClassee> rechercherSitesDansPolygon(Geometry polygon) {
+        
+        return dao.rechercherSitesDansPolygon(polygon);
     }
 }
   

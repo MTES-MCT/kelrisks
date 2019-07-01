@@ -5,7 +5,7 @@
     <parent>
         <artifactId>kelrisks</artifactId>
         <groupId>fr.gouv.beta.fabnum</groupId>
-        <version>v1.0.7</version>
+        <version>v1.0.8</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -92,6 +92,13 @@
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-gmail</artifactId>
             <version>v1-rev83-1.23.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.bedatadriven/jackson-datatype-jts -->
+        <dependency>
+            <groupId>com.bedatadriven</groupId>
+            <artifactId>jackson-datatype-jts</artifactId>
+            <version>2.4</version>
         </dependency>
 
     </dependencies>

@@ -47,8 +47,8 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
         if (adresses.size() > 1) {return null;} // TODO
         
         Adresse adresse = adresses.get(0);
-        
-        Parcelle parcelle = parcelleService.rechercherParcelleContenantPoint(adresse.getPoint());
+    
+        Parcelle parcelle = parcelleService.rechercherClosestParcelleAvecPoint(adresse.getPoint());
         
         return parcelleMapper.toDTO(parcelle);
     }
@@ -76,7 +76,7 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
         adresseQO.setIdBan(idBAN);
         
         Adresse  adresse  = adresseService.rechercherResultatUniqueAvecCritere(adresseQO);
-        Parcelle parcelle = parcelleService.rechercherParcelleContenantPoint(adresse.getPoint());
+        Parcelle parcelle = parcelleService.rechercherClosestParcelleAvecPoint(adresse.getPoint());
         
         return parcelleMapper.toDTO(parcelle);
     }
@@ -89,9 +89,21 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     
     @Override
     public ParcelleDTO rechercherParcelleAvecCoordonnees(double x, double y) {
-        
-        ParcelleDTO parcelleDTO = parcelleMapper.toDTO(parcelleService.rechercherParcelleAvecCoordonnees(x, y));
+    
+        ParcelleDTO parcelleDTO = parcelleMapper.toDTO(parcelleService.rechercherClosestParcelleAvecCoordonnees(x, y));
         
         return parcelleDTO;
+    }
+    
+    @Override
+    public Geometry rechercherExpendedParcelle(String code, double distance) {
+        
+        return parcelleService.rechercherExpendedParcelle(code, distance / 100000D);
+    }
+    
+    @Override
+    public Geometry rechercherUnionParcellesContigues(Geometry polygon) {
+        
+        return parcelleService.rechercherUnionParcellesContigues(polygon);
     }
 }

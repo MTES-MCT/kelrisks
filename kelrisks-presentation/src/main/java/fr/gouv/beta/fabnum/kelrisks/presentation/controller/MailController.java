@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MailController {
     
-    private static final String TO               = "ud91.driee-if@developpement-durable.gouv.fr";
+    private static final String TO               = "contact@kelrisks.beta.gouv.fr";
     private static final String FROM             = "kelrisks.betagouv@gmail.com";
     private static final String FROM_FULL        = "kelrisks.beta.gouv.fr";
     private static final String SUBJECT          = "[Kelrisks] Un commentaire, une remarque, un problème?";

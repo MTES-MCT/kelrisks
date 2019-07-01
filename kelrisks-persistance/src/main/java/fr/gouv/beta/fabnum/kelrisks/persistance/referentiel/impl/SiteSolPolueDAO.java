@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.impl.AbstractDAO;
 import fr.gouv.beta.fabnum.commun.transverse.exception.technique.TechniqueException;
 import fr.gouv.beta.fabnum.commun.transverse.qo.AbstractQO;
@@ -11,6 +10,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteSolPolue
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -46,6 +46,12 @@ public class SiteSolPolueDAO extends AbstractDAO<SiteSolPolue> implements ISiteS
         this.setRepo(repo);
         this.siteSolPolueRepository = repo;
         this.siteSolPolue = QSiteSolPolue.siteSolPolue;
+    }
+    
+    @Override
+    public List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry) {
+        
+        return siteSolPolueRepository.rechercherZoneContenantPolygon(geometry);
     }
     
     @Override

@@ -48,17 +48,23 @@ public class SiteIndustrielBasolService extends AbstractCRUDService<SiteIndustri
     }
     
     @Override
-    public List<SiteIndustrielBasol> rechercherSitesDansPolygon(List<Geometry> multiPolygon) {
+    public List<SiteIndustrielBasol> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
     
         if (multiPolygon == null || multiPolygon.isEmpty()) { return new ArrayList<>(); }
-        
-        return dao.rechercherSitesDansPolygon(multiPolygon);
+    
+        return dao.rechercherSitesDansPolygons(multiPolygon);
     }
     
     @Override
     public List<SiteIndustrielBasol> rechercherSitesSurParcelles(List<String> codes) {
         
         return dao.rechercherSitesSurParcelles(codes);
+    }
+    
+    @Override
+    public List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry polygon) {
+        
+        return dao.rechercherSitesDansPolygon(polygon);
     }
 }
   

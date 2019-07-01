@@ -6,6 +6,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteSolPolue
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Query;
 
@@ -24,5 +25,10 @@ public interface SiteSolPolueRepository extends IAbstractRepository<SiteSolPolue
            "                       WHERE p.code = :codeParcelle), " +
            "                     ssp.multiPolygon) = TRUE")
     List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle);
+    
+    @Query("SELECT ssp " +
+           "FROM SiteSolPolue ssp " +
+           "WHERE st_intersects(:geometry, ssp.multiPolygon) = TRUE")
+    List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry);
 }
   

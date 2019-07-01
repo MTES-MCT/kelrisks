@@ -8,7 +8,7 @@ export default {
     }
     avis.numberOf = value.entity.siteIndustrielBasiasSurParcelleDTOs.length
     if (avis.numberOf === 0) {
-      avis.lib = 'n’est pas référencée dans l\'inventaire des sites ayant accueilli par le passé une activité susceptible d\'avoir pu généré une pollution des sols (BASIAS).'
+      avis.lib = 'N’est pas référencée dans l\'inventaire des sites ayant accueilli par le passé une activité susceptible d\'avoir pu généré une pollution des sols (BASIAS).'
     } else {
       avis.lib = 'est référencée dans l\'inventaire des sites ayant accueilli par le passé une activité susceptible d\'avoir pu généré une pollution des sols (BASIAS).'
       value.entity.siteIndustrielBasiasSurParcelleDTOs.forEach(function (element) {

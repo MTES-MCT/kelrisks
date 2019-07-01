@@ -16,5 +16,6 @@ public class ParcelleDTO {
     private String   prefixe;
     private String   section;
     private String   numero;
+    private String   ewkt;
 }
   

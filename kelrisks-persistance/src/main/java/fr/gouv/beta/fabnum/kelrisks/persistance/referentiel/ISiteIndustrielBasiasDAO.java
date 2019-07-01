@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.IAbstractDAO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustrielBasias;
 
@@ -17,7 +16,9 @@ public interface ISiteIndustrielBasiasDAO extends IAbstractDAO<SiteIndustrielBas
     
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(Geometry geometry, double distance);
     
-    List<SiteIndustrielBasias> rechercherSitesDansPolygon(List<Geometry> multiPolygon);
+    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
     
     List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
     

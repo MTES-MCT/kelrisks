@@ -15,6 +15,7 @@ public class SiteIndustrielBasolDTO {
     private String codeinsee;
     private String codepostal;
     private String proprietaire;
+    private String ewkt;
     private String responsable;
 }
   

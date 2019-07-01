@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration>
+
+    <!--Pattern : %d{HH:mm:ss,SSS} | %-5p | %c | %m (%X{session})%n-->
+    <!-- %d Used to output the date of the logging event. E.g. %d{dd MMM yyyy HH:mm:ss,SSS}-->
+    <!-- %-5p Used to output the priority of the logging event. Right pad with spaces if the category name is less than 5 characters long.-->
+    <!-- %c Used to output the category of the logging event. For example, for the category name "a.b.c" the pattern %c{2} will output "b.c".-->
+    <!-- %m Used to output the application supplied message associated with the logging event.-->
+    <!-- %X The X conversion character is followed by the key for the MDC. For example, X{clientIP} will print the information stored in the MDC against the key clientIP.-->
+    <!-- %n Outputs the platform dependent line separator character or characters.-->
+
+    <appender name="appenderRolling"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="Threshold"
+               value="WARN"/>
+        <param name="File"
+               value="/var/log/tomcat/kelrisks.log"/>
+        <param name="MaxFileSize"
+               value="100000KB"/>
+        <param name="MaxBackupIndex"
+               value="3"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{dd MMM yyyy HH:mm:ss,SSS} | %-5p | %c | %m (%X{session})%n"/>
+            <!--<param name="ConversionPattern"-->
+            <!--value="[%d] %X{session} %X{utilisateur} %5p (%c) - %m (%x) %n" />-->
+        </layout>
+    </appender>
+
+    <appender name="appenderStdout"
+              class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold"
+               value="INFO"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{HH:mm:ss,SSS} | %-5p | %c{1} | %m (%X{session})%n"/>
+            <!--<param name="ConversionPattern"-->
+            <!--value="[%d] %X{session} %X{utilisateur} %-6p (%c) - %m (%x) %n" />-->
+        </layout>
+    </appender>
+
+    <category name="i2.application.commun.util.ServiceAdvice">
+        <priority value="ERROR"/>
+    </category>
+    <category name="i2.application.commun.util.UserDetailsServiceAdvice">
+        <priority value="ERROR"/>
+    </category>
+    <category name="i2.application.commun.presentation.securite.WebSecurityManager">
+        <priority value="ERROR"/>
+    </category>
+    <category name="org.hibernate">
+        <priority value="INFO"/>
+    </category>
+    <category name="org.hibernate.type">
+        <priority value="TRACE"/>
+    </category>
+    <!--TODO A retirer ou changer de niveau pour la prod.-->
+    <category name="fr.gouv.rie.e2.application.commun.presentation.controller.CommonAbstractController"
+              additivity="false">
+        <priority value="INFO"/>
+        <appender-ref ref="appenderStdout"/>
+        <appender-ref ref="appenderRolling"/>
+    </category>
+    <category name="i2.application.commun.util.dbunit"
+              additivity="false">
+        <priority value="INFO"/>
+        <appender-ref ref="appenderStdout"/>
+        <appender-ref ref="appenderRolling"/>
+    </category>
+
+    <root>
+        <priority value="WARN"/>
+        <appender-ref ref="appenderStdout"/>
+        <appender-ref ref="appenderRolling"/>
+    </root>
+
+</log4j:configuration>

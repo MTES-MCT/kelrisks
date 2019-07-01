@@ -8,6 +8,7 @@ import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISiteSolPolueS
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,12 @@ public class GestionSiteSolPolueFacade extends AbstractFacade implements IGestio
     @Override
     public List<SiteSolPolueDTO> rechercherZoneContenantParcelle(String codeParcelle) {
     
-        List<SiteSolPolueDTO> siteSolPolueDTOs = siteSolPolueMapper.toDTOs(siteSolPolueService.rechercherZoneContenantParcelle(codeParcelle));
+        return siteSolPolueMapper.toDTOs(siteSolPolueService.rechercherZoneContenantParcelle(codeParcelle));
+    }
     
-        return siteSolPolueDTOs;
+    @Override
+    public List<SiteSolPolueDTO> rechercherZoneContenantPolygon(Geometry geometry) {
+        
+        return siteSolPolueMapper.toDTOs(siteSolPolueService.rechercherZoneContenantPolygon(geometry));
     }
 }
