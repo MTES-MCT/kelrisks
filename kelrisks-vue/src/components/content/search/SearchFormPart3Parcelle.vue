@@ -3,8 +3,10 @@
              id="section3">
         <div class="container">
             <div class="panel">
-                <h2 class="section__title">Votre terrain</h2>
-                <p class="section__subtitle">Informations</p>
+                <h2 class="section__title title">Votre terrain</h2>
+                <p class="subtitle">Informations</p>
+                <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">Saisissez le code de la parcelle à analyser<br>(les recherches par code parcelle peuvent être plus pertinentes
+                                                                                         que par adresse)</p>
 
                 <errors :error-list="concatErrors(errors)"
                         :info-list="informations.infoList"
@@ -13,30 +15,7 @@
 
                 <br/>
 
-                <div style="width: 40%; float: left; margin-left: 5%">
-                    <kr-input :get-option-label-function="(option => {return option['properties']['name'] + ', ' + option['properties']['postcode'] + ' ' + option['properties']['city']})"
-                              :get-option-value-function="(option => {return option['properties']['id']})"
-                              :get-results-list-function="(data => {return data['features']})"
-                              :start-at="3"
-                              @selected="onAdresseChanged"
-                              label="Adresse"
-                              name="adresse"
-                              v-bind:source="'https://api-adresse.data.gouv.fr/search/?limit=10&q='">
-                        <template slot="kr-no-results"
-                                  slot-scope="slotProps">
-                            Aucune adresse trouvée pour "{{ slotProps.query }}"
-                        </template>
-                        <template slot="kr-helper"
-                                  slot-scope="slotProps">
-                            IBAN&nbsp;: {{ slotProps.option.properties.id }}
-                        </template>
-                    </kr-input>
-                </div>
-
-                <div style="width: 10%; float: left; margin-top: 60px">
-                    <p class="section__subtitle">Ou</p>
-                </div>
-                <div style="width: 40%; float: left; margin-right: 5%">
+                <div style="width: 40%; margin: 0 5%; float: left">
                     <kr-input :errors="error.field.codeCommune"
                               :get-option-label-function="data => { return data['codePostal'] }"
                               :get-option-value-function="data => { return data['codeINSEE'] }"
@@ -58,15 +37,43 @@
                             Aucune commune trouvé pour "{{ slotProps.query }}"
                         </template>
                     </kr-input>
+                </div>
+
+                <div style="width: 40%; margin: 0 5%; float: left">
                     <kr-input @query="onCodeParcelleChanged"
                               label="Code Parcelle"
                               name="codeparcelle"
                               placeholder="BA-115 ou 912250000A0352"/>
                 </div>
 
-                <div style="width: 100%; display: flex; justify-content: center; margin-top: 170px;">
-                    <p class="section__subtitle">Optionnel</p>
+                <div class="clearfix"></div>
+                <p class="subtitle"
+                   style="margin: 25px 0 15px 0; color: #8A8F96">Ou</p>
+
+                <div style="width: 40%; margin-left: 30%">
+                    <!--                <div style="width: 40%; float: left; margin-left: 5%">-->
+                    <kr-input :get-option-label-function="(option => {return option['properties']['name'] + ', ' + option['properties']['postcode'] + ' ' + option['properties']['city']})"
+                              :get-option-value-function="(option => {return option['properties']['id']})"
+                              :get-results-list-function="(data => {return data['features']})"
+                              :start-at="3"
+                              @selected="onAdresseChanged"
+                              label="Adresse"
+                              name="adresse"
+                              v-bind:source="'https://api-adresse.data.gouv.fr/search/?limit=10&q='">
+                        <template slot="kr-no-results"
+                                  slot-scope="slotProps">
+                            Aucune adresse trouvée pour "{{ slotProps.query }}"
+                        </template>
+                        <template slot="kr-helper"
+                                  slot-scope="slotProps">
+                            IBAN&nbsp;: {{ slotProps.option.properties.id }}
+                        </template>
+                    </kr-input>
                 </div>
+
+                <div class="clearfix"></div>
+                <p class="subtitle"
+                   style="margin: 25px 0 0 5%; text-align: left; color: #8A8F96">Optionnel</p>
 
                 <div style="width: 90%; margin-left: 5%">
                     <kr-input :start-at="3"
@@ -82,7 +89,7 @@
                     </kr-input>
                 </div>
 
-                <div style="width: 90%; margin-left: 5%">
+                <div style="width: 90%; margin: 25px 5%">
                     <input @change="acceptCGU"
                            id="cgu"
                            type="checkbox"
