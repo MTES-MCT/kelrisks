@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.IAbstractRepository;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 
@@ -22,7 +21,7 @@ public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
                    " WHERE public.st_dwithin(:point, p.geog, (100. / 100000.))" +
                    " ORDER BY st_distance(p.geog, :point)" +
                    " LIMIT 1 ", nativeQuery = true)
-    Parcelle rechercherParcelleContenantPoint(Geometry point);
+    Parcelle rechercherClosestParcelleAvecPoint(Geometry point);
     
     @Query(value = "SELECT * FROM kelrisks.cadastre AS p" +
                    " WHERE public.st_touches(p.geog, :geog)", nativeQuery = true)
@@ -32,6 +31,14 @@ public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
                    " WHERE public.st_dwithin(public.st_setsrid(public.st_point(:x, :y),4326), p.geog, (100. / 100000.))" +
                    " ORDER BY st_distance(p.geog, public.st_setsrid(public.st_point(:x, :y),4326))" +
                    " LIMIT 1 ", nativeQuery = true)
-    Parcelle rechercherParcelleAvecCoordonnees(double x, double y);
+    Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y);
+    
+    @Query(value = "SELECT public.st_asewkt(public.st_buffer(p.geog, :distance)) FROM kelrisks.cadastre AS p" +
+                   " WHERE p.code = :code", nativeQuery = true)
+    String rechercherExpendedParcelle(String code, double distance);
+    
+    @Query(value = "SELECT public.st_asewkt(public.st_union(p.geog)) FROM kelrisks.cadastre AS p" +
+                   " WHERE public.st_touches(p.geog, :geog)", nativeQuery = true)
+    String rechercherUnionParcellesContigues(Geometry geog);
 }
   

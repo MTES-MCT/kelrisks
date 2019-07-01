@@ -35,9 +35,9 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     }
     
     @Override
-    public Parcelle rechercherParcelleContenantPoint(Geometry point) {
-        
-        return dao.rechercherParcelleContenantPoint(point);
+    public Parcelle rechercherClosestParcelleAvecPoint(Geometry point) {
+    
+        return dao.rechercherClosestParcelleAvecPoint(point);
     }
     
     @Override
@@ -47,9 +47,21 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     }
     
     @Override
-    public Parcelle rechercherParcelleAvecCoordonnees(double x, double y) {
+    public Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y) {
+    
+        return dao.rechercherClosestParcelleAvecCoordonnees(x, y);
+    }
+    
+    @Override
+    public Geometry rechercherExpendedParcelle(String code, double distance) {
         
-        return dao.rechercherParcelleAvecCoordonnees(x, y);
+        return dao.rechercherExpendedParcelle(code, distance);
+    }
+    
+    @Override
+    public Geometry rechercherUnionParcellesContigues(Geometry polygon) {
+        
+        return dao.rechercherUnionParcellesContigues(polygon);
     }
 }
   

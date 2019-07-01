@@ -6,30 +6,44 @@ import router from './router'
 // Font Awesome @ https://fontawesome.com/how-to-use/on-the-web/using-with/vuejs
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {
-  faBomb,
-  faBriefcase,
-  faCaretDown,
-  faCaretUp,
-  faCheck,
-  faCheckCircle,
-  faChevronLeft,
-  faChevronRight,
-  faExclamation,
-  faExclamationTriangle,
-  faFilePdf,
-  faHome,
-  faInfo,
-  faMapMarkedAlt,
-  faSearch,
-  faSpinner,
-  faThumbsUp,
-  faTimes,
-  faTruckMoving,
-  faUndo,
-  faUser
+    faBomb,
+    faBriefcase,
+    faCaretDown,
+    faCaretUp,
+    faCheck,
+    faCheckCircle,
+    faChevronLeft,
+    faChevronRight,
+    faExclamation,
+    faExclamationTriangle,
+    faFilePdf,
+    faHome,
+    faInfo,
+    faMapMarkedAlt,
+    faSearch,
+    faSpinner,
+    faThumbsUp,
+    faTimes,
+    faTruckMoving,
+    faUndo,
+    faUser
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
+import {Icon} from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+
+// Leaflet
+// this part resolve an issue where the markers would not appear
+delete Icon.Default.prototype._getIconUrl;
+
+Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
+
+// Font-Awesome
 library.add(faUser, faInfo, faThumbsUp, faBomb, faExclamation, faBriefcase, faChevronLeft, faTruckMoving, faChevronRight, faSearch, faSpinner, faUndo, faCheck, faTimes, faExclamationTriangle, faFilePdf, faCaretDown, faCaretUp, faCheckCircle, faMapMarkedAlt, faHome)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -40,6 +54,6 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  render: h => h(App),
-  router
+    render: h => h(App),
+    router
 }).$mount('#app')

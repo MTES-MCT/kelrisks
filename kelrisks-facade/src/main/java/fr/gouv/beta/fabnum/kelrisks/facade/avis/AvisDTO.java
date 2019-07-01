@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 public class AvisDTO extends JsonInfoDTO {
     
+    private Leaflet leaflet = new Leaflet();
     private Summary summary = new Summary();
     
     private List<SiteIndustrielBasiasDTO> siteIndustrielBasiasSurParcelleDTOs       = new ArrayList<>();
@@ -35,7 +36,7 @@ public class AvisDTO extends JsonInfoDTO {
     private List<InstallationClasseeDTO> installationClasseeNonGeorerenceesDTOs   = new ArrayList<>();
     
     @Data
-    public class Summary {
+    public static class Summary {
         
         private String codeUrl = "";
     
@@ -45,5 +46,35 @@ public class AvisDTO extends JsonInfoDTO {
         private String codeParcelle = "";
         
         private String nomProprietaire = "";
+    }
+    
+    @Data
+    public static class Leaflet {
+    
+        private Point        center   = new Point();
+        private String       parcelle = "";
+        private String       adresse  = "";
+        private List<String> basias   = new ArrayList<>();
+        private List<String> basol    = new ArrayList<>();
+        private List<String> sis      = new ArrayList<>();
+        private List<String> icpe     = new ArrayList<>();
+        private List<String> ssp      = new ArrayList<>();
+        
+        @Data
+        public static class Point {
+            
+            String x = "";
+            String y = "";
+            
+            public Point() {
+            
+            }
+            
+            public Point(String x, String y) {
+                
+                this.x = x;
+                this.y = y;
+            }
+        }
     }
 }

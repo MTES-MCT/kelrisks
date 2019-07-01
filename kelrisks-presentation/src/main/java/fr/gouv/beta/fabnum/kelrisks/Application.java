@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.bedatadriven.jackson.datatype.jts.JtsModule;
+
 /**
  * Configuration of the business, persistence and security layers.
  */
@@ -44,4 +46,7 @@ public class Application extends SpringBootServletInitializer {
             }
         };
     }
+    
+    @Bean
+    public JtsModule jtsModule() { return new JtsModule(); }
 }

@@ -11,5 +11,6 @@ public class SiteSolPolueDTO {
     private String   nom;
     private String   description;
     private Geometry multiPolygon;
+    private String   ewkt;
 }
   

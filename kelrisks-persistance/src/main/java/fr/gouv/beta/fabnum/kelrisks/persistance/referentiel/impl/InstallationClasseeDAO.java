@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.impl.AbstractDAO;
 import fr.gouv.beta.fabnum.commun.transverse.exception.technique.TechniqueException;
 import fr.gouv.beta.fabnum.commun.transverse.qo.AbstractQO;
@@ -62,8 +61,8 @@ public class InstallationClasseeDAO extends AbstractDAO<InstallationClassee> imp
     }
     
     @Override
-    public List<InstallationClassee> rechercherSitesDansPolygon(List<Geometry> multiPolygon) {
-    
+    public List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
+        
         if (multiPolygon.size() == 1) { return installationClasseeRepository.rechercherSitesDansPolygon(multiPolygon.get(0)); }
         else { return installationClasseeRepository.rechercherSitesDansPolygons(multiPolygon); }
     }
@@ -78,6 +77,12 @@ public class InstallationClasseeDAO extends AbstractDAO<InstallationClassee> imp
     public List<InstallationClassee> rechercherRaisonsSociales(String codeINSEE, String query) {
         
         return installationClasseeRepository.rechercherRaisonsSociales(codeINSEE, query);
+    }
+    
+    @Override
+    public List<InstallationClassee> rechercherSitesDansPolygon(Geometry polygon) {
+        
+        return installationClasseeRepository.rechercherSitesDansPolygon(polygon);
     }
     
     @Override

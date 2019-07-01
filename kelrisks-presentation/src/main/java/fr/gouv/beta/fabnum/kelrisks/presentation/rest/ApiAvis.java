@@ -378,7 +378,7 @@ public class ApiAvis extends AbstractBasicApi {
             element.append("Est référencée dans l\'inventaire des installations classées sous le nom de :");
             element = element.appendElement("ul");
             for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeSurParcelleDTOs()) {
-                element.appendElement("li").append(" - " + site.getRaisonSociale());
+                element.appendElement("li").append(site.getRaisonSociale());
             }
         }
     }

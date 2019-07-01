@@ -64,7 +64,7 @@ public class ApiRestBasol extends AbstractBasicApi {
     
         List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
         List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs =
-                gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(siteSolPolueDTO.stream().map(SiteSolPolueDTO::getMultiPolygon).collect(Collectors.toList()));
+                gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(siteSolPolueDTO.stream().map(SiteSolPolueDTO::getMultiPolygon).collect(Collectors.toList()));
         
         return Response.ok(siteIndustrielBasolDTOs).build();
     }

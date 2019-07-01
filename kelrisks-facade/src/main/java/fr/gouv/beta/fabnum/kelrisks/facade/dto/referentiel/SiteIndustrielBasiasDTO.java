@@ -11,6 +11,7 @@ public class SiteIndustrielBasiasDTO {
     private String codeActivite;
     private String raisonSociale;
     private String geolocalisation;
+    private String ewkt;
     private String precision;
 }
   

@@ -11,6 +11,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QParcelle;
 import java.util.List;
 
 import org.geolatte.geom.Geometry;
+import org.geolatte.geom.codec.Wkt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -49,21 +50,39 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     }
     
     @Override
-    public Parcelle rechercherParcelleContenantPoint(Geometry point) {
-        
-        return parcelleRepository.rechercherParcelleContenantPoint(point);
+    public Parcelle rechercherClosestParcelleAvecPoint(Geometry point) {
+    
+        return parcelleRepository.rechercherClosestParcelleAvecPoint(point);
     }
     
     @Override
-    public List<Parcelle> rechercherParcellesContigues(Geometry point) {
+    public Geometry rechercherExpendedParcelle(String code, double distance) {
         
-        return parcelleRepository.rechercherParcellesContigues(point);
+        String wkt = parcelleRepository.rechercherExpendedParcelle(code, distance);
+        return Wkt.fromWkt(wkt);
     }
     
     @Override
-    public Parcelle rechercherParcelleAvecCoordonnees(double x, double y) {
+    public List<Parcelle> rechercherParcellesContigues(Geometry polygon) {
+    
+        return parcelleRepository.rechercherParcellesContigues(polygon);
+    }
+    
+    @Override
+    public Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y) {
+    
+        return parcelleRepository.rechercherClosestParcelleAvecCoordonnees(x, y);
+    }
+    
+    @Override
+    public Geometry rechercherUnionParcellesContigues(Geometry polygon) {
         
-        return parcelleRepository.rechercherParcelleAvecCoordonnees(x, y);
+        //        List<Parcelle> parcelles  = parcelleRepository.rechercherParcellesContigues(polygon);
+        //        Geometry[]     geometries = parcelles.stream().map(Parcelle::getMultiPolygon).toArray(Geometry[]::new);
+        //        List<Geometry> geometries = parcelles.stream().limit(2).map(Parcelle::getMultiPolygon).collect(Collectors.toList());
+        
+        String wkt = parcelleRepository.rechercherUnionParcellesContigues(polygon);
+        return Wkt.fromWkt(wkt);
     }
     
     @Override
