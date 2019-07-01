@@ -536,13 +536,6 @@ export default {
         background-color : #003B80;
     }
 
-    .title {
-        font-size     : 20px;
-        font-weight   : 900;
-        color         : #53657D;
-        margin-bottom : 20px;
-    }
-
     .lien {
         padding         : 9px 0;
         background      : none;

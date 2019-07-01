@@ -360,10 +360,37 @@ export default {
     html, body {
         height           : 100%;
         background-color : #FAFAFA;
+        font-family      : 'Nunito Sans', sans-serif;
     }
 
     body {
         overflow-y : scroll;
+    }
+
+    .title {
+        margin-top    : 0;
+        font-weight   : 900;
+        font-size     : 1.7em;
+        color         : #53657D;
+        margin-bottom : 20px;
+        text-align    : center;
+    }
+
+    .subtitle {
+        margin-top    : 0;
+        font-size     : 1.3em;
+        font-weight   : normal;
+        color         : #8A8F96;
+        margin-bottom : 20px;
+        text-align    : center;
+    }
+
+    p {
+        font-size   : 16px;
+        font-weight : normal;
+        color       : #222933;
+        font-family : 'Nunito Sans', sans-serif;
+
     }
 
     .hero__container p {
