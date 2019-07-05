@@ -140,9 +140,12 @@
                 <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le
                    COFRAC
                    (www.cofrac.fr) : à ce jour seul le LNE est accrédité.</p>
-                <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
-                   class="bouton"
-                   href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>Accéder à la liste des bureaux d’études certifiés</a>
+                <div style="width: 100%; text-align: center">
+                    <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
+                       class="bouton"
+                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
+                </div>
             </div>
             <div id="conclusion2"
                  style="text-align: justify"
@@ -161,9 +164,12 @@
                 <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le
                    COFRAC
                    (www.cofrac.fr) : à ce jour seul le LNE est accrédité.</p>
-                <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
-                   class="bouton"
-                   href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>Accéder à la liste des bureaux d’études certifiés</a>
+                <div style="width: 100%; text-align: center">
+                    <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
+                       class="bouton"
+                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
+                </div>
             </div>
             <div id="conclusion3"
                  style="text-align: justify"
@@ -181,9 +187,12 @@
                 <p>Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont répertoriés par le
                    COFRAC
                    (www.cofrac.fr) : à ce jour seul le LNE est accrédité.</p>
-                <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
-                   class="bouton"
-                   href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'>Accéder à la liste des bureaux d’études certifiés</a>
+                <div style="width: 100%; text-align: center">
+                    <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
+                       class="bouton"
+                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
+                </div>
             </div>
 
         </div>
@@ -565,7 +574,7 @@ export default {
         width       : calc(50% - 10px);
         margin-left : 20px;
         padding     : 0 !important;
-        height      : 200px;
+        height      : 209px;
     }
 
     .concordances_wrapper {
