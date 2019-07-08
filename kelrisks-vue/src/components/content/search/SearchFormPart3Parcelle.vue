@@ -57,7 +57,7 @@
                               :get-results-list-function="(data => {return data['features']})"
                               :start-at="3"
                               @selected="onAdresseChanged"
-                              label="Adresse"
+                              label="Adresse complète"
                               name="adresse"
                               v-bind:source="'https://api-adresse.data.gouv.fr/search/?limit=10&q='">
                         <template slot="kr-no-results"

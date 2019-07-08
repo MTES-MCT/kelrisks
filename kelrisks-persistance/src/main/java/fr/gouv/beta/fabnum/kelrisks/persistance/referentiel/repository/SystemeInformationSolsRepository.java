@@ -17,8 +17,8 @@ import org.springframework.data.jpa.repository.Query;
 @Qualifier("systemeInformationSolsRepository")
 public interface SystemeInformationSolsRepository extends IAbstractRepository<SystemeInformationSols> {
     
-    @Query("SELECT sis " +
-           "FROM SystemeInformationSols sis " +
-           "WHERE st_intersects(:geometry, sis.multiPolygon) = TRUE")
+    @Query(value = "SELECT sis " +
+                   " FROM kelrisks.sis sis " +
+                   " WHERE st_intersects(:geometry, sis.geog)", nativeQuery = true)
     List<SystemeInformationSols> rechercherZoneContenantPolygon(Geometry geometry);
 }

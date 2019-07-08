@@ -24,8 +24,8 @@ public class SystemeInformationSols extends AbstractEntity {
     String   numero;
     @Column(name = "numero_basol")
     String   numeroBasol;
-    @Column(name = "nom")
-    String   nom;
+    //    @Column(name = "nom")
+    //    String   nom;
     @Column(name = "adresse")
     String   adresse;
     @Column(name = "lieu_dit")
@@ -39,10 +39,10 @@ public class SystemeInformationSols extends AbstractEntity {
     @Column(name = "nom_departement")
     String   nomDepartement;
     @Column(name = "surface_m2")
-    Double   surface;
-    @Column(name = "geom", columnDefinition = "geometry")
+    Float    surface;
+    @Column(name = "geog", columnDefinition = "geometry")
     Geometry multiPolygon;
-    @Column(name = "geom_centroid", columnDefinition = "geometry")
+    @Column(name = "geog_centroid", columnDefinition = "geometry")
     Geometry centroid;
     
     @Id

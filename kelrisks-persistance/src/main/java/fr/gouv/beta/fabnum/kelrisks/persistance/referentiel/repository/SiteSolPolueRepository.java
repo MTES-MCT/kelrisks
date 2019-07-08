@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.IAbstractRepository;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteSolPolue;
 
@@ -18,17 +17,15 @@ import org.springframework.data.jpa.repository.Query;
 @Qualifier("siteSolPolueRepository")
 public interface SiteSolPolueRepository extends IAbstractRepository<SiteSolPolue> {
     
-    @Query("SELECT ssp " +
-           "FROM SiteSolPolue ssp " +
-           "WHERE st_intersects((SELECT p.multiPolygon " +
-           "                       FROM Parcelle AS p " +
-           "                       WHERE p.code = :codeParcelle), " +
-           "                     ssp.multiPolygon) = TRUE")
+    @Query(value = "SELECT ssp " +
+                   " FROM kelrisks.ssp ssp, " +
+                   " (SELECT p.geog FROM kelrisks.cadastre AS p WHERE p.code = :codeParcelle) polygon" +
+                   " WHERE st_intersects(polygon,  ssp.geog)", nativeQuery = true)
     List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle);
     
-    @Query("SELECT ssp " +
-           "FROM SiteSolPolue ssp " +
-           "WHERE st_intersects(:geometry, ssp.multiPolygon) = TRUE")
+    @Query(value = "SELECT ssp " +
+                   " FROM kelrisks.ssp ssp " +
+                   " WHERE st_intersects(:geometry, ssp.geog)", nativeQuery = true)
     List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry);
 }
   

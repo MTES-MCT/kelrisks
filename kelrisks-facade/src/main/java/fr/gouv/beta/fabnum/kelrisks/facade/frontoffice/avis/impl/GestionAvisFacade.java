@@ -6,7 +6,6 @@ import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
@@ -42,8 +41,6 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionSiteIndustrielBasolFacade  gestionSiteIndustrielBasolFacade;
     @Autowired
     IGestionInstallationClasseeFacade  gestionInstallationClasseeFacade;
-    @Autowired
-    IGestionAdresseFacade              gestionAdresseFacade;
     @Autowired
     IGestionCommuneFacade              gestionCommuneFacade;
     @Autowired

@@ -4,6 +4,6 @@ Mettre à jour le fichier flyway.properties puis lancer la ligne de commande sui
 
 mvn clean compile flyway:clean flyway:migrate -e
 
-Pour la base de test, le fichier flywaytest.properties puis :
+Pour la base de test, le fichier flyway_test.properties puis :
 
-mvn clean compile flyway:clean flyway:migrate -Dflyway.configFile=src/main/resources/flywaytest.properties -e
+mvn clean compile flyway:clean flyway:migrate -Dflyway.configFiles=src/main/resources/flyway_test.properties -e

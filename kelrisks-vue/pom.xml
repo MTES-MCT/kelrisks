@@ -6,7 +6,7 @@
   <parent>
     <artifactId>kelrisks</artifactId>
     <groupId>fr.gouv.beta.fabnum</groupId>
-      <version>v1.0.11</version>
+    <version>${revision}</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -14,7 +14,6 @@
   <artifactId>kelrisks-vue</artifactId>
   <packaging>jar</packaging>
 
-  <!--TODO : Reactivate-->
   <build>
     <plugins>
       <plugin>
