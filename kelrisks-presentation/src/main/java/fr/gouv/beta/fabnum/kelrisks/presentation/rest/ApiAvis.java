@@ -352,18 +352,13 @@ public class ApiAvis extends AbstractBasicApi {
         
         Element element;
         element = htmlDocument.select("#sisParcelle").first();
-        //        int numberOf = avisDTO.getInstallationClasseeSurParcelleDTOs().size();
-        //        if (numberOf == 0) {
-        element.append("N’est pas situé en secteur d’information sur les sols (SIS).");
-        //        }
-        //        else {
-        //            element.append("Est référencée dans l\'inventaire des installations classées sous le nom de :");
-        //            element = element.appendElement("ul");
-        //            for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeSurParcelleDTOs()) {
-        //                element.appendElement("li").append(" - " + site.getRaisonSociale());
-        //            }
-        //        }
-        
+        int numberOf = avisDTO.getInstallationClasseeSurParcelleDTOs().size();
+        if (numberOf == 0) {
+            element.append("N’est pas située en secteur d’information sur les sols (SIS).");
+        }
+        else {
+            element.append("Est située en secteur d’information sur les sols (SIS).");
+        }
     }
     
     private void redigerInstallationClasseeParcelle(Document htmlDocument, AvisDTO avisDTO) {

@@ -9,6 +9,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSecteurInformationSolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
@@ -34,17 +35,19 @@ import org.springframework.stereotype.Service;
 public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFacade {
     
     @Autowired
-    IGestionSiteSolPolueFacade         gestionSiteSolPolueFacade;
+    IGestionSiteSolPolueFacade          gestionSiteSolPolueFacade;
     @Autowired
-    IGestionSiteIndustrielBasiasFacade gestionSiteIndustrielBasiasFacade;
+    IGestionSiteIndustrielBasiasFacade  gestionSiteIndustrielBasiasFacade;
     @Autowired
-    IGestionSiteIndustrielBasolFacade  gestionSiteIndustrielBasolFacade;
+    IGestionSiteIndustrielBasolFacade   gestionSiteIndustrielBasolFacade;
     @Autowired
-    IGestionInstallationClasseeFacade  gestionInstallationClasseeFacade;
+    IGestionInstallationClasseeFacade   gestionInstallationClasseeFacade;
     @Autowired
-    IGestionCommuneFacade              gestionCommuneFacade;
+    IGestionCommuneFacade               gestionCommuneFacade;
     @Autowired
-    IGestionParcelleFacade             gestionParcelleFacade;
+    IGestionParcelleFacade              gestionParcelleFacade;
+    @Autowired
+    IGestionSecteurInformationSolFacade gestionSecteurInformationSolFacade;
     
     @Override
     public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String nomAdresse, String geolocAdresse, String nomProprietaire) {
@@ -120,6 +123,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
         getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
     
+        getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle);
+    
         return avisDTO;
     }
     
@@ -142,11 +147,23 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setSiteIndustrielBasolSurParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
         avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(touchesParcelle));
         avisDTO.setSiteIndustrielBasolRayonParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(expendedParcelle));
-    
+        
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getBasol().add(sib.getEwkt()));
         
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolProximiteParcelleDTOs());
+    }
+    
+    private void getAvisSis(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle) {
+        
+        avisDTO.setSecteurInformationSolSurParcelleDTOs(gestionSecteurInformationSolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
+        avisDTO.setSecteurInformationSolProximiteParcelleDTOs(gestionSecteurInformationSolFacade.rechercherSitesDansPolygon(touchesParcelle));
+        avisDTO.setSecteurInformationSolRayonParcelleDTOs(gestionSecteurInformationSolFacade.rechercherSitesDansPolygon(expendedParcelle));
+        
+        avisDTO.getSecteurInformationSolRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getSis().add(sib.getEwkt()));
+        
+        avisDTO.getSecteurInformationSolRayonParcelleDTOs().removeAll(avisDTO.getSecteurInformationSolSurParcelleDTOs());
+        avisDTO.getSecteurInformationSolRayonParcelleDTOs().removeAll(avisDTO.getSecteurInformationSolProximiteParcelleDTOs());
     }
     
     private void getAvisBasias(AvisDTO avisDTO, Geometry parcelle, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String nomProprietaire) {

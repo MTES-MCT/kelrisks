@@ -16,7 +16,7 @@ import org.geolatte.geom.Geometry;
 @Data
 @Entity
 @Table(name = "sis")
-public class SystemeInformationSols extends AbstractEntity {
+public class SecteurInformationSol extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
     
