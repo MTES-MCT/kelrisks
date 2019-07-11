@@ -1,11 +1,3 @@
-create sequence adresse_column_1_seq;
-
-alter sequence adresse_column_1_seq owner to postgres;
-
-create sequence commune_id_seq;
-
-alter sequence commune_id_seq owner to postgres;
-
 create table if not exists adresse_commune
 (
     code_insee  varchar(10),
@@ -53,38 +45,6 @@ alter table adresse_rue
 
 create unique index if not exists adresse_rue_id_uindex
     on adresse_rue (id);
-
-create table if not exists adresse
-(
-    id             bigserial not null
-        constraint adresse_pk
-            primary key,
-    numero         varchar(255),
-    rep            varchar(255),
-    nom_ld         varchar(255),
-    x              varchar(255),
-    y              varchar(255),
-    lon            varchar(255),
-    lat            varchar(255),
-    geog           public.geometry,
-    id_ban         varchar(255),
-    version        integer default 0,
-    adresse_rue_id bigint
-        constraint adresse_adresse_rue_id_fkey
-            references adresse_rue
-);
-
-alter table adresse
-    owner to postgres;
-
-create index if not exists adresse_geog_index
-    on adresse (geog);
-
-create index if not exists adresse_idban_index
-    on adresse (id_ban);
-
-create index if not exists adresse_numero_index
-    on adresse (numero);
 
 create table if not exists ssp
 (
@@ -188,10 +148,10 @@ create table if not exists cadastre
     commune   varchar(355),
     type_geom varchar(255),
     geog      public.geometry,
-    version   integer default 0 not null,
     prefixe   varchar(255),
     section   varchar(255),
-    numero    varchar(255)
+    numero    varchar(255),
+    version   integer default 0 not null
 );
 
 alter table cadastre

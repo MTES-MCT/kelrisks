@@ -28,7 +28,7 @@ public class Commune extends AbstractEntity {
     @Id
     @Column(name = "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_commune")
-    @SequenceGenerator(name = "seq_commune", sequenceName = "commune_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "seq_commune", sequenceName = "adresse_commune_id_seq", allocationSize = 1)
     private Long id;
     
     public String getCleFonc() {

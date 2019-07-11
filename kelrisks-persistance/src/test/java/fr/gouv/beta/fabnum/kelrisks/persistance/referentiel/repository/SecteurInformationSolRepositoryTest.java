@@ -21,8 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class SecteurInformationSolRepositoryTest {
     
-    //    @Autowired
-    //    TestEntityManager                entityManager;
     @Autowired
     SecteurInformationSolRepository secteurInformationSolRepository;
     @Autowired
@@ -43,7 +41,7 @@ public class SecteurInformationSolRepositoryTest {
     @Test
     public void neDoitRetournerAucunSecteurInformationSols() {
     
-        Parcelle parcelle = parcelleRepository.getOne(1045760L);
+        Parcelle parcelle = parcelleRepository.getOne(311762L);
     
         assertThat(parcelle).isNotNull();
     

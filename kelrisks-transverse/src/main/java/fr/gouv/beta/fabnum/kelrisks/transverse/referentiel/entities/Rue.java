@@ -43,8 +43,8 @@ public class Rue extends AbstractEntity {
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_adresse")
-    @SequenceGenerator(name = "seq_adresse", sequenceName = "adresse_column_1_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_rue")
+    @SequenceGenerator(name = "seq_rue", sequenceName = "adresse_rue_id_seq", allocationSize = 1)
     private Long id;
     
     public String getCleFonc() {
