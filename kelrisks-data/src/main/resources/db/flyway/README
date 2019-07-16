@@ -1,0 +1,9 @@
+Afin d'effacer et (ré)installer une bdd à niveau :
+
+Mettre à jour le fichier flyway.properties puis lancer la ligne de commande suivante :
+
+mvn clean compile flyway:clean flyway:migrate -e
+
+Pour la base de test, le fichier flyway_test.properties puis :
+
+mvn clean compile flyway:clean flyway:migrate -Dflyway.configFiles=src/main/resources/flyway_test.properties -e

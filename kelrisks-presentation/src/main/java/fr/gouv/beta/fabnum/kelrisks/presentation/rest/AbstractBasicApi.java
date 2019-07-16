@@ -1,8 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
-
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
@@ -17,8 +15,6 @@ public class AbstractBasicApi {
     
     @Autowired
     IGestionParcelleFacade gestionParcelleFacade;
-    @Autowired
-    IGestionAdresseFacade  gestionAdresseFacade;
     
     String getParcelleCode(String codeINSEE, String parcelleCode) {
     

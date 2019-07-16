@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.IAbstractRepository;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.InstallationClassee;
 
@@ -18,36 +17,37 @@ import org.springframework.data.jpa.repository.Query;
 @Qualifier("installationClasseeRepository")
 public interface InstallationClasseeRepository extends IAbstractRepository<InstallationClassee> {
     
-    
-    @Query(value = "SELECT * " +
-                   " FROM kelrisks.s3ic ic " +
-                   " LEFT JOIN kelrisks.cadastre p ON st_within(ic.geog, p.geog)" +
-                   " WHERE p.code = :codeParcelle ", nativeQuery = true)
+    @Query(value = "SELECT ic " +
+                   " FROM kelrisks.s3ic ic, " +
+                   "      (SELECT p.geog FROM kelrisks.cadastre AS p WHERE p.code = :codeParcelle) polygon " +
+                   " WHERE st_within(ic.geog, polygon) OR " +
+                   "       (ic.geocoded_score > 0.75 AND st_within(ic.geocoded_geog, polygon)) ", nativeQuery = true)
     List<InstallationClassee> rechercherInstallationsSurParcelle(String codeParcelle);
     
-    @Query("SELECT ic " +
-           "FROM InstallationClassee AS ic " +
-           "WHERE st_dwithin(ic.point, " +
-           "                 st_centroid((SELECT p.multiPolygon " +
-           "                             FROM Parcelle AS p " +
-           "                             WHERE p.code = :codeParcelle)), " +
-           "                 :distance) = TRUE")
+    @Query(value = "SELECT ic " +
+                   " FROM kelrisks.s3ic ic, " +
+                   "      st_centroid((SELECT p.geog FROM kelrisks.cadastre AS p  WHERE p.code = :codeParcelle)) centroide" +
+                   " WHERE st_dwithin(ic.geog, centroide, :distance) OR " +
+                   "       (ic.geocoded_score > 0.75 AND st_dwithin(ic.geocoded_geog, centroide, :distance))", nativeQuery = true)
     List<InstallationClassee> rechercherInstallationsDansRayonCentroideParcelle(String codeParcelle, double distance);
-    
-    @Query(value = "SELECT ic " +
-                   "FROM InstallationClassee ic " +
-                   "WHERE st_within(ic.point, :multiPolygon) = TRUE")
-    List<InstallationClassee> rechercherSitesDansPolygon(Geometry multiPolygon);
-    
-    @Query(value = "SELECT ic " +
-                   "FROM InstallationClassee ic " +
-                   "WHERE st_within(ic.point, st_union(:multiPolygon)) = TRUE")
-    List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.s3ic ic " +
-                   " LEFT JOIN kelrisks.cadastre p ON st_within(ic.geog, p.geog)" +
-                   " WHERE p.code IN :codes ", nativeQuery = true)
+                   " WHERE st_within(ic.geog, :multiPolygon) OR " +
+                   "       (ic.geocoded_score > 0.75 AND st_within(ic.geocoded_geog, :multiPolygon))", nativeQuery = true)
+    List<InstallationClassee> rechercherSitesDansPolygon(Geometry multiPolygon);
+    
+    @Query(value = "SELECT * " +
+                   " FROM kelrisks.s3ic ic " +
+                   " WHERE st_within(ic.geog, st_union(:multiPolygon)) OR " +
+                   "       (ic.geocoded_score > 0.75 AND st_within(ic.geocoded_geog, st_union(:multiPolygon)))", nativeQuery = true)
+    List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    
+    @Query(value = "SELECT ic " +
+                   " FROM kelrisks.s3ic ic, " +
+                   "      (SELECT st_union(p.geog) FROM kelrisks.cadastre p WHERE p.code IN :codes) polygon " +
+                   " WHERE st_within(ic.geog, polygon) OR " +
+                   "       (ic.geocoded_score > 0.75 AND st_within(ic.geocoded_geog, polygon)) ", nativeQuery = true)
     List<InstallationClassee> rechercherInstallationsSurParcelles(List<String> codes);
     
     @Query(value = "SELECT * " +

@@ -7,7 +7,7 @@
     <groupId>fr.gouv.beta.fabnum</groupId>
     <artifactId>kelrisks</artifactId>
     <packaging>pom</packaging>
-    <version>v1.0.9</version>
+    <version>${revision}</version>
 
     <modules>
         <module>kelrisks-vue</module>
@@ -26,6 +26,8 @@
     </parent>
 
     <properties>
+        <revision>v1.0.11</revision>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
@@ -59,6 +61,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <dependency>
@@ -118,4 +124,17 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway.version}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
