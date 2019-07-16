@@ -155,6 +155,7 @@ public class ApiAvis extends AbstractBasicApi {
             if (codeParcelle == null) {
                 JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
                 jsonInfoDTO.addError("La parcelle n'a pas été trouvée ¯\\_(ツ)_/¯");
+                jsonInfoDTO.addInfo("Il peut arriver que certaines parcelles n'existent pas encore dans Kelrisks. Merci de réessayer plus tard ou de nous le signaler.");
                 return Response.ok(jsonInfoDTO).build();
             }
         }
