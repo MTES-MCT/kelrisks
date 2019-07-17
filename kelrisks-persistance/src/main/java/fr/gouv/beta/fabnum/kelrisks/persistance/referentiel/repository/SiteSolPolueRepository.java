@@ -17,13 +17,13 @@ import org.springframework.data.jpa.repository.Query;
 @Qualifier("siteSolPolueRepository")
 public interface SiteSolPolueRepository extends IAbstractRepository<SiteSolPolue> {
     
-    @Query(value = "SELECT ssp " +
+    @Query(value = "SELECT * " +
                    " FROM kelrisks.ssp ssp, " +
                    " (SELECT * FROM kelrisks.cadastre AS p WHERE p.code = :codeParcelle) parcelle" +
                    " WHERE public.st_intersects(parcelle.geog,  ssp.geog)", nativeQuery = true)
     List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle);
     
-    @Query(value = "SELECT ssp " +
+    @Query(value = "SELECT * " +
                    " FROM kelrisks.ssp ssp " +
                    " WHERE public.st_intersects(:geometry, ssp.geog)", nativeQuery = true)
     List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry);

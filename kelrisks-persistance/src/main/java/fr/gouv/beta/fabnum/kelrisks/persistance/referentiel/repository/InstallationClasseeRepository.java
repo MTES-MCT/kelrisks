@@ -17,14 +17,14 @@ import org.springframework.data.jpa.repository.Query;
 @Qualifier("installationClasseeRepository")
 public interface InstallationClasseeRepository extends IAbstractRepository<InstallationClassee> {
     
-    @Query(value = "SELECT ic " +
+    @Query(value = "SELECT * " +
                    " FROM kelrisks.s3ic ic, " +
                    "      (SELECT p.geog FROM kelrisks.cadastre AS p WHERE p.code = :codeParcelle) polygon " +
                    " WHERE st_within(ic.geog, polygon) OR " +
                    "       (ic.geocoded_score > 0.6 AND st_within(ic.geocoded_geog, polygon)) ", nativeQuery = true)
     List<InstallationClassee> rechercherInstallationsSurParcelle(String codeParcelle);
     
-    @Query(value = "SELECT ic " +
+    @Query(value = "SELECT * " +
                    " FROM kelrisks.s3ic ic, " +
                    "      st_centroid((SELECT p.geog FROM kelrisks.cadastre AS p  WHERE p.code = :codeParcelle)) centroide" +
                    " WHERE st_dwithin(ic.geog, centroide, :distance) OR " +
@@ -43,7 +43,7 @@ public interface InstallationClasseeRepository extends IAbstractRepository<Insta
                    "       (ic.geocoded_score > 0.6 AND st_within(ic.geocoded_geog, st_union(:multiPolygon)))", nativeQuery = true)
     List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
     
-    @Query(value = "SELECT ic " +
+    @Query(value = "SELECT * " +
                    " FROM kelrisks.s3ic ic, " +
                    "      (SELECT st_union(p.geog) FROM kelrisks.cadastre p WHERE p.code IN :codes) polygon " +
                    " WHERE st_within(ic.geog, polygon) OR " +

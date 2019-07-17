@@ -20,4 +20,6 @@ public interface IGestionParcelleFacade {
     Geometry rechercherExpendedParcelle(String code, double distance);
     
     Geometry rechercherUnionParcellesContigues(Geometry multiPolygon);
+    
+    Geometry rechercherCentroidParcelle(Geometry polygon);
 }

@@ -84,6 +84,9 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             avisDTO.getSummary().setAdresse(nomAdresse);
     
             codeParcelle = parcelleDTO.getCode();
+    
+            avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(geolocAdresse.split("\\|")[0],
+                                                                     geolocAdresse.split("\\|")[1]));
         }
         else {
             ParcelleQO parcelleQO = new ParcelleQO();
@@ -99,6 +102,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                 return avisDTO;
             }
             parcelleDTO = parcelleDTOS.get(0);
+    
+            Geometry centroid = gestionParcelleFacade.rechercherCentroidParcelle(parcelleDTO.getMultiPolygon());
+    
+            avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
+                                                                     Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
         }
     
         Geometry expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcelleDTO.getCode(), 100);
@@ -108,8 +116,6 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.getLeaflet().setParcelle(GeoJsonUtils.toGeoJson(parcelleDTO.getMultiPolygon(),
                                                                 Stream.of(new AbstractMap.SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
                                                                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
-        avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(parcelleDTO.getMultiPolygon().getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
-                                                                 Double.toString(parcelleDTO.getMultiPolygon().getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
         
         // Recherche d'une éventuelle zone poluée contenant la parcelle
         List<Geometry>        parcelleSitesSolsPolues = new ArrayList<>();
