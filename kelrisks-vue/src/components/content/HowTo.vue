@@ -5,7 +5,7 @@
       <div class="content">
         <font-awesome-icon icon="map-marked-alt"
                            size="3x"/>
-        <p>Je Saisis le code postal du terrain concerné</p>
+          <p>Je saisis le code postal du terrain concerné</p>
       </div>
     </div>
     <hr>
