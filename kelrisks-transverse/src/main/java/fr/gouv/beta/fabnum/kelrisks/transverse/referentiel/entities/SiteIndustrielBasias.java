@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities;
 
 import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "basias")
 public class SiteIndustrielBasias extends AbstractEntity {
     

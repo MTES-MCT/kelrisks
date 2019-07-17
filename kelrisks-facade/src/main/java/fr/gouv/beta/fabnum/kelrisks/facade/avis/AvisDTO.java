@@ -34,6 +34,8 @@ public class AvisDTO extends JsonInfoDTO {
     private List<InstallationClasseeDTO> installationClasseeRayonParcelleDTOs     = new ArrayList<>();
     private List<InstallationClasseeDTO> installationClasseeProximiteParcelleDTOs = new ArrayList<>();
     private List<InstallationClasseeDTO> installationClasseeNonGeorerenceesDTOs   = new ArrayList<>();
+    private int                          codeZoneSismicite;
+    private int                          classePotentielRadon;
     
     @Data
     public static class Summary {

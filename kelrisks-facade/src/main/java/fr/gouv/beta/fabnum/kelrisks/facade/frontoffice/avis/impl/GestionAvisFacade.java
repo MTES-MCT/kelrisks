@@ -7,12 +7,15 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSecteurInformationSolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 
 import java.util.AbstractMap;
@@ -48,6 +51,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionParcelleFacade              gestionParcelleFacade;
     @Autowired
     IGestionSecteurInformationSolFacade gestionSecteurInformationSolFacade;
+    @Autowired
+    IGestionGeorisquesFacade            gestionGeorisquesFacade;
     
     @Override
     public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String nomAdresse, String geolocAdresse, String nomProprietaire) {
@@ -125,7 +130,29 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
         getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle);
     
+        getAvisSismicite(avisDTO, codeINSEE);
+    
+        getAvisRadon(avisDTO, codeINSEE);
+        
         return avisDTO;
+    }
+    
+    private void getAvisSismicite(AvisDTO avisDTO, String codeINSEE) {
+        
+        GeorisquePaginatedSismique georisquePaginatedSismique = gestionGeorisquesFacade.rechercherSismiciteCommune(codeINSEE);
+        
+        if (!georisquePaginatedSismique.getData().isEmpty()) {
+            avisDTO.setCodeZoneSismicite(Integer.parseInt(georisquePaginatedSismique.getData().get(0).getCode_zone()));
+        }
+    }
+    
+    private void getAvisRadon(AvisDTO avisDTO, String codeINSEE) {
+        
+        GeorisquePaginatedRadon georisquePaginatedRadon = gestionGeorisquesFacade.rechercherRadonCommune(codeINSEE);
+        
+        if (!georisquePaginatedRadon.getData().isEmpty()) {
+            avisDTO.setClassePotentielRadon(Integer.parseInt(georisquePaginatedRadon.getData().get(0).getClasse_potentiel()));
+        }
     }
     
     private void getAvisICPE(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String codeINSEE) {
@@ -138,6 +165,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeProximiteParcelleDTOs());
+    
+        avisDTO.getInstallationClasseeProximiteParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
         
         avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAuCentroideCommune(codeINSEE));
     }

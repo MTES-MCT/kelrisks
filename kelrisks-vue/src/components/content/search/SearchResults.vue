@@ -47,43 +47,112 @@
 
         <div class="container bordered concordances_wrapper">
 
-            <font-awesome-icon icon="exclamation"
-                               style="font-size: 50px; color: #F79D65; margin-bottom: 10px"
-                               v-if="concordances && concordances > 0"/>
-            <font-awesome-icon icon="check"
-                               style="font-size: 50px; color: #86CB92; margin-bottom: 10px"
-                               v-else/>
-
-            <p style="font-size: 20px; color: #2C3E50;"
-               v-if="concordances && concordances > 0">Votre terrain présente un risque de pollution</p>
-            <p style="font-size: 20px; color: #2C3E50;"
-               v-else>Votre terrain ne semble pas pollué</p>
-
-            <p style="font-size: 16px; color: #53657D;"
-               v-if="concordances && concordances > 0">Nous avons trouvé {{ concordances }} concordance{{ concordances > 1 ? 's': ''}} dans les bases de données</p>
-            <p style="font-size: 16px; color: #53657D;"
-               v-else>Nous n'avons trouvé aucune concordance dans les bases de données</p>
-
-            <div class="numbers_wrapper">
-                <big-number :any-match="(concordances && concordances > 0)"
-                            :number-of="avis.basiasParcelle.numberOf"
-                            label-text="Sites polués BASIAS"/>
-
-                <big-number :any-match="(concordances && concordances > 0)"
-                            :number-of="avis.basolParcelle.numberOf"
-                            label-text="Sites polués BASOL"/>
-
-                <big-number :any-match="(concordances && concordances > 0)"
-                            :number-of="avis.installationClasseeParcelle.numberOf"
-                            label-text="Installations classées"/>
-
-                <big-number :any-match="(concordances && concordances > 0)"
-                            :number-of="avis.sisParcelle.numberOf"
-                            label-text="SIS"/>
+            <div class="tabWrapper">
+                <div @click="tab.concordances.index = 'POLLUTION'"
+                     class="tab"
+                     v-bind:class="{ selected:tab.concordances.index === 'POLLUTION'}">Pollution
+                </div>
+                <div @click="tab.concordances.index = 'RISQUES'"
+                     class="tab"
+                     v-bind:class="{ selected:tab.concordances.index === 'RISQUES'}">Risques
+                </div>
             </div>
 
-            <a class="lien big"
-               href="mailto:Contact%20Kelrisks%20<contact@kelrisks.beta.gouv.fr>?subject=Signaler%20une%20erreur%20Kelrisks">Signaler une erreur</a>
+            <template v-if="tab.concordances.index === 'POLLUTION'">
+
+                <font-awesome-icon icon="exclamation"
+                                   style="font-size: 50px; color: #F79D65; margin-bottom: 10px"
+                                   v-if="concordances && concordances > 0"/>
+                <font-awesome-icon icon="check"
+                                   style="font-size: 50px; color: #86CB92; margin-bottom: 10px"
+                                   v-else/>
+
+                <p style="font-size: 20px; color: #2C3E50;"
+                   v-if="concordances && concordances > 0">Votre terrain présente un risque de pollution</p>
+                <p style="font-size: 20px; color: #2C3E50;"
+                   v-else>Votre terrain ne semble pas pollué</p>
+
+                <p style="font-size: 16px; color: #53657D;"
+                   v-if="concordances && concordances > 0">Nous avons trouvé {{ concordances }} concordance{{ concordances > 1 ? 's': ''}} dans les bases de données</p>
+                <p style="font-size: 16px; color: #53657D;"
+                   v-else>Nous n'avons trouvé aucune concordance dans les bases de données</p>
+
+                <div class="numbers_wrapper">
+                    <big-number :any-match="(concordances && concordances > 0)"
+                                :number-of="avis.basiasParcelle.numberOf"
+                                label-text="Sites polués BASIAS"/>
+
+                    <big-number :any-match="(concordances && concordances > 0)"
+                                :number-of="avis.basolParcelle.numberOf"
+                                label-text="Sites polués BASOL"/>
+
+                    <big-number :any-match="(concordances && concordances > 0)"
+                                :number-of="avis.installationClasseeParcelle.numberOf"
+                                label-text="Installations classées"/>
+
+                    <big-number :any-match="(concordances && concordances > 0)"
+                                :number-of="avis.sisParcelle.numberOf"
+                                label-text="SIS"/>
+                </div>
+
+                <a class="lien big"
+                   href="mailto:Contact%20Kelrisks%20<contact@kelrisks.beta.gouv.fr>?subject=Signaler%20une%20erreur%20Kelrisks">Signaler une erreur</a>
+
+            </template>
+
+            <template v-if="tab.concordances.index === 'RISQUES'">
+
+                <font-awesome-icon icon="exclamation"
+                                   style="font-size: 50px; color: #F79D65; margin-bottom: 10px"
+                                   v-if="concordances_risques"/>
+                <font-awesome-icon icon="check"
+                                   style="font-size: 50px; color: #86CB92; margin-bottom: 10px"
+                                   v-else/>
+
+                <p style="font-size: 20px; color: #2C3E50;"
+                   v-if="concordances_risques">Votre terrain présente un risque naturel<sup> (1)</sup></p>
+                <p style="font-size: 20px; color: #2C3E50;"
+                   v-else>Votre terrain ne semble pas présenter de risque naturel<sup> (1)</sup></p>
+
+                <div class="numbers_wrapper">
+
+                    <div class="icon-risque-wrapper">
+                        <div class="icon-risque">
+                            <img height="50"
+                                 src="/images/icons/kelrisks/radon_ko.svg"
+                                 v-if="this.avis.potentielRadon >= 3"
+                                 width="50">
+                            <img height="50"
+                                 src="/images/icons/kelrisks/radon_ok.svg"
+                                 v-else
+                                 width="50">
+                        </div>
+                        <div class="icon-risque-label">Radon niveau {{this.avis.potentielRadon}}</div>
+                    </div>
+
+                    <div class="icon-risque-wrapper">
+                        <div class="icon-risque">
+                            <img height="50"
+                                 src="/images/icons/kelrisks/quake_ko.svg"
+                                 v-if="this.avis.codeSismicite >= 3"
+                                 width="50">
+                            <img height="50"
+                                 src="/images/icons/kelrisks/quake_ok.svg"
+                                 v-else
+                                 width="50">
+                        </div>
+                        <div class="icon-risque-label">Sismicité zone {{this.avis.codeSismicite}}</div>
+                    </div>
+
+                </div>
+
+                <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune de sismicité classée en zone {{this.avis.codeSismicite}}</p>
+                <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune à potentiel radon classée en niveau {{this.avis.potentielRadon}}</p>
+
+                <p class="renvoi">
+                    <sup>(1)</sup> - Au regard des risques pour lesquels la recherche a été faite (Radon et Sismicité).</p>
+            </template>
+
         </div>
 
         <div class="container bordered conclusion_wrapper">
@@ -351,7 +420,9 @@ export default {
             installationClasseeProximiteParcelle: {},
             installationClasseeRayonParcelle: {},
             installationClasseeCommune: {},
-            sisParcelle: {}
+            sisParcelle: {},
+            codeSismicite: 0,
+            potentielRadon: 0
         },
         tinyUrl: {
             codeParcelle: undefined,
@@ -363,6 +434,11 @@ export default {
         leaflet: {
             data: undefined,
             center: [0, 0]
+        },
+        tab: {
+            concordances: {
+                index: 'POLLUTION'
+            }
         }
     }),
     methods: {
@@ -423,6 +499,9 @@ export default {
 
                     this.leaflet.data = value.entity.leaflet
                     this.leaflet.center = [parseFloat(value.entity.leaflet.center.y), parseFloat(value.entity.leaflet.center.x)]
+
+                    this.avis.codeSismicite = value.entity.codeZoneSismicite
+                    this.avis.potentielRadon = value.entity.classePotentielRadon
 
                     functions.scrollToElement('main', false)
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
@@ -496,6 +575,9 @@ export default {
         },
         concordances: function () {
             return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
+        },
+        concordances_risques: function () {
+            return this.avis.potentielRadon >= 3 || this.avis.codeSismicite >= 3
         },
         _paq: function () {
             return window._paq
@@ -577,12 +659,43 @@ export default {
         height      : 209px;
     }
 
+    .tabWrapper {
+        position                : absolute;
+        top                     : -4em;
+        left                    : -1px;
+        border                  : 1px solid #CCCCCC;
+        border-bottom           : none;
+        border-top-left-radius  : 2px;
+        border-top-right-radius : 2px;
+        float                   : left;
+        margin-top              : 20px;
+    }
+
+    .tabWrapper .tab {
+        float            : left;
+        padding          : 10px 20px;
+        border-left      : 1px solid #CCCCCC;
+        background-color : #F8F8F8;
+        border-bottom    : 1px solid #CCCCCC;
+        cursor           : pointer;
+    }
+
+    .tabWrapper .tab:first-child {
+        border-left : none;
+    }
+
+    .tabWrapper .tab.selected {
+        background-color : white;
+        border-bottom    : 1px solid #FFFFFF;
+    }
+
     .concordances_wrapper {
-        float      : left;
-        margin-top : 20px;
-        padding    : 30px 0 !important;
-        width      : 100%;
-        text-align : center;
+        margin-top             : calc(20px + 4em);
+        float                  : left;
+        border-top-left-radius : unset;
+        padding                : 30px 0 0 0 !important;
+        width                  : 100%;
+        text-align             : center;
     }
 
     .concordances_wrapper p {
@@ -631,4 +744,34 @@ export default {
     .site-list li {
         margin-bottom : 3px;
     }
+
+    .icon-risque-wrapper {
+        display : inline-block;
+        width   : 25%;
+    }
+
+    .icon-risque {
+        margin      : 10px;
+        display     : inline-block;
+        height      : 80px;
+        padding-top : 20px;
+        color       : #53657D;
+    }
+
+    .icon-risque-label {
+        color : #2C3E50;
+    }
+
+    sup {
+        font-size : 0.6em;
+    }
+
+    .renvoi {
+        font-size   : 0.8em;
+        margin      : 30px 10px 10px !important;
+        text-align  : left !important;
+        color       : rgb(153, 153, 153);
+        line-height : 1.1em;
+    }
+
 </style>

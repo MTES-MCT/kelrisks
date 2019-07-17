@@ -124,7 +124,8 @@ public class ApiAvis extends AbstractBasicApi {
     
     @GetMapping("/api/avis")
     public Response avis(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                         @RequestParam("codeINSEE") String codeINSEE, @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                         @RequestParam("codeINSEE") String codeINSEE,
+                         @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
                          @RequestParam(value = "geolocAdresse") String geolocAdresse,
                          @ApiParam(name = "nomAdresse", value = "Adresse.")
                          @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
@@ -155,6 +156,7 @@ public class ApiAvis extends AbstractBasicApi {
             if (codeParcelle == null) {
                 JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
                 jsonInfoDTO.addError("La parcelle n'a pas été trouvée ¯\\_(ツ)_/¯");
+                jsonInfoDTO.addInfo("Il peut arriver que certaines parcelles n'existent pas encore dans Kelrisks. Merci de réessayer plus tard ou de nous le signaler.");
                 return Response.ok(jsonInfoDTO).build();
             }
         }
