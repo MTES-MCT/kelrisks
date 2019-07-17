@@ -12,7 +12,8 @@
                         :options-style="styleFunction"></l-geo-json>
             <l-geo-json :geojson="data.basias.map(x => JSON.parse(x))"
                         :options="basiasOptions"></l-geo-json>
-            <l-geo-json :geojson="data.basol.map(x => JSON.parse(x))"></l-geo-json>
+            <l-geo-json :geojson="data.basol.map(x => JSON.parse(x))"
+                        :options="basolOptions"></l-geo-json>
             <l-geo-json :geojson="data.sis.map(x => JSON.parse(x))"></l-geo-json>
             <l-geo-json :geojson="data.icpe.map(x => JSON.parse(x))"
                         :options="icpeOptions"></l-geo-json>
@@ -86,6 +87,12 @@ export default {
                 pointToLayer: this.createBasiasIcon
             };
         },
+        basolOptions () {
+            return {
+                onEachFeature: this.onEachFeatureFunction,
+                pointToLayer: this.createBasolIcon
+            };
+        },
         adresseOptions () {
             return {
                 onEachFeature: this.onEachFeatureFunction,
@@ -157,6 +164,20 @@ export default {
             return (feature, latlng) => {
                 let myIcon = icon({
                     iconUrl: '/images/leaflet/basias.svg',
+                    shadowUrl: '/images/leaflet/shadow.png',
+                    iconSize: [35, 35], // width and height of the image in pixels
+                    shadowSize: [30, 22], // width, height of optional shadow image
+                    iconAnchor: [17, 35], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [0, 24],  // anchor point of the shadow. should be offset
+                    popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+                })
+                return marker(latlng, {icon: myIcon})
+            };
+        },
+        createBasolIcon () {
+            return (feature, latlng) => {
+                let myIcon = icon({
+                    iconUrl: '/images/leaflet/basol.svg',
                     shadowUrl: '/images/leaflet/shadow.png',
                     iconSize: [35, 35], // width and height of the image in pixels
                     shadowSize: [30, 22], // width, height of optional shadow image
