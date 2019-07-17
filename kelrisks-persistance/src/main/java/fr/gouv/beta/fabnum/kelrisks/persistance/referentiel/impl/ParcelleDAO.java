@@ -86,6 +86,13 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     }
     
     @Override
+    public Geometry rechercherCentroidParcelle(Geometry polygon) {
+        
+        String wkt = parcelleRepository.rechercherCentroidParcelle(polygon);
+        return Wkt.fromWkt(wkt);
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }

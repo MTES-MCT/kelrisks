@@ -63,5 +63,11 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
         
         return dao.rechercherUnionParcellesContigues(polygon);
     }
+    
+    @Override
+    public Geometry rechercherCentroidParcelle(Geometry polygon) {
+        
+        return dao.rechercherCentroidParcelle(polygon);
+    }
 }
   

@@ -22,5 +22,7 @@ public interface IParcelleDAO extends IAbstractDAO<Parcelle> {
     Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y);
     
     Geometry rechercherUnionParcellesContigues(Geometry polygon);
+    
+    Geometry rechercherCentroidParcelle(Geometry polygon);
 }
   

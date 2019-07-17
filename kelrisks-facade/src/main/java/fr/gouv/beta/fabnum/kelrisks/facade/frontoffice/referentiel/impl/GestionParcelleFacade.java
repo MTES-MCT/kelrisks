@@ -59,7 +59,13 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     
     @Override
     public Geometry rechercherUnionParcellesContigues(Geometry polygon) {
-        
+    
         return parcelleService.rechercherUnionParcellesContigues(polygon);
+    }
+    
+    @Override
+    public Geometry rechercherCentroidParcelle(Geometry polygon) {
+        
+        return parcelleService.rechercherCentroidParcelle(polygon);
     }
 }

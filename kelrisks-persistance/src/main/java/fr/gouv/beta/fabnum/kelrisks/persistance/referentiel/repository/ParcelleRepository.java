@@ -40,5 +40,8 @@ public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
     @Query(value = "SELECT public.st_asewkt(public.st_union(p.geog)) FROM kelrisks.cadastre AS p" +
                    " WHERE public.st_touches(p.geog, :geog)", nativeQuery = true)
     String rechercherUnionParcellesContigues(Geometry geog);
+    
+    @Query(value = "SELECT public.st_asewkt(public.st_centroid(:polygon))", nativeQuery = true)
+    String rechercherCentroidParcelle(Geometry polygon);
 }
   
