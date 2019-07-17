@@ -1,6 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.controller;
 
-import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGeorisquesFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GeorisqueController {
     
     @Autowired
-    IGeorisquesFacade georisquesFacade;
+    IGestionGeorisquesFacade georisquesFacade;
     
     @GetMapping("/georisques/radon/{insee}")
     public GeorisquePaginatedRadon radon(@PathVariable("insee") String codeINSEE) {

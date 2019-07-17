@@ -124,7 +124,8 @@ public class ApiAvis extends AbstractBasicApi {
     
     @GetMapping("/api/avis")
     public Response avis(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                         @RequestParam("codeINSEE") String codeINSEE, @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                         @RequestParam("codeINSEE") String codeINSEE,
+                         @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
                          @RequestParam(value = "geolocAdresse") String geolocAdresse,
                          @ApiParam(name = "nomAdresse", value = "Adresse.")
                          @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
