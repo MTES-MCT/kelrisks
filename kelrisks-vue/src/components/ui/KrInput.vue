@@ -158,8 +158,8 @@ export default {
         getOptionValueFunction: {
             type: Function,
             default: function (option) {
-                console.log(option)
-                console.log(option['code'])
+                // console.log(option)
+                // console.log(option['code'])
                 return option['code']
             },
             required: false
@@ -167,8 +167,8 @@ export default {
         getOptionLabelFunction: {
             type: Function,
             default: function (option) {
-                console.log(option)
-                console.log(option['libelle'])
+                // console.log(option)
+                // console.log(option['libelle'])
                 return option['libelle']
             },
             required: false

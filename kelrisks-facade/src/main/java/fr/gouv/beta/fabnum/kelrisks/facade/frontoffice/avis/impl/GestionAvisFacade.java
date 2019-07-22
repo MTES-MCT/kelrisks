@@ -4,12 +4,15 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.commun.utils.GeoJsonUtils;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanPreventionRisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSecteurInformationSolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
@@ -54,6 +57,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionSecteurInformationSolFacade gestionSecteurInformationSolFacade;
     @Autowired
     IGestionGeorisquesFacade            gestionGeorisquesFacade;
+    @Autowired
+    IGestionPlanPreventionRisquesFacade gestionPlanPreventionRisquesFacade;
     
     @Override
     public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String nomAdresse, String geolocAdresse, String nomProprietaire) {
@@ -137,11 +142,20 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
         getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle);
     
-        getAvisSismicite(avisDTO, codeINSEE);
+        getAvisPPR(avisDTO, parcelleSitesSolsPolues);
     
-        getAvisRadon(avisDTO, codeINSEE);
+        //        getAvisSismicite(avisDTO, codeINSEE);
+    
+        //        getAvisRadon(avisDTO, codeINSEE);
         
         return avisDTO;
+    }
+    
+    private void getAvisPPR(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues) {
+        
+        List<PlanPreventionRisquesDTO> planPreventionRisquesList = gestionPlanPreventionRisquesFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues);
+        
+        avisDTO.setPlanPreventionRisquesDTOs(planPreventionRisquesList);
     }
     
     private void getAvisSismicite(AvisDTO avisDTO, String codeINSEE) {
