@@ -15,3 +15,7 @@ VALUES (680, 'IDFR', '92', 49, '92.0049', '065.6294', NULL, NULL, 'NON', 'Site n
         649568, 6872089, 'Adresse (numéro)', '92|92078|03/11/2010|A01|28|#92|92036|29/11/2011|G01|55|#92|92036|29/11/2011|G01|54|', '2 av Philippe Lebon', NULL, 'Villeneuve-la-Garenne', '92078', NULL,
         'RUBIS TERMINAL PARTIE OUEST (SEPUR)', 1, 48.9467, 2.31157, 0.58, 'housenumber', '2 Avenue Philippe Lebon 92390 Villeneuve-la-Garenne', '0101000020E610000059518369187E0240C58F31772D794840',
         '0101000020E6100000DF8B063746E55040C6A56E55C7483940', 'housenumber');
+
+
+INSERT INTO kelrisks.basol_parcelle
+VALUES (1843, NULL, '92.0049', '92036', 'G01', '98');

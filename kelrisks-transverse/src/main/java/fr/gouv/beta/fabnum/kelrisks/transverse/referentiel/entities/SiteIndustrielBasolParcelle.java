@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = {"siteIndustrielBasol"})
 @Table(name = "basol_parcelle")
 public class SiteIndustrielBasolParcelle extends AbstractEntity {
     
