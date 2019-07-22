@@ -37,7 +37,7 @@ public class SecteurInformationSolRepositoryTest extends AbstractRepositoryTest 
         polygons.add(parcelleRepository.getOne(1045474L).getMultiPolygon()); // match
         polygons.add(parcelleRepository.getOne(311762L).getMultiPolygon());
         //        TODO : Fix problème avec 3 polygons
-        //        polygons.add(parcelleRepository.getOne(2478186L).getMultiPolygon());
+        //        polygons.add(parcelleRepository.getOne(2662371L).getMultiPolygon());
     
         List<SecteurInformationSol> SecteurInformationSols = secteurInformationSolRepository.rechercherSecteursDansPolygons(polygons);
         

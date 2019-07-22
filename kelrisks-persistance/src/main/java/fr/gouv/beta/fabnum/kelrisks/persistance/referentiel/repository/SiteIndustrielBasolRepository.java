@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository;
 
-
 import fr.gouv.beta.fabnum.commun.persistance.IAbstractRepository;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustrielBasol;
 
@@ -17,36 +16,41 @@ import org.springframework.data.repository.query.Param;
  */
 public interface SiteIndustrielBasolRepository extends IAbstractRepository<SiteIndustrielBasol> {
     
-    @Query(value = "SELECT si " +
-                   "FROM SiteIndustrielBasol si, Parcelle p " +
-                   "WHERE p.code = :codeParcelle" +
-                   "  AND st_within(si.point, p.multiPolygon) = TRUE")
+    @Query(value = "SELECT * " +
+                   " FROM kelrisks.basol si, " +
+                   "      kelrisks.cadastre p " +
+                   " WHERE p.code = :codeParcelle " +
+                   "   AND (public.st_within(si.point, p.geog) " +
+                   "     OR (si.geocoded_score > 0.6 AND public.st_within(si.geocoded_geog, p.geog))) ", nativeQuery = true)
     List<SiteIndustrielBasol> rechercherSiteSurParcelle(@Param("codeParcelle") String codeParcelle);
     
-    @Query("SELECT si " +
-           "FROM SiteIndustrielBasol AS si " +
-           "WHERE st_dwithin(si.point, " +
-           "                 st_centroid((SELECT p.multiPolygon " +
-           "                             FROM Parcelle AS p " +
-           "                             WHERE p.code = :codeParcelle)), " +
-           "                 :distance) = TRUE")
+    @Query(value = "SELECT si " +
+                   " FROM kelrisks.basol AS si " +
+                   " WHERE public.st_dwithin(si.geog, " +
+                   "                         st_centroid((SELECT p.geog " +
+                   "                                       FROM kelrisks.cadastre AS p " +
+                   "                                       WHERE p.code = :codeParcelle)), " +
+                   "                         :distance)", nativeQuery = true)
     List<SiteIndustrielBasol> rechercherSiteDansRayonCentroideParcelle(@Param("codeParcelle") String codeParcelle,
                                                                        @Param("distance") double distance);
     
-    @Query(value = "SELECT sib " +
-                   "FROM SiteIndustrielBasol sib " +
-                   "WHERE st_within(sib.point, :multiPolygon) = TRUE")
+    @Query(value = "SELECT * " +
+                   " FROM kelrisks.basol sib " +
+                   " WHERE public.st_within(sib.geog, :multiPolygon) " +
+                   "    OR (sib.geocoded_score > 0.6 AND public.st_within(sib.geocoded_geog, :multiPolygon))", nativeQuery = true)
     List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon);
     
-    @Query(value = "SELECT sib " +
-                   "FROM SiteIndustrielBasol sib " +
-                   "WHERE st_within(sib.point, st_union(:multiPolygon)) = TRUE")
+    @Query(value = "SELECT * " +
+                   " FROM kelrisks.basol sib " +
+                   " WHERE public.st_within(sib.geog, st_union(:multiPolygon)) " +
+                   "    OR (sib.geocoded_score > 0.6 AND public.st_within(sib.geocoded_geog, st_union(:multiPolygon)))", nativeQuery = true)
     List<SiteIndustrielBasol> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
     
-    @Query(value = "SELECT si " +
-                   "FROM SiteIndustrielBasol si, Parcelle p " +
-                   "WHERE p.code IN :codes" +
-                   "  AND st_within(si.point, p.multiPolygon) = TRUE")
+    @Query(value = "SELECT * " +
+                   " FROM kelrisks.basol si, " +
+                   "      kelrisks.cadastre p " +
+                   " WHERE p.code IN :codes" +
+                   "   AND public.st_within(si.point, p.geog)", nativeQuery = true)
     List<SiteIndustrielBasol> rechercherSitesSurParcelles(List<String> codes);
 }
 
