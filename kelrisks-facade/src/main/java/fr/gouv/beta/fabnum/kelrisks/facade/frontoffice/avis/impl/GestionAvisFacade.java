@@ -144,9 +144,9 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
         getAvisPPR(avisDTO, parcelleSitesSolsPolues);
     
-        //        getAvisSismicite(avisDTO, codeINSEE);
+        getAvisSismicite(avisDTO, codeINSEE);
     
-        //        getAvisRadon(avisDTO, codeINSEE);
+        getAvisRadon(avisDTO, codeINSEE);
         
         return avisDTO;
     }
@@ -198,7 +198,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         SiteIndustrielBasolParcelleQO siteIndustrielBasolParcelleQO = new SiteIndustrielBasolParcelleQO();
         siteIndustrielBasolParcelleQO.setParcelleCodeINSEE(parcelleDTO.getCommune());
-        siteIndustrielBasolParcelleQO.setParcelleSection(parcelleDTO.getSection() + "01");
+        siteIndustrielBasolParcelleQO.setParcelleSection(parcelleDTO.getSection());
         siteIndustrielBasolParcelleQO.setParcelleNumero(parcelleDTO.getNumero());
         
         siteIndustrielBasolSurSSP.addAll(gestionSiteIndustrielBasolFacade.rechercherAvecCritere(siteIndustrielBasolParcelleQO));

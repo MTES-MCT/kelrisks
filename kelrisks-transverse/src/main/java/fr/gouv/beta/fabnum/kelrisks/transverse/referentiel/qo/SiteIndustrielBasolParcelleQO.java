@@ -23,7 +23,7 @@ public class SiteIndustrielBasolParcelleQO extends AbstractQO {
         
         if (parcelleCodeINSEE != null && parcelleSection != null && parcelleNumero != null) {
             builder.and(QSiteIndustrielBasolParcelle.siteIndustrielBasolParcelle.codeINSEE.eq(parcelleCodeINSEE));
-            builder.and(QSiteIndustrielBasolParcelle.siteIndustrielBasolParcelle.section.eq(parcelleSection));
+            builder.and(QSiteIndustrielBasolParcelle.siteIndustrielBasolParcelle.section.equalsIgnoreCase(parcelleSection));
             builder.and(QSiteIndustrielBasolParcelle.siteIndustrielBasolParcelle.numero.eq(parcelleNumero));
         }
     }
