@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
+import fr.gouv.beta.fabnum.commun.transverse.qo.AbstractQO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISiteIndustrielBasolMapper;
@@ -54,6 +55,12 @@ public class GestionSiteIndustrielBasolFacade extends AbstractFacade implements 
                 siteIndustrielBasolMapper.toDTOs(siteIndustrielBasolService.rechercherSitesSurParcelles(codesParcelle));
         
         return siteIndustrielBasolDTOS;
+    }
+    
+    @Override
+    public List<SiteIndustrielBasolDTO> rechercherAvecCritere(AbstractQO... criteres) {
+        
+        return siteIndustrielBasolMapper.toDTOs(siteIndustrielBasolService.rechercherAvecCritere(criteres));
     }
     
     @Override

@@ -6,7 +6,9 @@ import fr.gouv.beta.fabnum.commun.transverse.qo.AbstractQO;
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.ISiteIndustrielBasolDAO;
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.SiteIndustrielBasolRepository;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QSiteIndustrielBasol;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QSiteIndustrielBasolParcelle;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.SiteIndustrielBasol;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.SiteIndustrielBasolParcelleQO;
 
 import java.util.List;
 
@@ -82,6 +84,15 @@ public class SiteIndustrielBasolDAO extends AbstractDAO<SiteIndustrielBasol> imp
     @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
+        for (AbstractQO abstractQO : leCritere) {
+        
+            if (abstractQO instanceof SiteIndustrielBasolParcelleQO) {
+            
+                //                SiteIndustrielBasolParcelleQO siteIndustrielBasolParcelleQO = (SiteIndustrielBasolParcelleQO) abstractQO;
+            
+                query.leftJoin(QSiteIndustrielBasol.siteIndustrielBasol.parcelles, QSiteIndustrielBasolParcelle.siteIndustrielBasolParcelle).fetchJoin();
+            }
+        }
     }
     
     @Override

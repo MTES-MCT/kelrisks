@@ -3,6 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.avis;
 import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
@@ -34,8 +35,11 @@ public class AvisDTO extends JsonInfoDTO {
     private List<InstallationClasseeDTO> installationClasseeRayonParcelleDTOs     = new ArrayList<>();
     private List<InstallationClasseeDTO> installationClasseeProximiteParcelleDTOs = new ArrayList<>();
     private List<InstallationClasseeDTO> installationClasseeNonGeorerenceesDTOs   = new ArrayList<>();
-    private int                          codeZoneSismicite;
-    private int                          classePotentielRadon;
+    
+    private List<PlanPreventionRisquesDTO> planPreventionRisquesDTOs;
+    
+    private int codeZoneSismicite;
+    private int classePotentielRadon;
     
     @Data
     public static class Summary {

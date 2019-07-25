@@ -29,6 +29,7 @@ import {
     faUser
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import moment from 'moment'
 
 import {Icon} from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -51,6 +52,12 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 // Vue.use(VueMaterial)
 
 Vue.config.productionTip = false
+
+Vue.filter('formatDate', function (value, format) {
+    if (value) {
+        return moment(String(value)).format(format)
+    }
+})
 
 /* eslint-disable no-new */
 new Vue({

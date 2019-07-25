@@ -4,15 +4,22 @@ import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.geolatte.geom.Geometry;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Data
@@ -22,37 +29,28 @@ public class SiteIndustrielBasol extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
     
-    @Column(name = "numerosite")
-    String numerosite;
+    @NaturalId
     @Column(name = "numerobasol")
-    String numerobasol;
-    @Column(name = "numeros3ic")
-    String numeros3ic;
+    private String   numerobasol;
     @Column(name = "identifiantbasias")
-    String identifiantbasias;
-    //    @Column(name = "georeferencement")
-    //    String georeferencement;
-    //    @Column(name = "coordxlambertii")
-    //    String coordxlambertii;
-    //    @Column(name = "coordylambertii")
-    //    String coordylambertii;
-    //    @Column(name = "precision")
-    //    String precision;
+    private String   identifiantbasias;
     @Column(name = "adresse")
-    String adresse;
+    private String   adresse;
     @Column(name = "commune")
-    String commune;
-    @Column(name = "codeinsee")
-    String codeinsee;
-    @Column(name = "codepostal")
-    String codepostal;
+    private String   commune;
+    @Column(name = "code_insee")
+    private String   codeinsee;
     @Column(name = "proprietaire")
-    String proprietaire;
-    @Column(name = "responsable")
-    String responsable;
-    
+    private String   proprietaire;
+    @Column(name = "geocoded_score")
+    private Float    scoreGeocodage;
     @Column(name = "geog", columnDefinition = "geometry")
     private Geometry point;
+    @Column(name = "geocoded_geog", columnDefinition = "geometry")
+    private Geometry pointGeocode;
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "siteIndustrielBasol", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private Set<SiteIndustrielBasolParcelle> parcelles = new HashSet<>();
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -65,7 +63,6 @@ public class SiteIndustrielBasol extends AbstractEntity {
         StringBuffer cleFonc = new StringBuffer();
         
         //TODO : Définir une clé fonctionnelle
-        
         
         return cleFonc.toString().toUpperCase();
     }

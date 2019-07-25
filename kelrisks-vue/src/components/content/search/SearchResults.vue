@@ -148,9 +148,13 @@
 
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune de sismicité classée en zone {{this.avis.codeSismicite}}</p>
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune à potentiel radon classée en niveau {{this.avis.potentielRadon}}</p>
+                <p style="font-size: 20px; color: #2C3E50;"
+                   v-bind:key="plan"
+                   v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.categorie.famille.code }} de type {{ plan.categorie.libelle }},
+                                            approuvé le {{ plan.dateValidite | formatDate('DD/MM/YYYY') }}.</p>
 
                 <p class="renvoi">
-                    <sup>(1)</sup> - Au regard des risques pour lesquels la recherche a été faite (Radon et Sismicité).</p>
+                    <sup>(1)</sup> - Au regard des risques pour lesquels la recherche a été faite (Radon, Sismicité et PPR).</p>
             </template>
 
         </div>
@@ -422,7 +426,8 @@ export default {
             installationClasseeCommune: {},
             sisParcelle: {},
             codeSismicite: 0,
-            potentielRadon: 0
+            potentielRadon: 0,
+            ppr: {}
         },
         tinyUrl: {
             codeParcelle: undefined,
@@ -502,6 +507,8 @@ export default {
 
                     this.avis.codeSismicite = value.entity.codeZoneSismicite
                     this.avis.potentielRadon = value.entity.classePotentielRadon
+
+                    this.avis.ppr = value.entity.planPreventionRisquesDTOs
 
                     functions.scrollToElement('main', false)
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
