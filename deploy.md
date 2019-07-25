@@ -2,9 +2,22 @@
 
 ## Sommaire
 
+* [Prérequis](#prrequis)
 * [Production](#production)
 * [Préprodution](#prprodution)
 * [Montée de version](#monte-de-version)
+
+## Prérequis
+
+### Base de donnée pour les Tests
+
+Créer une base de donnée `kelrisks_tests`
+
+Lancer la commande suivante :
+
+`clean compile flyway:clean flyway:migrate -Dflyway.configFiles=src/main/resources/flyway_test.properties -e`
+
+Cette dernière va alimenter la base de tests avec les données nécessaires.
 
 ## Production
 
