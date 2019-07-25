@@ -80,11 +80,11 @@
                 <div class="numbers_wrapper">
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.basiasParcelle.numberOf"
-                                label-text="Sites polués BASIAS"/>
+                                label-text="Sites pollués BASIAS"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.basolParcelle.numberOf"
-                                label-text="Sites polués BASOL"/>
+                                label-text="Sites pollués BASOL"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.installationClasseeParcelle.numberOf"
