@@ -2,8 +2,9 @@
 
 ## Sommaire
 
-* [Production]()
-* [Préprodution]()
+* [Production](#production)
+* [Préprodution](#prprodution)
+* [Montée de version](#monte-de-version)
 
 ## Production
 
@@ -53,6 +54,15 @@ La suite est très semblable au déploiement en production.
 * Copier le war sur le serveur de dans le dossier `/var/www/sites/`.
 
 Tomcat déploie automatiquement la nouvelle application.
+
+## Montée de version
+
+Dans le cas d'une montée de version, le numéro de version dans les fichiers suivants sont à modifier :
+
+* `/pom.xml` (L29)
+* `kelrisks-vue/.env` (L1)
+* `kelrisks-vue/package.json` (L3)
+* `kelrisks-vue/package-lock.json` (L3)
 
 ## Annexe
 
