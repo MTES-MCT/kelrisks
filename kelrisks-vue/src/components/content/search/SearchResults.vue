@@ -102,7 +102,7 @@
 
             <template v-if="tab.concordances.index === 'RISQUES'">
 
-                <font-awesome-icon icon="exclamation"
+                <!--<font-awesome-icon icon="exclamation"
                                    style="font-size: 50px; color: #F79D65; margin-bottom: 10px"
                                    v-if="concordances_risques"/>
                 <font-awesome-icon icon="check"
@@ -112,7 +112,10 @@
                 <p style="font-size: 20px; color: #2C3E50;"
                    v-if="concordances_risques">Votre terrain présente un risque naturel<sup> (1)</sup></p>
                 <p style="font-size: 20px; color: #2C3E50;"
-                   v-else>Votre terrain ne semble pas présenter de risque naturel<sup> (1)</sup></p>
+                   v-else>Votre terrain ne semble pas présenter de risque naturel<sup> (1)</sup></p>-->
+
+                <p style="font-size: 20px; color: #2C3E50;"
+                   v-if="concordances_risques">Analyse de la parcelle donnée</p>
 
                 <div class="numbers_wrapper">
 
