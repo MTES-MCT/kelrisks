@@ -114,8 +114,7 @@
                 <p style="font-size: 20px; color: #2C3E50;"
                    v-else>Votre terrain ne semble pas présenter de risque naturel<sup> (1)</sup></p>-->
 
-                <p style="font-size: 20px; color: #2C3E50;"
-                   v-if="concordances_risques">Analyse de la parcelle donnée</p>
+                <p style="font-size: 20px; color: #2C3E50;">Analyse de la parcelle donnée</p>
 
                 <div class="numbers_wrapper">
 
