@@ -695,7 +695,8 @@ export default {
     }
 
     .tabWrapper .tab.selected {
-        background-color : white;
+        background-color : #0053B3;
+        color            : #FFFFFF;
         border-bottom    : 1px solid #FFFFFF;
     }
 
