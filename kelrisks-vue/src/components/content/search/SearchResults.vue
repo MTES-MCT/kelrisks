@@ -161,7 +161,8 @@
 
         </div>
 
-        <div class="container bordered conclusion_wrapper">
+        <div class="container bordered conclusion_wrapper"
+             v-if="tab.concordances.index === 'POLLUTION'">
             <template v-if="avis.basiasProximiteParcelle.numberOf > 0 || avis.basiasRaisonSociale > 0">
                 <div class="title">Voisinage :</div>
                 <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
@@ -272,7 +273,8 @@
 
         </div>
 
-        <div class="container bordered resume_wrapper">
+        <div class="container bordered resume_wrapper"
+             v-if="tab.concordances.index === 'POLLUTION'">
             <div class="title">Résumé et analyse à 100m :</div>
             <p><strong>Votre parcelle,</strong><br>
                 {{ '- ' + avis.basiasParcelle.lib }}</p>
