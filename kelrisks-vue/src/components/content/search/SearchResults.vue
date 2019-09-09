@@ -786,4 +786,12 @@ export default {
         line-height : 1.1em;
     }
 
+    .bulleinfo {
+
+    }
+
+    .bulleinfo:hover {
+
+    }
+
 </style>
