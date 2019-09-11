@@ -17,4 +17,3 @@ public class SiteIndustrielBasolQO extends AbstractQO {
         if (id != null) {builder.and(QSiteIndustrielBasol.siteIndustrielBasol.id.eq(id));}
     }
 }
-  

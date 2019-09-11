@@ -5,7 +5,6 @@ import fr.gouv.beta.fabnum.commun.utils.GeoJsonUtils;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
@@ -20,7 +19,6 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteS
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
-import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.SiteIndustrielBasolParcelleQO;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -193,17 +191,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private void getAvisBasol(AvisDTO avisDTO, ParcelleDTO parcelleDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle) {
-        
-        List<SiteIndustrielBasolDTO> siteIndustrielBasolSurSSP = gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues);
-        
-        SiteIndustrielBasolParcelleQO siteIndustrielBasolParcelleQO = new SiteIndustrielBasolParcelleQO();
-        siteIndustrielBasolParcelleQO.setParcelleCodeINSEE(parcelleDTO.getCommune());
-        siteIndustrielBasolParcelleQO.setParcelleSection(parcelleDTO.getSection());
-        siteIndustrielBasolParcelleQO.setParcelleNumero(parcelleDTO.getNumero());
-        
-        siteIndustrielBasolSurSSP.addAll(gestionSiteIndustrielBasolFacade.rechercherAvecCritere(siteIndustrielBasolParcelleQO));
-        
-        avisDTO.setSiteIndustrielBasolSurParcelleDTOs(siteIndustrielBasolSurSSP);
+    
+        avisDTO.setSiteIndustrielBasolSurParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
         avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(touchesParcelle));
         avisDTO.setSiteIndustrielBasolRayonParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(expendedParcelle));
         

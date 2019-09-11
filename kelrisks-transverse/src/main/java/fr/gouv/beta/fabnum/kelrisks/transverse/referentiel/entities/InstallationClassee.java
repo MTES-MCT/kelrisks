@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.geolatte.geom.Geometry;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -22,27 +23,27 @@ public class InstallationClassee extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
     
-    private String  code;
-    private String  nom;
-    @Column(name = "raison_sociale")
-    private String  raisonSociale;
-    @Column(name = "etat_activite")
-    private String  etatActivite;
-    private String  regime;
-    private String  commune;
+    private String code;
+    private String nom;
+    private String regime;
+    private String commune;
     @Column(name = "code_insee")
-    private String  codeInsee;
+    private String codeInsee;
     @Column(name = "code_postal")
-    private String  codePostal;
-    private String  adresse;
+    private String codePostal;
+    private String adresse;
     @Column(name = "complement_adresse")
-    private String  complementAdresse;
-    private String  departement;
-    @Column(name = "centroide_commune")
-    private boolean centroideCommune;
+    private String complementAdresse;
     
-    @Column(name = "geog", columnDefinition = "geometry")
-    private Geometry point;
+    @Column(name = "geocoded_result_score")
+    private Double   scoreGeocodage;
+    @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
+    @Type(type = "org.geolatte.geom.Geometry")
+    private Geometry multiPolygon;
+    @Column(name = "geog_precision")
+    private String   precision;
+    @Column(name = "adresse_id")
+    private String   adresseId;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -55,7 +56,6 @@ public class InstallationClassee extends AbstractEntity {
         StringBuffer cleFonc = new StringBuffer();
         
         //TODO : Définir une clé fonctionnelle
-        
         
         return cleFonc.toString().toUpperCase();
     }

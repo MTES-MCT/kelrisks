@@ -5,19 +5,17 @@ import lombok.Data;
 @Data
 public class InstallationClasseeDTO {
     
-    private Long    id;
-    private String  code;
-    private String  nom;
-    private String  raisonSociale;
-    private String  etatActivite;
-    private String  regime;
-    private String  commune;
-    private String  codeInsee;
-    private String  codePostal;
-    private String  adresse;
-    private String  complementAdresse;
-    private String  departement;
-    private boolean centroideCommune;
-    private String  ewkt;
+    private Long   id;
+    private String code;
+    private String nom;
+    private String regime;
+    private String commune;
+    private String codeInsee;
+    private String codePostal;
+    private String adresse;
+    private String complementAdresse;
+    private String ewkt;
+    private String precision;
+    private String adresseId;
 }
   

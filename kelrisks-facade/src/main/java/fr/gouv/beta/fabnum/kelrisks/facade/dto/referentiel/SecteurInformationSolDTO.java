@@ -7,5 +7,7 @@ public class SecteurInformationSolDTO {
     
     private Long   id;
     private String ewkt;
+    private String precision;
+    private String adresseId;
 }
   

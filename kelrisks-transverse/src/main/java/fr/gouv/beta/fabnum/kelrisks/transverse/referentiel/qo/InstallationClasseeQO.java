@@ -22,7 +22,7 @@ public class InstallationClasseeQO extends AbstractQO {
         if (id != null) {builder.and(QInstallationClassee.installationClassee.id.eq(id));}
         if (codePostal != null) {builder.and(QInstallationClassee.installationClassee.codePostal.eq(codePostal));}
         if (codeINSEE != null) {builder.and(QInstallationClassee.installationClassee.codeInsee.eq(codeINSEE));}
-        if (centroideCommune != null) {builder.and(QInstallationClassee.installationClassee.centroideCommune.eq(centroideCommune));}
+        if (centroideCommune != null) {builder.and(QInstallationClassee.installationClassee.precision.equalsIgnoreCase("municipality"));}
     }
 }
   

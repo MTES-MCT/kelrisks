@@ -23,7 +23,7 @@ public interface ISiteIndustrielBasolMapper extends IGeometryMapper {
     
     //    @formatter:off
     @Mappings(
-            @Mapping(target = "ewkt", expression = "java(GeoJsonUtils.toGeoJson(siteIndustrielBasol.getPoint(), Stream.of(new AbstractMap.SimpleEntry<>(\"propriétaire\", siteIndustrielBasol.getProprietaire()), new AbstractMap.SimpleEntry<>(\"numéro\", siteIndustrielBasol.getNumerobasol())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
+            @Mapping(target = "ewkt", expression = "java(GeoJsonUtils.toGeoJson(siteIndustrielBasol.getMultiPolygon(), Stream.of(new AbstractMap.SimpleEntry<>(\"propriétaire\", siteIndustrielBasol.getProprietaire()), new AbstractMap.SimpleEntry<>(\"numéro\", siteIndustrielBasol.getNumerobasol())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
     )
     //    @formatter:on
     SiteIndustrielBasolDTO toDTOs(SiteIndustrielBasol siteIndustrielBasol);

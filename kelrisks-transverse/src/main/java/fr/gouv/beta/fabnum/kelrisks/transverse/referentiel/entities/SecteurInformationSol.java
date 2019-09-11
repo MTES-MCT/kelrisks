@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.geolatte.geom.Geometry;
+import org.hibernate.annotations.Type;
 
 @Data
 @Entity
@@ -23,29 +24,31 @@ public class SecteurInformationSol extends AbstractEntity {
     static final long serialVersionUID = 1L;
     
     @Column(name = "numero_affichage")
-    String   numero;
+    String numero;
     @Column(name = "numero_basol")
-    String   numeroBasol;
-    //    @Column(name = "nom")
-    //    String   nom;
+    String numeroBasol;
     @Column(name = "adresse")
-    String   adresse;
+    String adresse;
     @Column(name = "lieu_dit")
-    String   lieuDit;
+    String lieuDit;
     @Column(name = "code_insee")
-    String   codeINSEE;
+    String codeINSEE;
     @Column(name = "nom_commune")
-    String   nomCommune;
-    @Column(name = "code_departement")
-    String   codeDepartement;
+    String nomCommune;
     @Column(name = "nom_departement")
-    String   nomDepartement;
+    String nomDepartement;
     @Column(name = "surface_m2")
-    Float    surface;
-    @Column(name = "geog", columnDefinition = "geometry")
-    Geometry multiPolygon;
-    @Column(name = "geog_centroid", columnDefinition = "geometry")
-    Geometry centroid;
+    Double surface;
+    
+    @Column(name = "geocoded_result_score")
+    private Double   scoreGeocodage;
+    @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
+    @Type(type = "org.geolatte.geom.Geometry")
+    private Geometry multiPolygon;
+    @Column(name = "geog_precision")
+    private String   precision;
+    @Column(name = "adresse_id")
+    private String   adresseId;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)

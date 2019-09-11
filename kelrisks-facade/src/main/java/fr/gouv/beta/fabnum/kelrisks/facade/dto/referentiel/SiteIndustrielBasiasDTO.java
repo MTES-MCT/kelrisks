@@ -6,11 +6,10 @@ import lombok.Data;
 public class SiteIndustrielBasiasDTO {
     
     private Long   id;
+    private String adresseId;
     private String identifiant;
     private String adresse;
-    private String codeActivite;
     private String raisonSociale;
-    private String geolocalisation;
     private String ewkt;
     private String precision;
 }

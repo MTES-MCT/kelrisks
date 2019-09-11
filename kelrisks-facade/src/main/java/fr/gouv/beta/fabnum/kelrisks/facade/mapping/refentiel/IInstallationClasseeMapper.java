@@ -24,7 +24,7 @@ public interface IInstallationClasseeMapper extends IGeometryMapper {
     
     //    @formatter:off
     @Mappings(
-            @Mapping(target = "ewkt", expression = "java(GeoJsonUtils.toGeoJson(installationClassee.getPoint(), Stream.of(new AbstractMap.SimpleEntry<>(\"raisonSociale\", installationClassee.getRaisonSociale()), new AbstractMap.SimpleEntry<>(\"code\", installationClassee.getCode())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
+            @Mapping(target = "ewkt", expression = "java(GeoJsonUtils.toGeoJson(installationClassee.getMultiPolygon(), Stream.of(new AbstractMap.SimpleEntry<>(\"nom\", installationClassee.getNom()), new AbstractMap.SimpleEntry<>(\"code\", installationClassee.getCode())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
     )
     //    @formatter:on
     InstallationClasseeDTO toDTO(InstallationClassee installationClassee);
@@ -33,8 +33,8 @@ public interface IInstallationClasseeMapper extends IGeometryMapper {
     
     @Mappings({
             @Mapping(source = "id", target = "id"),
-            @Mapping(source = "raisonSociale", target = "code"),
-            @Mapping(source = "raisonSociale", target = "libelle")
+            @Mapping(source = "nom", target = "code"),
+            @Mapping(source = "nom", target = "libelle")
     })
     AutocompleteDTO toAutocompleteDTO(InstallationClassee installationClassee);
 }

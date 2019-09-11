@@ -21,7 +21,7 @@ public interface SiteIndustrielBasolRepository extends IAbstractRepository<SiteI
                    "      kelrisks.cadastre p " +
                    " WHERE p.code = :codeParcelle " +
                    "   AND (public.st_within(si.point, p.geog) " +
-                   "     OR (si.geocoded_score > 0.6 AND public.st_within(si.geocoded_geog, p.geog))) ", nativeQuery = true)
+                   "     OR (si.geocoded_result_score > 0.6 AND public.st_within(si.geog, p.geog))) ", nativeQuery = true)
     List<SiteIndustrielBasol> rechercherSiteSurParcelle(@Param("codeParcelle") String codeParcelle);
     
     @Query(value = "SELECT si " +
@@ -37,13 +37,13 @@ public interface SiteIndustrielBasolRepository extends IAbstractRepository<SiteI
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basol sib " +
                    " WHERE public.st_within(sib.geog, :multiPolygon) " +
-                   "    OR (sib.geocoded_score > 0.6 AND public.st_within(sib.geocoded_geog, :multiPolygon))", nativeQuery = true)
+                   "    OR (sib.geocoded_result_score > 0.6 AND public.st_within(sib.geog, :multiPolygon))", nativeQuery = true)
     List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basol sib " +
                    " WHERE public.st_within(sib.geog, st_union(:multiPolygon)) " +
-                   "    OR (sib.geocoded_score > 0.6 AND public.st_within(sib.geocoded_geog, st_union(:multiPolygon)))", nativeQuery = true)
+                   "    OR (sib.geocoded_result_score > 0.6 AND public.st_within(sib.geog, st_union(:multiPolygon)))", nativeQuery = true)
     List<SiteIndustrielBasol> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
     
     @Query(value = "SELECT * " +
