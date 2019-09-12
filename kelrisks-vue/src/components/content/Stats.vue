@@ -91,8 +91,8 @@ export default {
     methods: {
         getStats () {
             let idSite = '1'
-            let period = 'year'
-            let date = 'yesterday'
+            let period = 'range'
+            let date = '2019-02-21,2019-12-31'
             let url = 'https://kelrisks.beta.gouv.fr/mat/?module=API&idSite=' + idSite + '&method=Events.getAction&secondaryDimension=eventName&flat=1&period=' + period + '&date=' + date + '&format=json'
             fetchWithError(url, null, 1000 * 20)
                 .then(stream => stream.json())
