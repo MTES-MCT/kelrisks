@@ -3,7 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel;
 import lombok.Data;
 
 @Data
-public class SiteIndustrielBasolDTO {
+public class SiteIndustrielBasolDTO extends AbstractLocalisationAvecPrecision {
     
     private String adresseId;
     private Long   id;
@@ -13,7 +13,5 @@ public class SiteIndustrielBasolDTO {
     private String commune;
     private String codeinsee;
     private String proprietaire;
-    private String ewkt;
-    private String precision;
 }
   
