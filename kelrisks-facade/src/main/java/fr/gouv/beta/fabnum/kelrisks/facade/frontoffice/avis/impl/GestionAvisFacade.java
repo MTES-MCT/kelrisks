@@ -138,13 +138,13 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         }
         else { parcelleSitesSolsPolues.add(parcelleDTO.getMultiPolygon()); }
     
-        getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire);
+        getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire, codeINSEE);
     
-        getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle);
+        getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
         
         getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
     
-        getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle);
+        getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
     
         getAvisPPR(avisDTO, parcelleSitesSolsPolues);
     
@@ -192,11 +192,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeProximiteParcelleDTOs());
     
         avisDTO.getInstallationClasseeProximiteParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
-        
-        avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAuCentroideCommune(codeINSEE));
+    
+        avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
-    private void getAvisBasol(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle) {
+    private void getAvisBasol(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String codeINSEE) {
         
         avisDTO.setSiteIndustrielBasolSurParcelleDTOs((List<SiteIndustrielBasolDTO>) removeLowPrecision(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));
         avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs((List<SiteIndustrielBasolDTO>) removeLowPrecision(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(touchesParcelle)));
@@ -206,9 +206,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolProximiteParcelleDTOs());
+        
+        avisDTO.setSiteIndustrielBasolNonGeorerenceesDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
-    private void getAvisSis(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle) {
+    private void getAvisSis(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String codeINSEE) {
     
         avisDTO.setSecteurInformationSolSurParcelleDTOs((List<SecteurInformationSolDTO>) removeLowPrecision(gestionSecteurInformationSolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));
         avisDTO.setSecteurInformationSolProximiteParcelleDTOs((List<SecteurInformationSolDTO>) removeLowPrecision(gestionSecteurInformationSolFacade.rechercherSitesDansPolygon(touchesParcelle)));
@@ -218,9 +220,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         avisDTO.getSecteurInformationSolRayonParcelleDTOs().removeAll(avisDTO.getSecteurInformationSolSurParcelleDTOs());
         avisDTO.getSecteurInformationSolRayonParcelleDTOs().removeAll(avisDTO.getSecteurInformationSolProximiteParcelleDTOs());
+        
+        avisDTO.setSecteurInformationSolNonGeorerenceesDTOs(gestionSecteurInformationSolFacade.rechercherSecteursAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
-    private void getAvisBasias(AvisDTO avisDTO, Geometry parcelle, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String nomProprietaire) {
+    private void getAvisBasias(AvisDTO avisDTO, Geometry parcelle, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String nomProprietaire, String codeINSEE) {
     
         avisDTO.setSiteIndustrielBasiasSurParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));
         avisDTO.setSiteIndustrielBasiasProximiteParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(touchesParcelle)));
@@ -237,6 +241,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs());
+        
+        avisDTO.setSiteIndustrielBasiasNonGeorerenceesDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
     private List<? extends AbstractLocalisationAvecPrecision> removeLowPrecision(List<? extends AbstractLocalisationAvecPrecision> sites) {

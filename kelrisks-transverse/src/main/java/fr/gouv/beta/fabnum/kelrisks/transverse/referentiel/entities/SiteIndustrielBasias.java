@@ -26,6 +26,8 @@ public class SiteIndustrielBasias extends AbstractEntity {
     @Column(name = "indice_departemental")
     private String identifiant;
     private String adresse;
+    @Column(name = "numero_insee")
+    private String codeInsee;
     //    private String   geolocalisation;
     @Column(name = "raison_sociale")
     private String raisonSociale;

@@ -24,24 +24,22 @@ public class SecteurInformationSol extends AbstractEntity {
     static final long serialVersionUID = 1L;
     
     @Column(name = "numero_affichage")
-    String numero;
+    private String numero;
     @Column(name = "numero_basol")
-    String numeroBasol;
+    private String numeroBasol;
     @Column(name = "adresse")
-    String adresse;
+    private String adresse;
     @Column(name = "lieu_dit")
-    String lieuDit;
+    private String lieuDit;
     @Column(name = "code_insee")
-    String codeINSEE;
+    private String codeInsee;
     @Column(name = "nom_commune")
-    String nomCommune;
+    private String nomCommune;
     @Column(name = "nom_departement")
-    String nomDepartement;
+    private String nomDepartement;
     @Column(name = "surface_m2")
-    Double surface;
+    private Double surface;
     
-    @Column(name = "geocoded_result_score")
-    private Double   scoreGeocodage;
     @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
     @Type(type = "org.geolatte.geom.Geometry")
     private Geometry multiPolygon;

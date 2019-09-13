@@ -34,15 +34,15 @@ public class SiteIndustrielBasol extends AbstractEntity {
     @Column(name = "commune")
     private String commune;
     @Column(name = "code_insee")
-    private String codeinsee;
+    private String codeInsee;
     @Column(name = "proprietaire")
     private String proprietaire;
     
-    @Column(name = "geocoded_result_score")
-    private Double   scoreGeocodage;
     @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
     @Type(type = "org.geolatte.geom.Geometry")
     private Geometry multiPolygon;
+    @Column(name = "geog_precision")
+    private String   precision;
     @Column(name = "adresse_id")
     private String   adresseId;
     

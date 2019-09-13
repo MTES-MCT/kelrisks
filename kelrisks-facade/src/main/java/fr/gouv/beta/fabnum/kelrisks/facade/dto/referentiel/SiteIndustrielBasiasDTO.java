@@ -10,5 +10,6 @@ public class SiteIndustrielBasiasDTO extends AbstractLocalisationAvecPrecision {
     private String identifiant;
     private String adresse;
     private String raisonSociale;
+    private String codeInsee;
 }
   

@@ -20,4 +20,6 @@ public interface IGestionSiteIndustrielBasolFacade {
     List<SiteIndustrielBasolDTO> rechercherAvecCritere(AbstractQO... criteres);
     
     List<SiteIndustrielBasolDTO> rechercherSitesDansPolygon(Geometry polygon);
+    
+    List<SiteIndustrielBasolDTO> rechercherSitesAvecFaiblePrecisionDeGeolocalisation(String codeINSEE);
 }

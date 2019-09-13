@@ -35,8 +35,6 @@ public class InstallationClassee extends AbstractEntity {
     @Column(name = "complement_adresse")
     private String complementAdresse;
     
-    @Column(name = "geocoded_result_score")
-    private Double   scoreGeocodage;
     @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
     @Type(type = "org.geolatte.geom.Geometry")
     private Geometry multiPolygon;

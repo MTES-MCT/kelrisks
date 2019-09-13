@@ -6,7 +6,10 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSecte
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISecteurInformationSolMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleService;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISecteurInformationSolService;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums.PrecisionEnum;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.SecteurInformationSolQO;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.geolatte.geom.Geometry;
@@ -33,5 +36,19 @@ public class GestionSecteurInformationSolFacade extends AbstractFacade implement
     public List<SecteurInformationSolDTO> rechercherSitesDansPolygon(Geometry polygon) {
         
         return secteurInformationSolMapper.toDTOs(secteurInformationSolService.rechercherSecteursDansPolygon(polygon));
+    }
+    
+    @Override
+    public List<SecteurInformationSolDTO> rechercherSecteursAvecFaiblePrecisionDeGeolocalisation(String codeINSEE) {
+        
+        SecteurInformationSolQO secteurInformationSolQO = new SecteurInformationSolQO();
+        
+        secteurInformationSolQO.setCodeINSEE(codeINSEE);
+        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode());
+        secteurInformationSolQO.setPrecisions(precision);
+        
+        List<SecteurInformationSolDTO> secteurInformationSolDTOS = secteurInformationSolMapper.toDTOs(secteurInformationSolService.rechercherAvecCritere(secteurInformationSolQO));
+        
+        return secteurInformationSolDTOS;
     }
 }
