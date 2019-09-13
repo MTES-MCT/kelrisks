@@ -82,18 +82,22 @@
                 <div class="numbers_wrapper">
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.basiasParcelle.numberOf"
+                                info-text="Base des Anciens Sites Industriels et Activités de Services. C’est l’inventaire de toutes les activités industriels abandonnées ou non, susceptibles d'avoir engendré une pollution de l'environnement. L’inscription d’une parcelle à cet inventaire ne préjuge pas de l’existence d’une pollution."
                                 label-text="Sites pollués BASIAS"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.basolParcelle.numberOf"
+                                info-text="Base de données sur les sites et sols pollués. c’est l’inventaire des sites sur lesquels la présence d’une pollution a nécessité une action des pouvoirs publics soit à titre préventif soit à titre curatif."
                                 label-text="Sites pollués BASOL"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.installationClasseeParcelle.numberOf"
+                                info-text="Inventaire des activités régies par la réglementation des installations dites classées pour la protection de l’environnement en raison des risques, des pollutions et des nuisances que ces activités génèrent."
                                 label-text="Installations classées"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.sisParcelle.numberOf"
+                                info-text="Secteur d’information sur les sols. Lorsque l’Etat a connaissance d’une pollution des sols, il est tenu en application de l’article L 125-6 du code de l’environnement de délimiter ces secteurs par arrêté préfectoral. L’inscription d’une parcelle dans un secteur d’information sur les sols entraîne des obligations d’information des acquéreurs et des locataires et l’obligation en cas de changement d’usage (dépôt de permis de construire) de faire appel à un bureau d’étude spécialisés dans le domaine des sols pollués pour attester de la bonne prise en compte des pollutions des sols présentes."
                                 label-text="SIS"/>
                 </div>
 
@@ -131,7 +135,12 @@
                                  v-else
                                  width="50">
                         </div>
-                        <div class="icon-risque-label">Radon niveau {{this.avis.potentielRadon}}</div>
+                        <div class="icon-risque-label">Radon niveau {{this.avis.potentielRadon}}<sup style="font-size: 0.7em"> (*)</sup>
+                            <div class="infobulle">Le Radon est un gaz radioactif, incolore, inodore et d'origine le plus souvent naturelle. Il est présent dans l'ensemble des sols du territoire dans
+                                                   des proportions plus ou moins importances. Cancérigène pulmonaire, il peut présenter un risque pour la santé lorsqu’il s’accumule dans les bâtiments.
+                                                   Les communes sont classées en fonction de leur potentiel radon selon trois catégories classées de 1 (faible) à 3 (fort).
+                            </div>
+                        </div>
                     </div>
 
                     <div class="icon-risque-wrapper">
@@ -145,7 +154,32 @@
                                  v-else
                                  width="50">
                         </div>
-                        <div class="icon-risque-label">Sismicité zone {{this.avis.codeSismicite}}</div>
+                        <div class="icon-risque-label">Sismicité zone {{this.avis.codeSismicite}}<sup style="font-size: 0.7em"> (*)</sup>
+                            <div class="infobulle">Un Zonage Sismique est une zone géographique dans laquelle la probabilité d’occurrence d’un séisme de caractéristiques données (magnitude, profondeur
+                                                   focale) peut être considérée homogène en tout point. Il existe 5 catégories de zones classées de 1 (très faible) à 5 (la plus forte).
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="icon-risque-wrapper">
+                        <div class="icon-risque">
+                            <img height="50"
+                                 src="/images/icons/kelrisks/ppr_ko.svg"
+                                 v-if="this.avis.ppr.length > 0"
+                                 width="50">
+                            <img height="50"
+                                 src="/images/icons/kelrisks/ppr_ok.svg"
+                                 v-else
+                                 width="50">
+                        </div>
+                        <div class="icon-risque-label">Plan de prévention des risques<sup style="font-size: 0.7em"> (*)</sup>
+                            <div class="infobulle">Un PPR (plan de prévention des risques) est un document réalisé par l’État qui réglemente l’utilisation des sols, en fonction des risques auxquels
+                                                   ils sont soumis. Cette réglementation va de l’interdiction de construire à la possibilité de construire sous certaines conditions en passant par
+                                                   l'imposition d'aménagement aux constructions existantes. Les risques concernés par ce type de dispositif sont naturels (Inondations, mouvements de
+                                                   terrains, incendies de forêt, avalanches, tempêtes, submersions marines, séismes, éruptions volcaniques, cyclones...) et/ou anthropiques/
+                                                   technologiques/ miniers.
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -153,12 +187,17 @@
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune de sismicité classée en zone {{this.avis.codeSismicite}}</p>
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune à potentiel radon classée en niveau {{this.avis.potentielRadon}}</p>
                 <p style="font-size: 20px; color: #2C3E50;"
+                   v-if="this.avis.ppr.length === 0">L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé</p>
+                <p style="font-size: 20px; color: #2C3E50;"
+                   v-else
                    v-bind:key="plan"
                    v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.categorie.famille.code }} de type {{ plan.categorie.libelle }},
                                             approuvé le {{ plan.dateValidite | formatDate('DD/MM/YYYY') }}.</p>
 
-                <p class="renvoi">
-                    <sup>(1)</sup> - Au regard des risques pour lesquels la recherche a été faite (Radon, Sismicité et PPR).</p>
+                <!--                <p class="renvoi">-->
+                <!--                    <sup>(1)</sup> - Au regard des risques pour lesquels la recherche a été faite (Radon, Sismicité et PPR).</p>-->
+
+                <div style="height: 20px"></div>
             </template>
 
         </div>
@@ -670,6 +709,7 @@ export default {
 
     .lien.big {
         font-weight : 900;
+        z-index     : 10;
     }
 
     .lien:hover {
@@ -799,12 +839,27 @@ export default {
         line-height : 1.1em;
     }
 
-    .bulleinfo {
-
+    .infobulle {
+        position         : absolute;
+        width            : calc(25% - 10px);
+        display          : none;
+        background-color : #FFFFFF;
+        border           : 1px solid #CCCCCC;
+        border-radius    : 2px;
+        text-align       : justify;
+        z-index          : 1;
+        /*position: sticky;*/
+        padding          : 5px;
+        margin           : 5px;
     }
 
-    .bulleinfo:hover {
+    .icon-risque-wrapper:hover .infobulle {
+        display : block;
+    }
 
+    .infobulle:hover {
+
+        display : block;
     }
 
 </style>

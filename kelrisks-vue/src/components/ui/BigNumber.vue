@@ -4,7 +4,12 @@
              v-bind:class="{ notfound: !anyMatch,
                              found: anyMatch && numberOf > 0 }">{{ numberOf }}
         </div>
-        <div class="bc-label">{{ labelText }}</div>
+        <div class="bc-label">{{ labelText }}<sup style="font-size: 0.7em"
+                                                  v-if="infoText"> (*)</sup>
+            <div class="infobulle"
+                 v-if="infoText">{{ infoText }}
+            </div>
+        </div>
     </div>
 </template>
 
@@ -16,6 +21,10 @@ export default {
         labelText: {
             type: String,
             required: true
+        },
+        infoText: {
+            type: String,
+            required: false
         },
         id: {
             type: String,
@@ -59,5 +68,28 @@ export default {
 
     .found {
         color : #F79D65;
+    }
+
+    .infobulle {
+        position         : absolute;
+        width            : calc(25% - 10px);
+        display          : none;
+        background-color : #FFFFFF;
+        border           : 1px solid #CCCCCC;
+        border-radius    : 2px;
+        text-align       : justify;
+        z-index          : 1;
+        /*position: sticky;*/
+        padding          : 5px;
+        margin           : 5px;
+    }
+
+    .bc-wrapper:hover .infobulle {
+        display : block;
+    }
+
+    .infobulle:hover {
+
+        display : block;
     }
 </style>

@@ -3,3 +3,4 @@
 *.properties eol=lf
 *.xml eol=lf
 *.sql eol=lf
+*.json eol=lf

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg fill="#86CB92"
+     xmlns="http://www.w3.org/2000/svg"
+     width="112.18333mm"
+     height="112.18333mm"
+     viewBox="0 0 112.18333 112.18333"
+     version="1.1"
+     id="svg8">
+    <g id="layer1"
+       transform="translate(-32.543749,-19.981256)">
+        <text
+                xml:space="preserve"
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.04284096px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#86CB92;fill-opacity:1;stroke:none;stroke-width:0.52606928"
+                x="65.001015"
+                y="121.48057"
+                id="text4577"
+                transform="scale(1.022517,0.97797885)"><tspan
+         id="tspan4575"
+         x="65.001015"
+         y="121.48057"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.04284096px;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.52606928">PPR</tspan></text>
+        <path
+                style="fill:none;stroke:#86CB92;stroke-width:9.91971684;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                d="M 49.93155,25.249149 H 127.7835 V 127.11151 H 49.93155 Z"
+                id="path4528"/>
+        <path
+                style="fill:none;stroke:#86CB92;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                d="M 74.266469,24.397949 V 38.4296 H 103.4523 V 24.397949"
+                id="path4530"/>
+        <path
+                style="fill:none;stroke:#86CB92;stroke-width:4.59547663;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                d="m 76.322497,72.7137 c 4.725047,4.951938 8.929228,9.903877 12.160763,14.855815 6.436244,-19.083099 12.38538,-25.50149 18.33469,-31.924197"
+                id="path826"/>
+    </g>
+</svg>
