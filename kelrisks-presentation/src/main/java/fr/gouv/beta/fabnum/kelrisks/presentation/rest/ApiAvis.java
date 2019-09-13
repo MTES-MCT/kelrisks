@@ -375,7 +375,7 @@ public class ApiAvis extends AbstractBasicApi {
             element.append("Est référencée dans l\'inventaire des installations classées sous le nom de :");
             element = element.appendElement("ul");
             for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeSurParcelleDTOs()) {
-                element.appendElement("li").append(site.getRaisonSociale());
+                element.appendElement("li").append(site.getNom());
             }
         }
     }
@@ -487,7 +487,7 @@ public class ApiAvis extends AbstractBasicApi {
         element.append("Le résultat de cette recherche ne tient pas compte des " + numberOf + " sites identifiés sur la commune qui n’ont pu être géolocalisés faute d’une information suffisante : ");
         element = element.appendElement("ul");
         for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeNonGeorerenceesDTOs()) {
-            element.appendElement("li").append(" - " + site.getRaisonSociale());
+            element.appendElement("li").append(" - " + site.getNom());
         }
     }
     
@@ -546,7 +546,7 @@ public class ApiAvis extends AbstractBasicApi {
             }
             element = element.appendElement("ul");
             for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeRayonParcelleDTOs()) {
-                element.appendElement("li").append(" - " + site.getRaisonSociale());
+                element.appendElement("li").append(" - " + site.getNom());
             }
         }
     }

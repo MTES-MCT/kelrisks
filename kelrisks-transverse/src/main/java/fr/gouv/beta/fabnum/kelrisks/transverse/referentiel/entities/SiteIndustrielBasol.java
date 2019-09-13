@@ -4,22 +4,17 @@ import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.geolatte.geom.Geometry;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Data
@@ -31,26 +26,25 @@ public class SiteIndustrielBasol extends AbstractEntity {
     
     @NaturalId
     @Column(name = "numerobasol")
-    private String   numerobasol;
+    private String numerobasol;
     @Column(name = "identifiantbasias")
-    private String   identifiantbasias;
+    private String identifiantbasias;
     @Column(name = "adresse")
-    private String   adresse;
+    private String adresse;
     @Column(name = "commune")
-    private String   commune;
+    private String commune;
     @Column(name = "code_insee")
-    private String   codeinsee;
+    private String codeInsee;
     @Column(name = "proprietaire")
-    private String   proprietaire;
-    @Column(name = "geocoded_score")
-    private Float    scoreGeocodage;
-    @Column(name = "geog", columnDefinition = "geometry")
-    private Geometry point;
-    @Column(name = "geocoded_geog", columnDefinition = "geometry")
-    private Geometry pointGeocode;
+    private String proprietaire;
     
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "siteIndustrielBasol", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    private Set<SiteIndustrielBasolParcelle> parcelles = new HashSet<>();
+    @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
+    @Type(type = "org.geolatte.geom.Geometry")
+    private Geometry multiPolygon;
+    @Column(name = "geog_precision")
+    private String   precision;
+    @Column(name = "adresse_id")
+    private String   adresseId;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)

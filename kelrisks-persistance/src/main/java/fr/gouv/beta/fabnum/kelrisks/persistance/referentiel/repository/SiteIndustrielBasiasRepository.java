@@ -19,13 +19,13 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias si" +
-                   " LEFT JOIN kelrisks.cadastre AS p ON st_within(si.geog, p.geog)" +
+                   " LEFT JOIN kelrisks.cadastre AS p ON st_intersects(si.geog, p.geog)" +
                    " WHERE p.code = :codeParcelle", nativeQuery = true)
     List<SiteIndustrielBasias> rechercherSiteSurParcelle(@Param("codeParcelle") String codeParcelle);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +
-                   " WHERE st_dwithin(si.geog," +
+                   " WHERE st_intersects(si.geog," +
                    " st_centroid(:geom)," +
                    " :distance)", nativeQuery = true)
     List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("geom") Geometry geom,
@@ -33,12 +33,12 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     
     @Query(value = "SELECT sib " +
                    " FROM SiteIndustrielBasias AS sib" +
-                   " WHERE st_within(sib.point, st_union(:multiPolygon)) = TRUE")
+                   " WHERE st_intersects(sib.multiPolygon, st_union(:multiPolygon)) = TRUE")
     List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
     
     @Query(value = "SELECT sib " +
                    " FROM SiteIndustrielBasias AS sib" +
-                   " WHERE st_within(sib.point, :multiPolygon) = TRUE")
+                   " WHERE st_intersects(sib.multiPolygon, :multiPolygon) = TRUE")
     List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
     
     @Query(value = "SELECT * " +
@@ -55,7 +55,7 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias si" +
-                   " LEFT JOIN kelrisks.cadastre AS p ON st_within(si.geog, p.geog)" +
+                   " LEFT JOIN kelrisks.cadastre AS p ON st_intersects(si.geog, p.geog)" +
                    " WHERE p.code in :codes", nativeQuery = true)
     List<SiteIndustrielBasias> rechercherSitesSurParcelles(List<String> codes);
 }

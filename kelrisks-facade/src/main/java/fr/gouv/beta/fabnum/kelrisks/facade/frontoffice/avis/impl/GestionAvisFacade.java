@@ -3,8 +3,12 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.impl;
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.commun.utils.GeoJsonUtils;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AbstractLocalisationAvecPrecision;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
@@ -19,8 +23,8 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteI
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums.PrecisionEnum;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
-import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.SiteIndustrielBasolParcelleQO;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -134,13 +138,13 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         }
         else { parcelleSitesSolsPolues.add(parcelleDTO.getMultiPolygon()); }
     
-        getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire);
+        getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire, codeINSEE);
     
-        getAvisBasol(avisDTO, parcelleDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle);
+        getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
         
         getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
     
-        getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle);
+        getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
     
         getAvisPPR(avisDTO, parcelleSitesSolsPolues);
     
@@ -177,60 +181,55 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private void getAvisICPE(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String codeINSEE) {
-        
-        avisDTO.setInstallationClasseeSurParcelleDTOs(gestionInstallationClasseeFacade.rechercherInstallationsDansPolygons(parcelleSitesSolsPolues));
-        avisDTO.setInstallationClasseeProximiteParcelleDTOs(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(touchesParcelle));
-        avisDTO.setInstallationClasseeRayonParcelleDTOs(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(expendedParcelle));
     
+        avisDTO.setInstallationClasseeSurParcelleDTOs((List<InstallationClasseeDTO>) removeLowPrecision(gestionInstallationClasseeFacade.rechercherInstallationsDansPolygons(parcelleSitesSolsPolues)));
+        avisDTO.setInstallationClasseeProximiteParcelleDTOs((List<InstallationClasseeDTO>) removeLowPrecision(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(touchesParcelle)));
+        avisDTO.setInstallationClasseeRayonParcelleDTOs((List<InstallationClasseeDTO>) removeLowPrecision(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(expendedParcelle)));
+        
         avisDTO.getInstallationClasseeRayonParcelleDTOs().forEach(icpe -> avisDTO.getLeaflet().getIcpe().add(icpe.getEwkt()));
         
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeProximiteParcelleDTOs());
     
         avisDTO.getInstallationClasseeProximiteParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
-        
-        avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAuCentroideCommune(codeINSEE));
+    
+        avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
-    private void getAvisBasol(AvisDTO avisDTO, ParcelleDTO parcelleDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle) {
+    private void getAvisBasol(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String codeINSEE) {
         
-        List<SiteIndustrielBasolDTO> siteIndustrielBasolSurSSP = gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues);
-        
-        SiteIndustrielBasolParcelleQO siteIndustrielBasolParcelleQO = new SiteIndustrielBasolParcelleQO();
-        siteIndustrielBasolParcelleQO.setParcelleCodeINSEE(parcelleDTO.getCommune());
-        siteIndustrielBasolParcelleQO.setParcelleSection(parcelleDTO.getSection());
-        siteIndustrielBasolParcelleQO.setParcelleNumero(parcelleDTO.getNumero());
-        
-        siteIndustrielBasolSurSSP.addAll(gestionSiteIndustrielBasolFacade.rechercherAvecCritere(siteIndustrielBasolParcelleQO));
-        
-        avisDTO.setSiteIndustrielBasolSurParcelleDTOs(siteIndustrielBasolSurSSP);
-        avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(touchesParcelle));
-        avisDTO.setSiteIndustrielBasolRayonParcelleDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(expendedParcelle));
+        avisDTO.setSiteIndustrielBasolSurParcelleDTOs((List<SiteIndustrielBasolDTO>) removeLowPrecision(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));
+        avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs((List<SiteIndustrielBasolDTO>) removeLowPrecision(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(touchesParcelle)));
+        avisDTO.setSiteIndustrielBasolRayonParcelleDTOs((List<SiteIndustrielBasolDTO>) removeLowPrecision(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(expendedParcelle)));
         
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getBasol().add(sib.getEwkt()));
         
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolProximiteParcelleDTOs());
+        
+        avisDTO.setSiteIndustrielBasolNonGeorerenceesDTOs(gestionSiteIndustrielBasolFacade.rechercherSitesAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
-    private void getAvisSis(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle) {
-        
-        avisDTO.setSecteurInformationSolSurParcelleDTOs(gestionSecteurInformationSolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
-        avisDTO.setSecteurInformationSolProximiteParcelleDTOs(gestionSecteurInformationSolFacade.rechercherSitesDansPolygon(touchesParcelle));
-        avisDTO.setSecteurInformationSolRayonParcelleDTOs(gestionSecteurInformationSolFacade.rechercherSitesDansPolygon(expendedParcelle));
+    private void getAvisSis(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String codeINSEE) {
+    
+        avisDTO.setSecteurInformationSolSurParcelleDTOs((List<SecteurInformationSolDTO>) removeLowPrecision(gestionSecteurInformationSolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));
+        avisDTO.setSecteurInformationSolProximiteParcelleDTOs((List<SecteurInformationSolDTO>) removeLowPrecision(gestionSecteurInformationSolFacade.rechercherSitesDansPolygon(touchesParcelle)));
+        avisDTO.setSecteurInformationSolRayonParcelleDTOs((List<SecteurInformationSolDTO>) removeLowPrecision(gestionSecteurInformationSolFacade.rechercherSitesDansPolygon(expendedParcelle)));
         
         avisDTO.getSecteurInformationSolRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getSis().add(sib.getEwkt()));
         
         avisDTO.getSecteurInformationSolRayonParcelleDTOs().removeAll(avisDTO.getSecteurInformationSolSurParcelleDTOs());
         avisDTO.getSecteurInformationSolRayonParcelleDTOs().removeAll(avisDTO.getSecteurInformationSolProximiteParcelleDTOs());
+        
+        avisDTO.setSecteurInformationSolNonGeorerenceesDTOs(gestionSecteurInformationSolFacade.rechercherSecteursAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
-    private void getAvisBasias(AvisDTO avisDTO, Geometry parcelle, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String nomProprietaire) {
-        
-        avisDTO.setSiteIndustrielBasiasSurParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues));
-        avisDTO.setSiteIndustrielBasiasProximiteParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(touchesParcelle));
-        avisDTO.setSiteIndustrielBasiasRayonParcelleDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(expendedParcelle));
+    private void getAvisBasias(AvisDTO avisDTO, Geometry parcelle, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String nomProprietaire, String codeINSEE) {
     
+        avisDTO.setSiteIndustrielBasiasSurParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));
+        avisDTO.setSiteIndustrielBasiasProximiteParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(touchesParcelle)));
+        avisDTO.setSiteIndustrielBasiasRayonParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(expendedParcelle)));
+        
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getBasias().add(sib.getEwkt()));
         
         if (!nomProprietaire.equals("")) {
@@ -242,6 +241,16 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs());
+        
+        avisDTO.setSiteIndustrielBasiasNonGeorerenceesDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
+    }
+    
+    private List<? extends AbstractLocalisationAvecPrecision> removeLowPrecision(List<? extends AbstractLocalisationAvecPrecision> sites) {
+        
+        sites.removeIf(site -> !site.getPrecision().equals(PrecisionEnum.PARCELLE.getCode()) &&
+                               !site.getPrecision().equals(PrecisionEnum.NUMERO.getCode()));
+        
+        return sites;
     }
 }
 

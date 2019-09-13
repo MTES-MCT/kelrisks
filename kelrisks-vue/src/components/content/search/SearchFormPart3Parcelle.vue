@@ -17,20 +17,21 @@
 
                 <div style="width: 40%; margin: 0 5%; float: left">
                     <kr-input :errors="error.field.codeCommune"
-                              :get-option-label-function="data => { return data['codePostal'] }"
-                              :get-option-value-function="data => { return data['codeINSEE'] }"
+                              :get-option-label-function="(option => {return option['properties']['postcode'] + ' - ' + option['properties']['city']})"
+                              :get-option-value-function="(option => {return option['properties']['citycode']})"
+                              :get-results-list-function="(data => {return data['features']})"
                               :start-at="3"
                               @selected="onCodePostalSelected"
                               label="Nom de commune ou Code postal"
                               name="codePostal"
-                              v-bind:source="env.apiPath + 'adresse/commune/autocomplete/'">
+                              v-bind:source="'https://api-adresse.data.gouv.fr/search/?type=municipality&limit=10&q='">
                         <template slot="kr-option-label"
                                   slot-scope="slotProps">
-                            {{ slotProps.option.codePostal + ' - ' + slotProps.option.nomCommune}}
+                            {{ slotProps.option.properties.postcode + ' - ' + slotProps.option.properties.city}}
                         </template>
                         <template slot="kr-helper"
                                   slot-scope="slotProps">
-                            {{ slotProps.option.nomCommune }}
+                            INSEE&nbsp;: {{ slotProps.option.properties.citycode }}
                         </template>
                         <template slot="kr-no-results"
                                   slot-scope="slotProps">
@@ -59,7 +60,7 @@
                               @selected="onAdresseChanged"
                               label="Adresse complète"
                               name="adresse"
-                              v-bind:source="'https://api-adresse.data.gouv.fr/search/?limit=10&q='">
+                              v-bind:source="'https://api-adresse.data.gouv.fr/search/?type=housenumber&limit=10&q='">
                         <template slot="kr-no-results"
                                   slot-scope="slotProps">
                             Aucune adresse trouvée pour "{{ slotProps.query }}"
@@ -194,9 +195,9 @@ export default {
             this.$emit('nomproprietairechanged')
             this.$emit('codeproprio', value)
         },
-        onCodePostalSelected (value) {
+        onCodePostalSelected (option) {
             this.$emit('codepostalselected')
-            this.$emit('codeinsee', value.codeINSEE)
+            this.$emit('codeinsee', option['properties']['citycode'])
             this.error.field.codeCommune = []
         },
         getAvis () {

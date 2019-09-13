@@ -22,10 +22,11 @@
                id="copyInput"
                style="position: absolute; left: -1000px; top: -1000px;"/>
 
-        <div class="container bordered summary_wrapper">
+        <div class="container bordered"
+             id="summary_wrapper">
             <div id="summary">
-                <div style="margin-bottom: 20px"><span class="title">Votre recherche </span><a @click="$emit('flow', -1)
-                         _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])"
+                <div style="margin-bottom: 20px"><span class="title">Votre recherche </span><a @click="() => {  $emit('flow', -1)
+                                                                                                _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])}"
                                                                                                class="lien"
                                                                                                v-show="visibility.modifier">Modifier</a>
                 </div>
@@ -45,7 +46,8 @@
                      :data="leaflet.data"/>
         </div>
 
-        <div class="container bordered concordances_wrapper">
+        <div class="container bordered"
+             id="concordances_wrapper">
 
             <div class="tabWrapper">
                 <div @click="tab.concordances.index = 'POLLUTION'"
@@ -80,11 +82,11 @@
                 <div class="numbers_wrapper">
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.basiasParcelle.numberOf"
-                                label-text="Sites polués BASIAS"/>
+                                label-text="Sites pollués BASIAS"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.basolParcelle.numberOf"
-                                label-text="Sites polués BASOL"/>
+                                label-text="Sites pollués BASOL"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 :number-of="avis.installationClasseeParcelle.numberOf"
@@ -102,7 +104,7 @@
 
             <template v-if="tab.concordances.index === 'RISQUES'">
 
-                <font-awesome-icon icon="exclamation"
+                <!--<font-awesome-icon icon="exclamation"
                                    style="font-size: 50px; color: #F79D65; margin-bottom: 10px"
                                    v-if="concordances_risques"/>
                 <font-awesome-icon icon="check"
@@ -112,7 +114,9 @@
                 <p style="font-size: 20px; color: #2C3E50;"
                    v-if="concordances_risques">Votre terrain présente un risque naturel<sup> (1)</sup></p>
                 <p style="font-size: 20px; color: #2C3E50;"
-                   v-else>Votre terrain ne semble pas présenter de risque naturel<sup> (1)</sup></p>
+                   v-else>Votre terrain ne semble pas présenter de risque naturel<sup> (1)</sup></p>-->
+
+                <p style="font-size: 20px; color: #2C3E50;">Analyse de la parcelle donnée</p>
 
                 <div class="numbers_wrapper">
 
@@ -159,7 +163,9 @@
 
         </div>
 
-        <div class="container bordered conclusion_wrapper">
+        <div class="container bordered"
+             id="conclusion_wrapper"
+             v-if="tab.concordances.index === 'POLLUTION'">
             <template v-if="avis.basiasProximiteParcelle.numberOf > 0 || avis.basiasRaisonSociale > 0">
                 <div class="title">Voisinage :</div>
                 <template v-if="avis.basiasProximiteParcelle.numberOf > 0">
@@ -270,10 +276,12 @@
 
         </div>
 
-        <div class="container bordered resume_wrapper">
+        <div class="container bordered"
+             id="resume_wrapper"
+             v-if="tab.concordances.index === 'POLLUTION'">
             <div class="title">Résumé et analyse à 100m :</div>
-            <p><strong>Votre parcelle,</strong><br>
-                {{ '- ' + avis.basiasParcelle.lib }}</p>
+            <p><strong>Votre parcelle,</strong><br></p>
+            <p>{{ '- ' + avis.basiasParcelle.lib }}</p>
             <template v-if="avis.basiasParcelle.numberOf > 0">
                 <ul class="site-list">
                     <li :key="sibasias.id"
@@ -301,7 +309,7 @@
                     </li>
                 </ul>
             </template>
-            <p>{{ avis.sisParcelle.lib }}</p>
+            <p>{{ '- ' + avis.sisParcelle.lib }}</p>
 
             <template v-if="avis.basiasRayonParcelle.numberOf > 0 || avis.basolRayonParcelle.numberOf > 0 || avis.installationClasseeRayonParcelle.numberOf > 0">
                 <strong>Dans un rayon de 100m&nbsp;:</strong>
@@ -338,11 +346,23 @@
                     </ul>
                 </template>
             </template>
-            <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+        </div>
 
-            <template v-if="avis.installationClasseeCommune.numberOf > 0"><p>Nous avons également trouvé {{ avis.installationClasseeCommune.numberOf }} installation(s) classée(s) non
-                                                                             géoréférencées
-                                                                             dans la commune.</p></template>
+        <div class="container bordered"
+             id="non_georef_wrapper"
+             v-if="(tab.concordances.index === 'POLLUTION') && (avis.basiasNonGeorerencee.numberOf > 0 ||
+                                                                avis.basolNonGeorerencee.numberOf > 0 ||
+                                                                avis.installationClasseeNonGeorerencee.numberOf > 0 ||
+                                                                avis.sisNonGeorerencee.numberOf > 0)">
+            <div class="title">Installations sans références géographiques</div>
+            <p>Dans la commune, nous avons également trouvé :</p>
+            <ul class="site-list">
+                <li v-if="avis.basiasNonGeorerencee.numberOf > 0">- {{ avis.basiasNonGeorerencee.numberOf }} installation(s) BASIAS</li>
+                <li v-if="avis.basolNonGeorerencee.numberOf > 0">- {{ avis.basolNonGeorerencee.numberOf }} installation(s) BASOL</li>
+                <li v-if="avis.installationClasseeNonGeorerencee.numberOf > 0">- {{ avis.installationClasseeNonGeorerencee.numberOf }} installation(s) classée(s)</li>
+                <li v-if="avis.sisNonGeorerencee.numberOf > 0">- {{ avis.sisNonGeorerencee.numberOf }} secteur(s) d'information sur les sols</li>
+            </ul>
+            <p>qui ne possèdent pas de coordonnées géographiques identifiées. Sans localisations précises, elles sont localisées dans le centre de la commune par défaut.</p>
         </div>
 
         <div class="container"
@@ -350,7 +370,7 @@
             <div class="note_pied_page"></div>
         </div>
 
-        <div style="clear: both"></div>
+        <div style="clear: both; height: 100px;"></div>
     </section>
 </template>
 
@@ -415,16 +435,19 @@ export default {
             basiasProximiteParcelle: {},
             basiasRayonParcelle: {},
             basiasRaisonSociale: {},
+            basiasNonGeorerencee: {},
             basolNbOf: 0,
             basolParcelle: {},
             basolProximiteParcelle: {},
             basolRayonParcelle: {},
+            basolNonGeorerencee: {},
             s3ICNbOf: 0,
             installationClasseeParcelle: {},
             installationClasseeProximiteParcelle: {},
             installationClasseeRayonParcelle: {},
-            installationClasseeCommune: {},
+            installationClasseeNonGeorerencee: {},
             sisParcelle: {},
+            sisNonGeorerencee: {},
             codeSismicite: 0,
             potentielRadon: 0,
             ppr: {}
@@ -490,17 +513,20 @@ export default {
                     this.avis.basiasProximiteParcelle = avis.getBasiasProximiteParcelle(value)
                     this.avis.basiasRaisonSociale = avis.getBasiasRaisonSocialeParcelle(value)
                     this.avis.basiasRayonParcelle = avis.getBasiasRayonParcelle(value)
+                    this.avis.basiasNonGeorerencee = avis.getBasiasNonGeoreferencees(value)
 
                     this.avis.basolParcelle = avis.getBasolParcelle(value)
                     this.avis.basolProximiteParcelle = avis.getBasolProximiteParcelle(value)
                     this.avis.basolRayonParcelle = avis.getBasolRayonParcelle(value)
+                    this.avis.basolNonGeorerencee = avis.getBasolNonGeoreferencees(value)
 
                     this.avis.installationClasseeParcelle = avis.getICSurParcelle(value)
                     this.avis.installationClasseeProximiteParcelle = avis.getICProximiteParcelle(value)
                     this.avis.installationClasseeRayonParcelle = avis.getICRayonParcelle(value)
-                    this.avis.installationClasseeCommune = avis.getICNonGeoreferencees(value)
+                    this.avis.installationClasseeNonGeorerencee = avis.getICNonGeoreferencees(value)
 
                     this.avis.sisParcelle = avis.getSISSurParcelle(value)
+                    this.avis.sisNonGeorerencee = avis.getSISNonGeoreferencees(value)
 
                     this.leaflet.data = value.entity.leaflet
                     this.leaflet.center = [parseFloat(value.entity.leaflet.center.y), parseFloat(value.entity.leaflet.center.x)]
@@ -651,7 +677,7 @@ export default {
         color      : #003B80;
     }
 
-    .summary_wrapper {
+    #summary_wrapper {
         clear      : both;
         float      : left;
         width      : calc(50% - 10px);
@@ -692,11 +718,12 @@ export default {
     }
 
     .tabWrapper .tab.selected {
-        background-color : white;
+        background-color : #0053B3;
+        color            : #FFFFFF;
         border-bottom    : 1px solid #FFFFFF;
     }
 
-    .concordances_wrapper {
+    #concordances_wrapper {
         margin-top             : calc(20px + 4em);
         float                  : left;
         border-top-left-radius : unset;
@@ -705,33 +732,24 @@ export default {
         text-align             : center;
     }
 
-    .concordances_wrapper p {
+    #concordances_wrapper p {
         margin     : 5px;
         text-align : center;
     }
 
-    .concordances_wrapper .numbers_wrapper {
+    #concordances_wrapper .numbers_wrapper {
         width            : 100%;
         background-color : #FAFAFA;
         height           : 145px;
         margin           : 30px 0;
     }
 
-    .conclusion_wrapper {
+    #conclusion_wrapper, #resume_wrapper, #non_georef_wrapper {
         float      : left;
         margin-top : 20px;
         padding    : 30px 20px !important;
         width      : 100%;
         text-align : left;
-    }
-
-    .resume_wrapper {
-        float         : left;
-        margin-top    : 20px;
-        padding       : 30px 20px !important;
-        width         : 100%;
-        text-align    : left;
-        margin-bottom : 100px;
     }
 
     .container.bordered {
@@ -779,6 +797,14 @@ export default {
         text-align  : left !important;
         color       : rgb(153, 153, 153);
         line-height : 1.1em;
+    }
+
+    .bulleinfo {
+
+    }
+
+    .bulleinfo:hover {
+
     }
 
 </style>

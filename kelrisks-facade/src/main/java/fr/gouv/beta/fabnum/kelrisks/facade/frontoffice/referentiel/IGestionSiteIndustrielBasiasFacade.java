@@ -24,4 +24,6 @@ public interface IGestionSiteIndustrielBasiasFacade {
     List<AutocompleteDTO> rechercherRaisonsSociales(String codeINSEE, String query);
     
     List<SiteIndustrielBasiasDTO> rechercherSitesSurParcelles(List<String> codes);
+    
+    List<SiteIndustrielBasiasDTO> rechercherSitesAvecFaiblePrecisionDeGeolocalisation(String codeINSEE);
 }

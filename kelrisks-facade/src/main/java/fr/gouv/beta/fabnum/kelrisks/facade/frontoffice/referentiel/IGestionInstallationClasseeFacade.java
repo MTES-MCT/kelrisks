@@ -13,7 +13,7 @@ public interface IGestionInstallationClasseeFacade {
     
     List<InstallationClasseeDTO> rechercherInstallationsDansRayonCentroideParcelle(String codeParcelle, double distance);
     
-    List<InstallationClasseeDTO> rechercherInstallationsAuCentroideCommune(String codePostal);
+    List<InstallationClasseeDTO> rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(String codePostal);
     
     List<InstallationClasseeDTO> rechercherInstallationsDansPolygons(List<Geometry> codeParcelle);
     

@@ -67,6 +67,20 @@ export default {
     return avis
   },
 
+    getBasiasNonGeoreferencees (value) {
+        let avis = {
+            lib: 'Liste des sites BASIAS non géoréférencés',
+            liste: []
+        }
+        avis.numberOf = value.entity.siteIndustrielBasiasNonGeorerenceesDTOs.length
+        if (avis.numberOf !== 0) {
+            value.entity.siteIndustrielBasiasNonGeorerenceesDTOs.forEach(function (element) {
+                avis.liste.push(element)
+            }, this)
+        }
+        return avis
+    },
+
   getBasolParcelle (value) {
     let avis = {
       lib: '',
@@ -102,6 +116,20 @@ export default {
     return avis
   },
 
+    getBasolNonGeoreferencees (value) {
+        let avis = {
+            lib: 'Liste des sites BASOL non géoréférencés',
+            liste: []
+        }
+        avis.numberOf = value.entity.siteIndustrielBasolNonGeorerenceesDTOs.length
+        if (avis.numberOf !== 0) {
+            value.entity.siteIndustrielBasolNonGeorerenceesDTOs.forEach(function (element) {
+                avis.liste.push(element)
+            }, this)
+        }
+        return avis
+    },
+
   getICSurParcelle (value) {
     let avis = {
       lib: '',
@@ -116,24 +144,6 @@ export default {
         avis.liste.push(element)
       }, this)
     }
-    return avis
-  },
-
-  getSISSurParcelle () {
-    let avis = {
-      lib: '',
-      liste: []
-    }
-    // avis.numberOf = value.entity.installationClasseeSurParcelleDTOs.length
-    avis.numberOf = 0
-    // if (avis.numberOf === 0) {
-    avis.lib = 'N’est pas situé en secteur d’information sur les sols (SIS).'
-    // } else {
-    //   avis.lib = 'Est référencée dans l\'inventaire des installations classées sous le nom de + nom de l’activité'
-    //   value.entity.installationClasseeSurParcelleDTOs.forEach(function (element) {
-    //     avis.liste.push(element)
-    //   }, this)
-    // }
     return avis
   },
 
@@ -169,6 +179,38 @@ export default {
         avis.liste.push(element)
       }, this)
     }
-    return avis
-  }
+      return avis
+  },
+
+    getSISSurParcelle () {
+        let avis = {
+            lib: '',
+            liste: []
+        }
+        // avis.numberOf = value.entity.installationClasseeSurParcelleDTOs.length
+        avis.numberOf = 0
+        // if (avis.numberOf === 0) {
+        avis.lib = 'N’est pas situé en secteur d’information sur les sols (SIS).'
+        // } else {
+        //   avis.lib = 'Est référencée dans l\'inventaire des installations classées sous le nom de + nom de l’activité'
+        //   value.entity.installationClasseeSurParcelleDTOs.forEach(function (element) {
+        //     avis.liste.push(element)
+        //   }, this)
+        // }
+        return avis
+    },
+
+    getSISNonGeoreferencees (value) {
+        let avis = {
+            lib: 'Liste des secteurs d\'information sur les sols non géoréférencés',
+            liste: []
+        }
+        avis.numberOf = value.entity.secteurInformationSolNonGeorerenceesDTOs.length
+        if (avis.numberOf !== 0) {
+            value.entity.secteurInformationSolNonGeorerenceesDTOs.forEach(function (element) {
+                avis.liste.push(element)
+            }, this)
+        }
+        return avis
+    }
 }

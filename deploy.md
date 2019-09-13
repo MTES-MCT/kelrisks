@@ -2,8 +2,22 @@
 
 ## Sommaire
 
-* [Production]()
-* [Préprodution]()
+* [Prérequis](#prrequis)
+* [Production](#production)
+* [Préprodution](#prprodution)
+* [Montée de version](#monte-de-version)
+
+## Prérequis
+
+### Base de donnée pour les Tests
+
+Créer une base de donnée `kelrisks_tests`
+
+Lancer la commande suivante :
+
+`clean compile flyway:clean flyway:migrate -Dflyway.configFiles=src/main/resources/flyway_test.properties -e`
+
+Cette dernière va alimenter la base de tests avec les données nécessaires.
 
 ## Production
 
@@ -53,6 +67,15 @@ La suite est très semblable au déploiement en production.
 * Copier le war sur le serveur de dans le dossier `/var/www/sites/`.
 
 Tomcat déploie automatiquement la nouvelle application.
+
+## Montée de version
+
+Dans le cas d'une montée de version, le numéro de version dans les fichiers suivants sont à modifier :
+
+* `/pom.xml` (L29)
+* `kelrisks-vue/.env` (L1)
+* `kelrisks-vue/package.json` (L3)
+* `kelrisks-vue/package-lock.json` (L3)
 
 ## Annexe
 

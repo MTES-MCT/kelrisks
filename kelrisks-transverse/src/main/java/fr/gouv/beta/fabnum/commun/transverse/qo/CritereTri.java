@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.commun.transverse.qo;
 
-
 import lombok.Data;
 
 import java.io.Serializable;
@@ -55,8 +54,8 @@ public class CritereTri implements Serializable {
     public CritereTri() {
     
         //        setPropriete(applicationProperties.getCritere().getTri().getDefaut()); TODO : Comprendre pourquoi les prop ne sont pas injectées (Problème d'ordre ?)
-        setPropriete("id");
-        setAscendant(true);
+        //        setPropriete("id");
+        //        setAscendant(true);
     }
     
     public void ajouteOrdre(OrderSpecifier<?> ordre) {
