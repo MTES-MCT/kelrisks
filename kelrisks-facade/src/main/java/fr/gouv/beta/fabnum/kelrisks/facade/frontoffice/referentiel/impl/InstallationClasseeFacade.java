@@ -46,7 +46,7 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
         InstallationClasseeQO installationClasseeQO = new InstallationClasseeQO();
     
         installationClasseeQO.setCodeINSEE(codeINSEE);
-        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode());
+        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode(), PrecisionEnum.RUE.getCode());
         installationClasseeQO.setPrecisions(precision);
         
         List<InstallationClasseeDTO> installationClasseeDTOs = installationClasseeMapper.toDTOs(installationClasseeService.rechercherAvecCritere(installationClasseeQO));

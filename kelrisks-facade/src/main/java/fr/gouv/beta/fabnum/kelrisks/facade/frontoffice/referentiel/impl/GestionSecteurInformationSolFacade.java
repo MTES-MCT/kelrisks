@@ -44,7 +44,7 @@ public class GestionSecteurInformationSolFacade extends AbstractFacade implement
         SecteurInformationSolQO secteurInformationSolQO = new SecteurInformationSolQO();
         
         secteurInformationSolQO.setCodeINSEE(codeINSEE);
-        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode());
+        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode(), PrecisionEnum.RUE.getCode());
         secteurInformationSolQO.setPrecisions(precision);
         
         List<SecteurInformationSolDTO> secteurInformationSolDTOS = secteurInformationSolMapper.toDTOs(secteurInformationSolService.rechercherAvecCritere(secteurInformationSolQO));
