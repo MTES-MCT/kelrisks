@@ -98,8 +98,9 @@ export default {
                 .then(stream => stream.json())
                 .then(value => {
                     this.stats = value
+                    // console.log(this.stats)
                     let demandeurs = this.getEventAction('Demandeur')
-                    // console.log(demandeurs)
+                    // console.log(demandeurs)/
                     this.professionnel_nb = demandeurs.events.Professionnel.nb_events
                     this.professionnel_pct = 100 / demandeurs.nb_events_sum * demandeurs.events.Professionnel.nb_events
                     this.particulier_nb = demandeurs.events.Particulier.nb_events
@@ -112,9 +113,9 @@ export default {
                     // console.log(pdf)
                     if (pdf.events.undefined) this.pdf_nb = pdf.events.undefined.nb_events
 
-                    let bureauEtude = this.getEventAction('Bureau_Etude')
+                    // let bureauEtude = this.getEventAction('Bureau_Etude')
                     // console.log(bureauEtude)
-                    if (bureauEtude.events.Bureau_Etude) this.bureau_etude_nb = bureauEtude.events.Bureau_Etude.nb_events
+                    if (avis.events.Bureau_Etude) this.bureau_etude_nb = avis.events.Bureau_Etude.nb_events
                 })
         },
         getEventAction (actionName) {
