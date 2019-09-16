@@ -8,7 +8,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDT
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseDataGouvFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionShortUrlFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,11 +48,11 @@ import com.itextpdf.kernel.pdf.WriterProperties;
 public class ApiAvis extends AbstractBasicApi {
     
     @Autowired
-    IGestionAvisFacade            gestionAvisFacade;
+    IGestionAvisFacade     gestionAvisFacade;
     @Autowired
-    IGestionAdresseDataGouvFacade gestionAdresseDataGouvFacade;
+    IGestionCommuneFacade  gestionCommuneFacade;
     @Autowired
-    IGestionShortUrlFacade        gestionShortUrlFacade;
+    IGestionShortUrlFacade gestionShortUrlFacade;
     
     public ApiAvis() {
         // Rien à faire
@@ -169,8 +169,8 @@ public class ApiAvis extends AbstractBasicApi {
         }
     
         //        TODO : Fetch la commune depuis adresse.data.gouv.fr
-        CommuneDTO communeDTO = gestionAdresseDataGouvFacade.rechercherCommune(codeINSEE).get(0);
-    
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
+        
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);
         
         avisDTO.getSummary().setCodeUrl(shortUrlDTO.getCode());
@@ -195,8 +195,8 @@ public class ApiAvis extends AbstractBasicApi {
         
         codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
     
-        CommuneDTO communeDTO = gestionAdresseDataGouvFacade.rechercherCommune(codeINSEE).get(0);
-    
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
+        
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);
         
         try {
@@ -256,7 +256,7 @@ public class ApiAvis extends AbstractBasicApi {
     
         element = htmlDocument.select("#infos").first();
     
-        CommuneDTO communeDTO = gestionAdresseDataGouvFacade.rechercherCommune(codeINSEE).get(0);
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         element.append("n°" + avisDTO.getSummary().getCodeParcelle() + " à " + communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
         
         redigerAnalyseParcelle(htmlDocument, avisDTO);
