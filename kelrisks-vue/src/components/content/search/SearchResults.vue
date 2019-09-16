@@ -401,7 +401,8 @@
                 <li v-if="avis.installationClasseeNonGeorerencee.numberOf > 0">- {{ avis.installationClasseeNonGeorerencee.numberOf }} installation(s) classée(s)</li>
                 <li v-if="avis.sisNonGeorerencee.numberOf > 0">- {{ avis.sisNonGeorerencee.numberOf }} secteur(s) d'information sur les sols</li>
             </ul>
-            <p>qui ne possèdent pas de coordonnées géographiques identifiées. Sans localisations précises, elles sont localisées dans le centre de la commune par défaut.</p>
+            <p>qui ne possèdent pas de coordonnées géographiques identifiées. Sans localisations précises, elles sont localisées dans le centre de la commune par défaut. La présente analyse n'en tient
+               donc pas compte.</p>
         </div>
 
         <div class="container"
