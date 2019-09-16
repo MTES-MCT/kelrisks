@@ -131,8 +131,8 @@
                 <h1 class="hero__white-background">Kelrisks</h1>
                 <p class="hero__white-background"
                    v-bind:class="{'contracted':flow.index > 1}">Evaluez simplement et rapidement le risque de pollution de votre terrain</p>
-                <p class="hero__white-background note"
-                   v-bind:class="{'contracted':flow.index > 1}">(Île-de-France)*</p>
+                <!--                <p class="hero__white-background note"-->
+                <!--                   v-bind:class="{'contracted':flow.index > 1}">(Île-de-France)*</p>-->
             </div>
         </div>
 
@@ -187,9 +187,9 @@
         <how-to class="clearfix container"
                 v-show="flow.index <= 1"/>
 
-        <div class="container">
-            <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>
-        </div>
+        <!--        <div class="container">-->
+        <!--            <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>-->
+        <!--        </div>-->
 
         <footer>
             <div>

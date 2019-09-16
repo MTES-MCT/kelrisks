@@ -82,6 +82,9 @@ public class SiteIndustrielBasolDAO extends AbstractDAO<SiteIndustrielBasol> imp
     @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
+        for (AbstractQO abstractQO : leCritere) {
+        
+        }
     }
     
     @Override

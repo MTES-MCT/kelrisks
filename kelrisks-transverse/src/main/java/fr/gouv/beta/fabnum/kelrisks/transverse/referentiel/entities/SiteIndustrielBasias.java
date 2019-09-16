@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities;
 
 import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,22 +17,28 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "basias")
 public class SiteIndustrielBasias extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
     
-    private String   identifiant;
-    private String   adresse;
-    @Column(name = "code_activite")
-    private String   codeActivite;
-    private String   geolocalisation;
+    @Column(name = "indice_departemental")
+    private String identifiant;
+    private String adresse;
+    @Column(name = "numero_insee")
+    private String codeInsee;
+    //    private String   geolocalisation;
     @Column(name = "raison_sociale")
-    private String   raisonSociale;
-    private String   precision;
+    private String raisonSociale;
+    
     @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
     @Type(type = "org.geolatte.geom.Geometry")
-    private Geometry point;
+    private Geometry multiPolygon;
+    @Column(name = "geog_precision")
+    private String   precision;
+    @Column(name = "adresse_id")
+    private String   adresseId;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)

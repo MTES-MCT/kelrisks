@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities;
 
 import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "short_url")
 public class ShortUrl extends AbstractEntity {
     

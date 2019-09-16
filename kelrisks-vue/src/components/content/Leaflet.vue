@@ -9,13 +9,18 @@
                         :options="adresseOptions"></l-geo-json>
             <l-geo-json :geojson="JSON.parse(data.parcelle)"
                         :options="parcelleOptions"
-                        :options-style="styleFunction"></l-geo-json>
+                        :options-style="parcelleStyleFunction"></l-geo-json>
             <l-geo-json :geojson="data.basias.map(x => JSON.parse(x))"
-                        :options="basiasOptions"></l-geo-json>
-            <l-geo-json :geojson="data.basol.map(x => JSON.parse(x))"></l-geo-json>
-            <l-geo-json :geojson="data.sis.map(x => JSON.parse(x))"></l-geo-json>
+                        :options="basiasOptions"
+                        :options-style="basiasStyleFunction"></l-geo-json>
+            <l-geo-json :geojson="data.basol.map(x => JSON.parse(x))"
+                        :options="basolOptions"
+                        :options-style="basolStyleFunction"></l-geo-json>
+            <l-geo-json :geojson="data.sis.map(x => JSON.parse(x))"
+                        :options-style="sisStyleFunction"></l-geo-json>
             <l-geo-json :geojson="data.icpe.map(x => JSON.parse(x))"
-                        :options="icpeOptions"></l-geo-json>
+                        :options="icpeOptions"
+                        :options-style="icpeStyleFunction"></l-geo-json>
             <l-geo-json :geojson="data.ssp.map(x => JSON.parse(x))"></l-geo-json>
         </l-map>
     </div>
@@ -53,7 +58,7 @@ export default {
     },
     data: () => ({
         url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-        zoom: 17,
+        zoom: 16,
         bounds: null
     }),
     methods: {
@@ -86,13 +91,19 @@ export default {
                 pointToLayer: this.createBasiasIcon
             };
         },
+        basolOptions () {
+            return {
+                onEachFeature: this.onEachFeatureFunction,
+                pointToLayer: this.createBasolIcon
+            };
+        },
         adresseOptions () {
             return {
                 onEachFeature: this.onEachFeatureFunction,
                 pointToLayer: this.createAdresseIcon
             };
         },
-        styleFunction () {
+        parcelleStyleFunction () {
             // const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor
             return () => {
                 return {
@@ -100,6 +111,50 @@ export default {
                     color: "#455674",
                     opacity: 0.8,
                     fillColor: "#455674",
+                    fillOpacity: 0.2
+                };
+            };
+        },
+        basiasStyleFunction () {
+            return () => {
+                return {
+                    weight: 2,
+                    color: "#EFEF00",
+                    opacity: 0.8,
+                    fillColor: "#EFEF00",
+                    fillOpacity: 0.2
+                };
+            };
+        },
+        basolStyleFunction () {
+            return () => {
+                return {
+                    weight: 2,
+                    color: "#FF9800",
+                    opacity: 0.8,
+                    fillColor: "#FF9800",
+                    fillOpacity: 0.2
+                };
+            };
+        },
+        sisStyleFunction () {
+            return () => {
+                return {
+                    weight: 2,
+                    color: "#C500FF",
+                    opacity: 0.8,
+                    fillColor: "#C500FF",
+                    fillOpacity: 0.2
+                };
+            };
+        },
+        icpeStyleFunction () {
+            return () => {
+                return {
+                    weight: 2,
+                    color: "#C00900",
+                    opacity: 0.8,
+                    fillColor: "#C00900",
                     fillOpacity: 0.2
                 };
             };
@@ -157,6 +212,20 @@ export default {
             return (feature, latlng) => {
                 let myIcon = icon({
                     iconUrl: '/images/leaflet/basias.svg',
+                    shadowUrl: '/images/leaflet/shadow.png',
+                    iconSize: [35, 35], // width and height of the image in pixels
+                    shadowSize: [30, 22], // width, height of optional shadow image
+                    iconAnchor: [17, 35], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [0, 24],  // anchor point of the shadow. should be offset
+                    popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+                })
+                return marker(latlng, {icon: myIcon})
+            };
+        },
+        createBasolIcon () {
+            return (feature, latlng) => {
+                let myIcon = icon({
+                    iconUrl: '/images/leaflet/basol.svg',
                     shadowUrl: '/images/leaflet/shadow.png',
                     iconSize: [35, 35], // width and height of the image in pixels
                     shadowSize: [30, 22], // width, height of optional shadow image

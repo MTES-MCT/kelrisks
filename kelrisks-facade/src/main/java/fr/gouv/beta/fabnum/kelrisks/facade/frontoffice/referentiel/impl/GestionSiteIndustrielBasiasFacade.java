@@ -8,9 +8,11 @@ import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISiteIndustrielBasi
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleService;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISiteIndustrielBasiasService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums.PrecisionEnum;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.SiteIndustrielBasiasQO;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.geolatte.geom.Geometry;
@@ -92,5 +94,19 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     public List<SiteIndustrielBasiasDTO> rechercherSitesSurParcelles(List<String> codes) {
         
         return siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesSurParcelles(codes));
+    }
+    
+    @Override
+    public List<SiteIndustrielBasiasDTO> rechercherSitesAvecFaiblePrecisionDeGeolocalisation(String codeINSEE) {
+        
+        SiteIndustrielBasiasQO siteIndustrielBasiasQO = new SiteIndustrielBasiasQO();
+        
+        siteIndustrielBasiasQO.setCodeINSEE(codeINSEE);
+        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode(), PrecisionEnum.RUE.getCode());
+        siteIndustrielBasiasQO.setPrecisions(precision);
+        
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherAvecCritere(siteIndustrielBasiasQO));
+        
+        return siteIndustrielBasiasDTOS;
     }
 }

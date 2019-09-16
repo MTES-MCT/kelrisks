@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities;
 
 import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import org.geolatte.geom.Geometry;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "cadastre")
 public class Parcelle extends AbstractEntity {
     

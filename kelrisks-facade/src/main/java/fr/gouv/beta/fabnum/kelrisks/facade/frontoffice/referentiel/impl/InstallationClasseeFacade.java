@@ -6,8 +6,10 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDT
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IInstallationClasseeMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IInstallationClasseeService;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums.PrecisionEnum;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.InstallationClasseeQO;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.geolatte.geom.Geometry;
@@ -39,12 +41,13 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
     }
     
     @Override
-    public List<InstallationClasseeDTO> rechercherInstallationsAuCentroideCommune(String codeINSEE) {
+    public List<InstallationClasseeDTO> rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(String codeINSEE) {
         
         InstallationClasseeQO installationClasseeQO = new InstallationClasseeQO();
     
         installationClasseeQO.setCodeINSEE(codeINSEE);
-        installationClasseeQO.setCentroideCommune(true);
+        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode(), PrecisionEnum.RUE.getCode());
+        installationClasseeQO.setPrecisions(precision);
         
         List<InstallationClasseeDTO> installationClasseeDTOs = installationClasseeMapper.toDTOs(installationClasseeService.rechercherAvecCritere(installationClasseeQO));
         
@@ -65,7 +68,6 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
     
     @Override
     public List<AutocompleteDTO> rechercherRaisonsSociales(String codeINSEE, String query) {
-        
         
         return installationClasseeMapper.toAutocompleteDTOs(installationClasseeService.rechercherRaisonsSociales(codeINSEE, query));
     }

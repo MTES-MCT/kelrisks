@@ -124,7 +124,8 @@ public class ApiAvis extends AbstractBasicApi {
     
     @GetMapping("/api/avis")
     public Response avis(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                         @RequestParam("codeINSEE") String codeINSEE, @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                         @RequestParam("codeINSEE") String codeINSEE,
+                         @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
                          @RequestParam(value = "geolocAdresse") String geolocAdresse,
                          @ApiParam(name = "nomAdresse", value = "Adresse.")
                          @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
@@ -155,6 +156,7 @@ public class ApiAvis extends AbstractBasicApi {
             if (codeParcelle == null) {
                 JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
                 jsonInfoDTO.addError("La parcelle n'a pas été trouvée ¯\\_(ツ)_/¯");
+                jsonInfoDTO.addInfo("Il peut arriver que certaines parcelles n'existent pas encore dans Kelrisks. Merci de réessayer plus tard ou de nous le signaler.");
                 return Response.ok(jsonInfoDTO).build();
             }
         }
@@ -165,8 +167,10 @@ public class ApiAvis extends AbstractBasicApi {
             jsonInfoDTO.addError("Merci d'entrer un code parcelle ou de choisir une adresse parmi les résultats proposés dans le champ.");
             return Response.ok(jsonInfoDTO).build();
         }
+    
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         
-        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomAdresse, geolocAdresse, nomProprietaire);
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);
         
         avisDTO.getSummary().setCodeUrl(shortUrlDTO.getCode());
         
@@ -178,7 +182,8 @@ public class ApiAvis extends AbstractBasicApi {
     @GetMapping("/api/avis/pdf")
     @ResponseBody
     public ResponseEntity<byte[]> avisPdf(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                                          @RequestParam("codeINSEE") String codeINSEE, @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                                          @RequestParam("codeINSEE") String codeINSEE,
+                                          @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
                                           @RequestParam(value = "geolocAdresse") String geolocAdresse,
                                           @ApiParam(name = "nomAdresse", value = "Adresse.")
                                           @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
@@ -188,8 +193,10 @@ public class ApiAvis extends AbstractBasicApi {
                                           @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
+    
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         
-        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomAdresse, geolocAdresse, nomProprietaire);
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);
         
         try {
             File baseAvis = ResourceUtils.getFile("classpath:avis.html");
@@ -247,7 +254,7 @@ public class ApiAvis extends AbstractBasicApi {
         element.text("Le " + simpleDateFormat.format(new Date()));
     
         element = htmlDocument.select("#infos").first();
-        
+    
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         element.append("n°" + avisDTO.getSummary().getCodeParcelle() + " à " + communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
         
@@ -352,18 +359,13 @@ public class ApiAvis extends AbstractBasicApi {
         
         Element element;
         element = htmlDocument.select("#sisParcelle").first();
-        //        int numberOf = avisDTO.getInstallationClasseeSurParcelleDTOs().size();
-        //        if (numberOf == 0) {
-        element.append("N’est pas situé en secteur d’information sur les sols (SIS).");
-        //        }
-        //        else {
-        //            element.append("Est référencée dans l\'inventaire des installations classées sous le nom de :");
-        //            element = element.appendElement("ul");
-        //            for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeSurParcelleDTOs()) {
-        //                element.appendElement("li").append(" - " + site.getRaisonSociale());
-        //            }
-        //        }
-        
+        int numberOf = avisDTO.getInstallationClasseeSurParcelleDTOs().size();
+        if (numberOf == 0) {
+            element.append("N’est pas située en secteur d’information sur les sols (SIS).");
+        }
+        else {
+            element.append("Est située en secteur d’information sur les sols (SIS).");
+        }
     }
     
     private void redigerInstallationClasseeParcelle(Document htmlDocument, AvisDTO avisDTO) {
@@ -378,7 +380,7 @@ public class ApiAvis extends AbstractBasicApi {
             element.append("Est référencée dans l\'inventaire des installations classées sous le nom de :");
             element = element.appendElement("ul");
             for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeSurParcelleDTOs()) {
-                element.appendElement("li").append(site.getRaisonSociale());
+                element.appendElement("li").append(site.getNom());
             }
         }
     }
@@ -490,7 +492,7 @@ public class ApiAvis extends AbstractBasicApi {
         element.append("Le résultat de cette recherche ne tient pas compte des " + numberOf + " sites identifiés sur la commune qui n’ont pu être géolocalisés faute d’une information suffisante : ");
         element = element.appendElement("ul");
         for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeNonGeorerenceesDTOs()) {
-            element.appendElement("li").append(" - " + site.getRaisonSociale());
+            element.appendElement("li").append(" - " + site.getNom());
         }
     }
     
@@ -549,7 +551,7 @@ public class ApiAvis extends AbstractBasicApi {
             }
             element = element.appendElement("ul");
             for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeRayonParcelleDTOs()) {
-                element.appendElement("li").append(" - " + site.getRaisonSociale());
+                element.appendElement("li").append(" - " + site.getNom());
             }
         }
     }

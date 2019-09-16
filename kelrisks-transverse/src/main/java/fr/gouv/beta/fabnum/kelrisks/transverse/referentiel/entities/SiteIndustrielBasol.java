@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities;
 
 import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,45 +13,38 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.geolatte.geom.Geometry;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "basol")
 public class SiteIndustrielBasol extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
     
-    @Column(name = "numerosite")
-    String numerosite;
+    @NaturalId
     @Column(name = "numerobasol")
-    String numerobasol;
-    @Column(name = "numeros3ic")
-    String numeros3ic;
+    private String numerobasol;
     @Column(name = "identifiantbasias")
-    String identifiantbasias;
-    //    @Column(name = "georeferencement")
-    //    String georeferencement;
-    //    @Column(name = "coordxlambertii")
-    //    String coordxlambertii;
-    //    @Column(name = "coordylambertii")
-    //    String coordylambertii;
-    //    @Column(name = "precision")
-    //    String precision;
+    private String identifiantbasias;
     @Column(name = "adresse")
-    String adresse;
+    private String adresse;
     @Column(name = "commune")
-    String commune;
-    @Column(name = "codeinsee")
-    String codeinsee;
-    @Column(name = "codepostal")
-    String codepostal;
+    private String commune;
+    @Column(name = "code_insee")
+    private String codeInsee;
     @Column(name = "proprietaire")
-    String proprietaire;
-    @Column(name = "responsable")
-    String responsable;
+    private String proprietaire;
     
-    @Column(name = "geog", columnDefinition = "geometry")
-    private Geometry point;
+    @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
+    @Type(type = "org.geolatte.geom.Geometry")
+    private Geometry multiPolygon;
+    @Column(name = "geog_precision")
+    private String   precision;
+    @Column(name = "adresse_id")
+    private String   adresseId;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -63,7 +57,6 @@ public class SiteIndustrielBasol extends AbstractEntity {
         StringBuffer cleFonc = new StringBuffer();
         
         //TODO : Définir une clé fonctionnelle
-        
         
         return cleFonc.toString().toUpperCase();
     }

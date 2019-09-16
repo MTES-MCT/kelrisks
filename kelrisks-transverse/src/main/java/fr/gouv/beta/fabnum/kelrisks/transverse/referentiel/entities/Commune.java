@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities;
 
 import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "adresse_commune")
 public class Commune extends AbstractEntity {
     
@@ -28,7 +30,7 @@ public class Commune extends AbstractEntity {
     @Id
     @Column(name = "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_commune")
-    @SequenceGenerator(name = "seq_commune", sequenceName = "commune_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "seq_commune", sequenceName = "adresse_commune_id_seq", allocationSize = 1)
     private Long id;
     
     public String getCleFonc() {

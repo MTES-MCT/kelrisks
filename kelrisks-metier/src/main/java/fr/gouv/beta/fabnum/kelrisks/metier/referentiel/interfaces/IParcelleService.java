@@ -22,5 +22,7 @@ public interface IParcelleService extends IAbstractCRUDService<Parcelle> {
     Geometry rechercherExpendedParcelle(String code, double distance);
     
     Geometry rechercherUnionParcellesContigues(Geometry polygon);
+    
+    Geometry rechercherCentroidParcelle(Geometry polygon);
 }
   

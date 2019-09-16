@@ -59,8 +59,8 @@ public class ApiS3IC extends AbstractBasicApi {
     //    @ApiOperation(value = "Requête retournant les installations classées associées au centroïde de la commune.", response = String.class)
     public Response installationFromAdresse(@ApiParam(required = true, name = "codeINSEE", value = "Code postal de la commune.")
                                             @PathVariable("codeINSEE") String codeINSEE) {
-        
-        List<InstallationClasseeDTO> installationClasseeDTO = gestionInstallationClasseeFacade.rechercherInstallationsAuCentroideCommune(codeINSEE);
+    
+        List<InstallationClasseeDTO> installationClasseeDTO = gestionInstallationClasseeFacade.rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(codeINSEE);
         
         return Response.ok(installationClasseeDTO).build();
     }
