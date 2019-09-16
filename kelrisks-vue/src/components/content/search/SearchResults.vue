@@ -647,7 +647,7 @@ export default {
             return conclusionNumber
         },
         concordances: function () {
-            return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
+            return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf + this.avis.sisParcelle.numberOf
         },
         concordances_risques: function () {
             return this.avis.potentielRadon >= 3 || this.avis.codeSismicite >= 3
