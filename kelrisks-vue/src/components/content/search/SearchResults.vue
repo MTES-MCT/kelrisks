@@ -30,7 +30,7 @@
                                                                                                class="lien"
                                                                                                v-show="visibility.modifier">Modifier</a>
                 </div>
-                <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
+                <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
                 <b>Code parcelle&nbsp;: </b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
                 <b>Raison
                    Sociale&nbsp;: </b><span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
