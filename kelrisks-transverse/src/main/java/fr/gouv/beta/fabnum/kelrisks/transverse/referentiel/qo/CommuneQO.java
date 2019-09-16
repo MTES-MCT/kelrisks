@@ -27,6 +27,7 @@ public class CommuneQO extends AbstractQO {
         if (communePartielle != null) {
             BooleanBuilder orBuilder = new BooleanBuilder();
             orBuilder.or(QCommune.commune.codePostal.containsIgnoreCase(communePartielle));
+            orBuilder.or(QCommune.commune.codeINSEE.containsIgnoreCase(communePartielle));
             orBuilder.or(QCommune.commune.nomCommune.containsIgnoreCase(communePartielle));
             builder.and(orBuilder);
         }

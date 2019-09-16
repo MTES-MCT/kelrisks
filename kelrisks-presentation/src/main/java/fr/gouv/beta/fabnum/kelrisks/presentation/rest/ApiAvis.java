@@ -167,8 +167,11 @@ public class ApiAvis extends AbstractBasicApi {
             jsonInfoDTO.addError("Merci d'entrer un code parcelle ou de choisir une adresse parmi les résultats proposés dans le champ.");
             return Response.ok(jsonInfoDTO).build();
         }
+    
+        //        TODO : Fetch la commune depuis adresse.data.gouv.fr
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         
-        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomAdresse, geolocAdresse, nomProprietaire);
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);
         
         avisDTO.getSummary().setCodeUrl(shortUrlDTO.getCode());
         
@@ -180,7 +183,8 @@ public class ApiAvis extends AbstractBasicApi {
     @GetMapping("/api/avis/pdf")
     @ResponseBody
     public ResponseEntity<byte[]> avisPdf(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                                          @RequestParam("codeINSEE") String codeINSEE, @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+                                          @RequestParam("codeINSEE") String codeINSEE,
+                                          @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
                                           @RequestParam(value = "geolocAdresse") String geolocAdresse,
                                           @ApiParam(name = "nomAdresse", value = "Adresse.")
                                           @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
@@ -190,8 +194,10 @@ public class ApiAvis extends AbstractBasicApi {
                                           @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
+    
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         
-        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, codeINSEE, nomAdresse, geolocAdresse, nomProprietaire);
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);
         
         try {
             File baseAvis = ResourceUtils.getFile("classpath:avis.html");
@@ -249,7 +255,7 @@ public class ApiAvis extends AbstractBasicApi {
         element.text("Le " + simpleDateFormat.format(new Date()));
     
         element = htmlDocument.select("#infos").first();
-        
+    
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         element.append("n°" + avisDTO.getSummary().getCodeParcelle() + " à " + communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
         

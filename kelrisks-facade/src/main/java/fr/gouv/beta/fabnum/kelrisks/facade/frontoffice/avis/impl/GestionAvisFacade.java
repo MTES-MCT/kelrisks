@@ -4,6 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.commun.utils.GeoJsonUtils;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AbstractLocalisationAvecPrecision;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesDTO;
@@ -65,17 +66,16 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionPlanPreventionRisquesFacade gestionPlanPreventionRisquesFacade;
     
     @Override
-    public AvisDTO rendreAvis(String codeParcelle, String codeINSEE, String nomAdresse, String geolocAdresse, String nomProprietaire) {
+    public AvisDTO rendreAvis(String codeParcelle, CommuneDTO communeDTO, String nomAdresse, String geolocAdresse, String nomProprietaire) {
         
         AvisDTO avisDTO = new AvisDTO();
     
-        //        TODO : Modifier si le périmètre change
-        if (!codeINSEE.matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
-            avisDTO.addWarning("Le territoire d'expérimentation de Kelrisks est pour l'instant limité à l'Île de France.");
-            return avisDTO;
-        }
+        //        if (!codeINSEE.matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
+        //            avisDTO.addWarning("Le territoire d'expérimentation de Kelrisks est pour l'instant limité à l'Île de France.");
+        //            return avisDTO;
+        //        }
     
-        avisDTO.getSummary().setCommune(gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE));
+        avisDTO.getSummary().setCommune(communeDTO);
         avisDTO.getSummary().setNomProprietaire(nomProprietaire);
         
         // Recherche d'une parcelle à partir de l'adresse si aucune n'a été fournie
@@ -138,19 +138,19 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         }
         else { parcelleSitesSolsPolues.add(parcelleDTO.getMultiPolygon()); }
     
-        getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire, codeINSEE);
+        getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire, communeDTO.getCodeINSEE());
     
-        getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
+        getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
+    
+        getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
+    
+        getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
         
-        getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
-    
-        getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, codeINSEE);
-    
         getAvisPPR(avisDTO, parcelleSitesSolsPolues);
     
-        getAvisSismicite(avisDTO, codeINSEE);
+        getAvisSismicite(avisDTO, communeDTO.getCodeINSEE());
     
-        getAvisRadon(avisDTO, codeINSEE);
+        getAvisRadon(avisDTO, communeDTO.getCodeINSEE());
         
         return avisDTO;
     }
