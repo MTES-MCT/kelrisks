@@ -168,7 +168,6 @@ public class ApiAvis extends AbstractBasicApi {
             return Response.ok(jsonInfoDTO).build();
         }
     
-        //        TODO : Fetch la commune depuis adresse.data.gouv.fr
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);

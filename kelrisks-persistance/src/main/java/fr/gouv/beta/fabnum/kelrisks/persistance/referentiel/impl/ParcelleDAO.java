@@ -82,6 +82,7 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
         //        List<Geometry> geometries = parcelles.stream().limit(2).map(Parcelle::getMultiPolygon).collect(Collectors.toList());
         
         String wkt = parcelleRepository.rechercherUnionParcellesContigues(polygon);
+        if (wkt == null) { return polygon; }
         return Wkt.fromWkt(wkt);
     }
     

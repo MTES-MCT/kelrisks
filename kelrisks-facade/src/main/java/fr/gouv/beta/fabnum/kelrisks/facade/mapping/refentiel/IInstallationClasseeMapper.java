@@ -12,19 +12,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(config = ICommonMapperConfig.class,
-        imports = {GeoJsonUtils.class, Map.class, Collectors.class, Stream.class, AbstractMap.class})
+        imports = {GeoJsonUtils.class, Map.class, Collectors.class, Stream.class, AbstractMap.class, StringUtils.class})
 public interface IInstallationClasseeMapper extends IGeometryMapper {
     
     List<InstallationClasseeDTO> toDTOs(List<InstallationClassee> installationClassees);
     
     //    @formatter:off
     @Mappings(
-            @Mapping(target = "ewkt", expression = "java(GeoJsonUtils.toGeoJson(installationClassee.getMultiPolygon(), Stream.of(new AbstractMap.SimpleEntry<>(\"nom\", installationClassee.getNom()), new AbstractMap.SimpleEntry<>(\"code\", installationClassee.getCode())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
+            @Mapping(target = "ewkt", expression = "java(GeoJsonUtils.toGeoJson(installationClassee.getMultiPolygon(), Stream.of(new AbstractMap.SimpleEntry<>(\"nom\", StringUtils.stripToEmpty(installationClassee.getNom())), new AbstractMap.SimpleEntry<>(\"code\", StringUtils.stripToEmpty(installationClassee.getCode()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
     )
     //    @formatter:on
     InstallationClasseeDTO toDTO(InstallationClassee installationClassee);

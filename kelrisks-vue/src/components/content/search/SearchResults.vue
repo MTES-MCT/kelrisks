@@ -30,7 +30,7 @@
                                                                                                class="lien"
                                                                                                v-show="visibility.modifier">Modifier</a>
                 </div>
-                <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
+                <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
                 <b>Code parcelle&nbsp;: </b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
                 <b>Raison
                    Sociale&nbsp;: </b><span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
@@ -401,7 +401,8 @@
                 <li v-if="avis.installationClasseeNonGeorerencee.numberOf > 0">- {{ avis.installationClasseeNonGeorerencee.numberOf }} installation(s) classée(s)</li>
                 <li v-if="avis.sisNonGeorerencee.numberOf > 0">- {{ avis.sisNonGeorerencee.numberOf }} secteur(s) d'information sur les sols</li>
             </ul>
-            <p>qui ne possèdent pas de coordonnées géographiques identifiées. Sans localisations précises, elles sont localisées dans le centre de la commune par défaut.</p>
+            <p>qui ne possèdent pas de coordonnées géographiques identifiées. Sans localisations précises, elles sont localisées dans le centre de la commune par défaut. La présente analyse n'en tient
+               donc pas compte.</p>
         </div>
 
         <div class="container"
@@ -646,7 +647,7 @@ export default {
             return conclusionNumber
         },
         concordances: function () {
-            return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf
+            return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf + this.avis.sisParcelle.numberOf
         },
         concordances_risques: function () {
             return this.avis.potentielRadon >= 3 || this.avis.codeSismicite >= 3

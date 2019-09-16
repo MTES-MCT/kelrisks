@@ -12,19 +12,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(config = ICommonMapperConfig.class,
-        imports = {GeoJsonUtils.class, Map.class, Collectors.class, Stream.class, AbstractMap.class})
+        imports = {GeoJsonUtils.class, Map.class, Collectors.class, Stream.class, AbstractMap.class, StringUtils.class})
 public interface ISiteIndustrielBasiasMapper extends IGeometryMapper {
     
     List<SiteIndustrielBasiasDTO> toDTOs(List<SiteIndustrielBasias> siteIndustrielBasias);
     
     //    @formatter:off
     @Mappings(
-            @Mapping(target = "ewkt", expression = "java(GeoJsonUtils.toGeoJson(siteIndustrielBasias.getMultiPolygon(), Stream.of(new AbstractMap.SimpleEntry<>(\"raisonSociale\", siteIndustrielBasias.getRaisonSociale()), new AbstractMap.SimpleEntry<>(\"identifiant\", siteIndustrielBasias.getIdentifiant())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
+            @Mapping(target = "ewkt", expression = "java(GeoJsonUtils.toGeoJson(siteIndustrielBasias.getMultiPolygon(), Stream.of(new AbstractMap.SimpleEntry<>(\"raisonSociale\", StringUtils.stripToEmpty(siteIndustrielBasias.getRaisonSociale())), new AbstractMap.SimpleEntry<>(\"identifiant\", StringUtils.stripToEmpty(siteIndustrielBasias.getIdentifiant()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
     )
     //    @formatter:on
     SiteIndustrielBasiasDTO toDTO(SiteIndustrielBasias siteIndustrielBasias);
