@@ -81,16 +81,19 @@
 
                 <div class="numbers_wrapper">
                     <big-number :any-match="(concordances && concordances > 0)"
+                                id="basiasParcelle"
                                 :number-of="avis.basiasParcelle.numberOf"
                                 info-text="Base des Anciens Sites Industriels et Activités de Services. C’est l’inventaire de toutes les activités industriels abandonnées ou non, susceptibles d'avoir engendré une pollution de l'environnement. L’inscription d’une parcelle à cet inventaire ne préjuge pas de l’existence d’une pollution."
                                 label-text="Sites pollués BASIAS"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
+                                id="basolParcelle"
                                 :number-of="avis.basolParcelle.numberOf"
                                 info-text="Base de données sur les sites et sols pollués. c’est l’inventaire des sites sur lesquels la présence d’une pollution a nécessité une action des pouvoirs publics soit à titre préventif soit à titre curatif."
                                 label-text="Sites pollués BASOL"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
+                                id="icParcelle"
                                 :number-of="avis.installationClasseeParcelle.numberOf"
                                 info-text="Inventaire des activités régies par la réglementation des installations dites classées pour la protection de l’environnement en raison des risques, des pollutions et des nuisances que ces activités génèrent."
                                 label-text="Installations classées"/>
@@ -320,7 +323,7 @@
              v-if="tab.concordances.index === 'POLLUTION'">
             <div class="title">Résumé et analyse à 100m :</div>
             <p><strong>Votre parcelle,</strong><br></p>
-            <p>{{ '- ' + avis.basiasParcelle.lib }}</p>
+            <p id="basiasParcelle_anchor">{{ '- ' + avis.basiasParcelle.lib }}</p>
             <template v-if="avis.basiasParcelle.numberOf > 0">
                 <ul class="site-list">
                     <li :key="sibasias.id"
@@ -330,7 +333,7 @@
                     </li>
                 </ul>
             </template>
-            <p>{{ '- ' + avis.basolParcelle.lib }}</p>
+            <p id="basolParcelle_anchor">{{ '- ' + avis.basolParcelle.lib }}</p>
             <template v-if="avis.basolParcelle.numberOf > 0">
                 <ul class="site-list">
                     <li :key="sibasol.id"
@@ -339,7 +342,7 @@
                            target="_blank">https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp={{ sibasol.numerobasol }}</a></li>
                 </ul>
             </template>
-            <p>{{ '- ' + avis.installationClasseeParcelle.lib }}</p>
+            <p id="icParcelle_anchor">{{ '- ' + avis.installationClasseeParcelle.lib }}</p>
             <template v-if="avis.installationClasseeParcelle.numberOf > 0">
                 <ul class="site-list">
                     <li :key="ic.id"
