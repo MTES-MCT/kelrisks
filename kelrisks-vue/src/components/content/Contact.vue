@@ -15,6 +15,9 @@
        class="section__subtitle">Une remarque? Une suggestion?</p>
     <textarea id="contactContent"
               title="Remarque/Suggestion/Problème?"></textarea>
+    <kr-input label="Vous souhaitez être recontacté ?"
+              name="contactMail"
+              placeholder="jean.dupont@gmail.com"/>
     <button @click="sendMail()"
             class="button">Envoyer
     </button>
@@ -23,11 +26,13 @@
 
 <script>
 import JQuery from 'jquery'
+import KrInput from "../ui/KrInput";
 
 let $ = JQuery
 
 export default {
   name: 'Contact',
+  components: {KrInput},
   props: {
     timeout: {
       type: Number,
@@ -69,13 +74,13 @@ export default {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({content: $('#contactContent').val()})
+        body: JSON.stringify({content: $('#contactContent').val(), mail: $('#contactMail').val()})
       }).then(stream => stream.json())
-          .then(() => {
-          this.closeContact()
-          $('#contactContent').val('')
-          // console.log(value)
-        })
+              .then(() => {
+                this.closeContact()
+                $('#contactContent').val('')
+                // console.log(value)
+              })
     }
   },
   mounted () {
@@ -97,7 +102,7 @@ export default {
   }
 
   #contact.hidden {
-    bottom : -167px;
+    bottom : -230px;
   }
 
   #contact .close {
@@ -114,6 +119,11 @@ export default {
   }
 
   #contact textarea {
+    margin-bottom : 10px;
+    resize        : none;
+  }
+
+  #contact input {
     margin-bottom : 20px;
     resize        : none;
   }

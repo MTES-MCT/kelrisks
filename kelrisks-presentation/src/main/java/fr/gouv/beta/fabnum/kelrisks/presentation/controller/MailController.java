@@ -13,6 +13,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -41,13 +42,13 @@ public class MailController {
                       "Le message suivant a été envoyé par un utilisateur via Kelrisks :<br><br>" +
                       "<i>" + mailModel.getContent() + "</i><br><br>" +
                       "Kelrisks";
-        
-        sendMail(body);
+    
+        sendMail(body, mailModel.getMail());
         
         return Response.ok().build();
     }
     
-    private void sendMail(String body) {
+    private void sendMail(String body, String userMail) {
         
         try {
             Properties props = System.getProperties();
@@ -68,9 +69,11 @@ public class MailController {
                 }
             });
             session.setDebug(true);
-            
-            MimeMessage     mail        = new MimeMessage(session);
-            InternetAddress addressFrom = new InternetAddress(FROM, FROM_FULL);
+    
+            MimeMessage     mail = new MimeMessage(session);
+            InternetAddress addressFrom;
+            if (StringUtils.isEmpty(userMail)) { addressFrom = new InternetAddress(FROM, FROM_FULL); }
+            else { addressFrom = new InternetAddress(userMail, "Un usager Kelrisks"); }
             mail.setSender(addressFrom);
             mail.setFrom(addressFrom);
             mail.setRecipient(Message.RecipientType.TO, new InternetAddress(TO));
@@ -91,8 +94,9 @@ public class MailController {
     
     @Data
     public static class MailModel {
-        
+    
         String content;
+        String mail;
     }
 }
 
