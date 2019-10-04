@@ -53,11 +53,11 @@
              id="concordances_wrapper">
 
             <div class="tabWrapper">
-                <div @click="tab.concordances.index = 'POLLUTION'"
+                <div @click="switchTab('POLLUTION')"
                      class="tab"
                      v-bind:class="{ selected:tab.concordances.index === 'POLLUTION'}">Pollution
                 </div>
-                <div @click="tab.concordances.index = 'RISQUES'"
+                <div @click="switchTab('RISQUES')"
                      class="tab"
                      v-bind:class="{ selected:tab.concordances.index === 'RISQUES'}">Risques
                 </div>
@@ -511,6 +511,9 @@ export default {
         },
         tab: {
             concordances: {
+                pollution: {
+                    vu: false
+                },
                 index: 'POLLUTION'
             }
         }
@@ -520,6 +523,13 @@ export default {
             // console.log(this.visibility.details)
             this.visibility.details = !this.visibility.details
             // console.log(this.visibility.details)
+        },
+        switchTab (name) {
+            this.tab.concordances.index = name;
+            if (this.tab.concordances.index === 'RISQUES' && !this.tab.concordances.pollution.vu) {
+                this._paq.push(['trackEvent', 'Flow', 'Avis', 'Risques'])
+                this.tab.concordances.pollution.vu = true
+            }
         },
         getAvis () {
             this.clearAll()
