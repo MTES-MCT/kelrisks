@@ -93,6 +93,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                                                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
             avisDTO.getSummary().setAdresse(nomAdresse);
     
+            if (parcelleDTO == null) {
+                avisDTO.addError("Aucune parcelle n'a été trouvée à l'addresse indiquée !");
+                return avisDTO;
+            }
+    
             codeParcelle = parcelleDTO.getCode();
     
             avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(geolocAdresse.split("\\|")[0],

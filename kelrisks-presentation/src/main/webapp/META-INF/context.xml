@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context docBase="/kelrisks"
-         path="kelrisks"
+         path="/kelrisks"
          reloadable="false">
     <Resource name="jdbc/kelrisks"
               auth="Container"
