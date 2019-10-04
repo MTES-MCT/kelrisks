@@ -102,7 +102,7 @@ export default {
   }
 
   #contact.hidden {
-    bottom : -230px;
+    bottom : -235px;
   }
 
   #contact .close {

@@ -17,33 +17,36 @@
 
         <a @click="copyLink"
            class="lien big"
-           style="float: left">Copier l’URL</a>
+           id="copyLink">Copier l’URL</a>
         <input :value="env.basePath + '#/' + avis.summary.codeUrl"
                id="copyInput"
                style="position: absolute; left: -1000px; top: -1000px;"/>
 
-        <div class="container bordered"
-             id="summary_wrapper">
-            <div id="summary">
-                <div style="margin-bottom: 20px"><span class="title">Votre recherche </span><a @click="() => {  $emit('flow', -1)
+        <div id="summary_leaflet_wrapper">
+            <div class="container bordered"
+                 id="summary_wrapper">
+                <div id="summary">
+                    <div style="margin-bottom: 20px"><span class="title">Votre recherche </span><a @click="() => {  $emit('flow', -1)
                                                                                                 _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])}"
-                                                                                               class="lien"
-                                                                                               v-show="visibility.modifier">Modifier</a>
+                                                                                                   class="lien"
+                                                                                                   v-show="visibility.modifier">Modifier</a>
+                    </div>
+                    <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
+                    <b>Code parcelle&nbsp;: </b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
+                    <b>Raison
+                       Sociale&nbsp;: </b><span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
+                    <br>
+                    <a :href="env.basePath"
+                       @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
+                       class="lien">Nouvelle recherche</a>
                 </div>
-                <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
-                <b>Code parcelle&nbsp;: </b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
-                <b>Raison
-                   Sociale&nbsp;: </b><span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
-                <br>
-                <a :href="env.basePath"
-                   @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
-                   class="lien">Nouvelle recherche</a>
             </div>
-        </div>
 
-        <div class="container bordered leaflet_wrapper">
-            <leaflet :center="leaflet.center"
-                     :data="leaflet.data"/>
+            <div class="container bordered"
+                 id="leaflet_wrapper">
+                <leaflet :center="leaflet.center"
+                         :data="leaflet.data"/>
+            </div>
         </div>
 
         <div class="container bordered"
@@ -671,7 +674,7 @@ export default {
     @import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
 
     #section4 {
-        padding        : 30px 140px 0;
+        padding        : 30px 40px 0;
         text-align     : left;
         font-family    : 'Nunito Sans', sans-serif;
         font-size      : 16px;
@@ -680,6 +683,12 @@ export default {
         font-stretch   : normal;
         line-height    : normal;
         letter-spacing : normal;
+    }
+
+    @media (min-width : 1000px) {
+        #section4 {
+            padding : 30px 140px 0;
+        }
     }
 
     .container {
@@ -697,16 +706,23 @@ export default {
         text-decoration  : none;
         margin-right     : 20px;
         margin-bottom    : 20px;
+        display          : block;
     }
 
     .bouton:hover {
         background-color : #003B80;
     }
 
+    #copyLink {
+        float         : left;
+        margin-right  : 20px;
+        margin-bottom : 20px;
+    }
+
     .lien {
         padding         : 9px 0;
         background      : none;
-        height          : 22px;
+        /*height          : 22px;*/
         color           : #0053B3;
         text-decoration : none;
     }
@@ -721,24 +737,48 @@ export default {
         color      : #003B80;
     }
 
+    #summary_leaflet_wrapper {
+        width   : 100%;
+        display : flex;
+    }
+
     #summary_wrapper {
-        clear      : both;
-        float      : left;
         width      : calc(50% - 10px);
         text-align : left;
     }
 
-    .leaflet_wrapper {
-        float       : left;
+    #leaflet_wrapper {
         width       : calc(50% - 10px);
         margin-left : 20px;
         padding     : 0 !important;
-        height      : 209px;
+        /*height      : 209px;*/
+    }
+
+    @media (max-width : 1000px) {
+
+        #summary_leaflet_wrapper {
+            display : block;
+        }
+
+        #summary_wrapper {
+            clear : both;
+            float : left;
+            width : 100%;
+        }
+
+        #leaflet_wrapper {
+            clear       : both;
+            float       : left;
+            width       : 100%;
+            margin-left : 0;
+            margin-top  : 20px;
+            height      : 210px;
+        }
     }
 
     .tabWrapper {
         position                : absolute;
-        top                     : -4em;
+        top                     : -4.05em;
         left                    : -1px;
         border                  : 1px solid #CCCCCC;
         border-bottom           : none;
@@ -750,10 +790,10 @@ export default {
 
     .tabWrapper .tab {
         float            : left;
-        padding          : 10px 20px;
+        padding          : 10px 20px 9px;
         border-left      : 1px solid #CCCCCC;
         background-color : #F8F8F8;
-        border-bottom    : 1px solid #CCCCCC;
+        border-bottom    : 1px solid #FFFFFF;
         cursor           : pointer;
     }
 
@@ -762,9 +802,10 @@ export default {
     }
 
     .tabWrapper .tab.selected {
+        padding          : 10px 20px;
         background-color : #0053B3;
         color            : #FFFFFF;
-        border-bottom    : 1px solid #FFFFFF;
+        border-bottom    : 1px solid #0053B3;
     }
 
     #concordances_wrapper {
@@ -786,6 +827,12 @@ export default {
         background-color : #FAFAFA;
         height           : 145px;
         margin           : 30px 0;
+    }
+
+    @media (max-width : 500px) {
+        #concordances_wrapper .numbers_wrapper {
+            display : none;
+        }
     }
 
     #conclusion_wrapper, #resume_wrapper, #non_georef_wrapper {
