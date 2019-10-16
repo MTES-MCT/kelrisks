@@ -268,25 +268,160 @@ public class ApiAvis extends AbstractBasicApi {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.FRANCE);
         element.text("Le " + simpleDateFormat.format(new Date()));
     
-        element = htmlDocument.select("#infos").first();
-    
+        element = htmlDocument.select("#commune").first();
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
-        element.append("n°" + avisDTO.getSummary().getCodeParcelle() + " à " + communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
+        element.append(communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
+    
+        element = htmlDocument.select("#parcelle").first();
+        element.append(avisDTO.getSummary().getCodeParcelle());
+    
+        element = htmlDocument.select("#raison_sociale").first();
+        element.append(!StringUtils.isEmpty(avisDTO.getSummary().getNomProprietaire()) ? avisDTO.getSummary().getNomProprietaire() : "n/a");
         
         redigerAnalyseParcelle(htmlDocument, avisDTO);
     
-        redigerConclusion(htmlDocument, avisDTO);
-        
-        redigerAnalyseComplementaire(htmlDocument, avisDTO);
+        redigerConsequences(htmlDocument, avisDTO);
+    
+        redigerInformationsComplementaire(htmlDocument, avisDTO);
+    
+        redigerInstallationsSansReferencesGeographiques(htmlDocument, avisDTO);
     }
     
-    private void redigerConclusion(Document htmlDocument, AvisDTO avisDTO) {
+    private void redigerInstallationsSansReferencesGeographiques(Document htmlDocument, AvisDTO avisDTO) {
+        
+        if (avisDTO.getSiteIndustrielBasiasNonGeorerenceesDTOs().size() == 0 &&
+            avisDTO.getSiteIndustrielBasolNonGeorerenceesDTOs().size() == 0 &&
+            avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size() == 0) {
+            
+            htmlDocument.select("#installationsNonGeoreferenceesWrapper").first().remove();
+        }
+        else {
+            
+            redigerSitesBasiasNonGeoreferences(htmlDocument, avisDTO);
+            
+            redigerSitesBasolNonGeoreferences(htmlDocument, avisDTO);
+            
+            redigerInstallationsClasseesNonGeoreferencees(htmlDocument, avisDTO);
+        }
+    }
     
+    private void redigerSitesBasiasNonGeoreferences(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element = htmlDocument.select("#basiasCommune").first();
+        
+        int numberOf = avisDTO.getSiteIndustrielBasiasNonGeorerenceesDTOs().size();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 site BASIAS");
+            }
+            else {
+                element.append(numberOf + " sites BASIAS");
+            }
+        }
+        
+        element = htmlDocument.select("#basiasCommuneList").first();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 site BASIAS :");
+            }
+            else {
+                element.append(numberOf + " sites BASIAS :");
+            }
+            element = element.appendElement("ul");
+            for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasNonGeorerenceesDTOs()) {
+                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>http://fiches-risques.brgm" +
+                                                   ".fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
+            }
+        }
+    }
+    
+    private void redigerSitesBasolNonGeoreferences(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element;
+        int     numberOf;
+        element = htmlDocument.select("#basolCommune").first();
+        
+        numberOf = avisDTO.getSiteIndustrielBasolNonGeorerenceesDTOs().size();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 site BASOL");
+            }
+            else {
+                element.append(numberOf + " sites BASOL");
+            }
+        }
+        
+        element = htmlDocument.select("#basolCommuneList").first();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 site BASOL :");
+            }
+            else {
+                element.append(numberOf + " sites BASOL :");
+            }
+            element = element.appendElement("ul");
+            for (SiteIndustrielBasolDTO site : avisDTO.getSiteIndustrielBasolNonGeorerenceesDTOs()) {
+                element.appendElement("li").append(" - <a href='https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "'>https://basol" +
+                                                   ".developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "</a>");
+            }
+        }
+    }
+    
+    private void redigerInstallationsClasseesNonGeoreferencees(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element = htmlDocument.select("#icCommune").first();
+        
+        int numberOf;
+        numberOf = avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 installation classée");
+            }
+            else {
+                element.append(numberOf + " installations classées");
+            }
+        }
+        
+        element = htmlDocument.select("#icCommuneList").first();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 installation classée :");
+            }
+            else {
+                element.append(numberOf + " installations classées :");
+            }
+            element = element.appendElement("ul");
+            for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeNonGeorerenceesDTOs()) {
+                element.appendElement("li").append(site.getNom());
+            }
+        }
+    }
+    
+    private void redigerConsequences(Document htmlDocument, AvisDTO avisDTO) {
+        
         int conclusionNumber = getConclusionNumber(avisDTO);
         
         Element element;
         element = htmlDocument.select("#conclusion").first();
-    
+        
         if (conclusionNumber == 0) {
             element.append("<p class=\"indent\">Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au " +
                            "titre des pollutions de sols d’origine industrielle.</p>");
@@ -469,33 +604,16 @@ public class ApiAvis extends AbstractBasicApi {
         }
     }
     
-    private void redigerAnalyseComplementaire(Document htmlDocument, AvisDTO avisDTO) {
+    private void redigerInformationsComplementaire(Document htmlDocument, AvisDTO avisDTO) {
         
         if (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() == 0 &&
             avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() == 0 &&
-            avisDTO.getInstallationClasseeRayonParcelleDTOs().size() == 0 &&
-            avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size() == 0) {
+            avisDTO.getInstallationClasseeRayonParcelleDTOs().size() == 0) {
             
             htmlDocument.select("#analyseComplementaireWrapper").first().remove();
         }
         else {
-            
-            if (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() == 0 &&
-                avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() == 0 &&
-                avisDTO.getInstallationClasseeRayonParcelleDTOs().size() == 0) {
-                
-                htmlDocument.select("#rayonWrapper").first().remove();
-            }
-            else {
-                redigerAvisRayonParcelle(htmlDocument, avisDTO);
-            }
-            
-            if (avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size() == 0) {
-                htmlDocument.select("#icCommuneWrapper").first().remove();
-            }
-            else {
-                redigerAvisInstallationsClasseesCommune(htmlDocument, avisDTO);
-            }
+            redigerAvisRayonParcelle(htmlDocument, avisDTO);
         }
     }
     
@@ -504,7 +622,7 @@ public class ApiAvis extends AbstractBasicApi {
         Element element;
         int     numberOf = avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size();
         element = htmlDocument.select("#icCommune").first();
-        element.append("Le résultat de cette recherche ne tient pas compte des " + numberOf + " sites identifiés sur la commune qui n’ont pu être géolocalisés faute d’une information suffisante : ");
+        element.append(numberOf + " installation(s) classée(s)");
         element = element.appendElement("ul");
         for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeNonGeorerenceesDTOs()) {
             element.appendElement("li").append(" - " + site.getNom());
@@ -521,10 +639,10 @@ public class ApiAvis extends AbstractBasicApi {
         }
         else {
             if (numberOf == 1) {
-                element.append("Se trouve 1 site Basias dont la fiche est consultable à l'adresse suivante :");
+                element.append("1 site Basias dont la fiche est consultable à l'adresse suivante :");
             }
             else {
-                element.append("Se trouvent " + numberOf + " sites Basias dont les fiches sont consultables en cliquant sur les liens suivants :");
+                element.append(numberOf + " sites Basias dont les fiches sont consultables en cliquant sur les liens suivants :");
             }
             element = element.appendElement("ul");
             for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs()) {
@@ -540,10 +658,10 @@ public class ApiAvis extends AbstractBasicApi {
         }
         else {
             if (numberOf == 1) {
-                element.append("Se trouve 1 site Basol dont la fiche est consultable à l'adresse suivante :");
+                element.append("1 site Basol dont la fiche est consultable à l'adresse suivante :");
             }
             else {
-                element.append("Se trouvent " + numberOf + " sites Basol dont les fiches sont consultables en cliquant sur les liens suivants :");
+                element.append(numberOf + " sites Basol dont les fiches sont consultables en cliquant sur les liens suivants :");
             }
             element = element.appendElement("ul");
             for (SiteIndustrielBasolDTO site : avisDTO.getSiteIndustrielBasolRayonParcelleDTOs()) {
@@ -559,10 +677,10 @@ public class ApiAvis extends AbstractBasicApi {
         }
         else {
             if (numberOf == 1) {
-                element.append("Se trouve 1 installation classée :");
+                element.append("1 installation classée :");
             }
             else {
-                element.append("Se trouvent " + numberOf + " installations classées :");
+                element.append(numberOf + " installations classées :");
             }
             element = element.appendElement("ul");
             for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeRayonParcelleDTOs()) {

@@ -50,10 +50,14 @@
                 text-indent : 25px;
             }
 
+            p.separate {
+                margin-bottom : 15px;
+            }
+
             ul {
                 list-style : none;
                 padding    : 0;
-                margin     : 5px 12px;
+                margin     : 5px 35px;
                 text-align : left;
             }
 
@@ -85,38 +89,69 @@
         <div id="date"
              style="text-align: right; width: 100%; margin-bottom: 50px;">Le
         </div>
-        <!--<div style="text-align: center">-->
-        <!--<h2>Avis</h2>-->
-        <!--</div>-->
         <div class="contentWrapper">
-            <p class="indent">Nous vous informons que la parcelle <span id="infos"></span> :</p>
-            <p id="basiasParcelle"></p>
+            <p class="separate">La présente fiche est établie pour la parcelle : </p>
+            <p style="margin-left: 35px;">Commune : <strong><span id="commune"></span></strong><br>
+                                          Code parcelle : <strong><span id="parcelle"></span></strong><br>
+                                          Raison Sociale : <strong><span id="raison_sociale"></span></strong></p><br>
+            <br>
+            <div style="text-align: center">
+                <h2>Situation au regard du risque de pollution des sols (Basol Basias, SIIIC, SIS)</h2>
+            </div>
+            <p>La parcelle :</p>
+            <p class="indent"
+               id="basiasParcelle"></p>
             <p class="indent"
                id="basiasProximiteParcelle"></p>
-            <p id="basolParcelle"></p>
-            <p id="icParcelle"></p>
-            <p id="sisParcelle"></p><br/>
+            <p class="indent"
+               id="basolParcelle"></p>
+            <p class="indent"
+               id="icParcelle"></p>
+            <p class="indent"
+               id="sisParcelle"></p><br/>
             <div style="text-align: center">
                 <h2>Conséquences</h2>
             </div>
             <div id="conclusion"></div>
         </div>
-        <div id="analyseComplementaireWrapper">
+        <div id="informationsComplementairesWrapper">
             <div style="text-align: center; margin-left : 50px;">
-                <h2>Analyse complémentaire</h2>
+                <h2>Informations complémentaires</h2>
             </div>
             <div class="contentWrapper"
                  id="rayonWrapper">
-                <p class="indent">Pour information, dans un rayon de 100m :</p>
+                <p class="indent">Dans un rayon de 100m, se trouvent :</p>
                 <p id="basiasRayon"></p>
                 <p id="basolRayon"></p>
                 <p id="icRayon"></p>
             </div>
-            <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+        </div>
+        <div id="installationsNonGeoreferenceesWrapper">
+            <div style="text-align: center; margin-left : 50px;">
+                <h2>Installations sans références géographiques</h2>
+            </div>
             <div class="contentWrapper"
-                 id="icCommuneWrapper">
+                 id="communeWrapper">
+                <p>Dans la commune, nous avons également trouvé :</p>
+                <p class="indent"
+                   id="basiasCommune"></p>
+                <p class="indent"
+                   id="basolCommune"></p>
                 <p class="indent"
                    id="icCommune"></p>
+                <p>qui ne possèdent pas de coordonnées géographiques identifiées. Sans localisation précise, elles sont localisées dans le centre de la commune par défaut. La présente analyse n'en
+                   tient donc pas compte. La liste de ces installations et de ces sites est jointe au présent document.</p>
+            </div>
+            <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+            <div class="contentWrapper"
+                 id="communeListWrapper">
+                <p>Listes des sites et des installations sans référencement géographiques :</p>
+                <p class="indent"
+                   id="basiasCommuneList"></p>
+                <p class="indent"
+                   id="basolCommuneList"></p>
+                <p class="indent"
+                   id="icCommuneList"></p>
             </div>
         </div>
     </body>
