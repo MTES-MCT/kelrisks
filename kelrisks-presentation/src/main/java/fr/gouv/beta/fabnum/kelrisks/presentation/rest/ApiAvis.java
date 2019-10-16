@@ -5,6 +5,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.ShortUrlDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
@@ -284,6 +285,8 @@ public class ApiAvis extends AbstractBasicApi {
     
         redigerInformationsComplementaire(htmlDocument, avisDTO);
     
+        redigerRisquesNaturels(htmlDocument, avisDTO);
+        
         redigerInstallationsSansReferencesGeographiques(htmlDocument, avisDTO);
     }
     
@@ -554,10 +557,9 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     private void redigerBasiasProximiteParcelle(Document htmlDocument, AvisDTO avisDTO) {
-        
-        Element element;
-        element = htmlDocument.select("#basiasProximiteParcelle").first();
-        int numberOf = avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() + avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().size();
+    
+        Element element  = htmlDocument.select("#basiasProximiteParcelle").first();
+        int     numberOf = avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() + avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().size();
         if (numberOf == 0) {
             element.remove();
         }
@@ -586,6 +588,34 @@ public class ApiAvis extends AbstractBasicApi {
         }
     }
     
+    private void redigerRisquesNaturels(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element = htmlDocument.select("#zoneSismicite").first();
+        element.append(String.valueOf(avisDTO.getCodeZoneSismicite()));
+        
+        element = htmlDocument.select("#potentielRadon").first();
+        element.append(String.valueOf(avisDTO.getClassePotentielRadon()));
+        
+        if (!avisDTO.getSummary().getCommune().getCodeINSEE().matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
+            htmlDocument.select("#pprWrapper").first().remove();
+        }
+        else {
+            if (avisDTO.getPlanPreventionRisquesDTOs().size() == 0) {
+                htmlDocument.select("#pprWrapper").first().append("L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé");
+            }
+            else {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
+                for (PlanPreventionRisquesDTO plan : avisDTO.getPlanPreventionRisquesDTOs()) {
+                    element = htmlDocument.select("#pprWrapper").first();
+                    element = element.appendElement("p");
+                    element.append("L’immeuble est situé dans le périmètre d’un " + plan.getCategorie().getFamille().getCode() +
+                                   " de type " + plan.getCategorie().getLibelle() +
+                                   ", approuvé le " + simpleDateFormat.format(plan.getDateValidite()));
+                }
+            }
+        }
+    }
+    
     private void redigerBasiasParcelle(Document htmlDocument, AvisDTO avisDTO) {
         
         Element element;
@@ -609,23 +639,11 @@ public class ApiAvis extends AbstractBasicApi {
         if (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() == 0 &&
             avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() == 0 &&
             avisDTO.getInstallationClasseeRayonParcelleDTOs().size() == 0) {
-            
-            htmlDocument.select("#analyseComplementaireWrapper").first().remove();
+    
+            htmlDocument.select("#informationsComplementairesWrapper").first().remove();
         }
         else {
             redigerAvisRayonParcelle(htmlDocument, avisDTO);
-        }
-    }
-    
-    private void redigerAvisInstallationsClasseesCommune(Document htmlDocument, AvisDTO avisDTO) {
-        
-        Element element;
-        int     numberOf = avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size();
-        element = htmlDocument.select("#icCommune").first();
-        element.append(numberOf + " installation(s) classée(s)");
-        element = element.appendElement("ul");
-        for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeNonGeorerenceesDTOs()) {
-            element.appendElement("li").append(" - " + site.getNom());
         }
     }
     
