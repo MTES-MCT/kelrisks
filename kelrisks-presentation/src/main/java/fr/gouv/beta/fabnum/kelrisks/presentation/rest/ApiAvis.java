@@ -69,7 +69,7 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     @GetMapping("/api/avis/adresse")
-    @ApiOperation(value = "Requête retournant un avis à partir de la parcelle.", response = String.class)
+    @ApiOperation(value = "Requête retournant un avis à partir de l'adresse.", response = AvisDTO.class)
     public Response avisParAdresse(@ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
                                    @RequestParam(value = "geolocAdresse") String geolocAdresse,
                                    @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
@@ -83,7 +83,7 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     @GetMapping("/api/avis/parcelle")
-    @ApiOperation(value = "Requête retournant un avis à partir de l'adresse.", response = String.class)
+    @ApiOperation(value = "Requête retournant un avis à partir de la parcelle.", response = AvisDTO.class)
     public Response avisParParcelle(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                     @RequestParam("codeParcelle") String codeParcelle,
                                     @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
@@ -94,7 +94,7 @@ public class ApiAvis extends AbstractBasicApi {
         return avis(codeINSEE, null, null, codeParcelle, nomProprietaire);
     }
     
-    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de l'adresse.", response = String.class)
+    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de l'adresse.")
     @GetMapping(value = "/api/avis/adresse/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> avisParAdressePdf(@ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
@@ -109,7 +109,7 @@ public class ApiAvis extends AbstractBasicApi {
         return avisPdf(null, geolocAdresse, nomAdresse, null, nomProprietaire);
     }
     
-    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de la parcelle.", response = String.class)
+    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de la parcelle.")
     @GetMapping(value = "/api/avis/parcelle/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> avisParParcellePdf(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
@@ -123,15 +123,10 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     @GetMapping("/api/avis")
-    public Response avis(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                         @RequestParam("codeINSEE") String codeINSEE,
-                         @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+    public Response avis(@RequestParam("codeINSEE") String codeINSEE,
                          @RequestParam(value = "geolocAdresse") String geolocAdresse,
-                         @ApiParam(name = "nomAdresse", value = "Adresse.")
                          @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
-                         @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                          @RequestParam("codeParcelle") String codeParcelle,
-                         @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                          @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         String      url         = getUrl(codeINSEE, geolocAdresse, nomAdresse, codeParcelle, nomProprietaire);
@@ -181,15 +176,10 @@ public class ApiAvis extends AbstractBasicApi {
     
     @GetMapping("/api/avis/pdf")
     @ResponseBody
-    public ResponseEntity<byte[]> avisPdf(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                                          @RequestParam("codeINSEE") String codeINSEE,
-                                          @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+    public ResponseEntity<byte[]> avisPdf(@RequestParam("codeINSEE") String codeINSEE,
                                           @RequestParam(value = "geolocAdresse") String geolocAdresse,
-                                          @ApiParam(name = "nomAdresse", value = "Adresse.")
                                           @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
-                                          @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                           @RequestParam("codeParcelle") String codeParcelle,
-                                          @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                                           @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
