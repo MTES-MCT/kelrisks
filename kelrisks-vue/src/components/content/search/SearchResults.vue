@@ -59,7 +59,7 @@
                 </div>
                 <div @click="switchTab('RISQUES')"
                      class="tab"
-                     v-bind:class="{ selected:tab.concordances.index === 'RISQUES'}">Risques
+                     v-bind:class="{ selected:tab.concordances.index === 'RISQUES'}">Risques Naturels
                 </div>
             </div>
 
@@ -87,7 +87,7 @@
                                 id="basiasParcelle"
                                 :number-of="avis.basiasParcelle.numberOf"
                                 info-text="Base des Anciens Sites Industriels et Activités de Services. C’est l’inventaire de toutes les activités industriels abandonnées ou non, susceptibles d'avoir engendré une pollution de l'environnement. L’inscription d’une parcelle à cet inventaire ne préjuge pas de l’existence d’une pollution."
-                                label-text="Sites pollués BASIAS"/>
+                                label-text="Sites potentiellement pollués BASIAS"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 id="basolParcelle"
@@ -839,7 +839,7 @@ export default {
     #concordances_wrapper .numbers_wrapper {
         width            : 100%;
         background-color : #FAFAFA;
-        height           : 145px;
+        padding-bottom   : 10px;
         margin           : 30px 0;
     }
 
