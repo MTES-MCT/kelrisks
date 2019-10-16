@@ -98,7 +98,7 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     @GetMapping("/api/avis/coordonnees")
-    @ApiOperation(value = "Requête retournant un avis à partir d'un point (SRID 4326).", response = AvisDTO.class)
+    @ApiOperation(value = "Requête retournant un avis à partir de coordonnées (SRID 4326).", response = AvisDTO.class)
     public Response avisParCoordonnees(@ApiParam(required = true, name = "longitude", value = "Longitude.")
                                        @RequestParam("longitude") String longitude,
                                        @ApiParam(required = true, name = "latitude", value = "Latitude.")
@@ -107,6 +107,16 @@ public class ApiAvis extends AbstractBasicApi {
         CommuneDTO communeDTO = gestionGeoDataGouvFacade.rechercherCommune(latitude, longitude);
         
         return avis(communeDTO.getCodeINSEE(), longitude + "|" + latitude, null, null, null);
+    }
+    
+    @GetMapping("/api/avis/surface")
+    @ApiOperation(value = "Requête retournant un avis à partir d'une géométrie (SRID 4326).", response = AvisDTO.class)
+    public Response avisParSurface(@ApiParam(required = true, name = "geoJSON", value = "un geoJSON.")
+                                   @RequestParam("geojson") String geojson) {
+        
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(geojson);
+        
+        return Response.ok(avisDTO).build();
     }
     
     @ApiOperation(value = "Requête retournant un avis au format pdf à partir de l'adresse.")
