@@ -9,6 +9,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasD
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeoDataGouvFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionShortUrlFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,11 +49,13 @@ import com.itextpdf.kernel.pdf.WriterProperties;
 public class ApiAvis extends AbstractBasicApi {
     
     @Autowired
-    IGestionAvisFacade     gestionAvisFacade;
+    IGestionAvisFacade        gestionAvisFacade;
     @Autowired
-    IGestionCommuneFacade  gestionCommuneFacade;
+    IGestionCommuneFacade     gestionCommuneFacade;
     @Autowired
-    IGestionShortUrlFacade gestionShortUrlFacade;
+    IGestionShortUrlFacade    gestionShortUrlFacade;
+    @Autowired
+    IGestionGeoDataGouvFacade gestionGeoDataGouvFacade;
     
     public ApiAvis() {
         // Rien à faire
@@ -92,6 +95,18 @@ public class ApiAvis extends AbstractBasicApi {
                                     @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         return avis(codeINSEE, null, null, codeParcelle, nomProprietaire);
+    }
+    
+    @GetMapping("/api/avis/coordonnees")
+    @ApiOperation(value = "Requête retournant un avis à partir d'un point (SRID 4326).", response = AvisDTO.class)
+    public Response avisParCoordonnees(@ApiParam(required = true, name = "longitude", value = "Longitude.")
+                                       @RequestParam("longitude") String longitude,
+                                       @ApiParam(required = true, name = "latitude", value = "Latitude.")
+                                       @RequestParam("latitude") String latitude) {
+        
+        CommuneDTO communeDTO = gestionGeoDataGouvFacade.rechercherCommune(latitude, longitude);
+        
+        return avis(communeDTO.getCodeINSEE(), longitude + "|" + latitude, null, null, null);
     }
     
     @ApiOperation(value = "Requête retournant un avis au format pdf à partir de l'adresse.")
