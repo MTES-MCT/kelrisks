@@ -46,7 +46,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.WriterProperties;
 
 @RestController
-@Api(tags = {"API Avis Generator"}, description = "API permettant la génération d'avis")
+@Api(tags = {"API Avis Generator"}, value = "API permettant la génération d'avis")
 public class ApiAvis extends AbstractBasicApi {
     
     @Autowired
@@ -62,11 +62,12 @@ public class ApiAvis extends AbstractBasicApi {
         // Rien à faire
     }
     
+    @ApiOperation(value = "Requête retournant une recherche à partir d'une URL courte.", hidden = true)
     @GetMapping("/api/url")
     public Response getUrl(@RequestParam("code") String code) {
         
         ShortUrlDTO shortUrlDTO = gestionShortUrlFacade.rechercherResultatAvecCode(code);
-    
+        
         if (shortUrlDTO == null) { return Response.status(422).build(); }
         
         return Response.ok(shortUrlDTO).build();
@@ -106,12 +107,14 @@ public class ApiAvis extends AbstractBasicApi {
                                        @RequestParam("latitude") String latitude) {
         
         CommuneDTO communeDTO = gestionGeoDataGouvFacade.rechercherCommune(latitude, longitude);
-        
-        return avis(communeDTO.getCodeINSEE(), longitude + "|" + latitude, null, null, null);
+    
+        if (communeDTO == null) { return Response.status(Response.Status.BAD_REQUEST).entity("Les coordonnées sont probablement erronées, aucune commune n'a été trouvé.").build(); }
+    
+        return avis(communeDTO.getCodeINSEE(), longitude + "|" + latitude, "", "", "");
     }
     
     @GetMapping("/api/avis/surface")
-    @ApiOperation(value = "Requête retournant un avis à partir d'une géométrie (SRID 4326).", response = AvisDTO.class)
+    @ApiOperation(value = "Requête retournant un avis à partir d'une géométrie au format GeoJSON (SRID 4326).", response = AvisDTO.class, hidden = true)
     public Response avisParSurface(@ApiParam(required = true, name = "geoJSON", value = "un geoJSON.")
                                    @RequestParam("geojson") String geojson) {
         
@@ -148,6 +151,7 @@ public class ApiAvis extends AbstractBasicApi {
         return avisPdf(codeINSEE, null, null, codeParcelle, nomProprietaire);
     }
     
+    @ApiOperation(value = "Requête permettant de rendre un avis.", hidden = true)
     @GetMapping("/api/avis")
     public Response avis(@RequestParam("codeINSEE") String codeINSEE,
                          @RequestParam(value = "geolocAdresse") String geolocAdresse,
@@ -165,7 +169,7 @@ public class ApiAvis extends AbstractBasicApi {
         }
         
         if (codeParcelle != null && !codeParcelle.equals("")) {
-    
+            
             if (StringUtils.isEmpty(codeINSEE)) {
                 JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
                 jsonInfoDTO.addWarning("Dans le cas d'une recherche par code parcelle, merci de choisir une commune parmi les résultats proposés dans le champ.");
@@ -173,7 +177,7 @@ public class ApiAvis extends AbstractBasicApi {
             }
             
             codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
-    
+            
             if (codeParcelle == null) {
                 JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
                 jsonInfoDTO.addError("La parcelle n'a pas été trouvée ¯\\_(ツ)_/¯");
@@ -188,7 +192,7 @@ public class ApiAvis extends AbstractBasicApi {
             jsonInfoDTO.addError("Merci d'entrer un code parcelle ou de choisir une adresse parmi les résultats proposés dans le champ.");
             return Response.ok(jsonInfoDTO).build();
         }
-    
+        
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);
@@ -200,6 +204,7 @@ public class ApiAvis extends AbstractBasicApi {
         return Response.ok(avisDTO).build();
     }
     
+    @ApiOperation(value = "Requête permettant de rendre un avis pdf.", hidden = true)
     @GetMapping("/api/avis/pdf")
     @ResponseBody
     public ResponseEntity<byte[]> avisPdf(@RequestParam("codeINSEE") String codeINSEE,
@@ -209,7 +214,7 @@ public class ApiAvis extends AbstractBasicApi {
                                           @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
-    
+        
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
         
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(codeParcelle, communeDTO, nomAdresse, geolocAdresse, nomProprietaire);
@@ -218,7 +223,7 @@ public class ApiAvis extends AbstractBasicApi {
             File baseAvis = ResourceUtils.getFile("classpath:avis.html");
             
             org.jsoup.nodes.Document htmlDocument = Jsoup.parse(baseAvis, StandardCharsets.UTF_8.name());
-    
+            
             redigerAnalyse(htmlDocument, avisDTO, codeINSEE);
             
             String html = htmlDocument.outerHtml();
@@ -233,7 +238,7 @@ public class ApiAvis extends AbstractBasicApi {
             converterProperties.setCharset(StandardCharsets.UTF_8.name());
             
             HtmlConverter.convertToPdf(byteArrayInputStream, pdfWriter, converterProperties);
-    
+            
             return ResponseEntity.ok()
                            .header("Content-Disposition",
                                    "attachment; filename=Kelrisks_Parcelle_" + avisDTO.getSummary().getCodeParcelle() + "_(" + avisDTO.getSummary().getCommune().getCodePostal() + ").pdf")
@@ -252,12 +257,12 @@ public class ApiAvis extends AbstractBasicApi {
                           String nomAdresse,
                           String codeParcelle,
                           String nomProprietaire) {
-        
-        codeINSEE = codeINSEE.equalsIgnoreCase("null") || codeINSEE.equalsIgnoreCase("undefined") ? "" : codeINSEE;
-        geolocAdresse = geolocAdresse.equalsIgnoreCase("null") || geolocAdresse.equalsIgnoreCase("undefined") ? "" : geolocAdresse;
-        nomAdresse = nomAdresse.equalsIgnoreCase("null") || nomAdresse.equalsIgnoreCase("undefined") ? "" : nomAdresse;
-        codeParcelle = codeParcelle.equalsIgnoreCase("null") || codeParcelle.equalsIgnoreCase("undefined") ? "" : codeParcelle;
-        nomProprietaire = nomProprietaire.equalsIgnoreCase("null") || nomProprietaire.equalsIgnoreCase("undefined") ? "" : nomProprietaire;
+    
+        codeINSEE = codeINSEE == null || codeINSEE.equalsIgnoreCase("null") || codeINSEE.equalsIgnoreCase("undefined") ? "" : codeINSEE;
+        geolocAdresse = geolocAdresse == null || geolocAdresse.equalsIgnoreCase("null") || geolocAdresse.equalsIgnoreCase("undefined") ? "" : geolocAdresse;
+        nomAdresse = nomAdresse == null || nomAdresse.equalsIgnoreCase("null") || nomAdresse.equalsIgnoreCase("undefined") ? "" : nomAdresse;
+        codeParcelle = codeParcelle == null || codeParcelle.equalsIgnoreCase("null") || codeParcelle.equalsIgnoreCase("undefined") ? "" : codeParcelle;
+        nomProprietaire = nomProprietaire == null || nomProprietaire.equalsIgnoreCase("null") || nomProprietaire.equalsIgnoreCase("undefined") ? "" : nomProprietaire;
         
         return codeParcelle + "|&|" + codeINSEE + "|&|" + nomAdresse + "|&|" + geolocAdresse + "|&|" + nomProprietaire;
     }

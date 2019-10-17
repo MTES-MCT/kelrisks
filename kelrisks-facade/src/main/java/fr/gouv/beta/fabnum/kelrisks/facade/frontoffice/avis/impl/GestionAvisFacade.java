@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.geolatte.geom.G2D;
 import org.geolatte.geom.Geometry;
@@ -70,7 +72,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionPlanPreventionRisquesFacade gestionPlanPreventionRisquesFacade;
     
     @Override
-    public AvisDTO rendreAvis(String codeParcelle, CommuneDTO communeDTO, String nomAdresse, String geolocAdresse, String nomProprietaire) {
+    public AvisDTO rendreAvis(String codeParcelle, CommuneDTO communeDTO, @NotNull String nomAdresse, @NotNull String geolocAdresse, @NotNull String nomProprietaire) {
     
         AvisDTO avisDTO = new AvisDTO();
     
@@ -137,8 +139,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         AvisDTO avisDTO = new AvisDTO();
         
         Geometry geometry = GeoJsonUtils.fromGeoJson(geoJson);
+    
+        ParcelleDTO parcelleDTO = new ParcelleDTO();
+        parcelleDTO.setMultiPolygon(geometry);
+        parcelleDTO.setEwkt(GeoJsonUtils.toGeoJson(geometry));
         
-        ParcelleDTO parcelleDTO = gestionParcelleFacade.rechercherParcellesIntersectionnantSurface(geometry);
         Geometry    centroid    = gestionParcelleFacade.rechercherCentroidParcelle(geometry);
         
         CommuneDTO communeDTO = gestionGeoDataGouvFacade.rechercherCommune(Double.toString(((Point) centroid).getPosition().getCoordinate(CoordinateSystemAxis.mkLatAxis())),
