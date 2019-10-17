@@ -1,10 +1,9 @@
 package fr.gouv.beta.fabnum.commun.utils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.geolatte.common.dataformats.json.jackson.JsonException;
-import org.geolatte.common.dataformats.json.jackson.JsonMapper;
 import org.geolatte.geom.Feature;
 import org.geolatte.geom.Geometry;
 import org.geolatte.geom.json.GeoJsonFeature;
@@ -61,10 +60,12 @@ public class GeoJsonUtils {
         }
         Geometry geometry = null;
         try {
-            JsonMapper jsonMapper = new JsonMapper();
-            geometry = jsonMapper.fromJson(geoJson, Geometry.class);
+    
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new GeolatteGeomModule());
+            geometry = mapper.readValue(geoJson, Geometry.class);
         }
-        catch (JsonException e) {
+        catch (IOException e) {
             // TODO : Catcher cette exception correctement !
             e.printStackTrace();
         }
