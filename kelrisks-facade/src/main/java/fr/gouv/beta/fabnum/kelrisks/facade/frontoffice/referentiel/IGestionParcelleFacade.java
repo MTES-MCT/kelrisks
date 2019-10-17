@@ -22,4 +22,6 @@ public interface IGestionParcelleFacade {
     Geometry rechercherUnionParcellesContigues(Geometry multiPolygon);
     
     Geometry rechercherCentroidParcelle(Geometry polygon);
+    
+    ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry polygon);
 }

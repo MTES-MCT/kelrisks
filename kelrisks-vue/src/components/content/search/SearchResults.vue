@@ -59,7 +59,7 @@
                 </div>
                 <div @click="switchTab('RISQUES')"
                      class="tab"
-                     v-bind:class="{ selected:tab.concordances.index === 'RISQUES'}">Risques
+                     v-bind:class="{ selected:tab.concordances.index === 'RISQUES'}">Risques Naturels
                 </div>
             </div>
 
@@ -87,7 +87,7 @@
                                 id="basiasParcelle"
                                 :number-of="avis.basiasParcelle.numberOf"
                                 info-text="Base des Anciens Sites Industriels et Activités de Services. C’est l’inventaire de toutes les activités industriels abandonnées ou non, susceptibles d'avoir engendré une pollution de l'environnement. L’inscription d’une parcelle à cet inventaire ne préjuge pas de l’existence d’une pollution."
-                                label-text="Sites pollués BASIAS"/>
+                                label-text="Sites potentiellement pollués BASIAS"/>
 
                     <big-number :any-match="(concordances && concordances > 0)"
                                 id="basolParcelle"
@@ -167,7 +167,8 @@
                         </div>
                     </div>
 
-                    <div class="icon-risque-wrapper">
+                    <div class="icon-risque-wrapper"
+                         v-if="avis.summary.commune.codePostal.match(/(?:75|77|78|91|92|93|94|95)\d{3}/g) !== null">
                         <div class="icon-risque">
                             <img height="50"
                                  src="/images/icons/kelrisks/ppr_ko.svg"
@@ -192,13 +193,16 @@
 
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune de sismicité classée en zone {{this.avis.codeSismicite}}</p>
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune à potentiel radon classée en niveau {{this.avis.potentielRadon}}</p>
-                <p style="font-size: 20px; color: #2C3E50;"
-                   v-if="this.avis.ppr.length === 0">L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé</p>
-                <p style="font-size: 20px; color: #2C3E50;"
-                   v-else
-                   v-bind:key="plan"
-                   v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.categorie.famille.code }} de type {{ plan.categorie.libelle }},
-                                            approuvé le {{ plan.dateValidite | formatDate('DD/MM/YYYY') }}.</p>
+
+                <template v-if="avis.summary.commune.codePostal.match(/(?:75|77|78|91|92|93|94|95)\d{3}/g) !== null">
+                    <p style="font-size: 20px; color: #2C3E50;"
+                       v-if="this.avis.ppr.length === 0">L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé</p>
+                    <p style="font-size: 20px; color: #2C3E50;"
+                       v-bind:key="plan"
+                       v-else
+                       v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.categorie.famille.code }} de type {{ plan.categorie.libelle }},
+                                                approuvé le {{ plan.dateValidite | formatDate('DD/MM/YYYY') }}.</p>
+                </template>
 
                 <!--                <p class="renvoi">-->
                 <!--                    <sup>(1)</sup> - Au regard des risques pour lesquels la recherche a été faite (Radon, Sismicité et PPR).</p>-->
@@ -835,7 +839,7 @@ export default {
     #concordances_wrapper .numbers_wrapper {
         width            : 100%;
         background-color : #FAFAFA;
-        height           : 145px;
+        padding-bottom   : 10px;
         margin           : 30px 0;
     }
 

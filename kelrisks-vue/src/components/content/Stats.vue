@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div id="stats_wrapper">
         <h2 class="section__title">Statistiques 2019</h2><!--TODO : Année dynamique--><br>
         <br>
         <div class="histogram_wrapper">
@@ -37,8 +37,7 @@
                 {{ pdf_nb }}
             </div>
         </div>
-        <div class="value_wrapper"
-             style="margin-left: 17.5%;">
+        <div class="value_wrapper push-2">
             <div class="value_title_wrapper">
                 Bureaux d'Étude consultés
             </div>
@@ -52,7 +51,7 @@
                 Jours de travail à faible valeur ajoutée économisés par l’administration <sup>(1)</sup>
             </div>
             <div class="value_text_wrapper">
-                {{ avis_rendu_nb / 7 }}
+                {{ Math.round(avis_rendu_nb / 7) }}
             </div>
         </div>
         <div class="value_wrapper half">
@@ -61,7 +60,7 @@
                 Jours de travail à faible valeur ajoutée économisés par les professionnels du secteur <sup>(2)</sup>
             </div>
             <div class="value_text_wrapper">
-                {{ avis_rendu_nb / 5 }}
+                {{ Math.round(avis_rendu_nb / 5) }}
             </div>
         </div>
         <div style="clear: both; margin-bottom: 100px;"></div>
@@ -150,9 +149,16 @@ export default {
 </script>
 
 <style scoped>
-    .wrapper {
+
+    #stats_wrapper {
         font-weight : bold;
-        margin      : 100px 12.5% 0 12.5%;
+        padding     : 30px 0 0;
+    }
+
+    @media (min-width : 1200px) {
+        #stats_wrapper {
+            padding : 30px 140px 0;
+        }
     }
 
     .histogram_wrapper {
@@ -183,7 +189,8 @@ export default {
 
     .histogram_bars_wrapper {
         width           : 100%;
-        height          : calc(100% - 45px);display : flex;
+        height          : calc(100% - 45px);
+        display         : flex;
         align-items     : flex-end;
         justify-content : flex-end;
         padding         : 10px 0 15px 0;
@@ -232,6 +239,21 @@ export default {
         height      : 45px;
         font-weight : initial;
         line-height : 15px;
+    }
+
+    .push-2 {
+        margin-left : 17.5%;
+    }
+
+    @media (max-width : 700px) {
+
+        .value_wrapper,
+        .value_wrapper.half,
+        .value_wrapper.push-2,
+        .histogram_wrapper {
+            width       : calc(100% - 40px);
+            margin-left : 0;
+        }
     }
 
     sup {

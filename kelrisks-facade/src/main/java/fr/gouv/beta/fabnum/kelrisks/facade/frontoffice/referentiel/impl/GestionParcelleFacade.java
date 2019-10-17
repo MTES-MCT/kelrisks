@@ -68,4 +68,10 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
         
         return parcelleService.rechercherCentroidParcelle(polygon);
     }
+    
+    @Override
+    public ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry polygon) {
+        
+        return parcelleMapper.toDTO(parcelleService.rechercherParcellesIntersectionnantSurface(polygon));
+    }
 }

@@ -49,8 +49,9 @@ export default {
 
 <style>
     .bc-wrapper {
-        display : inline-block;
-        width   : 25%;
+        display        : inline-block;
+        vertical-align : top;
+        width          : 25%;
     }
 
     .bc-label {

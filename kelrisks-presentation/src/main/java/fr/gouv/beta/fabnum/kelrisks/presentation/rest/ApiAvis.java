@@ -5,10 +5,12 @@ import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.ShortUrlDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeoDataGouvFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionShortUrlFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,11 +50,13 @@ import com.itextpdf.kernel.pdf.WriterProperties;
 public class ApiAvis extends AbstractBasicApi {
     
     @Autowired
-    IGestionAvisFacade     gestionAvisFacade;
+    IGestionAvisFacade        gestionAvisFacade;
     @Autowired
-    IGestionCommuneFacade  gestionCommuneFacade;
+    IGestionCommuneFacade     gestionCommuneFacade;
     @Autowired
-    IGestionShortUrlFacade gestionShortUrlFacade;
+    IGestionShortUrlFacade    gestionShortUrlFacade;
+    @Autowired
+    IGestionGeoDataGouvFacade gestionGeoDataGouvFacade;
     
     public ApiAvis() {
         // Rien à faire
@@ -69,7 +73,7 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     @GetMapping("/api/avis/adresse")
-    @ApiOperation(value = "Requête retournant un avis à partir de la parcelle.", response = String.class)
+    @ApiOperation(value = "Requête retournant un avis à partir de l'adresse.", response = AvisDTO.class)
     public Response avisParAdresse(@ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
                                    @RequestParam(value = "geolocAdresse") String geolocAdresse,
                                    @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
@@ -83,7 +87,7 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     @GetMapping("/api/avis/parcelle")
-    @ApiOperation(value = "Requête retournant un avis à partir de l'adresse.", response = String.class)
+    @ApiOperation(value = "Requête retournant un avis à partir de la parcelle.", response = AvisDTO.class)
     public Response avisParParcelle(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                     @RequestParam("codeParcelle") String codeParcelle,
                                     @ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
@@ -94,7 +98,29 @@ public class ApiAvis extends AbstractBasicApi {
         return avis(codeINSEE, null, null, codeParcelle, nomProprietaire);
     }
     
-    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de l'adresse.", response = String.class)
+    @GetMapping("/api/avis/coordonnees")
+    @ApiOperation(value = "Requête retournant un avis à partir de coordonnées (SRID 4326).", response = AvisDTO.class)
+    public Response avisParCoordonnees(@ApiParam(required = true, name = "longitude", value = "Longitude.")
+                                       @RequestParam("longitude") String longitude,
+                                       @ApiParam(required = true, name = "latitude", value = "Latitude.")
+                                       @RequestParam("latitude") String latitude) {
+        
+        CommuneDTO communeDTO = gestionGeoDataGouvFacade.rechercherCommune(latitude, longitude);
+        
+        return avis(communeDTO.getCodeINSEE(), longitude + "|" + latitude, null, null, null);
+    }
+    
+    @GetMapping("/api/avis/surface")
+    @ApiOperation(value = "Requête retournant un avis à partir d'une géométrie (SRID 4326).", response = AvisDTO.class)
+    public Response avisParSurface(@ApiParam(required = true, name = "geoJSON", value = "un geoJSON.")
+                                   @RequestParam("geojson") String geojson) {
+        
+        AvisDTO avisDTO = gestionAvisFacade.rendreAvis(geojson);
+        
+        return Response.ok(avisDTO).build();
+    }
+    
+    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de l'adresse.")
     @GetMapping(value = "/api/avis/adresse/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> avisParAdressePdf(@ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
@@ -109,7 +135,7 @@ public class ApiAvis extends AbstractBasicApi {
         return avisPdf(null, geolocAdresse, nomAdresse, null, nomProprietaire);
     }
     
-    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de la parcelle.", response = String.class)
+    @ApiOperation(value = "Requête retournant un avis au format pdf à partir de la parcelle.")
     @GetMapping(value = "/api/avis/parcelle/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> avisParParcellePdf(@ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
@@ -123,15 +149,10 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     @GetMapping("/api/avis")
-    public Response avis(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                         @RequestParam("codeINSEE") String codeINSEE,
-                         @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+    public Response avis(@RequestParam("codeINSEE") String codeINSEE,
                          @RequestParam(value = "geolocAdresse") String geolocAdresse,
-                         @ApiParam(name = "nomAdresse", value = "Adresse.")
                          @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
-                         @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                          @RequestParam("codeParcelle") String codeParcelle,
-                         @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                          @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         String      url         = getUrl(codeINSEE, geolocAdresse, nomAdresse, codeParcelle, nomProprietaire);
@@ -181,15 +202,10 @@ public class ApiAvis extends AbstractBasicApi {
     
     @GetMapping("/api/avis/pdf")
     @ResponseBody
-    public ResponseEntity<byte[]> avisPdf(@ApiParam(required = true, name = "codeINSEE", value = "Code INSEE de la commune.")
-                                          @RequestParam("codeINSEE") String codeINSEE,
-                                          @ApiParam(required = true, name = "geolocAdresse", value = "Géolocalisation de l'adresse (x.xxxx|y.yyyy)")
+    public ResponseEntity<byte[]> avisPdf(@RequestParam("codeINSEE") String codeINSEE,
                                           @RequestParam(value = "geolocAdresse") String geolocAdresse,
-                                          @ApiParam(name = "nomAdresse", value = "Adresse.")
                                           @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
-                                          @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                           @RequestParam("codeParcelle") String codeParcelle,
-                                          @ApiParam(name = "nomProprietaire", value = "Nom du propriétaire / Raison sociale.")
                                           @RequestParam(value = "nomProprietaire", required = false) String nomProprietaire) {
         
         codeParcelle = getParcelleCode(codeINSEE, codeParcelle);
@@ -253,25 +269,162 @@ public class ApiAvis extends AbstractBasicApi {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.FRANCE);
         element.text("Le " + simpleDateFormat.format(new Date()));
     
-        element = htmlDocument.select("#infos").first();
-    
+        element = htmlDocument.select("#commune").first();
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
-        element.append("n°" + avisDTO.getSummary().getCodeParcelle() + " à " + communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
+        element.append(communeDTO.getNomCommune() + " (" + communeDTO.getCodePostal() + ")");
+    
+        element = htmlDocument.select("#parcelle").first();
+        element.append(avisDTO.getSummary().getCodeParcelle());
+    
+        element = htmlDocument.select("#raison_sociale").first();
+        element.append(!StringUtils.isEmpty(avisDTO.getSummary().getNomProprietaire()) ? avisDTO.getSummary().getNomProprietaire() : "n/a");
         
         redigerAnalyseParcelle(htmlDocument, avisDTO);
     
-        redigerConclusion(htmlDocument, avisDTO);
+        redigerConsequences(htmlDocument, avisDTO);
+    
+        redigerInformationsComplementaire(htmlDocument, avisDTO);
+    
+        redigerRisquesNaturels(htmlDocument, avisDTO);
         
-        redigerAnalyseComplementaire(htmlDocument, avisDTO);
+        redigerInstallationsSansReferencesGeographiques(htmlDocument, avisDTO);
     }
     
-    private void redigerConclusion(Document htmlDocument, AvisDTO avisDTO) {
+    private void redigerInstallationsSansReferencesGeographiques(Document htmlDocument, AvisDTO avisDTO) {
+        
+        if (avisDTO.getSiteIndustrielBasiasNonGeorerenceesDTOs().size() == 0 &&
+            avisDTO.getSiteIndustrielBasolNonGeorerenceesDTOs().size() == 0 &&
+            avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size() == 0) {
+            
+            htmlDocument.select("#installationsNonGeoreferenceesWrapper").first().remove();
+        }
+        else {
+            
+            redigerSitesBasiasNonGeoreferences(htmlDocument, avisDTO);
+            
+            redigerSitesBasolNonGeoreferences(htmlDocument, avisDTO);
+            
+            redigerInstallationsClasseesNonGeoreferencees(htmlDocument, avisDTO);
+        }
+    }
     
+    private void redigerSitesBasiasNonGeoreferences(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element = htmlDocument.select("#basiasCommune").first();
+        
+        int numberOf = avisDTO.getSiteIndustrielBasiasNonGeorerenceesDTOs().size();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 site BASIAS");
+            }
+            else {
+                element.append(numberOf + " sites BASIAS");
+            }
+        }
+        
+        element = htmlDocument.select("#basiasCommuneList").first();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 site BASIAS :");
+            }
+            else {
+                element.append(numberOf + " sites BASIAS :");
+            }
+            element = element.appendElement("ul");
+            for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasNonGeorerenceesDTOs()) {
+                element.appendElement("li").append(" - <a href='http://fiches-risques.brgm.fr/georisques/basias-synthetique/" + site.getIdentifiant() + "'>http://fiches-risques.brgm" +
+                                                   ".fr/georisques/basias-synthetique/" + site.getIdentifiant() + "</a>");
+            }
+        }
+    }
+    
+    private void redigerSitesBasolNonGeoreferences(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element;
+        int     numberOf;
+        element = htmlDocument.select("#basolCommune").first();
+        
+        numberOf = avisDTO.getSiteIndustrielBasolNonGeorerenceesDTOs().size();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 site BASOL");
+            }
+            else {
+                element.append(numberOf + " sites BASOL");
+            }
+        }
+        
+        element = htmlDocument.select("#basolCommuneList").first();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 site BASOL :");
+            }
+            else {
+                element.append(numberOf + " sites BASOL :");
+            }
+            element = element.appendElement("ul");
+            for (SiteIndustrielBasolDTO site : avisDTO.getSiteIndustrielBasolNonGeorerenceesDTOs()) {
+                element.appendElement("li").append(" - <a href='https://basol.developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "'>https://basol" +
+                                                   ".developpement-durable.gouv.fr/fiche.php?page=1&index_sp=" + site.getNumerobasol() + "</a>");
+            }
+        }
+    }
+    
+    private void redigerInstallationsClasseesNonGeoreferencees(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element = htmlDocument.select("#icCommune").first();
+        
+        int numberOf;
+        numberOf = avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 installation classée");
+            }
+            else {
+                element.append(numberOf + " installations classées");
+            }
+        }
+        
+        element = htmlDocument.select("#icCommuneList").first();
+        if (numberOf == 0) {
+            element.remove();
+        }
+        else {
+            if (numberOf == 1) {
+                element.append("1 installation classée :");
+            }
+            else {
+                element.append(numberOf + " installations classées :");
+            }
+            element = element.appendElement("ul");
+            for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeNonGeorerenceesDTOs()) {
+                element.appendElement("li").append(site.getNom());
+            }
+        }
+    }
+    
+    private void redigerConsequences(Document htmlDocument, AvisDTO avisDTO) {
+        
         int conclusionNumber = getConclusionNumber(avisDTO);
         
         Element element;
         element = htmlDocument.select("#conclusion").first();
-    
+        
         if (conclusionNumber == 0) {
             element.append("<p class=\"indent\">Au regard de ces éléments, le propriétaire ou le bailleur n'est tenu à aucune obligation réglementaire en terme d'information acquéreur locataire au " +
                            "titre des pollutions de sols d’origine industrielle.</p>");
@@ -404,10 +557,9 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     private void redigerBasiasProximiteParcelle(Document htmlDocument, AvisDTO avisDTO) {
-        
-        Element element;
-        element = htmlDocument.select("#basiasProximiteParcelle").first();
-        int numberOf = avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() + avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().size();
+    
+        Element element  = htmlDocument.select("#basiasProximiteParcelle").first();
+        int     numberOf = avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().size() + avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().size();
         if (numberOf == 0) {
             element.remove();
         }
@@ -436,6 +588,34 @@ public class ApiAvis extends AbstractBasicApi {
         }
     }
     
+    private void redigerRisquesNaturels(Document htmlDocument, AvisDTO avisDTO) {
+        
+        Element element = htmlDocument.select("#zoneSismicite").first();
+        element.append(String.valueOf(avisDTO.getCodeZoneSismicite()));
+        
+        element = htmlDocument.select("#potentielRadon").first();
+        element.append(String.valueOf(avisDTO.getClassePotentielRadon()));
+        
+        if (!avisDTO.getSummary().getCommune().getCodeINSEE().matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
+            htmlDocument.select("#pprWrapper").first().remove();
+        }
+        else {
+            if (avisDTO.getPlanPreventionRisquesDTOs().size() == 0) {
+                htmlDocument.select("#pprWrapper").first().append("L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé");
+            }
+            else {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
+                for (PlanPreventionRisquesDTO plan : avisDTO.getPlanPreventionRisquesDTOs()) {
+                    element = htmlDocument.select("#pprWrapper").first();
+                    element = element.appendElement("p");
+                    element.append("L’immeuble est situé dans le périmètre d’un " + plan.getCategorie().getFamille().getCode() +
+                                   " de type " + plan.getCategorie().getLibelle() +
+                                   ", approuvé le " + simpleDateFormat.format(plan.getDateValidite()));
+                }
+            }
+        }
+    }
+    
     private void redigerBasiasParcelle(Document htmlDocument, AvisDTO avisDTO) {
         
         Element element;
@@ -454,45 +634,16 @@ public class ApiAvis extends AbstractBasicApi {
         }
     }
     
-    private void redigerAnalyseComplementaire(Document htmlDocument, AvisDTO avisDTO) {
+    private void redigerInformationsComplementaire(Document htmlDocument, AvisDTO avisDTO) {
         
         if (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() == 0 &&
             avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() == 0 &&
-            avisDTO.getInstallationClasseeRayonParcelleDTOs().size() == 0 &&
-            avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size() == 0) {
-            
-            htmlDocument.select("#analyseComplementaireWrapper").first().remove();
+            avisDTO.getInstallationClasseeRayonParcelleDTOs().size() == 0) {
+    
+            htmlDocument.select("#informationsComplementairesWrapper").first().remove();
         }
         else {
-            
-            if (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() == 0 &&
-                avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() == 0 &&
-                avisDTO.getInstallationClasseeRayonParcelleDTOs().size() == 0) {
-                
-                htmlDocument.select("#rayonWrapper").first().remove();
-            }
-            else {
-                redigerAvisRayonParcelle(htmlDocument, avisDTO);
-            }
-            
-            if (avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size() == 0) {
-                htmlDocument.select("#icCommuneWrapper").first().remove();
-            }
-            else {
-                redigerAvisInstallationsClasseesCommune(htmlDocument, avisDTO);
-            }
-        }
-    }
-    
-    private void redigerAvisInstallationsClasseesCommune(Document htmlDocument, AvisDTO avisDTO) {
-        
-        Element element;
-        int     numberOf = avisDTO.getInstallationClasseeNonGeorerenceesDTOs().size();
-        element = htmlDocument.select("#icCommune").first();
-        element.append("Le résultat de cette recherche ne tient pas compte des " + numberOf + " sites identifiés sur la commune qui n’ont pu être géolocalisés faute d’une information suffisante : ");
-        element = element.appendElement("ul");
-        for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeNonGeorerenceesDTOs()) {
-            element.appendElement("li").append(" - " + site.getNom());
+            redigerAvisRayonParcelle(htmlDocument, avisDTO);
         }
     }
     
@@ -506,10 +657,10 @@ public class ApiAvis extends AbstractBasicApi {
         }
         else {
             if (numberOf == 1) {
-                element.append("Se trouve 1 site Basias dont la fiche est consultable à l'adresse suivante :");
+                element.append("1 site Basias dont la fiche est consultable à l'adresse suivante :");
             }
             else {
-                element.append("Se trouvent " + numberOf + " sites Basias dont les fiches sont consultables en cliquant sur les liens suivants :");
+                element.append(numberOf + " sites Basias dont les fiches sont consultables en cliquant sur les liens suivants :");
             }
             element = element.appendElement("ul");
             for (SiteIndustrielBasiasDTO site : avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs()) {
@@ -525,10 +676,10 @@ public class ApiAvis extends AbstractBasicApi {
         }
         else {
             if (numberOf == 1) {
-                element.append("Se trouve 1 site Basol dont la fiche est consultable à l'adresse suivante :");
+                element.append("1 site Basol dont la fiche est consultable à l'adresse suivante :");
             }
             else {
-                element.append("Se trouvent " + numberOf + " sites Basol dont les fiches sont consultables en cliquant sur les liens suivants :");
+                element.append(numberOf + " sites Basol dont les fiches sont consultables en cliquant sur les liens suivants :");
             }
             element = element.appendElement("ul");
             for (SiteIndustrielBasolDTO site : avisDTO.getSiteIndustrielBasolRayonParcelleDTOs()) {
@@ -544,10 +695,10 @@ public class ApiAvis extends AbstractBasicApi {
         }
         else {
             if (numberOf == 1) {
-                element.append("Se trouve 1 installation classée :");
+                element.append("1 installation classée :");
             }
             else {
-                element.append("Se trouvent " + numberOf + " installations classées :");
+                element.append(numberOf + " installations classées :");
             }
             element = element.appendElement("ul");
             for (InstallationClasseeDTO site : avisDTO.getInstallationClasseeRayonParcelleDTOs()) {

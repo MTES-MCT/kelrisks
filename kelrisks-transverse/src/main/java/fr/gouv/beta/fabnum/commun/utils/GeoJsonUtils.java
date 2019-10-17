@@ -3,6 +3,8 @@ package fr.gouv.beta.fabnum.commun.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.geolatte.common.dataformats.json.jackson.JsonException;
+import org.geolatte.common.dataformats.json.jackson.JsonMapper;
 import org.geolatte.geom.Feature;
 import org.geolatte.geom.Geometry;
 import org.geolatte.geom.json.GeoJsonFeature;
@@ -50,5 +52,23 @@ public class GeoJsonUtils {
         }
         
         return geoJsonOutput;
+    }
+    
+    public static Geometry fromGeoJson(String geoJson) {
+        
+        if (geoJson == null) {
+            return null;
+        }
+        Geometry geometry = null;
+        try {
+            JsonMapper jsonMapper = new JsonMapper();
+            geometry = jsonMapper.fromJson(geoJson, Geometry.class);
+        }
+        catch (JsonException e) {
+            // TODO : Catcher cette exception correctement !
+            e.printStackTrace();
+        }
+        
+        return geometry;
     }
 }
