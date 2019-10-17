@@ -6,6 +6,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Parcelle;
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -19,4 +20,9 @@ public interface IParcelleMapper extends IGeometryMapper {
     ParcelleDTO toDTO(Parcelle parcelle);
     
     List<ParcelleDTO> toDTOs(List<Parcelle> parcelles);
+    
+    @Mappings(
+            @Mapping(target = "ewkt", qualifiedByName = "toWKT")
+    )
+    ParcelleDTO toDTO(Geometry geometry);
 }

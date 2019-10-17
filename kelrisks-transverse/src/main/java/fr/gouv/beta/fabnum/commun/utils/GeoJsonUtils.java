@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.commun.utils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,5 +51,25 @@ public class GeoJsonUtils {
         }
         
         return geoJsonOutput;
+    }
+    
+    public static Geometry fromGeoJson(String geoJson) {
+        
+        if (geoJson == null) {
+            return null;
+        }
+        Geometry geometry = null;
+        try {
+    
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new GeolatteGeomModule());
+            geometry = mapper.readValue(geoJson, Geometry.class);
+        }
+        catch (IOException e) {
+            // TODO : Catcher cette exception correctement !
+            e.printStackTrace();
+        }
+        
+        return geometry;
     }
 }

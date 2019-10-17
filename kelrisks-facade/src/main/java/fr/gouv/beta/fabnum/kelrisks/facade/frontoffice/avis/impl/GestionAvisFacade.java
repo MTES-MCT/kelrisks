@@ -14,6 +14,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDT
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeoDataGouvFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
@@ -34,6 +35,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.StringUtils;
 import org.geolatte.geom.G2D;
 import org.geolatte.geom.Geometry;
 import org.geolatte.geom.Point;
@@ -63,11 +67,13 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     @Autowired
     IGestionGeorisquesFacade            gestionGeorisquesFacade;
     @Autowired
+    IGestionGeoDataGouvFacade           gestionGeoDataGouvFacade;
+    @Autowired
     IGestionPlanPreventionRisquesFacade gestionPlanPreventionRisquesFacade;
     
     @Override
-    public AvisDTO rendreAvis(String codeParcelle, CommuneDTO communeDTO, String nomAdresse, String geolocAdresse, String nomProprietaire) {
-        
+    public AvisDTO rendreAvis(String codeParcelle, CommuneDTO communeDTO, @NotNull String nomAdresse, @NotNull String geolocAdresse, @NotNull String nomProprietaire) {
+    
         AvisDTO avisDTO = new AvisDTO();
     
         //        if (!codeINSEE.matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
@@ -77,14 +83,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
         avisDTO.getSummary().setCommune(communeDTO);
         avisDTO.getSummary().setNomProprietaire(nomProprietaire);
-        
+    
         // Recherche d'une parcelle à partir de l'adresse si aucune n'a été fournie
         ParcelleDTO parcelleDTO;
         if (codeParcelle == null || codeParcelle.equals("")) {
-    
+        
             parcelleDTO = gestionParcelleFacade.rechercherParcelleAvecCoordonnees(Double.parseDouble(geolocAdresse.split("\\|")[0]),
                                                                                   Double.parseDouble(geolocAdresse.split("\\|")[1]));
-    
+        
             Positions.CanMakeG2D canMakeG2D = new Positions.CanMakeG2D();
             G2D g2D = canMakeG2D.mkPosition(Double.parseDouble(geolocAdresse.split("\\|")[0]),
                                             Double.parseDouble(geolocAdresse.split("\\|")[1]));
@@ -92,9 +98,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             avisDTO.getLeaflet().setAdresse(GeoJsonUtils.toGeoJson(point, Stream.of(new AbstractMap.SimpleEntry<>("adresse", nomAdresse))
                                                                                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
             avisDTO.getSummary().setAdresse(nomAdresse);
-    
+        
+            if (parcelleDTO == null) {
+                avisDTO.addError("Aucune parcelle n'a été trouvée à l'addresse indiquée !");
+                return avisDTO;
+            }
+        
             codeParcelle = parcelleDTO.getCode();
-    
+        
             avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(geolocAdresse.split("\\|")[0],
                                                                      geolocAdresse.split("\\|")[1]));
         }
@@ -102,7 +113,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             ParcelleQO parcelleQO = new ParcelleQO();
             parcelleQO.setCode(codeParcelle);
             List<ParcelleDTO> parcelleDTOS = gestionParcelleFacade.rechercherAvecCritere(parcelleQO);
-    
+        
             if (parcelleDTOS.isEmpty()) {
                 avisDTO.addError("Aucune parcelle n'a été trouvée avec le code donné !");
                 return avisDTO;
@@ -112,13 +123,39 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                 return avisDTO;
             }
             parcelleDTO = parcelleDTOS.get(0);
-    
+        
             Geometry centroid = gestionParcelleFacade.rechercherCentroidParcelle(parcelleDTO.getMultiPolygon());
-    
+        
             avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                      Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
         }
     
+        return getAvisFromParcelle(avisDTO, parcelleDTO, communeDTO, nomProprietaire);
+    }
+    
+    @Override
+    public AvisDTO rendreAvis(String geoJson) {
+        
+        AvisDTO avisDTO = new AvisDTO();
+        
+        Geometry geometry = GeoJsonUtils.fromGeoJson(geoJson);
+    
+        ParcelleDTO parcelleDTO = new ParcelleDTO();
+        parcelleDTO.setMultiPolygon(geometry);
+        parcelleDTO.setEwkt(GeoJsonUtils.toGeoJson(geometry));
+        
+        Geometry    centroid    = gestionParcelleFacade.rechercherCentroidParcelle(geometry);
+        
+        CommuneDTO communeDTO = gestionGeoDataGouvFacade.rechercherCommune(Double.toString(((Point) centroid).getPosition().getCoordinate(CoordinateSystemAxis.mkLatAxis())),
+                                                                           Double.toString(((Point) centroid).getPosition().getCoordinate(CoordinateSystemAxis.mkLonAxis())));
+        
+        avisDTO.getSummary().setCommune(communeDTO);
+        
+        return getAvisFromParcelle(avisDTO, parcelleDTO, communeDTO, null);
+    }
+    
+    private AvisDTO getAvisFromParcelle(AvisDTO avisDTO, ParcelleDTO parcelleDTO, CommuneDTO communeDTO, String nomProprietaire) {
+        
         Geometry expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcelleDTO.getCode(), 100);
         Geometry touchesParcelle  = gestionParcelleFacade.rechercherUnionParcellesContigues(parcelleDTO.getMultiPolygon());
         
@@ -129,7 +166,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         // Recherche d'une éventuelle zone poluée contenant la parcelle
         List<Geometry>        parcelleSitesSolsPolues = new ArrayList<>();
-        List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(codeParcelle);
+        List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcelleDTO.getCode());
         if (!siteSolPolueDTOs.isEmpty()) {
             siteSolPolueDTOs.forEach(siteSolPolueDTO -> {
                 parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon());
@@ -137,19 +174,19 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             });
         }
         else { parcelleSitesSolsPolues.add(parcelleDTO.getMultiPolygon()); }
-    
+        
         getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire, communeDTO.getCodeINSEE());
-    
+        
         getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-    
+        
         getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-    
+        
         getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
         
         getAvisPPR(avisDTO, parcelleSitesSolsPolues);
-    
+        
         getAvisSismicite(avisDTO, communeDTO.getCodeINSEE());
-    
+        
         getAvisRadon(avisDTO, communeDTO.getCodeINSEE());
         
         return avisDTO;
@@ -187,11 +224,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setInstallationClasseeRayonParcelleDTOs((List<InstallationClasseeDTO>) removeLowPrecision(gestionInstallationClasseeFacade.rechercherSitesDansPolygon(expendedParcelle)));
         
         avisDTO.getInstallationClasseeRayonParcelleDTOs().forEach(icpe -> avisDTO.getLeaflet().getIcpe().add(icpe.getEwkt()));
+    
+        avisDTO.getInstallationClasseeProximiteParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
         
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
         avisDTO.getInstallationClasseeRayonParcelleDTOs().removeAll(avisDTO.getInstallationClasseeProximiteParcelleDTOs());
-    
-        avisDTO.getInstallationClasseeProximiteParcelleDTOs().removeAll(avisDTO.getInstallationClasseeSurParcelleDTOs());
     
         avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
@@ -203,6 +240,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setSiteIndustrielBasolRayonParcelleDTOs((List<SiteIndustrielBasolDTO>) removeLowPrecision(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(expendedParcelle)));
         
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getBasol().add(sib.getEwkt()));
+    
+        avisDTO.getSiteIndustrielBasolProximiteParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolSurParcelleDTOs());
         
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasolProximiteParcelleDTOs());
@@ -234,10 +273,13 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setSiteIndustrielBasiasRayonParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(expendedParcelle)));
         
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getBasias().add(sib.getEwkt()));
-        
-        if (!nomProprietaire.equals("")) {
+    
+        if (!StringUtils.isEmpty(nomProprietaire)) {
             avisDTO.setSiteIndustrielBasiasParRaisonSocialeDTOs(gestionSiteIndustrielBasiasFacade.rechercherParNomProprietaireDansRayonGeometry(parcelle, nomProprietaire, 5000D));
         }
+    
+        avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
+        
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs());
         

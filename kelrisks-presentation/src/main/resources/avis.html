@@ -28,6 +28,7 @@
 
             h2 {
                 color          : #53657D;
+                padding-top    : 35px;
                 padding-bottom : 20px;
                 /*background-color : #E8F7FF;*/
             }
@@ -50,10 +51,14 @@
                 text-indent : 25px;
             }
 
+            p.separate {
+                margin-bottom : 15px;
+            }
+
             ul {
                 list-style : none;
                 padding    : 0;
-                margin     : 5px 12px;
+                margin     : 5px 35px;
                 text-align : left;
             }
 
@@ -85,38 +90,79 @@
         <div id="date"
              style="text-align: right; width: 100%; margin-bottom: 50px;">Le
         </div>
-        <!--<div style="text-align: center">-->
-        <!--<h2>Avis</h2>-->
-        <!--</div>-->
         <div class="contentWrapper">
-            <p class="indent">Nous vous informons que la parcelle <span id="infos"></span> :</p>
-            <p id="basiasParcelle"></p>
-            <p class="indent"
-               id="basiasProximiteParcelle"></p>
-            <p id="basolParcelle"></p>
-            <p id="icParcelle"></p>
-            <p id="sisParcelle"></p><br/>
-            <div style="text-align: center">
-                <h2>Conséquences</h2>
-            </div>
-            <div id="conclusion"></div>
-        </div>
-        <div id="analyseComplementaireWrapper">
-            <div style="text-align: center; margin-left : 50px;">
-                <h2>Analyse complémentaire</h2>
-            </div>
-            <div class="contentWrapper"
-                 id="rayonWrapper">
-                <p class="indent">Pour information, dans un rayon de 100m :</p>
-                <p id="basiasRayon"></p>
-                <p id="basolRayon"></p>
-                <p id="icRayon"></p>
-            </div>
-            <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
-            <div class="contentWrapper"
-                 id="icCommuneWrapper">
+            <p class="separate">La présente fiche est établie pour la parcelle : </p>
+            <p style="margin-left: 35px;">Commune : <strong><span id="commune"></span></strong><br>
+                                          Code parcelle : <strong><span id="parcelle"></span></strong><br>
+                                          Raison Sociale : <strong><span id="raison_sociale"></span></strong></p><br>
+            <br>
+            <div id="parcelleWrapper">
+                <div style="text-align: center">
+                    <h2>Situation au regard du risque de pollution des sols (Basol Basias, SIIIC, SIS)</h2>
+                </div>
+                <p>La parcelle :</p>
                 <p class="indent"
-                   id="icCommune"></p>
+                   id="basiasParcelle"></p>
+                <p class="indent"
+                   id="basiasProximiteParcelle"></p>
+                <p class="indent"
+                   id="basolParcelle"></p>
+                <p class="indent"
+                   id="icParcelle"></p>
+                <p class="indent"
+                   id="sisParcelle"></p>
+            </div>
+            <div id="consequencesWrapper">
+                <div style="text-align: center">
+                    <h2>Conséquences</h2>
+                </div>
+                <div id="conclusion"></div>
+            </div>
+            <div id="informationsComplementairesWrapper">
+                <div style="text-align: center;">
+                    <h2>Informations complémentaires</h2>
+                </div>
+                <div id="rayonWrapper">
+                    <p class="indent">Dans un rayon de 100m, se trouvent :</p>
+                    <p id="basiasRayon"></p>
+                    <p id="basolRayon"></p>
+                    <p id="icRayon"></p>
+                </div>
+            </div>
+            <div id="risquesNaturelsWrapper">
+                <div style="text-align: center;">
+                    <h2>Risques naturels</h2>
+                </div>
+                <p id="zoneSismiciteWrapper">L’immeuble se situe dans une commune de sismicité classée en zone <span id="zoneSismicite"></span></p>
+                <p id="potentielRadonWrapper">L’immeuble se situe dans une commune à potentiel radon classée en niveau <span id="potentielRadon"></span></p>
+                <div id="pprWrapper"></div>
+            </div>
+            <div id="installationsNonGeoreferenceesWrapper">
+                <div style="text-align: center;">
+                    <h2>Installations sans références géographiques</h2>
+                </div>
+                <div id="communeWrapper">
+                    <p>Dans la commune, nous avons également trouvé :</p>
+                    <p class="indent"
+                       id="basiasCommune"></p>
+                    <p class="indent"
+                       id="basolCommune"></p>
+                    <p class="indent"
+                       id="icCommune"></p>
+                    <p>qui ne possèdent pas de coordonnées géographiques identifiées. Sans localisation précise, elles sont localisées dans le centre de la commune par défaut. La présente analyse n'en
+                       tient donc pas compte. La liste de ces installations et de ces sites est jointe au présent document.</p>
+                </div>
+                <br>
+                <!--Se trouvent {{ avis. }} SIS&nbsp;: <br/>-->
+                <div id="communeListWrapper">
+                    <p>Listes des sites et des installations sans référencement géographiques :</p>
+                    <p class="indent"
+                       id="basiasCommuneList"></p>
+                    <p class="indent"
+                       id="basolCommuneList"></p>
+                    <p class="indent"
+                       id="icCommuneList"></p>
+                </div>
             </div>
         </div>
     </body>

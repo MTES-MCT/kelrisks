@@ -2,7 +2,10 @@
     <div class="bc-wrapper">
         <div class="bc-number"
              v-bind:class="{ notfound: !anyMatch,
-                             found: anyMatch && numberOf > 0 }">{{ numberOf }}
+                             found: anyMatch && numberOf > 0 }">
+            <a v-bind:href="'#'+ id + '_anchor'"
+               v-if="id">{{ numberOf }}</a>
+            <template v-else>{{ numberOf }}</template>
         </div>
         <div class="bc-label">{{ labelText }}<sup style="font-size: 0.7em"
                                                   v-if="infoText"> (*)</sup>
@@ -46,8 +49,9 @@ export default {
 
 <style>
     .bc-wrapper {
-        display : inline-block;
-        width   : 25%;
+        display        : inline-block;
+        vertical-align : top;
+        width          : 25%;
     }
 
     .bc-label {
@@ -62,11 +66,20 @@ export default {
         color       : #53657D;
     }
 
-    .notfound {
+    .bc-number a {
+        text-decoration : none;
+        font-size       : 60px;
+        font-weight     : 500;
+        color           : #53657D;
+    }
+
+    .notfound,
+    .notfound a {
         color : #86CB92;
     }
 
-    .found {
+    .found,
+    .found a {
         color : #F79D65;
     }
 

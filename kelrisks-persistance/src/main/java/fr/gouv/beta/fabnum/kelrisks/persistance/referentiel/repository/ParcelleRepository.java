@@ -43,5 +43,9 @@ public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
     
     @Query(value = "SELECT public.st_asewkt(public.st_centroid(:polygon))", nativeQuery = true)
     String rechercherCentroidParcelle(Geometry polygon);
+    
+    @Query(value = "SELECT public.st_asewkt(public.st_intersects(:polygon, p.geog)) " +
+                   " FROM kelrisks.cadastre AS p", nativeQuery = true)
+    String rechercherParcellesIntersectionnantSurface(Geometry polygon);
 }
   

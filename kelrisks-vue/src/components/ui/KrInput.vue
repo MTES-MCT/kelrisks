@@ -361,8 +361,8 @@ export default {
     .kr-group label.top {
         color     : #555555;
         position  : absolute;
-        font-size : 0.7em;
-        top       : 5px;
+        font-size : 0.75em;
+        top       : 0;
         left      : 0;
     }
 

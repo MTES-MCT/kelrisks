@@ -1,6 +1,6 @@
 {
   "name": "kelrisks-vue",
-  "version": "v1.1.6",
+  "version": "v1.1.9",
   "author": "thomas.bouchardon <thomas.bouchardon@developpement-durable.gouv.fr>",
   "private": true,
   "scripts": {

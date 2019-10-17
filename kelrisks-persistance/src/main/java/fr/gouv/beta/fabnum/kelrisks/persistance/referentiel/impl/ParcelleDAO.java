@@ -94,6 +94,12 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     }
     
     @Override
+    public Geometry rechercherParcellesIntersectionnantSurface(Geometry polygon) {
+        
+        return Wkt.fromWkt(parcelleRepository.rechercherParcellesIntersectionnantSurface(polygon));
+    }
+    
+    @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
     }
