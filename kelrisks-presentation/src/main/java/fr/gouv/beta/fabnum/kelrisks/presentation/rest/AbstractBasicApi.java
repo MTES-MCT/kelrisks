@@ -18,7 +18,7 @@ public class AbstractBasicApi {
     
     String getParcelleCode(String codeINSEE, String parcelleCode) {
     
-        Pattern pattern = Pattern.compile("([a-zA-Z]+).*?(\\d+)");
+        Pattern pattern = Pattern.compile("((?:[a-zA-Z]+)|(?:\\d{1,2})).*?(\\d+)");
         Matcher matcher = pattern.matcher(parcelleCode);
     
         List<ParcelleDTO> parcelleDTOs = new ArrayList<>();
