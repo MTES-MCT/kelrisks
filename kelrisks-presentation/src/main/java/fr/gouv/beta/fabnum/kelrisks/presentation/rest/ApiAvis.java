@@ -600,8 +600,9 @@ public class ApiAvis extends AbstractBasicApi {
         
         element = htmlDocument.select("#potentielRadon").first();
         element.append(String.valueOf(avisDTO.getClassePotentielRadon()));
-        
-        if (!avisDTO.getSummary().getCommune().getCodeINSEE().matches("(?:75|77|78|91|92|93|94|95)\\d{3}")) {
+    
+        //        Petite couronne : 75 92 93 94, Grande couronne 78 91 77 95
+        if (!avisDTO.getSummary().getCommune().getCodeINSEE().matches("(?:7592|93|94)\\d{3}")) {
             htmlDocument.select("#pprWrapper").first().remove();
         }
         else {
