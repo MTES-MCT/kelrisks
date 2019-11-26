@@ -443,7 +443,7 @@ public class ApiAvis extends AbstractBasicApi {
                            "concerne que les attestations prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement.</p>");
             element.append("<p class=\"indent\">Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont " +
                            "répertoriés par le COFRAC (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce " +
-                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/220/222'>https://www.lne.fr/recherche-certificats/</a>)</p>");
+                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/222'>https://www.lne.fr/recherche-certificats/</a>)</p>");
         }
         if (conclusionNumber == 2) {
             element.append("<p class=\"indent\">En cas de vente, le propriétaire est donc tenu de communiquer ces informations à l'acquéreur conformément aux articles L. 514-20 du code de " +
@@ -455,7 +455,7 @@ public class ApiAvis extends AbstractBasicApi {
                            "concerne que les attestations prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement.</p>");
             element.append("<p class=\"indent\">Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont " +
                            "répertoriés par le COFRAC (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce " +
-                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/220/222'>https://www.lne.fr/recherche-certificats/</a>)</p>");
+                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/222'>https://www.lne.fr/recherche-certificats/</a>)</p>");
         }
         if (conclusionNumber == 3) {
             element.append("<p class=\"indent\">Ces informations ne préjugent pas d'une éventuelle pollution de la parcelle pour laquelle la recherche a été faite.</p>");
@@ -465,7 +465,7 @@ public class ApiAvis extends AbstractBasicApi {
                            "concerne que les attestations prévues aux articles L. 556-1 et L. 556-2 du code de l'environnement.</p>");
             element.append("<p class=\"indent\">Les bureaux d’études certifiés sont disponibles sur les sites internet du ou des organismes de certification accrédités. Ce ou ces organismes sont " +
                            "répertoriés par le COFRAC (www.cofrac.fr) : à ce jour seul le LNE est accrédité et la liste des bureaux d'études certifiés par le LNE est disponible en cliquant sur ce " +
-                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/220/222'>https://www.lne.fr/recherche-certificats/</a>)</p>");
+                           "lien (<a href='https://www.lne.fr/recherche-certificats/search/222'>https://www.lne.fr/recherche-certificats/</a>)</p>");
         }
     }
     
