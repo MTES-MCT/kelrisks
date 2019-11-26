@@ -168,7 +168,7 @@
                     </div>
 
                     <div class="icon-risque-wrapper"
-                         v-if="avis.summary.commune.codePostal.match(/(?:75|77|78|91|92|93|94|95)\d{3}/g) !== null">
+                         v-if="avis.summary.commune.codePostal.match(/(?:75|92|93|94)\d{3}/g) !== null"> <!-- Petite couronne : 75 92 93 94, Grande couronne 78 91 77 95  -->
                         <div class="icon-risque">
                             <img height="50"
                                  src="/images/icons/kelrisks/ppr_ko.svg"
@@ -194,7 +194,7 @@
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune de sismicité classée en zone {{this.avis.codeSismicite}}</p>
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune à potentiel radon classée en niveau {{this.avis.potentielRadon}}</p>
 
-                <template v-if="avis.summary.commune.codePostal.match(/(?:75|77|78|91|92|93|94|95)\d{3}/g) !== null">
+                <template v-if="avis.summary.commune.codePostal.match(/(?:75|92|93|94)\d{3}/g) !== null"> <!-- Petite couronne : 75 92 93 94, Grande couronne 78 91 77 95  -->
                     <p style="font-size: 20px; color: #2C3E50;"
                        v-if="this.avis.ppr.length === 0">L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé</p>
                     <p style="font-size: 20px; color: #2C3E50;"
@@ -271,7 +271,7 @@
                 <div style="width: 100%; text-align: center">
                     <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                        class="bouton"
-                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       href='https://www.lne.fr/recherche-certificats/search/222'
                        style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
                 </div>
             </div>
@@ -295,7 +295,7 @@
                 <div style="width: 100%; text-align: center">
                     <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                        class="bouton"
-                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       href='https://www.lne.fr/recherche-certificats/search/222'
                        style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
                 </div>
             </div>
@@ -318,7 +318,7 @@
                 <div style="width: 100%; text-align: center">
                     <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                        class="bouton"
-                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       href='https://www.lne.fr/recherche-certificats/search/222'
                        style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
                 </div>
             </div>
