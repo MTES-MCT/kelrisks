@@ -27,7 +27,7 @@ public class ApiSSP extends AbstractBasicApi {
     }
     
     @GetMapping("/api/ssp/cadastre/{codeINSEE}/{codeParcelle}")
-    @ApiOperation(value = "Requête retournant une éventuelle adresse à partir d'un code de Parcelle.", response = String.class)
+    @ApiOperation(value = "Requête retournant une éventuelle zone Sites Sols Polués intersectant la Parcelle.", response = String.class)
     public Response acdressFromCadastre(@ApiParam(name = "codeINSEE", value = "Code postal de la commune.")
                                         @PathVariable("codeINSEE") String codeINSEE,
                                         @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
