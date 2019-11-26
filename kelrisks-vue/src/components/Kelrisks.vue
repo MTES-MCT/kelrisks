@@ -108,7 +108,7 @@
                          class="navbar__logo"
                          src="/images/logo-marianne.svg"/><span class="navbar__domain">kelrisks</span><img alt="data.gouv.fr"
                                                                                                            class="navbar__gouvfr"
-                                                                                                           src="/images/pointdatagouvfr.svg"/>
+                                                                                                           src="/images/pointbetagouvfr.svg"/>
                 </a>
 
                 <nav>
