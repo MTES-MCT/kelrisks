@@ -271,7 +271,7 @@
                 <div style="width: 100%; text-align: center">
                     <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                        class="bouton"
-                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       href='https://www.lne.fr/recherche-certificats/search/220/222'
                        style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
                 </div>
             </div>
@@ -295,7 +295,7 @@
                 <div style="width: 100%; text-align: center">
                     <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                        class="bouton"
-                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       href='https://www.lne.fr/recherche-certificats/search/220/222'
                        style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
                 </div>
             </div>
@@ -318,7 +318,7 @@
                 <div style="width: 100%; text-align: center">
                     <a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                        class="bouton"
-                       href='https://www.lne.fr/recherche-certificats/search/systems/S1/220/S2/220/S3/239/lang/fr'
+                       href='https://www.lne.fr/recherche-certificats/search/220/222'
                        style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a>
                 </div>
             </div>
