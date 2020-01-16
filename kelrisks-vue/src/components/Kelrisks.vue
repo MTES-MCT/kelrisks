@@ -508,4 +508,50 @@ export default {
         font-family : "Bradley Hand ITC", Arial, sans-serif;
         padding-top : 65px;
     }
+
+    .bouton {
+        background-color : #0053B3;
+        border-bottom    : solid 3px #003B80;
+        border-radius    : 2px;
+        color            : #FFFFFF;
+        display          : block;
+        float            : left;
+        font-size        : var(--space-s);
+        margin-bottom    : 20px;
+        margin-right     : 20px;
+        padding          : 0.35em 1.75em;
+        text-decoration  : none;
+    }
+
+    .bouton:hover {
+        background-color : #003B80;
+    }
+
+    .lien {
+        background      : none;
+        color           : #0053B3;
+        cursor          : pointer;
+        padding         : 9px 0;
+        text-decoration : none;
+    }
+
+    .lien.big {
+        font-size : 1.3em;
+        z-index   : 10;
+    }
+
+    .lien:hover {
+        background : none;
+        color      : #003B80;
+    }
+
+    svg {
+        margin : 0 10px;
+    }
+
+    .button svg,
+    .bouton svg {
+        color  : #FFFFFF;
+        margin : 0 10px 0 0;
+    }
 </style>

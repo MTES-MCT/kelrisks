@@ -722,46 +722,10 @@ export default {
         max-width : unset;
     }
 
-    .bouton {
-        float            : left;
-        border-bottom    : solid 3px #003B80;
-        border-radius    : 2px;
-        background-color : #0053B3;
-        font-weight      : 900;
-        color            : #FFFFFF;
-        padding          : 9px 20px;
-        text-decoration  : none;
-        margin-right     : 20px;
-        margin-bottom    : 20px;
-        display          : block;
-    }
-
-    .bouton:hover {
-        background-color : #003B80;
-    }
-
     #copyLink {
         float         : left;
         margin-right  : 20px;
         margin-bottom : 20px;
-    }
-
-    .lien {
-        padding         : 9px 0;
-        background      : none;
-        /*height          : 22px;*/
-        color           : #0053B3;
-        text-decoration : none;
-    }
-
-    .lien.big {
-        font-weight : 900;
-        z-index     : 10;
-    }
-
-    .lien:hover {
-        background : none;
-        color      : #003B80;
     }
 
     #summary_leaflet_wrapper {
