@@ -645,6 +645,7 @@ export default {
                 })
         },
         copyLink () {
+            this._paq.push(['trackEvent', 'Flow', 'Copy Link']);
             let copyInput = document.getElementById("copyInput");
             copyInput.select();
             document.execCommand("copy");
