@@ -65,10 +65,6 @@
                                   slot-scope="slotProps">
                             Aucune adresse trouvée pour "{{ slotProps.query }}"
                         </template>
-                        <template slot="kr-helper"
-                                  slot-scope="slotProps">
-                            IBAN&nbsp;: {{ slotProps.option.properties.id }}
-                        </template>
                     </kr-input>
                 </div>
 
