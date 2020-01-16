@@ -12,7 +12,7 @@
                        size="lg"
                        v-show="!opened"/>
     <p @click="openCloseContact()"
-       class="section__subtitle">Une remarque? Une suggestion?</p>
+       class="section__subtitle">Une remarque? Une Erreur?</p>
     <textarea id="contactContent"
               title="Remarque/Suggestion/Problème?"></textarea>
     <kr-input label="Vous souhaitez être recontacté ?"

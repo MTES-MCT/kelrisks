@@ -14,22 +14,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GeoJsonUtils {
     
-    public static String toGeoJson(Geometry geom) {
+    public static String toGeoJson(Geometry<?> geom) {
         
         return toGeoJson(geom, null, null);
     }
     
-    public static String toGeoJson(Geometry geom, Object id) {
+    public static String toGeoJson(Geometry<?> geom, Object id) {
         
         return toGeoJson(geom, id, null);
     }
     
-    public static String toGeoJson(Geometry geom, Map<String, Object> properties) {
+    public static String toGeoJson(Geometry<?> geom, Map<String, Object> properties) {
         
         return toGeoJson(geom, null, properties);
     }
     
-    public static String toGeoJson(Geometry geom, Object id, Map<String, Object> properties) {
+    public static String toGeoJson(Geometry<?> geom, Object id, Map<String, Object> properties) {
         
         if (properties == null) {
             properties = new HashMap<>();
@@ -53,12 +53,12 @@ public class GeoJsonUtils {
         return geoJsonOutput;
     }
     
-    public static Geometry fromGeoJson(String geoJson) {
+    public static Geometry<?> fromGeoJson(String geoJson) {
         
         if (geoJson == null) {
             return null;
         }
-        Geometry geometry = null;
+        Geometry<?> geometry = null;
         try {
     
             ObjectMapper mapper = new ObjectMapper();
