@@ -35,7 +35,7 @@
            class="bouton"
            id="copyLink">
             <font-awesome-icon icon="copy"/>
-            Copier l’URL
+            Copier le lien
         </a>
         <input :value="env.basePath + '#/' + avis.summary.codeUrl"
                id="copyInput"
