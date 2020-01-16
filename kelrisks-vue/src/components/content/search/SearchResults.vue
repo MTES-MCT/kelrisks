@@ -1,6 +1,22 @@
 <template>
     <section class="section section-white"
              id="section4">
+
+        <a @click="() => {  $emit('flow', -1)
+                            _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])}"
+           class="bouton"
+           v-show="visibility.modifier">
+            <font-awesome-icon icon="chevron-left"/>
+            Modifier
+        </a>
+
+        <a :href="env.basePath"
+           @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
+           class="bouton">
+            <font-awesome-icon icon="search"/>
+            Nouvelle recherche
+        </a>
+
         <a :href="this.env.apiPath + 'avis/pdf?' +
                             'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : codeInsee) + '&' +
                             'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : nomAdresse) + '&' +
@@ -16,8 +32,11 @@
         </a>
 
         <a @click="copyLink"
-           class="lien big"
-           id="copyLink">Copier l’URL</a>
+           class="bouton"
+           id="copyLink">
+            <font-awesome-icon icon="copy"/>
+            Copier l’URL
+        </a>
         <input :value="env.basePath + '#/' + avis.summary.codeUrl"
                id="copyInput"
                style="position: absolute; left: -1000px; top: -1000px;"/>
@@ -26,19 +45,12 @@
             <div class="container bordered"
                  id="summary_wrapper">
                 <div id="summary">
-                    <div style="margin-bottom: 20px"><span class="title">Votre recherche </span><a @click="() => {  $emit('flow', -1)
-                                                                                                _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])}"
-                                                                                                   class="lien"
-                                                                                                   v-show="visibility.modifier">Modifier</a>
-                    </div>
+                    <div style="margin-bottom: 20px"><span class="title">Votre recherche </span></div>
                     <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
                     <b>Code parcelle&nbsp;: </b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
                     <b>Raison
                        Sociale&nbsp;: </b><span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
                     <br>
-                    <a :href="env.basePath"
-                       @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
-                       class="lien">Nouvelle recherche</a>
                 </div>
             </div>
 
@@ -107,8 +119,8 @@
                                 label-text="SIS"/>
                 </div>
 
-                <a class="lien big"
-                   href="mailto:Contact%20Kelrisks%20<contact@kelrisks.beta.gouv.fr>?subject=Signaler%20une%20erreur%20Kelrisks">Signaler une erreur</a>
+                <!--                <a class="lien big"-->
+                <!--                   href="mailto:Contact%20Kelrisks%20<contact@kelrisks.beta.gouv.fr>?subject=Signaler%20une%20erreur%20Kelrisks">Signaler une erreur</a>-->
 
             </template>
 

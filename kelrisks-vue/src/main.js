@@ -14,6 +14,7 @@ import {
     faCheckCircle,
     faChevronLeft,
     faChevronRight,
+    faCopy,
     faExclamation,
     faExclamationTriangle,
     faFilePdf,
@@ -45,7 +46,7 @@ Icon.Default.mergeOptions({
 });
 
 // Font-Awesome
-library.add(faUser, faInfo, faThumbsUp, faBomb, faExclamation, faBriefcase, faChevronLeft, faTruckMoving, faChevronRight, faSearch, faSpinner, faUndo, faCheck, faTimes, faExclamationTriangle, faFilePdf, faCaretDown, faCaretUp, faCheckCircle, faMapMarkedAlt, faHome)
+library.add(faUser, faCopy, faInfo, faThumbsUp, faBomb, faExclamation, faBriefcase, faChevronLeft, faTruckMoving, faChevronRight, faSearch, faSpinner, faUndo, faCheck, faTimes, faExclamationTriangle, faFilePdf, faCaretDown, faCaretUp, faCheckCircle, faMapMarkedAlt, faHome)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 // Vue Material @ https://vuematerial.io/getting-started
