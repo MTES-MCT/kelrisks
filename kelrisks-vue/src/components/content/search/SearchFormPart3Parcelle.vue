@@ -158,7 +158,7 @@ export default {
         }
     },
     data: () => ({
-        cgu: false,
+        cgu: true,
         error: {
             field: {
                 codeCommune: []
