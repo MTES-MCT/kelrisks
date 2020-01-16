@@ -803,44 +803,58 @@ export default {
     }
 
     .tabWrapper {
-        position                : absolute;
-        top                     : -4.05em;
-        left                    : -1px;
-        border                  : 1px solid #CCCCCC;
         border-bottom           : none;
         border-top-left-radius  : 2px;
         border-top-right-radius : 2px;
+        /*border                  : 1px solid #CCCCCC;*/
         float                   : left;
+        left                    : -1px;
         margin-top              : 20px;
+        position                : absolute;
+        top                     : -4.1em;
     }
 
     .tabWrapper .tab {
-        float            : left;
-        padding          : 10px 20px 9px;
-        border-left      : 1px solid #CCCCCC;
         background-color : #F8F8F8;
         border-bottom    : 1px solid #FFFFFF;
+        border-left      : 1px solid #CCCCCC;
+        border-top       : 1px solid #CCCCCC;
         cursor           : pointer;
+        float            : left;
+        padding          : 10px 20px 9px;
     }
 
     .tabWrapper .tab:first-child {
-        border-left : none;
+        border-top-left-radius : 2px;
+    }
+
+    .tabWrapper .tab:last-child {
+        border-right            : 1px solid #CCCCCC;
+        border-top-right-radius : 2px;
     }
 
     .tabWrapper .tab.selected {
-        padding          : 10px 20px;
         background-color : #0053B3;
+        border-bottom    : 1px solid #003B80;
+        border-left      : 1px solid #003B80;
+        border-top       : 1px solid #003B80;
         color            : #FFFFFF;
-        border-bottom    : 1px solid #0053B3;
+        padding          : 10px 20px;
+    }
+
+    .tabWrapper .tab:last-child.selected {
+        border-right : 1px solid #003B80;
     }
 
     #concordances_wrapper {
-        margin-top             : calc(20px + 4em);
-        float                  : left;
-        border-top-left-radius : unset;
-        padding                : 30px 0 0 0 !important;
-        width                  : 100%;
-        text-align             : center;
+        border-top              : 3px solid #003B80;
+        border-top-left-radius  : unset;
+        border-top-right-radius : 2px;
+        float                   : left;
+        margin-top              : calc(20px + 4em);
+        padding                 : 30px 0 0 0 !important;
+        text-align              : center;
+        width                   : 100%;
     }
 
     #concordances_wrapper p {
