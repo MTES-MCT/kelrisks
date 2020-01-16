@@ -5,8 +5,9 @@
             <div class="panel">
                 <h2 class="section__title title">Rechercher votre terrain</h2>
                 <p class="subtitle">Informations</p>
-                <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">Saisissez le code de la parcelle à analyser<br>(les recherches par code parcelle sont plus pertinentes que par
-                                                                                         adresse)</p>
+                <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">Saisissez le code de la parcelle à analyser<br><b>(les recherches par code parcelle sont plus pertinentes que
+                                                                                                                                           par
+                                                                                                                                           adresse)</b></p>
 
                 <errors :error-list="concatErrors(errors)"
                         :info-list="informations.infoList"
@@ -52,25 +53,10 @@
 
                 <div class="clearfix"></div>
 
-                <div style="width: 100%; display: flex; justify-content: center; margin-top: 30px;">
-                    <p @click="showAddressSearch"
-                       class="lien"
-                       style="margin:0;"
-                       v-if="!addressSearch">
-                        <font-awesome-icon icon="caret-down"/>
-                        Cliquez pour rechercher par addresse&nbsp;&nbsp;&nbsp;&nbsp;
-                        <font-awesome-icon icon="caret-down"/>
-                    </p>
-                </div>
-
-                <div class="clearfix"></div>
-
                 <p class="subtitle"
-                   style="margin: 10px 0 15px 0; color: #8A8F96"
-                   v-if="addressSearch">Ou</p>
+                   style="margin: 30px 0 15px 0; color: #8A8F96">Ou</p>
 
-                <div style="width: 40%; margin-left: 30%"
-                     v-if="addressSearch">
+                <div style="width: 40%; margin-left: 30%">
                     <!--                <div style="width: 40%; float: left; margin-left: 5%">-->
                     <kr-input :get-option-label-function="(option => {return option['properties']['name'] + ', ' + option['properties']['postcode'] + ' ' + option['properties']['city']})"
                               :get-option-value-function="(option => {return option['properties']['id']})"
@@ -174,7 +160,6 @@ export default {
     },
     data: () => ({
         cgu: true,
-        addressSearch: false,
         error: {
             field: {
                 codeCommune: []
@@ -188,9 +173,6 @@ export default {
     methods: {
         acceptCGU () {
             // sessionStorage.cguChecked = value.target.checked
-        },
-        showAddressSearch () {
-            this.addressSearch = !this.addressSearch
         },
         onAdresseChanged (option) {
             this.$emit('adressechanged')
