@@ -113,10 +113,10 @@
 
                 <nav>
                     <ul class="nav__links">
-                        <li class="nav__item"><a @click="showStats()"
-                                                 id="stats">Stats</a></li>
-                        <li class="nav__item"><a href="/swagger-ui.html"
-                                                 id="api">{{ api.message }}</a></li>
+                        <!--                        <li class="nav__item"><a @click="showStats()"-->
+                        <!--                                                 id="stats">Stats</a></li>-->
+                        <!--                        <li class="nav__item"><a href="/swagger-ui.html"-->
+                        <!--                                                 id="api">{{ api.message }}</a></li>-->
                     </ul>
                 </nav>
             </div>
@@ -185,7 +185,7 @@
         </main>
 
         <how-to class="clearfix container"
-                v-show="flow.index <= 1"/>
+                v-show="flow.index <= 2"/>
 
         <!--        <div class="container">-->
         <!--            <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>-->
@@ -200,6 +200,9 @@
                 <div class="column">
                     <c-g-u ref="cgu"/>
                     <a @click="$refs.cgu.open()">CGU</a>
+                </div>
+                <div class="column">
+                    <a @click="showStats()">Stats</a>
                 </div>
                 <div class="column">
                     <a href="/swagger-ui.html">API</a>
@@ -244,7 +247,7 @@ export default {
     mixins: [mixinErrors],
     data: () => ({
         flow: {
-            index: 1,
+            index: 2,
             querying: false,
             loading: false
         },
@@ -492,14 +495,13 @@ export default {
     }
 
     footer .column {
-        width   : 33.33%;
         float   : left;
         padding : 15px;
+        width   : 25%;
     }
 
-    footer .column:nth-child(2) {
+    footer .column:nth-last-child(n+2) {
         border-right : #CCCCCC solid 1px;
-        border-left  : #CCCCCC solid 1px;
     }
 
     #version {

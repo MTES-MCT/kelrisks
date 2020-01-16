@@ -3,7 +3,7 @@
              id="section3">
         <div class="container">
             <div class="panel">
-                <h2 class="section__title title">Votre terrain</h2>
+                <h2 class="section__title title">Rechercher votre terrain</h2>
                 <p class="subtitle">Informations</p>
                 <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">Saisissez le code de la parcelle à analyser<br>(les recherches par code parcelle peuvent être plus pertinentes
                                                                                          que par adresse)</p>
@@ -90,19 +90,11 @@
                     </kr-input>
                 </div>
 
-                <div style="width: 90%; margin: 25px 5%">
-                    <input @change="acceptCGU"
-                           id="cgu"
-                           type="checkbox"
-                           v-model="cgu"><label for="cgu"
-                                                style="display: inline">J'accepte les <a v-on:click="$emit('cgu')">CGU</a></label>
-                </div>
-
                 <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
-                    <a @click="$emit('flow', -1)"
-                       class="button">
-                        <font-awesome-icon icon="chevron-left"/>
-                        Précédent</a>
+                    <!--                    <a @click="$emit('flow', -1)"-->
+                    <!--                       class="button">-->
+                    <!--                        <font-awesome-icon icon="chevron-left"/>-->
+                    <!--                        Précédent</a>-->
                     <button class="button"
                             name="subscribe"
                             type="submit"
@@ -120,6 +112,10 @@
                         <font-awesome-icon icon="search"/>
                         Rechercher
                     </button>
+                </div>
+
+                <div style="width: 90%; margin: 50px 5% 0;">
+                    <p id="cgu">En poursuivant votre navigation, vous acceptez nos <a v-on:click="$emit('cgu')">CGU</a>.</p>
                 </div>
             </div>
         </div>
@@ -219,4 +215,14 @@ export default {
 
 <style scoped>
 
+    #cgu {
+        color      : rgb(138, 143, 150);
+        font-size  : 0.85em;
+        margin     : 0;
+        text-align : center;
+    }
+
+    #cgu a {
+        text-decoration : none;
+    }
 </style>
