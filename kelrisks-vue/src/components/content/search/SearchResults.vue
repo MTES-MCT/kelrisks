@@ -2,9 +2,17 @@
     <section class="section section-white"
              id="section4">
 
+        <errors :error-list="[]"
+                :info-list="[]"
+                :success-list="['Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min) , <a>Répondre</a>']"
+                :warning-list="[]"/>
+
+        <br/>
+
         <a @click="() => {  $emit('flow', -1)
                             _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])}"
            class="bouton"
+           style="float: left;"
            v-show="visibility.modifier">
             <font-awesome-icon icon="chevron-left"/>
             Modifier
@@ -12,9 +20,18 @@
 
         <a :href="env.basePath"
            @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
-           class="bouton">
+           class="bouton"
+           style="float: left;">
             <font-awesome-icon icon="search"/>
             Nouvelle recherche
+        </a>
+
+        <a @click="copyLink"
+           class="bouton"
+           id="copyLink"
+           style="float: right; margin-right: 0;">
+            <font-awesome-icon icon="copy"/>
+            Copier le lien
         </a>
 
         <a :href="this.env.apiPath + 'avis/pdf?' +
@@ -25,17 +42,11 @@
                             'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : codeProprio)"
            @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
            class="bouton"
+           style="float: right;"
            id="pdf"
            target="_blank">
             <font-awesome-icon icon="file-pdf"/>
             PDF
-        </a>
-
-        <a @click="copyLink"
-           class="bouton"
-           id="copyLink">
-            <font-awesome-icon icon="copy"/>
-            Copier le lien
         </a>
         <input :value="env.basePath + '#/' + avis.summary.codeUrl"
                id="copyInput"
@@ -95,25 +106,25 @@
                    v-else>Nous n'avons trouvé aucune concordance dans les bases de données</p>
 
                 <div class="numbers_wrapper">
-                    <big-number :any-match="(concordances && concordances > 0)"
+                    <big-number :any-match="(concordances > 0)"
                                 id="basiasParcelle"
                                 :number-of="avis.basiasParcelle.numberOf"
                                 info-text="Base des Anciens Sites Industriels et Activités de Services. C’est l’inventaire de toutes les activités industriels abandonnées ou non, susceptibles d'avoir engendré une pollution de l'environnement. L’inscription d’une parcelle à cet inventaire ne préjuge pas de l’existence d’une pollution."
                                 label-text="Sites potentiellement pollués BASIAS"/>
 
-                    <big-number :any-match="(concordances && concordances > 0)"
+                    <big-number :any-match="(concordances > 0)"
                                 id="basolParcelle"
                                 :number-of="avis.basolParcelle.numberOf"
                                 info-text="Base de données sur les sites et sols pollués. c’est l’inventaire des sites sur lesquels la présence d’une pollution a nécessité une action des pouvoirs publics soit à titre préventif soit à titre curatif."
                                 label-text="Sites pollués BASOL"/>
 
-                    <big-number :any-match="(concordances && concordances > 0)"
+                    <big-number :any-match="(concordances > 0)"
                                 id="icParcelle"
                                 :number-of="avis.installationClasseeParcelle.numberOf"
                                 info-text="Inventaire des activités régies par la réglementation des installations dites classées pour la protection de l’environnement en raison des risques, des pollutions et des nuisances que ces activités génèrent."
                                 label-text="Installations classées"/>
 
-                    <big-number :any-match="(concordances && concordances > 0)"
+                    <big-number :any-match="(concordances > 0)"
                                 :number-of="avis.sisParcelle.numberOf"
                                 info-text="Secteur d’information sur les sols. Lorsque l’Etat a connaissance d’une pollution des sols, il est tenu en application de l’article L 125-6 du code de l’environnement de délimiter ces secteurs par arrêté préfectoral. L’inscription d’une parcelle dans un secteur d’information sur les sols entraîne des obligations d’information des acquéreurs et des locataires et l’obligation en cas de changement d’usage (dépôt de permis de construire) de faire appel à un bureau d’étude spécialisés dans le domaine des sols pollués pour attester de la bonne prise en compte des pollutions des sols présentes."
                                 label-text="SIS"/>
@@ -441,6 +452,7 @@ import BigNumber from '../../../components/ui/BigNumber'
 import avis from '../../../script/avis'
 import fetchWithError from '../../../script/fetchWithError'
 import functions from '../../../script/fonctions'
+import Errors from '../../../components/content/base/Errors'
 import mixinErrors from '../../mixins/errors'
 import Leaflet from "../Leaflet";
 
@@ -449,6 +461,7 @@ export default {
     name: 'SearchResults',
     components: {
         Leaflet,
+        Errors,
         BigNumber
     },
     props: {
@@ -680,7 +693,12 @@ export default {
             return conclusionNumber
         },
         concordances: function () {
-            return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf + this.avis.sisParcelle.numberOf
+            var numberOfInstallationClasseeParcelle = isNaN(this.avis.installationClasseeParcelle.numberOf) ? 0 : this.avis.installationClasseeParcelle.numberOf
+            var numberOfBasolParcelle = isNaN(this.avis.basolParcelle.numberOf) ? 0 : this.avis.basolParcelle.numberOf
+            var numberOfBasiasParcelle = isNaN(this.avis.basiasParcelle.numberOf) ? 0 : this.avis.basiasParcelle.numberOf
+            var numberOfSisParcelle = isNaN(this.avis.sisParcelle.numberOf) ? 0 : this.avis.sisParcelle.numberOf
+
+            return numberOfInstallationClasseeParcelle + numberOfBasolParcelle + numberOfBasiasParcelle + numberOfSisParcelle
         },
         concordances_risques: function () {
             return this.avis.potentielRadon >= 3 || this.avis.codeSismicite >= 3
@@ -774,7 +792,7 @@ export default {
         /*border                  : 1px solid #CCCCCC;*/
         float                   : left;
         left                    : -1px;
-        margin-top              : 20px;
+        margin-top              : 19px;
         position                : absolute;
         top                     : -4.1em;
     }

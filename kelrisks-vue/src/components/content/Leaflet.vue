@@ -3,25 +3,25 @@
         <l-map :center="center"
                :zoom="zoom"
                ref="leafletMap">
-            <l-tile-layer :url="url"></l-tile-layer>
-            <l-geo-json :geojson="JSON.parse(data.adresse)"
+            <l-tile-layer :url="url"/>
+            <l-geo-json :geojson="parseJSON(data.adresse)"
                         v-if="data.adresse"
-                        :options="adresseOptions"></l-geo-json>
-            <l-geo-json :geojson="JSON.parse(data.parcelle)"
+                        :options="adresseOptions"/>
+            <l-geo-json :geojson="parseJSON(data.parcelle)"
                         :options="parcelleOptions"
-                        :options-style="parcelleStyleFunction"></l-geo-json>
-            <l-geo-json :geojson="data.basias.map(x => JSON.parse(x))"
+                        :options-style="parcelleStyleFunction"/>
+            <l-geo-json :geojson="parseJSONMap(data.basias)"
                         :options="basiasOptions"
-                        :options-style="basiasStyleFunction"></l-geo-json>
-            <l-geo-json :geojson="data.basol.map(x => JSON.parse(x))"
+                        :options-style="basiasStyleFunction"/>
+            <l-geo-json :geojson="parseJSONMap(data.basol)"
                         :options="basolOptions"
-                        :options-style="basolStyleFunction"></l-geo-json>
-            <l-geo-json :geojson="data.sis.map(x => JSON.parse(x))"
-                        :options-style="sisStyleFunction"></l-geo-json>
-            <l-geo-json :geojson="data.icpe.map(x => JSON.parse(x))"
+                        :options-style="basolStyleFunction"/>
+            <l-geo-json :geojson="parseJSONMap(data.sis)"
+                        :options-style="sisStyleFunction"/>
+            <l-geo-json :geojson="parseJSONMap(data.icpe)"
                         :options="icpeOptions"
-                        :options-style="icpeStyleFunction"></l-geo-json>
-            <l-geo-json :geojson="data.ssp.map(x => JSON.parse(x))"></l-geo-json>
+                        :options-style="icpeStyleFunction"/>
+            <l-geo-json :geojson="parseJSONMap(data.ssp)"/>
         </l-map>
     </div>
 </template>
@@ -71,6 +71,26 @@ export default {
             map.keyboard.disable()
 
             map.dragging.disable()
+        },
+        parseJSON (data) {
+            // console.log(data)
+            if (data !== '') {
+                return JSON.parse(data)
+            }
+            return {
+                "type": "FeatureCollection",
+                "features": []
+            }
+        },
+        parseJSONMap (data) {
+            // console.log(data)
+            if (data !== '') {
+                return data.map(x => JSON.parse(x))
+            }
+            return {
+                "type": "FeatureCollection",
+                "features": []
+            }
         }
     },
     computed: {
@@ -239,10 +259,14 @@ export default {
     },
     mounted () {
         this.$nextTick(() => {
+
             const map = this.$refs.leafletMap.mapObject
-            map.LGeoJson()
-            // console.log(map)
-            this.crippleMap(map)
+
+            if (typeof map.LGeoJson === "function") {
+                map.LGeoJson()
+                // console.log(map)
+                this.crippleMap(map)
+            }
         })
     }
 }
