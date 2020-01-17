@@ -4,10 +4,10 @@
         <div class="container">
             <div class="panel">
                 <h2 class="section__title title">Rechercher votre terrain</h2>
-                <p class="subtitle">Informations</p>
-                <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">Saisissez le code de la parcelle à analyser<br><b>(les recherches par code parcelle sont plus pertinentes que
-                                                                                                                                           par
-                                                                                                                                           adresse)</b></p>
+                <p class="subtitle">Saisissez le code de la parcelle à analyser</p>
+                <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">
+                    <b>(les recherches par code parcelle sont plus pertinentes que par adresse)</b>
+                </p>
 
                 <errors :error-list="concatErrors(errors)"
                         :info-list="informations.infoList"
@@ -105,7 +105,7 @@
                         Recherche en cours...
                     </button>
                     <button @click="getAvis"
-                            class="button"
+                            class="bouton"
                             id="submit"
                             name="subscribe"
                             type="submit"

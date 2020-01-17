@@ -15,6 +15,7 @@ export default {
         clearAll: function () {
             this.clearErrors()
             this.clearWarnings()
+            this.clearSuccesses()
             this.clearInfos()
         },
         checkInformations: function (info) {
@@ -52,6 +53,20 @@ export default {
         },
         emitWarnings: function () {
             this.$emit('warnings', this.informations.warningList)
+        },
+        clearSuccesses: function () {
+            this.informations.hasSuccess = false
+            this.informations.successList = []
+            this.emitSuccesses()
+        },
+        sendSuccess: function (success) {
+            console.log(success)
+            this.informations.hasSuccess = true
+            this.informations.successList.push(success)
+            this.emitSuccesses()
+        },
+        emitSuccesses: function () {
+            this.$emit('successes', this.informations.successList)
         },
         clearInfos: function () {
             this.informations.hasInfo = false

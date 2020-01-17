@@ -410,6 +410,10 @@ export default {
         color      : #333333;
     }
 
+    .kr-clear svg {
+        margin : 0 10px 0 0;
+    }
+
     .kr-helper {
         color      : #888888;
         font-size  : 0.7em;

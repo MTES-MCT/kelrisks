@@ -127,10 +127,10 @@
              role="banner"
              style="background-image: url('/images/banner-min.png'); background-size: auto; background-position-y: -30px">
             <div class="hero__container"
-                 v-bind:class="{'contracted':flow.index > 1}">
+                 v-bind:class="{'contracted':flow.index > 2}">
                 <h1 class="hero__white-background">Kelrisks</h1>
                 <p class="hero__white-background"
-                   v-bind:class="{'contracted':flow.index > 1}">Evaluez simplement et rapidement le risque de pollution de votre terrain</p>
+                   v-bind:class="{'contracted':flow.index > 2}">Évaluez simplement et rapidement le risque de pollution de votre terrain</p>
                 <!--                <p class="hero__white-background note"-->
                 <!--                   v-bind:class="{'contracted':flow.index > 1}">(Île-de-France)*</p>-->
             </div>
@@ -239,8 +239,6 @@ import SearchFormPart3Parcelle from '../components/content/search/SearchFormPart
 import SearchResults from '../components/content/search/SearchResults'
 import Stats from '../components/content/Stats'
 import fetchWithError from '../script/fetchWithError'
-// import KrSelect from '../components/ui/KrSelect'
-// import KrInput from './ui/KrInput';
 
 export default {
     name: 'Kelrisks',
@@ -509,8 +507,12 @@ export default {
         padding-top : 65px;
     }
 
-    .bouton {
+    .bouton,
+    .bouton:active,
+    .bouton:focus,
+    .bouton:visited {
         background-color : #0053B3;
+        border           : 0;
         border-bottom    : solid 3px #003B80;
         border-radius    : 2px;
         color            : #FFFFFF;
@@ -519,12 +521,18 @@ export default {
         font-size        : var(--space-s);
         margin-bottom    : 20px;
         margin-right     : 20px;
+        min-width        : 250px;
         padding          : 0.35em 1.75em;
+        text-align       : center;
         text-decoration  : none;
+        transition       : background-color .25s ease;
     }
 
     .bouton:hover {
         background-color : #003B80;
+        border-bottom    : solid 3px #003B80;
+        border-radius    : 2px;
+        color            : #FFFFFF;
     }
 
     .lien {
