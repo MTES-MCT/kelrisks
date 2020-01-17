@@ -7,14 +7,16 @@ export default {
      * Permet de monter/descendre vers l'element cible
      * l'id est celui du champ visé ou son objet jQuery
      */
-    scrollToElement (id, glow) {
+    scrollToElement (id, speed, delay, glow) {
         // console.log(id)
+        // console.log(delay === undefined)
         if (JQuery.type(id) === 'string') {
             id = $('#' + id)
         }
-        $('html, body').delay(500).animate({
+        // console.log(delay ? 'true' : 'false');
+        $('html, body').delay(delay !== undefined ? delay : 500).animate({
             scrollTop: (id.offset().top - 125)
-        }, 500)
+        }, speed !== undefined ? speed : 500)
 
         if (glow) {
             this.targetGlow(id)
