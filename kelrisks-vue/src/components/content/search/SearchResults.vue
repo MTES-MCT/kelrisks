@@ -4,53 +4,53 @@
 
         <errors :error-list="[]"
                 :info-list="[]"
-                :success-list="['Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min) , <a>Répondre</a>']"
+                :success-list="['Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min),<a target=\'_blank\' style=\'display:inline-block; margin: 0 10px; min-width: 0; float: none;\' class=\'bouton\' href=\'https://docs.google.com/forms/d/e/1FAIpQLSd3tB_gWGZsucCihp4VYDqv0Vxq61nqnpQJeMkI17nY39St_w/viewform?usp=sf_link\'>Répondre</a>']"
                 :warning-list="[]"/>
 
         <br/>
 
-        <a @click="() => {  $emit('flow', -1)
+        <div id="searchButtonsWrapper">
+            <a @click="() => {  $emit('flow', -1)
                             _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])}"
-           class="bouton"
-           style="float: left;"
-           v-show="visibility.modifier">
-            <font-awesome-icon icon="chevron-left"/>
-            Modifier
-        </a>
+               class="bouton"
+               v-show="visibility.modifier">
+                <font-awesome-icon icon="chevron-left"/>
+                Modifier
+            </a>
 
-        <a :href="env.basePath"
-           @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
-           class="bouton"
-           style="float: left;">
-            <font-awesome-icon icon="search"/>
-            Nouvelle recherche
-        </a>
+            <a :href="env.basePath"
+               @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
+               class="bouton">
+                <font-awesome-icon icon="search"/>
+                Nouvelle recherche
+            </a>
+        </div>
 
-        <a @click="copyLink"
-           class="bouton"
-           id="copyLink"
-           style="float: right; margin-right: 0;">
-            <font-awesome-icon icon="copy"/>
-            Copier le lien
-        </a>
-
-        <a :href="this.env.apiPath + 'avis/pdf?' +
+        <div id="actionButtonsWrapper">
+            <a :href="this.env.apiPath + 'avis/pdf?' +
                             'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : codeInsee) + '&' +
                             'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : nomAdresse) + '&' +
                             'geolocAdresse=' + (tinyUrl.geolocAdresse ? tinyUrl.geolocAdresse.replace(/\|/, '%7C') : geolocAdresse.replace(/\|/, '%7C')) + '&' +
                             'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : codeParcelle) + '&' +
                             'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : codeProprio)"
-           @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
-           class="bouton"
-           style="float: right;"
-           id="pdf"
-           target="_blank">
-            <font-awesome-icon icon="file-pdf"/>
-            PDF
-        </a>
-        <input :value="env.basePath + '#/' + avis.summary.codeUrl"
-               id="copyInput"
-               style="position: absolute; left: -1000px; top: -1000px;"/>
+               @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
+               class="bouton"
+               id="pdf"
+               target="_blank">
+                <font-awesome-icon icon="file-pdf"/>
+                PDF
+            </a>
+            <input :value="env.basePath + '#/' + avis.summary.codeUrl"
+                   id="copyInput"
+                   style="position: absolute; left: -1000px; top: -1000px;"/>
+
+            <a @click="copyLink"
+               class="bouton"
+               id="copyLink">
+                <font-awesome-icon icon="copy"/>
+                Copier le lien
+            </a>
+        </div>
 
         <div id="summary_leaflet_wrapper">
             <div class="container bordered"
@@ -621,7 +621,7 @@ export default {
 
                     this.avis.ppr = value.entity.planPreventionRisquesDTOs
 
-                    functions.scrollToElement('main', false)
+                    functions.scrollToElement('app', 500, 0, false)
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
                 })
                 .catch(() => {
@@ -718,6 +718,48 @@ export default {
 <style scoped>
     @import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
 
+    #searchButtonsWrapper {
+        float : left;
+    }
+
+    #searchButtonsWrapper a,
+    #actionButtonsWrapper a {
+        display : inline-block;
+        float   : none;
+    }
+
+    #actionButtonsWrapper {
+        float : right;
+    }
+
+    @media (min-width : 630px) {
+        #searchButtonsWrapper a:last-of-type,
+        #actionButtonsWrapper a:last-of-type {
+            margin-right : 0;
+        }
+    }
+
+    @media (max-width : 1350px) {
+
+        #searchButtonsWrapper {
+            text-align : center;
+            width      : 100%;
+        }
+
+        #actionButtonsWrapper {
+            text-align : center;
+            width      : 100%;
+        }
+    }
+
+    @media (max-width : 630px) {
+        #searchButtonsWrapper a,
+        #actionButtonsWrapper a {
+            margin-left  : 10px;
+            margin-right : 10px;
+        }
+    }
+
     #section4 {
         padding        : 30px 40px 0;
         text-align     : left;
@@ -738,12 +780,6 @@ export default {
 
     .container {
         max-width : unset;
-    }
-
-    #copyLink {
-        float         : left;
-        margin-right  : 20px;
-        margin-bottom : 20px;
     }
 
     #summary_leaflet_wrapper {
