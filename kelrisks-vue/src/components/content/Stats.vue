@@ -1,6 +1,6 @@
 <template>
     <div id="stats_wrapper">
-        <h2 class="section__title">Statistiques 2019</h2><!--TODO : Année dynamique--><br>
+        <h2 class="section__title">Statistiques</h2><br>
         <br>
         <div class="histogram_wrapper">
             <div class="histogram_title_wrapper">

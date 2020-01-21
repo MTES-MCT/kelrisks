@@ -139,57 +139,31 @@
         <main id="main"
               role="main">
 
-            <section class="section section-white"
-                     id="section0"
-                     v-show="flow.index === 0">
-                <div class="container">
-                    <div class="panel">
-                        <h2 class="section__title">{{informations.errorList[0]}}</h2>
-                        <p class="section__subtitle">{{informations.errorList[1]}}</p>
-                    </div>
-                </div>
-                <br/>
-                <br/>
-            </section>
+            <search-form-parcelle @avis="avis = $event"
+                                  @cgu="$refs.cgu.open()"
+                                  @flow="updateflow"
+                                  @form="form = $event"
+                                  @leaflet="leaflet = $event"
+                                  @tinyUrl="tinyUrl = $event"
+                                  ref="searchForm"
+                                  v-show="flow.index === 2"/>
 
-            <search-form-part1-vous-etes @flow="updateflow"
-                                         v-show="flow.index === 1"/>
-            <search-form-part3-parcelle :errors="searchResults.errors"
-                                        :querying="flow.querying"
-                                        :warnings="searchResults.warnings"
-                                        @cgu="$refs.cgu.open()"
-                                        @codeinsee="form.codeInsee = $event"
-                                        @codeparcelle="form.codeParcelle = $event"
-                                        @codeproprio="form.codeProprio = $event"
-                                        @flow="updateflow"
-                                        @geolocalisationadresse="form.geolocAdresse = $event"
-                                        @getavis="getAvis"
-                                        @nomadresse="form.nomAdresse = $event"
-                                        v-show="flow.index === 2"/>
-            <search-results :code-insee="form.codeInsee"
-                            :code-parcelle="form.codeParcelle"
-                            :code-proprio="form.codeProprio"
-                            :geoloc-adresse="form.geolocAdresse"
-                            :nom-adresse="form.nomAdresse"
-                            @errors="searchErrors"
-                            @flow="updateflow"
-                            @loaded="loaded"
-                            @loading="loading"
-                            @requestfocus="renderAvis"
+            <search-results :avis="avis"
                             @setflow="setflow"
-                            @warnings="searchWarnings"
+                            :form="form"
+                            :leaflet="leaflet"
+                            :tinyUrl="tinyUrl"
+                            @flow="updateflow"
                             ref="results"
+                            v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0 && Object.entries(leaflet).length > 0 && Object.entries(tinyUrl).length > 0 "
                             v-show="flow.index === 3"/>
 
             <stats v-show="flow.index === 666"/>
+
         </main>
 
         <how-to class="clearfix container"
                 v-show="flow.index <= 2"/>
-
-        <!--        <div class="container">-->
-        <!--            <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>-->
-        <!--        </div>-->
 
         <footer>
             <div>
@@ -233,16 +207,13 @@ import CGU from '../components/content/CGU'
 import HowTo from '../components/content/HowTo'
 import WhoAreWe from '../components/content/WhoAreWe'
 import Konami from '../components/content/Konami'
-import mixinErrors from '../components/mixins/errors'
-import SearchFormPart1VousEtes from '../components/content/search/SearchFormPart1VousEtes'
-import SearchFormPart3Parcelle from '../components/content/search/SearchFormPart3Parcelle'
+import SearchFormParcelle from '../components/content/search/SearchFormParcelle'
 import SearchResults from '../components/content/search/SearchResults'
 import Stats from '../components/content/Stats'
 import fetchWithError from '../script/fetchWithError'
 
 export default {
     name: 'Kelrisks',
-    mixins: [mixinErrors],
     data: () => ({
         flow: {
             index: 2,
@@ -253,13 +224,10 @@ export default {
             errors: [],
             warnings: []
         },
-        form: {
-            codeInsee: '',
-            nomAdresse: '',
-            geolocAdresse: '',
-            codeProprio: '',
-            codeParcelle: ''
-        },
+        form: {},
+        avis: {},
+        leaflet: {},
+        tinyUrl: {},
         api: {
             message: 'API'
         },
@@ -272,8 +240,7 @@ export default {
     components: {
         Stats,
         SearchResults,
-        SearchFormPart3Parcelle,
-        SearchFormPart1VousEtes,
+        SearchFormParcelle,
         Contact,
         CGU,
         HowTo,
@@ -286,10 +253,6 @@ export default {
         },
         setflow (value) {
             this.flow.index = value
-        },
-        getAvis () {
-            this.flow.querying = true
-            this.$refs.results.getAvis()
         },
         renderAvis () {
             this.loaded()
@@ -305,20 +268,6 @@ export default {
         },
         debug () {
             // console.log(value)
-        },
-        searchErrors (value) {
-            if (value.length > 0) {
-                this.flow.querying = false
-            }
-            if (this.flow.loading) this.informations.errorList = value
-            else this.searchResults.errors = value
-        },
-        searchWarnings (value) {
-            if (value.length > 0) {
-                this.flow.querying = false
-            }
-            if (this.flow.loading) this.informations.warningList = value
-            else this.searchResults.warnings = value
         },
         showStats () {
             this.flow.index = 666

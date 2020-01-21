@@ -2,10 +2,7 @@
     <section class="section section-white"
              id="section4">
 
-        <errors :error-list="[]"
-                :info-list="[]"
-                :success-list="['Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min),<a target=\'_blank\' style=\'display:inline-block; margin: 0 10px; min-width: 0; float: none;\' class=\'bouton\' href=\'https://docs.google.com/forms/d/e/1FAIpQLSd3tB_gWGZsucCihp4VYDqv0Vxq61nqnpQJeMkI17nY39St_w/viewform?usp=sf_link\'>Répondre</a>']"
-                :warning-list="[]"/>
+        <errors ref="resultsErrors"/>
 
         <br/>
 
@@ -28,11 +25,11 @@
 
         <div id="actionButtonsWrapper">
             <a :href="this.env.apiPath + 'avis/pdf?' +
-                            'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : codeInsee) + '&' +
-                            'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : nomAdresse) + '&' +
-                            'geolocAdresse=' + (tinyUrl.geolocAdresse ? tinyUrl.geolocAdresse.replace(/\|/, '%7C') : geolocAdresse.replace(/\|/, '%7C')) + '&' +
-                            'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : codeParcelle) + '&' +
-                            'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : codeProprio)"
+                            'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : form.codeInsee) + '&' +
+                            'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : form.nomAdresse) + '&' +
+                            'geolocAdresse=' + (tinyUrl.geolocAdresse ? tinyUrl.geolocAdresse.replace(/\|/, '%7C') : form.geolocAdresse.replace(/\|/, '%7C')) + '&' +
+                            'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : form.codeParcelle) + '&' +
+                            'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : form.codeProprio)"
                @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
                class="bouton"
                id="pdf"
@@ -130,24 +127,9 @@
                                 label-text="SIS"/>
                 </div>
 
-                <!--                <a class="lien big"-->
-                <!--                   href="mailto:Contact%20Kelrisks%20<contact@kelrisks.beta.gouv.fr>?subject=Signaler%20une%20erreur%20Kelrisks">Signaler une erreur</a>-->
-
             </template>
 
             <template v-if="tab.concordances.index === 'RISQUES'">
-
-                <!--<font-awesome-icon icon="exclamation"
-                                   style="font-size: 50px; color: #F79D65; margin-bottom: 10px"
-                                   v-if="concordances_risques"/>
-                <font-awesome-icon icon="check"
-                                   style="font-size: 50px; color: #86CB92; margin-bottom: 10px"
-                                   v-else/>
-
-                <p style="font-size: 20px; color: #2C3E50;"
-                   v-if="concordances_risques">Votre terrain présente un risque naturel<sup> (1)</sup></p>
-                <p style="font-size: 20px; color: #2C3E50;"
-                   v-else>Votre terrain ne semble pas présenter de risque naturel<sup> (1)</sup></p>-->
 
                 <p style="font-size: 20px; color: #2C3E50;">Analyse de la parcelle donnée</p>
 
@@ -156,10 +138,12 @@
                     <div class="icon-risque-wrapper">
                         <div class="icon-risque">
                             <img height="50"
+                                 alt="Potentiel radon suprérieur ou égal à 3"
                                  src="/images/icons/kelrisks/radon_ko.svg"
                                  v-if="this.avis.potentielRadon >= 3"
                                  width="50">
                             <img height="50"
+                                 alt="Potentiel radon OK"
                                  src="/images/icons/kelrisks/radon_ok.svg"
                                  v-else
                                  width="50">
@@ -449,15 +433,10 @@
 
 <script>
 import BigNumber from '../../../components/ui/BigNumber'
-import avis from '../../../script/avis'
-import fetchWithError from '../../../script/fetchWithError'
-import functions from '../../../script/fonctions'
 import Errors from '../../../components/content/base/Errors'
-import mixinErrors from '../../mixins/errors'
 import Leaflet from "../Leaflet";
 
 export default {
-    mixins: [mixinErrors],
     name: 'SearchResults',
     components: {
         Leaflet,
@@ -465,28 +444,30 @@ export default {
         BigNumber
     },
     props: {
-        codeParcelle: {
-            type: String,
-            default: ''
+        form: {
+            type: Object,
+            default: () => {
+            }
         },
-        codeInsee: {
-            type: String,
-            default: ''
+        avis: {
+            type: Object,
+            default: () => {
+            }
         },
-        nomAdresse: {
-            type: String,
-            default: ''
+        leaflet: {
+            type: Object,
+            default: () => {
+            }
         },
-        geolocAdresse: {
-            type: String,
-            default: ''
-        },
-        codeProprio: {
-            type: String,
-            default: ''
+        tinyUrl: {
+            type: Object,
+            default: () => {
+            }
         }
     },
     data: () => ({
+        loading: false,
+        rendered: false,
         visibility: {
             details: false,
             modifier: true
@@ -494,49 +475,6 @@ export default {
         env: {
             basePath: process.env.VUE_APP_PATH,
             apiPath: process.env.VUE_APP_API_PATH
-        },
-        avis: {
-            summary: {
-                adresse: {
-                    rue: {}
-                },
-                commune: {}
-            },
-            querying: false,
-            loading: false,
-            rendered: false,
-            basiasNbOf: 0,
-            basiasParcelle: {},
-            basiasProximiteParcelle: {},
-            basiasRayonParcelle: {},
-            basiasRaisonSociale: {},
-            basiasNonGeorerencee: {},
-            basolNbOf: 0,
-            basolParcelle: {},
-            basolProximiteParcelle: {},
-            basolRayonParcelle: {},
-            basolNonGeorerencee: {},
-            s3ICNbOf: 0,
-            installationClasseeParcelle: {},
-            installationClasseeProximiteParcelle: {},
-            installationClasseeRayonParcelle: {},
-            installationClasseeNonGeorerencee: {},
-            sisParcelle: {},
-            sisNonGeorerencee: {},
-            codeSismicite: 0,
-            potentielRadon: 0,
-            ppr: {}
-        },
-        tinyUrl: {
-            codeParcelle: undefined,
-            codeInsee: undefined,
-            nomAdresse: undefined,
-            geolocAdresse: undefined,
-            codeProprio: undefined
-        },
-        leaflet: {
-            data: undefined,
-            center: [0, 0]
         },
         tab: {
             concordances: {
@@ -549,9 +487,7 @@ export default {
     }),
     methods: {
         showHideContent () {
-            // console.log(this.visibility.details)
             this.visibility.details = !this.visibility.details
-            // console.log(this.visibility.details)
         },
         switchTab (name) {
             this.tab.concordances.index = name;
@@ -559,75 +495,6 @@ export default {
                 this._paq.push(['trackEvent', 'Flow', 'Avis', 'Risques'])
                 this.tab.concordances.pollution.vu = true
             }
-        },
-        getAvis () {
-            this.clearAll()
-
-            if (this.codeParcelle === '' && this.geolocAdresse === '') {
-                this.sendError('Merci de bien vouloir choisir une rue/numéro ou entrer une parcelle.')
-            }
-
-            let parcelle = this.tinyUrl.codeParcelle ? this.tinyUrl.codeParcelle : this.codeParcelle
-            let insee = this.tinyUrl.codeInsee ? this.tinyUrl.codeInsee : this.codeInsee
-            let nom = this.tinyUrl.nomAdresse ? this.tinyUrl.nomAdresse : this.nomAdresse
-            let geoloc = this.tinyUrl.geolocAdresse ? this.tinyUrl.geolocAdresse : this.geolocAdresse
-            let proprio = this.tinyUrl.codeProprio ? this.tinyUrl.codeProprio : this.codeProprio
-
-            let url = this.env.apiPath + 'avis?' + 'codeINSEE=' + insee + '&' + 'codeParcelle=' + parcelle + '&' + 'nomAdresse=' + nom + '&' + 'geolocAdresse=' + geoloc.replace(/\|/, '%7C') + '&' + 'nomProprietaire=' + proprio
-            fetchWithError(url, null, 1000 * 20)
-                .then(stream => stream.json())
-                .then(value => {
-                    // console.log(value.entity)
-                    this.checkInformations(value.entity)
-                    if (this.informations.hasError) {
-                        this._paq.push(['trackEvent', 'Flow', 'Informations', 'Erreur'])
-                        this.emitErrors()
-                        return
-                    }
-                    if (this.informations.hasWarning) {
-                        this._paq.push(['trackEvent', 'Flow', 'Informations', 'Warning'])
-                        this.emitWarnings()
-                        return
-                    }
-                    this.avis.summary = value.entity.summary
-                    this._paq.push(['trackEvent', 'Flow', 'Informations', 'OK'])
-
-                    this.$emit('requestfocus')
-
-                    this.avis.basiasParcelle = avis.getBasiasParcelle(value)
-                    this.avis.basiasProximiteParcelle = avis.getBasiasProximiteParcelle(value)
-                    this.avis.basiasRaisonSociale = avis.getBasiasRaisonSocialeParcelle(value)
-                    this.avis.basiasRayonParcelle = avis.getBasiasRayonParcelle(value)
-                    this.avis.basiasNonGeorerencee = avis.getBasiasNonGeoreferencees(value)
-
-                    this.avis.basolParcelle = avis.getBasolParcelle(value)
-                    this.avis.basolProximiteParcelle = avis.getBasolProximiteParcelle(value)
-                    this.avis.basolRayonParcelle = avis.getBasolRayonParcelle(value)
-                    this.avis.basolNonGeorerencee = avis.getBasolNonGeoreferencees(value)
-
-                    this.avis.installationClasseeParcelle = avis.getICSurParcelle(value)
-                    this.avis.installationClasseeProximiteParcelle = avis.getICProximiteParcelle(value)
-                    this.avis.installationClasseeRayonParcelle = avis.getICRayonParcelle(value)
-                    this.avis.installationClasseeNonGeorerencee = avis.getICNonGeoreferencees(value)
-
-                    this.avis.sisParcelle = avis.getSISSurParcelle(value)
-                    this.avis.sisNonGeorerencee = avis.getSISNonGeoreferencees(value)
-
-                    this.leaflet.data = value.entity.leaflet
-                    this.leaflet.center = [parseFloat(value.entity.leaflet.center.y), parseFloat(value.entity.leaflet.center.x)]
-
-                    this.avis.codeSismicite = value.entity.codeZoneSismicite
-                    this.avis.potentielRadon = value.entity.classePotentielRadon
-
-                    this.avis.ppr = value.entity.planPreventionRisquesDTOs
-
-                    functions.scrollToElement('app', 500, 0, false)
-                    this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
-                })
-                .catch(() => {
-                    // console.log(e)
-                    this.sendError('Votre requête n\'a pu aboutir dans un délais raisonnable, merci de réessayer ou de nous le signaler au moyen du formulaire de contact.')
-                })
         },
         loadAvis (codeAvis) {
             // console.log('loadAvis')
@@ -639,8 +506,8 @@ export default {
                 .then(value => {
                     if (value.status === 422) {
                         // console.log('Wrong code')
-                        this.sendError("Oups! Votre recherche n'a pas été trouvée :-(.")
-                        this.sendError("Si vous l'avons perdue, veuillez bien vouloir nous en excuser.")
+                        this.$refs.searchErrors.sendError("Oups! Votre recherche n'a pas été trouvée :-(.")
+                        this.$refs.searchErrors.sendError("Si vous l'avons perdue, veuillez bien vouloir nous en excuser.")
                         this.$emit('loaded')
                         return
                     }
@@ -709,8 +576,11 @@ export default {
     },
     mounted () {
         let codeAvis = this.$route.params.codeAvis
-        // console.log('codeAvis : ' + codeAvis + ' && is undefined ? ' + (codeAvis === undefined))
         if (codeAvis !== undefined) this.loadAvis(codeAvis)
+
+        this.$nextTick(() => {
+            this.$refs.resultsErrors.sendSuccess('Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min),<a target=\'_blank\' style=\'display:inline-block; margin: 0 10px; min-width: 0; float: none;\' class=\'bouton\' href=\'https://docs.google.com/forms/d/e/1FAIpQLSd3tB_gWGZsucCihp4VYDqv0Vxq61nqnpQJeMkI17nY39St_w/viewform?usp=sf_link\'>Répondre</a>')
+        })
     }
 }
 </script>

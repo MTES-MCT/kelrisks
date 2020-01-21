@@ -9,10 +9,7 @@
                     <b>(les recherches par code parcelle sont plus pertinentes que par adresse)</b>
                 </p>
 
-                <errors :error-list="concatErrors(errors)"
-                        :info-list="informations.infoList"
-                        :success-list="informations.successList"
-                        :warning-list="concatWarnings(warnings)"/>
+                <errors ref="searchErrors"/>
 
                 <br/>
 
@@ -26,10 +23,12 @@
                               label="Nom de commune ou Code postal"
                               name="codePostal"
                               v-bind:source="'https://api-adresse.data.gouv.fr/search/?type=municipality&limit=10&q='">
+                        <!--suppress JSUnresolvedVariable -->
                         <template slot="kr-option-label"
                                   slot-scope="slotProps">
                             {{ slotProps.option.properties.postcode + ' - ' + slotProps.option.properties.city}}
                         </template>
+                        <!--suppress JSUnresolvedVariable -->
                         <template slot="kr-helper"
                                   slot-scope="slotProps">
                             INSEE&nbsp;: {{ slotProps.option.properties.citycode }}
@@ -83,7 +82,7 @@
                               @selected="onNomProprietaireSelected"
                               label="Nom de l'ancien propriétaire / Raison sociale"
                               name="raisonSociale"
-                              v-bind:source="env.apiPath + 'raison/autocomplete/' + codeInsee + '/'">
+                              v-bind:source="env.apiPath + 'raison/autocomplete/' + form.codeInsee + '/'">
                         <template slot="kr-no-results"
                                   slot-scope="slotProps">
                             Aucun numéro trouvé pour "{{ slotProps.query }}"
@@ -92,10 +91,6 @@
                 </div>
 
                 <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
-                    <!--                    <a @click="$emit('flow', -1)"-->
-                    <!--                       class="button">-->
-                    <!--                        <font-awesome-icon icon="chevron-left"/>-->
-                    <!--                        Précédent</a>-->
                     <button class="button"
                             name="subscribe"
                             type="submit"
@@ -104,7 +99,7 @@
                                            spin/>
                         Recherche en cours...
                     </button>
-                    <button @click="getAvis"
+                    <button @click="search"
                             class="bouton"
                             id="submit"
                             name="subscribe"
@@ -125,12 +120,12 @@
 
 <script>
 import Errors from '../../../components/content/base/Errors'
-import mixinErrors from '../../../components/mixins/errors'
+import mixinAvis from '../../../components/mixins/avis'
 import KrInput from '../../../components/ui/KrInput'
 
 export default {
-    name: 'SearchFormPart3',
-    mixins: [mixinErrors],
+    name: 'SearchFormParcelle',
+    mixins: [mixinAvis],
     components: {
         Errors,
         KrInput
@@ -140,24 +135,7 @@ export default {
             return window._paq
         }
     },
-    props: {
-        querying: {
-            type: Boolean,
-            default: false
-        },
-        codeInsee: {
-            type: String,
-            default: ''
-        },
-        errors: {
-            type: Array,
-            default: () => []
-        },
-        warnings: {
-            type: Array,
-            default: () => []
-        }
-    },
+    props: {},
     data: () => ({
         cgu: true,
         error: {
@@ -171,46 +149,27 @@ export default {
         }
     }),
     methods: {
-        acceptCGU () {
-            // sessionStorage.cguChecked = value.target.checked
-        },
         onAdresseChanged (option) {
-            this.$emit('adressechanged')
-            this.$emit('codeinsee', option['properties']['citycode'])
-            this.$emit('nomadresse', option['properties']['name'])
-            this.$emit('geolocalisationadresse', option['geometry']['coordinates']['0'] + '|' + option['geometry']['coordinates']['1'])
+            this.form.codeInsee = option['properties']['citycode']
+            this.form.nomAdresse = option['properties']['name']
+            this.form.geolocAdresse = option['geometry']['coordinates']['0'] + '|' + option['geometry']['coordinates']['1']
         },
         onCodeParcelleChanged (value) {
-            this.$emit('codeparcellechanged')
-            this.$emit('codeparcelle', value)
+            this.form.codeParcelle = value
         },
         onNomProprietaireSelected (value) {
-            this.$emit('nomproprietaireselected')
-            this.$emit('codeproprio', value.code)
+            this.form.codeProprio = value.code
         },
         onNomProprietaireChanged (value) {
-            this.$emit('nomproprietairechanged')
-            this.$emit('codeproprio', value)
+            this.form.codeProprio = value.code
         },
         onCodePostalSelected (option) {
-            this.$emit('codepostalselected')
-            this.$emit('codeinsee', option['properties']['citycode'])
-            this.error.field.codeCommune = []
+            this.form.codeInsee = option['properties']['citycode']
         },
-        getAvis () {
-            this.clearAll()
-            this.error.field.codeCommune = []
-            // if (!this.checkCodePostal()) return;
-            if (!this.cgu) {
-                this.sendWarning('Merci de bien vouloir accepter les Conditions générales d’utilisation.')
-                return
-            }
-            this.$emit('getavis')
-        }
+        search () {
+            this.getAvis();
+        },
     },
-    mounted () {
-        // if (sessionStorage.cguChecked !== undefined) this.cgu = sessionStorage.cguChecked
-    }
 }
 </script>
 
