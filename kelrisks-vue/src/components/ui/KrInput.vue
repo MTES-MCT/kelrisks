@@ -2,13 +2,12 @@
     <div class="kr-group">
         <label :for="id"
                v-bind:class="{'focus':inputHasFocus,
-                          'top':inputHasFocus || query !== '' || placeholder,
+                          'top':inputHasFocus || query !== '',
                           'error': errors.length > 0}"
                v-if="label !== ''">{{ label }}</label>
         <!--suppress HtmlFormInputWithoutLabel -->
         <input :id="id"
                :name="name"
-               :placeholder="placeholder"
                :title="title"
                :type="type"
                @blur="onBlur"
@@ -79,11 +78,15 @@
             </strong>
         </div>
         <div class="kr-helper"
-             v-if="selectedOption && !(errors.length > 0 || warnings.length > 0 || infos.length > 0)">
+             v-else-if="selectedOption">
             <strong>
                 <slot name="kr-helper"
                       v-bind:option="selectedOption"></slot>
             </strong>
+        </div>
+        <div class="kr-helper"
+             v-else-if="placeholder.length > 0">
+            {{placeholder}}
         </div>
         <div class="kr-autocomplete-options-wrapper"
              v-if="source"
@@ -140,7 +143,8 @@ export default {
         },
         placeholder: {
             type: String,
-            required: false
+            required: false,
+            default: ''
         },
         title: {
             type: String,
@@ -404,6 +408,10 @@ export default {
         height     : 32px;
         z-index    : 7;
         color      : #333333;
+    }
+
+    .kr-clear svg {
+        margin : 0 10px 0 0;
     }
 
     .kr-helper {

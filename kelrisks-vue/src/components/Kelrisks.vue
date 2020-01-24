@@ -113,10 +113,10 @@
 
                 <nav>
                     <ul class="nav__links">
-                        <li class="nav__item"><a @click="showStats()"
-                                                 id="stats">Stats</a></li>
-                        <li class="nav__item"><a href="/swagger-ui.html"
-                                                 id="api">{{ api.message }}</a></li>
+                        <!--                        <li class="nav__item"><a @click="showStats()"-->
+                        <!--                                                 id="stats">Stats</a></li>-->
+                        <!--                        <li class="nav__item"><a href="/swagger-ui.html"-->
+                        <!--                                                 id="api">{{ api.message }}</a></li>-->
                     </ul>
                 </nav>
             </div>
@@ -127,10 +127,10 @@
              role="banner"
              style="background-image: url('/images/banner-min.png'); background-size: auto; background-position-y: -30px">
             <div class="hero__container"
-                 v-bind:class="{'contracted':flow.index > 1}">
+                 v-bind:class="{'contracted':flow.index > 2}">
                 <h1 class="hero__white-background">Kelrisks</h1>
                 <p class="hero__white-background"
-                   v-bind:class="{'contracted':flow.index > 1}">Evaluez simplement et rapidement le risque de pollution de votre terrain</p>
+                   v-bind:class="{'contracted':flow.index > 2}">Évaluez simplement et rapidement le risque de pollution de votre terrain</p>
                 <!--                <p class="hero__white-background note"-->
                 <!--                   v-bind:class="{'contracted':flow.index > 1}">(Île-de-France)*</p>-->
             </div>
@@ -185,7 +185,7 @@
         </main>
 
         <how-to class="clearfix container"
-                v-show="flow.index <= 1"/>
+                v-show="flow.index <= 2"/>
 
         <!--        <div class="container">-->
         <!--            <p style="font-size: 0.8em; margin: 0 auto; text-align: left; color: #999999">(Île-de-France)* - Territoire d'expérimentation.</p>-->
@@ -200,6 +200,9 @@
                 <div class="column">
                     <c-g-u ref="cgu"/>
                     <a @click="$refs.cgu.open()">CGU</a>
+                </div>
+                <div class="column">
+                    <a @click="showStats()">Stats</a>
                 </div>
                 <div class="column">
                     <a href="/swagger-ui.html">API</a>
@@ -236,15 +239,13 @@ import SearchFormPart3Parcelle from '../components/content/search/SearchFormPart
 import SearchResults from '../components/content/search/SearchResults'
 import Stats from '../components/content/Stats'
 import fetchWithError from '../script/fetchWithError'
-// import KrSelect from '../components/ui/KrSelect'
-// import KrInput from './ui/KrInput';
 
 export default {
     name: 'Kelrisks',
     mixins: [mixinErrors],
     data: () => ({
         flow: {
-            index: 1,
+            index: 2,
             querying: false,
             loading: false
         },
@@ -492,18 +493,73 @@ export default {
     }
 
     footer .column {
-        width   : 33.33%;
         float   : left;
         padding : 15px;
+        width   : 25%;
     }
 
-    footer .column:nth-child(2) {
+    footer .column:nth-last-child(n+2) {
         border-right : #CCCCCC solid 1px;
-        border-left  : #CCCCCC solid 1px;
     }
 
     #version {
         font-family : "Bradley Hand ITC", Arial, sans-serif;
         padding-top : 65px;
+    }
+
+    .bouton,
+    .bouton:active,
+    .bouton:focus,
+    .bouton:visited {
+        background-color : #0053B3;
+        border           : 0;
+        border-bottom    : solid 3px #003B80;
+        border-radius    : 2px;
+        color            : #FFFFFF;
+        display          : block;
+        float            : left;
+        font-size        : var(--space-s);
+        margin-bottom    : 20px;
+        margin-right     : 20px;
+        min-width        : 250px;
+        padding          : 0.35em 1.75em;
+        text-align       : center;
+        text-decoration  : none;
+        transition       : background-color .25s ease;
+    }
+
+    .bouton:hover {
+        background-color : #003B80;
+        border-bottom    : solid 3px #003B80;
+        border-radius    : 2px;
+        color            : #FFFFFF;
+    }
+
+    .lien {
+        background      : none;
+        color           : #0053B3;
+        cursor          : pointer;
+        padding         : 9px 0;
+        text-decoration : none;
+    }
+
+    .lien.big {
+        font-size : 1.3em;
+        z-index   : 10;
+    }
+
+    .lien:hover {
+        background : none;
+        color      : #003B80;
+    }
+
+    svg {
+        margin : 0 10px;
+    }
+
+    .button svg,
+    .bouton svg {
+        color  : #FFFFFF;
+        margin : 0 10px 0 0;
     }
 </style>

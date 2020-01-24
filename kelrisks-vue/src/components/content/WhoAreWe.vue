@@ -58,14 +58,16 @@ export default {
 
 <style scoped>
   #haw_wrapper {
+    background : var(--theme-background-white);
+    box-shadow : #CCCCCC -3px 3px 5px;
     display    : none;
+    height     : 80%;
+    left       : 20%;
     padding    : 0;
     position   : fixed;
     top        : 10%;
     width      : 60%;
-    left       : 20%;
-    height     : 80%;
-    box-shadow : #CCCCCC -3px 3px 5px;
+    z-index    : 999;
   }
 
   #haw {

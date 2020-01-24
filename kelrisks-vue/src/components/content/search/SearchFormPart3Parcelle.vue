@@ -3,10 +3,11 @@
              id="section3">
         <div class="container">
             <div class="panel">
-                <h2 class="section__title title">Votre terrain</h2>
-                <p class="subtitle">Informations</p>
-                <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">Saisissez le code de la parcelle à analyser<br>(les recherches par code parcelle peuvent être plus pertinentes
-                                                                                         que par adresse)</p>
+                <h2 class="section__title title">Rechercher votre terrain</h2>
+                <p class="subtitle">Saisissez le code de la parcelle à analyser</p>
+                <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">
+                    <b>(les recherches par code parcelle sont plus pertinentes que par adresse)</b>
+                </p>
 
                 <errors :error-list="concatErrors(errors)"
                         :info-list="informations.infoList"
@@ -44,12 +45,16 @@
                     <kr-input @query="onCodeParcelleChanged"
                               label="Code Parcelle"
                               name="codeparcelle"
-                              placeholder="BA-115 ou 912250000A0352"/>
+                              placeholder="BA-115 ou 912250000A0352">
+                        <template slot="kr-helper">BA-115 ou 912250000A0352
+                        </template>
+                    </kr-input>
                 </div>
 
                 <div class="clearfix"></div>
+
                 <p class="subtitle"
-                   style="margin: 25px 0 15px 0; color: #8A8F96">Ou</p>
+                   style="margin: 30px 0 15px 0; color: #8A8F96">Ou</p>
 
                 <div style="width: 40%; margin-left: 30%">
                     <!--                <div style="width: 40%; float: left; margin-left: 5%">-->
@@ -64,10 +69,6 @@
                         <template slot="kr-no-results"
                                   slot-scope="slotProps">
                             Aucune adresse trouvée pour "{{ slotProps.query }}"
-                        </template>
-                        <template slot="kr-helper"
-                                  slot-scope="slotProps">
-                            IBAN&nbsp;: {{ slotProps.option.properties.id }}
                         </template>
                     </kr-input>
                 </div>
@@ -90,19 +91,11 @@
                     </kr-input>
                 </div>
 
-                <div style="width: 90%; margin: 25px 5%">
-                    <input @change="acceptCGU"
-                           id="cgu"
-                           type="checkbox"
-                           v-model="cgu"><label for="cgu"
-                                                style="display: inline">J'accepte les <a v-on:click="$emit('cgu')">CGU</a></label>
-                </div>
-
                 <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
-                    <a @click="$emit('flow', -1)"
-                       class="button">
-                        <font-awesome-icon icon="chevron-left"/>
-                        Précédent</a>
+                    <!--                    <a @click="$emit('flow', -1)"-->
+                    <!--                       class="button">-->
+                    <!--                        <font-awesome-icon icon="chevron-left"/>-->
+                    <!--                        Précédent</a>-->
                     <button class="button"
                             name="subscribe"
                             type="submit"
@@ -112,7 +105,7 @@
                         Recherche en cours...
                     </button>
                     <button @click="getAvis"
-                            class="button"
+                            class="bouton"
                             id="submit"
                             name="subscribe"
                             type="submit"
@@ -120,6 +113,10 @@
                         <font-awesome-icon icon="search"/>
                         Rechercher
                     </button>
+                </div>
+
+                <div style="width: 90%; margin: 50px 5% 0;">
+                    <p id="cgu">En poursuivant votre navigation, vous acceptez nos <a v-on:click="$emit('cgu')">CGU</a>.</p>
                 </div>
             </div>
         </div>
@@ -162,7 +159,7 @@ export default {
         }
     },
     data: () => ({
-        cgu: false,
+        cgu: true,
         error: {
             field: {
                 codeCommune: []
@@ -219,4 +216,14 @@ export default {
 
 <style scoped>
 
+    #cgu {
+        color      : rgb(138, 143, 150);
+        font-size  : 0.85em;
+        margin     : 0;
+        text-align : center;
+    }
+
+    #cgu a {
+        text-decoration : none;
+    }
 </style>

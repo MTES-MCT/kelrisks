@@ -5,7 +5,7 @@
       <li :key="error"
           v-for="error in errorList">
         <font-awesome-icon icon="bomb"/>
-        {{ error }}
+        <span v-html="error"/>
       </li>
     </ul>
     <ul class="warning"
@@ -13,7 +13,7 @@
       <li :key="warning"
           v-for="warning in warningList">
         <font-awesome-icon icon="exclamation"/>
-        {{ warning }}
+        <span v-html="warning"/>
       </li>
     </ul>
     <ul class="info"
@@ -21,7 +21,7 @@
       <li :key="info"
           v-for="info in infoList">
         <font-awesome-icon icon="info"/>
-        {{ info }}
+        <span v-html="info"/>
       </li>
     </ul>
     <ul class="success"
@@ -29,7 +29,7 @@
       <li :key="success"
           v-for="success in successList">
         <font-awesome-icon icon="thumbs-up"/>
-        {{ success }}
+        <span v-html="success"/>
       </li>
     </ul>
   </div>

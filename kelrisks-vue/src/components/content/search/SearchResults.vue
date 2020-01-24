@@ -1,44 +1,67 @@
 <template>
     <section class="section section-white"
              id="section4">
-        <a :href="this.env.apiPath + 'avis/pdf?' +
+
+        <errors :error-list="[]"
+                :info-list="[]"
+                :success-list="['Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min),<a target=\'_blank\' style=\'display:inline-block; margin: 0 10px; min-width: 0; float: none;\' class=\'bouton\' href=\'https://docs.google.com/forms/d/e/1FAIpQLSd3tB_gWGZsucCihp4VYDqv0Vxq61nqnpQJeMkI17nY39St_w/viewform?usp=sf_link\'>Répondre</a>']"
+                :warning-list="[]"/>
+
+        <br/>
+
+        <div id="searchButtonsWrapper">
+            <a @click="() => {  $emit('flow', -1)
+                            _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])}"
+               class="bouton"
+               v-show="visibility.modifier">
+                <font-awesome-icon icon="chevron-left"/>
+                Modifier
+            </a>
+
+            <a :href="env.basePath"
+               @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
+               class="bouton">
+                <font-awesome-icon icon="search"/>
+                Nouvelle recherche
+            </a>
+        </div>
+
+        <div id="actionButtonsWrapper">
+            <a :href="this.env.apiPath + 'avis/pdf?' +
                             'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : codeInsee) + '&' +
                             'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : nomAdresse) + '&' +
                             'geolocAdresse=' + (tinyUrl.geolocAdresse ? tinyUrl.geolocAdresse.replace(/\|/, '%7C') : geolocAdresse.replace(/\|/, '%7C')) + '&' +
                             'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : codeParcelle) + '&' +
                             'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : codeProprio)"
-           @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
-           class="bouton"
-           id="pdf"
-           target="_blank">
-            <font-awesome-icon icon="file-pdf"/>
-            PDF
-        </a>
+               @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
+               class="bouton"
+               id="pdf"
+               target="_blank">
+                <font-awesome-icon icon="file-pdf"/>
+                PDF
+            </a>
+            <input :value="env.basePath + '#/' + avis.summary.codeUrl"
+                   id="copyInput"
+                   style="position: absolute; left: -1000px; top: -1000px;"/>
 
-        <a @click="copyLink"
-           class="lien big"
-           id="copyLink">Copier l’URL</a>
-        <input :value="env.basePath + '#/' + avis.summary.codeUrl"
-               id="copyInput"
-               style="position: absolute; left: -1000px; top: -1000px;"/>
+            <a @click="copyLink"
+               class="bouton"
+               id="copyLink">
+                <font-awesome-icon icon="copy"/>
+                Copier le lien
+            </a>
+        </div>
 
         <div id="summary_leaflet_wrapper">
             <div class="container bordered"
                  id="summary_wrapper">
                 <div id="summary">
-                    <div style="margin-bottom: 20px"><span class="title">Votre recherche </span><a @click="() => {  $emit('flow', -1)
-                                                                                                _paq.push(['trackEvent', 'Flow', 'Avis', 'Modifier'])}"
-                                                                                                   class="lien"
-                                                                                                   v-show="visibility.modifier">Modifier</a>
-                    </div>
+                    <div style="margin-bottom: 20px"><span class="title">Votre recherche </span></div>
                     <b>Adresse&nbsp;: </b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, {{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span><br/>
                     <b>Code parcelle&nbsp;: </b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span><br/>
                     <b>Raison
                        Sociale&nbsp;: </b><span v-if="avis.summary.nomProprietaire && avis.summary.nomProprietaire !== ''">{{avis.summary.nomProprietaire}}</span><span v-else><i>n/a</i></span><br/>
                     <br>
-                    <a :href="env.basePath"
-                       @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
-                       class="lien">Nouvelle recherche</a>
                 </div>
             </div>
 
@@ -83,32 +106,32 @@
                    v-else>Nous n'avons trouvé aucune concordance dans les bases de données</p>
 
                 <div class="numbers_wrapper">
-                    <big-number :any-match="(concordances && concordances > 0)"
+                    <big-number :any-match="(concordances > 0)"
                                 id="basiasParcelle"
                                 :number-of="avis.basiasParcelle.numberOf"
                                 info-text="Base des Anciens Sites Industriels et Activités de Services. C’est l’inventaire de toutes les activités industriels abandonnées ou non, susceptibles d'avoir engendré une pollution de l'environnement. L’inscription d’une parcelle à cet inventaire ne préjuge pas de l’existence d’une pollution."
                                 label-text="Sites potentiellement pollués BASIAS"/>
 
-                    <big-number :any-match="(concordances && concordances > 0)"
+                    <big-number :any-match="(concordances > 0)"
                                 id="basolParcelle"
                                 :number-of="avis.basolParcelle.numberOf"
                                 info-text="Base de données sur les sites et sols pollués. c’est l’inventaire des sites sur lesquels la présence d’une pollution a nécessité une action des pouvoirs publics soit à titre préventif soit à titre curatif."
                                 label-text="Sites pollués BASOL"/>
 
-                    <big-number :any-match="(concordances && concordances > 0)"
+                    <big-number :any-match="(concordances > 0)"
                                 id="icParcelle"
                                 :number-of="avis.installationClasseeParcelle.numberOf"
                                 info-text="Inventaire des activités régies par la réglementation des installations dites classées pour la protection de l’environnement en raison des risques, des pollutions et des nuisances que ces activités génèrent."
                                 label-text="Installations classées"/>
 
-                    <big-number :any-match="(concordances && concordances > 0)"
+                    <big-number :any-match="(concordances > 0)"
                                 :number-of="avis.sisParcelle.numberOf"
                                 info-text="Secteur d’information sur les sols. Lorsque l’Etat a connaissance d’une pollution des sols, il est tenu en application de l’article L 125-6 du code de l’environnement de délimiter ces secteurs par arrêté préfectoral. L’inscription d’une parcelle dans un secteur d’information sur les sols entraîne des obligations d’information des acquéreurs et des locataires et l’obligation en cas de changement d’usage (dépôt de permis de construire) de faire appel à un bureau d’étude spécialisés dans le domaine des sols pollués pour attester de la bonne prise en compte des pollutions des sols présentes."
                                 label-text="SIS"/>
                 </div>
 
-                <a class="lien big"
-                   href="mailto:Contact%20Kelrisks%20<contact@kelrisks.beta.gouv.fr>?subject=Signaler%20une%20erreur%20Kelrisks">Signaler une erreur</a>
+                <!--                <a class="lien big"-->
+                <!--                   href="mailto:Contact%20Kelrisks%20<contact@kelrisks.beta.gouv.fr>?subject=Signaler%20une%20erreur%20Kelrisks">Signaler une erreur</a>-->
 
             </template>
 
@@ -429,6 +452,7 @@ import BigNumber from '../../../components/ui/BigNumber'
 import avis from '../../../script/avis'
 import fetchWithError from '../../../script/fetchWithError'
 import functions from '../../../script/fonctions'
+import Errors from '../../../components/content/base/Errors'
 import mixinErrors from '../../mixins/errors'
 import Leaflet from "../Leaflet";
 
@@ -437,6 +461,7 @@ export default {
     name: 'SearchResults',
     components: {
         Leaflet,
+        Errors,
         BigNumber
     },
     props: {
@@ -596,7 +621,7 @@ export default {
 
                     this.avis.ppr = value.entity.planPreventionRisquesDTOs
 
-                    functions.scrollToElement('main', false)
+                    functions.scrollToElement('app', 500, 0, false)
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
                 })
                 .catch(() => {
@@ -633,6 +658,7 @@ export default {
                 })
         },
         copyLink () {
+            this._paq.push(['trackEvent', 'Flow', 'Copy Link']);
             let copyInput = document.getElementById("copyInput");
             copyInput.select();
             document.execCommand("copy");
@@ -667,7 +693,12 @@ export default {
             return conclusionNumber
         },
         concordances: function () {
-            return this.avis.installationClasseeParcelle.numberOf + this.avis.basolParcelle.numberOf + this.avis.basiasParcelle.numberOf + this.avis.sisParcelle.numberOf
+            var numberOfInstallationClasseeParcelle = isNaN(this.avis.installationClasseeParcelle.numberOf) ? 0 : this.avis.installationClasseeParcelle.numberOf
+            var numberOfBasolParcelle = isNaN(this.avis.basolParcelle.numberOf) ? 0 : this.avis.basolParcelle.numberOf
+            var numberOfBasiasParcelle = isNaN(this.avis.basiasParcelle.numberOf) ? 0 : this.avis.basiasParcelle.numberOf
+            var numberOfSisParcelle = isNaN(this.avis.sisParcelle.numberOf) ? 0 : this.avis.sisParcelle.numberOf
+
+            return numberOfInstallationClasseeParcelle + numberOfBasolParcelle + numberOfBasiasParcelle + numberOfSisParcelle
         },
         concordances_risques: function () {
             return this.avis.potentielRadon >= 3 || this.avis.codeSismicite >= 3
@@ -686,6 +717,48 @@ export default {
 
 <style scoped>
     @import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+
+    #searchButtonsWrapper {
+        float : left;
+    }
+
+    #searchButtonsWrapper a,
+    #actionButtonsWrapper a {
+        display : inline-block;
+        float   : none;
+    }
+
+    #actionButtonsWrapper {
+        float : right;
+    }
+
+    @media (min-width : 630px) {
+        #searchButtonsWrapper a:last-of-type,
+        #actionButtonsWrapper a:last-of-type {
+            margin-right : 0;
+        }
+    }
+
+    @media (max-width : 1350px) {
+
+        #searchButtonsWrapper {
+            text-align : center;
+            width      : 100%;
+        }
+
+        #actionButtonsWrapper {
+            text-align : center;
+            width      : 100%;
+        }
+    }
+
+    @media (max-width : 630px) {
+        #searchButtonsWrapper a,
+        #actionButtonsWrapper a {
+            margin-left  : 10px;
+            margin-right : 10px;
+        }
+    }
 
     #section4 {
         padding        : 30px 40px 0;
@@ -707,48 +780,6 @@ export default {
 
     .container {
         max-width : unset;
-    }
-
-    .bouton {
-        float            : left;
-        border-bottom    : solid 3px #003B80;
-        border-radius    : 2px;
-        background-color : #0053B3;
-        font-weight      : 900;
-        color            : #FFFFFF;
-        padding          : 9px 20px;
-        text-decoration  : none;
-        margin-right     : 20px;
-        margin-bottom    : 20px;
-        display          : block;
-    }
-
-    .bouton:hover {
-        background-color : #003B80;
-    }
-
-    #copyLink {
-        float         : left;
-        margin-right  : 20px;
-        margin-bottom : 20px;
-    }
-
-    .lien {
-        padding         : 9px 0;
-        background      : none;
-        /*height          : 22px;*/
-        color           : #0053B3;
-        text-decoration : none;
-    }
-
-    .lien.big {
-        font-weight : 900;
-        z-index     : 10;
-    }
-
-    .lien:hover {
-        background : none;
-        color      : #003B80;
     }
 
     #summary_leaflet_wrapper {
@@ -791,44 +822,58 @@ export default {
     }
 
     .tabWrapper {
-        position                : absolute;
-        top                     : -4.05em;
-        left                    : -1px;
-        border                  : 1px solid #CCCCCC;
         border-bottom           : none;
         border-top-left-radius  : 2px;
         border-top-right-radius : 2px;
+        /*border                  : 1px solid #CCCCCC;*/
         float                   : left;
-        margin-top              : 20px;
+        left                    : -1px;
+        margin-top              : 19px;
+        position                : absolute;
+        top                     : -4.1em;
     }
 
     .tabWrapper .tab {
-        float            : left;
-        padding          : 10px 20px 9px;
-        border-left      : 1px solid #CCCCCC;
         background-color : #F8F8F8;
         border-bottom    : 1px solid #FFFFFF;
+        border-left      : 1px solid #CCCCCC;
+        border-top       : 1px solid #CCCCCC;
         cursor           : pointer;
+        float            : left;
+        padding          : 10px 20px 9px;
     }
 
     .tabWrapper .tab:first-child {
-        border-left : none;
+        border-top-left-radius : 2px;
+    }
+
+    .tabWrapper .tab:last-child {
+        border-right            : 1px solid #CCCCCC;
+        border-top-right-radius : 2px;
     }
 
     .tabWrapper .tab.selected {
-        padding          : 10px 20px;
         background-color : #0053B3;
+        border-bottom    : 1px solid #003B80;
+        border-left      : 1px solid #003B80;
+        border-top       : 1px solid #003B80;
         color            : #FFFFFF;
-        border-bottom    : 1px solid #0053B3;
+        padding          : 10px 20px;
+    }
+
+    .tabWrapper .tab:last-child.selected {
+        border-right : 1px solid #003B80;
     }
 
     #concordances_wrapper {
-        margin-top             : calc(20px + 4em);
-        float                  : left;
-        border-top-left-radius : unset;
-        padding                : 30px 0 0 0 !important;
-        width                  : 100%;
-        text-align             : center;
+        border-top              : 3px solid #003B80;
+        border-top-left-radius  : unset;
+        border-top-right-radius : 2px;
+        float                   : left;
+        margin-top              : calc(20px + 4em);
+        padding                 : 30px 0 0 0 !important;
+        text-align              : center;
+        width                   : 100%;
     }
 
     #concordances_wrapper p {

@@ -5,7 +5,7 @@
       <div class="content">
         <font-awesome-icon icon="map-marked-alt"
                            size="3x"/>
-          <p>Je saisis le code postal du terrain concerné</p>
+          <p>Je trouve le terrain concerné à l'aide de son adresse ou sa référence cadastrale</p>
       </div>
     </div>
     <hr>
@@ -13,7 +13,7 @@
       <div class="content">
         <font-awesome-icon icon="home"
                            size="3x"/>
-        <p>Son adresse ou le code parcelle</p>
+        <p>Kelrisks affiche le résultat de la recherche</p>
       </div>
     </div>
     <hr>
@@ -21,7 +21,7 @@
       <div class="content">
         <font-awesome-icon icon="check-circle"
                            size="3x"/>
-        <p>Hop, Kelrisks affiche le résultat de la recherche parmi les bases de données* de l'État !</p>
+        <p>Les résultats sont téléchargeables et partageables</p>
         <p class="subtext"
            style="color: #AAAAAA; font-size: 0.75em">* voir CGU pour les détails</p>
       </div>
