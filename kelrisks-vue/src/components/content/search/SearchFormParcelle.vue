@@ -110,7 +110,8 @@
                     </button>
                 </div>
 
-                <Leaflet @parcelleselected="onSelectedParcellesChanged"/>
+                <Leaflet @parcelleselected="onSelectedParcellesChanged"
+                         v-if="false"/>
 
                 <div style="width: 90%; margin: 50px 5% 0;">
                     <p id="cgu">En poursuivant votre navigation, vous acceptez nos <a v-on:click="$emit('cgu')">CGU</a>.</p>
