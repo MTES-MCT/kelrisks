@@ -45,7 +45,7 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     
     @Override
     public ParcelleDTO rechercherParcelleAvecCoordonnees(double x, double y) {
-    
+
         ParcelleDTO parcelleDTO = parcelleMapper.toDTO(parcelleService.rechercherClosestParcelleAvecCoordonnees(x, y));
         
         return parcelleDTO;
@@ -65,7 +65,7 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     
     @Override
     public Geometry rechercherCentroidParcelle(Geometry polygon) {
-        
+    
         return parcelleService.rechercherCentroidParcelle(polygon);
     }
     
@@ -73,5 +73,11 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     public ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry polygon) {
         
         return parcelleMapper.toDTO(parcelleService.rechercherParcellesIntersectionnantSurface(polygon));
+    }
+    
+    @Override
+    public List<ParcelleDTO> rechercherParcellesDansRayon(double x, double y, double radius) {
+        
+        return parcelleMapper.toDTOs(parcelleService.rechercherParcellesDansRayon(x, y, radius));
     }
 }

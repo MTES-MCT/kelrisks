@@ -434,7 +434,7 @@
 <script>
 import BigNumber from '../../../components/ui/BigNumber'
 import Errors from '../../../components/content/base/Errors'
-import Leaflet from "../Leaflet";
+import Leaflet from "../LeafletResults";
 
 export default {
     name: 'SearchResults',

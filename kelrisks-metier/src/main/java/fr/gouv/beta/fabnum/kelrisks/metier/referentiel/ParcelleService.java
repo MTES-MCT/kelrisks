@@ -66,7 +66,7 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     
     @Override
     public Geometry rechercherCentroidParcelle(Geometry polygon) {
-        
+    
         return dao.rechercherCentroidParcelle(polygon);
     }
     
@@ -74,6 +74,12 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     public Geometry rechercherParcellesIntersectionnantSurface(Geometry polygon) {
         
         return dao.rechercherParcellesIntersectionnantSurface(polygon);
+    }
+    
+    @Override
+    public List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius) {
+        
+        return dao.rechercherParcellesDansRayon(x, y, radius);
     }
 }
   

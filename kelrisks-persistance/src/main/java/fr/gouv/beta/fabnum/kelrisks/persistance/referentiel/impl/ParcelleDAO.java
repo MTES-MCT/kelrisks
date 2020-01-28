@@ -88,7 +88,7 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     
     @Override
     public Geometry rechercherCentroidParcelle(Geometry polygon) {
-        
+    
         String wkt = parcelleRepository.rechercherCentroidParcelle(polygon);
         return Wkt.fromWkt(wkt);
     }
@@ -97,6 +97,12 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     public Geometry rechercherParcellesIntersectionnantSurface(Geometry polygon) {
         
         return Wkt.fromWkt(parcelleRepository.rechercherParcellesIntersectionnantSurface(polygon));
+    }
+    
+    @Override
+    public List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius) {
+        
+        return parcelleRepository.rechercherParcellesDansRayon(x, y, radius);
     }
     
     @Override

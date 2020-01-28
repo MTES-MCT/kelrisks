@@ -110,6 +110,8 @@
                     </button>
                 </div>
 
+                <Leaflet @parcelleselected="onSelectedParcellesChanged"/>
+
                 <div style="width: 90%; margin: 50px 5% 0;">
                     <p id="cgu">En poursuivant votre navigation, vous acceptez nos <a v-on:click="$emit('cgu')">CGU</a>.</p>
                 </div>
@@ -122,11 +124,13 @@
 import Errors from '../../../components/content/base/Errors'
 import mixinAvis from '../../../components/mixins/avis'
 import KrInput from '../../../components/ui/KrInput'
+import Leaflet from "../LeafletParcelle";
 
 export default {
     name: 'SearchFormParcelle',
     mixins: [mixinAvis],
     components: {
+        Leaflet,
         Errors,
         KrInput
     },
@@ -165,6 +169,9 @@ export default {
         },
         onCodePostalSelected (option) {
             this.form.codeInsee = option['properties']['citycode']
+        },
+        onSelectedParcellesChanged (array) {
+            console.log(array)
         },
         search () {
             this.getAvis();

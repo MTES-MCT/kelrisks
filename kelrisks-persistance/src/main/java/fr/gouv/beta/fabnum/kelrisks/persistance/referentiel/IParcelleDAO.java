@@ -26,5 +26,7 @@ public interface IParcelleDAO extends IAbstractDAO<Parcelle> {
     Geometry rechercherCentroidParcelle(Geometry polygon);
     
     Geometry rechercherParcellesIntersectionnantSurface(Geometry polygon);
+    
+    List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius);
 }
   

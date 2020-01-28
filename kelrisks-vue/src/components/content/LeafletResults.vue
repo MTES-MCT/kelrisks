@@ -2,11 +2,11 @@
     <div class="leaflet">
         <l-map :center="center"
                :zoom="zoom"
-               ref="leafletMap">
+               ref="leafletResults">
             <l-tile-layer :url="url"/>
             <l-geo-json :geojson="parseJSON(data.adresse)"
-                        v-if="data.adresse"
-                        :options="adresseOptions"/>
+                        :options="adresseOptions"
+                        v-if="data.adresse"/>
             <l-geo-json :geojson="parseJSON(data.parcelle)"
                         :options="parcelleOptions"
                         :options-style="parcelleStyleFunction"/>
@@ -46,12 +46,7 @@ export default {
             type: Object,
             default: () => {
                 return {
-                    parcelle: "",
-                    basias: "",
-                    basol: "",
-                    sis: "",
-                    icpe: "",
-                    ssp: ""
+                    parcelles: "",
                 }
             }
         }
@@ -198,6 +193,9 @@ export default {
                     },
                     {permanent: false, sticky: true}
                 );
+                layer.on('click', function (e) {
+                    console.log(e)
+                })
             };
         },
         createAdresseIcon () {
@@ -260,13 +258,8 @@ export default {
     mounted () {
         this.$nextTick(() => {
 
-            const map = this.$refs.leafletMap.mapObject
-
-            if (typeof map.LGeoJson === "function") {
-                map.LGeoJson()
-                // console.log(map)
-                this.crippleMap(map)
-            }
+            // const map = this.$refs.leafletResults.mapObject
+            // this.crippleMap(map)
         })
     }
 }
@@ -274,7 +267,7 @@ export default {
 
 <style scoped>
     .leaflet {
-        width  : 100%;
         height : 100%;
+        width  : 100%;
     }
 </style>

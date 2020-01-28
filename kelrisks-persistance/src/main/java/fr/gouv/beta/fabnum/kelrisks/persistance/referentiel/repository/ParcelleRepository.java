@@ -47,5 +47,10 @@ public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
     @Query(value = "SELECT public.st_asewkt(public.st_intersects(:polygon, p.geog)) " +
                    " FROM kelrisks.cadastre AS p", nativeQuery = true)
     String rechercherParcellesIntersectionnantSurface(Geometry polygon);
+    
+    @Query(value = "SELECT * " +
+                   " FROM kelrisks.cadastre AS p " +
+                   " WHERE public.st_dwithin(public.st_setsrid(public.st_point(:x ,:y), 4326), p.geog, :radius)", nativeQuery = true)
+    List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius);
 }
   

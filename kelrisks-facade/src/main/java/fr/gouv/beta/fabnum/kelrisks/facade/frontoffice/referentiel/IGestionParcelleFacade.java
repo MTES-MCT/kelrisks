@@ -24,4 +24,6 @@ public interface IGestionParcelleFacade {
     Geometry rechercherCentroidParcelle(Geometry polygon);
     
     ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry polygon);
+    
+    List<ParcelleDTO> rechercherParcellesDansRayon(double x, double y, double radius);
 }
