@@ -235,6 +235,7 @@ public class ApiAvis extends AbstractBasicApi {
             PdfWriter        pdfWriter        = new PdfWriter(byteArrayOutputStream, writerProperties);
             
             ConverterProperties converterProperties = new ConverterProperties();
+            converterProperties.setCreateAcroForm(true);
             converterProperties.setCharset(StandardCharsets.UTF_8.name());
             
             HtmlConverter.convertToPdf(byteArrayInputStream, pdfWriter, converterProperties);
