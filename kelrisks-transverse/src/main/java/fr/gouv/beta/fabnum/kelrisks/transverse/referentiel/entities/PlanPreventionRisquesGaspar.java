@@ -38,22 +38,22 @@ public class PlanPreventionRisquesGaspar extends AbstractEntity {
     @Column(name = "libelle_risque")
     String libelleRisque;
     
-    @Column(name = "code_insee")
+    @Column(name = "code_insee", columnDefinition = "DATE")
     String codeINSEE;
     
-    @Column(name = "date_prescription")
+    @Column(name = "date_prescription", columnDefinition = "DATE")
     Date datePrescription;
     
-    @Column(name = "date_application_anticipee")
+    @Column(name = "date_application_anticipee", columnDefinition = "DATE")
     Date dateApplicationAnticipee;
     
-    @Column(name = "date_deprescription")
+    @Column(name = "date_deprescription", columnDefinition = "DATE")
     Date dateDeprescription;
     
-    @Column(name = "date_approbation")
+    @Column(name = "date_approbation", columnDefinition = "DATE")
     Date dateApprobation;
     
-    @Column(name = "date_abrogation")
+    @Column(name = "date_abrogation", columnDefinition = "DATE")
     Date dateAbrogation;
     
     @Id

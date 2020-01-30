@@ -21,6 +21,9 @@
             <l-geo-json :geojson="parseJSONMap(data.icpe)"
                         :options="icpeOptions"
                         :options-style="icpeStyleFunction"/>
+            <l-geo-json :geojson="parseJSONMap(data.ppr)"
+                        :options="pprOptions"
+                        :options-style="pprStyleFunction"/>
             <l-geo-json :geojson="parseJSONMap(data.ssp)"/>
         </l-map>
     </div>
@@ -100,6 +103,11 @@ export default {
                 pointToLayer: this.createIcpeIcon
             };
         },
+        pprOptions () {
+            return {
+                onEachFeature: this.onEachFeatureFunction,
+            };
+        },
         basiasOptions () {
             return {
                 onEachFeature: this.onEachFeatureFunction,
@@ -126,6 +134,18 @@ export default {
                     color: "#455674",
                     opacity: 0.8,
                     fillColor: "#455674",
+                    fillOpacity: 0.2
+                };
+            };
+        },
+        pprStyleFunction () {
+            // const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor
+            return () => {
+                return {
+                    weight: 2,
+                    color: "#0700FB",
+                    opacity: 0.6,
+                    fillColor: "#0700FB",
                     fillOpacity: 0.2
                 };
             };

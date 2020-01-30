@@ -26,8 +26,7 @@ public class GeoJsonDeserialiser extends StdDeserializer<Geometry<?>> {
             throws IOException {
         
         JsonNode node    = jp.getCodec().readTree(jp);
-        String   geoJson = node.get("id").toString();
         
-        return GeoJsonUtils.fromGeoJson(geoJson);
+        return GeoJsonUtils.fromGeoJson(node.toString());
     }
 }

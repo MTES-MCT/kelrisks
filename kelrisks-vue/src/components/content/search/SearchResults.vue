@@ -207,8 +207,8 @@
                     <p style="font-size: 20px; color: #2C3E50;"
                        v-bind:key="plan"
                        v-else
-                       v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.categorie.famille.code }} de type {{ plan.categorie.libelle }},
-                                                approuvé le {{ plan.dateValidite | formatDate('DD/MM/YYYY') }}.</p>
+                       v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.categorieRisque.code }} de type {{ plan.libelleRisque }},
+                                                approuvé le {{ plan.dateApprobation | formatDate('DD/MM/YYYY') }}.</p>
                 </template>
 
                 <!--                <p class="renvoi">-->

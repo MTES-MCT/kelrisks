@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.commun.utils;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.geolatte.geom.Feature;
@@ -17,6 +18,13 @@ public class GeoJsonUtils {
     public static String toGeoJson(Geometry<?> geom) {
         
         return toGeoJson(geom, null, null);
+    }
+    
+    public static String toGeoJson(List<Geometry<?>> polygons) {
+        
+        MultiPolygon multipolygon = new MultiPolygon(polygons.toArray(new Polygon[polygons.size()]));
+        
+        return toGeoJson(multipolygon, null, null);
     }
     
     public static String toGeoJson(Geometry<?> geom, Object id) {
