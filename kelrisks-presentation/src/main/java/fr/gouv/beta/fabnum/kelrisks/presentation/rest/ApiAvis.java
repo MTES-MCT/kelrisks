@@ -599,7 +599,7 @@ public class ApiAvis extends AbstractBasicApi {
         element.append(String.valueOf(avisDTO.getClassePotentielRadon()));
     
         //        Petite couronne : 75 92 93 94, Grande couronne 78 91 77 95
-        if (!avisDTO.getSummary().getCommune().getCodeINSEE().matches("(?:7592|93|94)\\d{3}")) {
+        if (!avisDTO.getSummary().getCommune().getCodeINSEE().matches("(?:75|92|93|94)\\d{3}")) {
             htmlDocument.select("#pprWrapper").first().remove();
         }
         else {
