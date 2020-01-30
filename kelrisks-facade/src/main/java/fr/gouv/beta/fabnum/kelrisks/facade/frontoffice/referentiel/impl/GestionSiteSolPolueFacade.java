@@ -27,8 +27,8 @@ public class GestionSiteSolPolueFacade extends AbstractFacade implements IGestio
     }
     
     @Override
-    public List<SiteSolPolueDTO> rechercherZoneContenantPolygon(Geometry geometry) {
-        
+    public List<SiteSolPolueDTO> rechercherZoneContenantPolygon(Geometry<?> geometry) {
+    
         return siteSolPolueMapper.toDTOs(siteSolPolueService.rechercherZoneContenantPolygon(geometry));
     }
 }

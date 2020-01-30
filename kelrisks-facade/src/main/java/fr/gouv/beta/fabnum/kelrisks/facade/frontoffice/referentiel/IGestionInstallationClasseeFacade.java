@@ -15,11 +15,11 @@ public interface IGestionInstallationClasseeFacade {
     
     List<InstallationClasseeDTO> rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(String codePostal);
     
-    List<InstallationClasseeDTO> rechercherInstallationsDansPolygons(List<Geometry> codeParcelle);
+    List<InstallationClasseeDTO> rechercherInstallationsDansPolygons(List<Geometry<?>> codeParcelle);
     
     List<InstallationClasseeDTO> rechercherInstallationsSurParcelles(List<String> codes);
     
     List<AutocompleteDTO> rechercherRaisonsSociales(String codeINSEE, String query);
     
-    List<InstallationClasseeDTO> rechercherSitesDansPolygon(Geometry polygon);
+    List<InstallationClasseeDTO> rechercherSitesDansPolygon(Geometry<?> polygon);
 }

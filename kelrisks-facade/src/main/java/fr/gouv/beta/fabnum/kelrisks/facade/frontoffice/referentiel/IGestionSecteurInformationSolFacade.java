@@ -8,9 +8,9 @@ import org.geolatte.geom.Geometry;
 
 public interface IGestionSecteurInformationSolFacade {
     
-    List<SecteurInformationSolDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<SecteurInformationSolDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
-    List<SecteurInformationSolDTO> rechercherSitesDansPolygon(Geometry polygon);
+    List<SecteurInformationSolDTO> rechercherSitesDansPolygon(Geometry<?> polygon);
     
     List<SecteurInformationSolDTO> rechercherSecteursAvecFaiblePrecisionDeGeolocalisation(String codeINSEE);
 }

@@ -15,6 +15,6 @@ public interface ISiteSolPolueDAO extends IAbstractDAO<SiteSolPolue> {
     
     List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle);
     
-    List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry);
+    List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry<?> geometry);
 }
   

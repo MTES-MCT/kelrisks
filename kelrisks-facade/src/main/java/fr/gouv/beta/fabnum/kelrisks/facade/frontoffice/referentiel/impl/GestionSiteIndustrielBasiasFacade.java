@@ -61,7 +61,7 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     }
     
     @Override
-    public List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
+    public List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon) {
     
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygons(multiPolygon));
     
@@ -69,15 +69,15 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
     }
     
     @Override
-    public List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry polygon) {
+    public List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry<?> polygon) {
         
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygon(polygon));
-    
+        
         return siteIndustrielBasiasDTOs;
     }
     
     @Override
-    public List<SiteIndustrielBasiasDTO> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance) {
+    public List<SiteIndustrielBasiasDTO> rechercherParNomProprietaireDansRayonGeometry(Geometry<?> geometry, String nomProprietaire, double distance) {
         
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, distance));
         

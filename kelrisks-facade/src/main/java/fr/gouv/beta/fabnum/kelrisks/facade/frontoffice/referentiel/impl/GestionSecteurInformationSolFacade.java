@@ -27,13 +27,13 @@ public class GestionSecteurInformationSolFacade extends AbstractFacade implement
     ISecteurInformationSolMapper  secteurInformationSolMapper;
     
     @Override
-    public List<SecteurInformationSolDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
-        
+    public List<SecteurInformationSolDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon) {
+    
         return secteurInformationSolMapper.toDTOs(secteurInformationSolService.rechercherSecteursDansPolygons(multiPolygon));
     }
     
     @Override
-    public List<SecteurInformationSolDTO> rechercherSitesDansPolygon(Geometry polygon) {
+    public List<SecteurInformationSolDTO> rechercherSitesDansPolygon(Geometry<?> polygon) {
         
         return secteurInformationSolMapper.toDTOs(secteurInformationSolService.rechercherSecteursDansPolygon(polygon));
     }

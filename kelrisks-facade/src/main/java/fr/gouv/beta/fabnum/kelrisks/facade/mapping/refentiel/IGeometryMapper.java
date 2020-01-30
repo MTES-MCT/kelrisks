@@ -13,12 +13,12 @@ import org.mapstruct.Named;
 public interface IGeometryMapper {
     
     @Named("toWKT")
-    default String toGeom(Geometry geom) {
+    default String toGeom(Geometry<?> geom) {
     
         Stream.of(new AbstractMap.SimpleEntry<>("code", 1),
                   new AbstractMap.SimpleEntry<>("nom", 2))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        
+    
         return GeoJsonUtils.toGeoJson(geom);
     }
 }

@@ -38,13 +38,13 @@ public interface SiteIndustrielBasolRepository extends IAbstractRepository<SiteI
                    " FROM kelrisks.basol sib " +
                    " WHERE public.st_intersects(sib.geog, :multiPolygon) " +
                    "    OR public.st_intersects(sib.geog, :multiPolygon)", nativeQuery = true)
-    List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<SiteIndustrielBasol> rechercherSitesDansPolygon(Geometry<?> multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basol sib " +
                    " WHERE public.st_intersects(sib.geog, st_union(:multiPolygon)) " +
                    "    OR public.st_intersects(sib.geog, st_union(:multiPolygon))", nativeQuery = true)
-    List<SiteIndustrielBasol> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<SiteIndustrielBasol> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basol si, " +

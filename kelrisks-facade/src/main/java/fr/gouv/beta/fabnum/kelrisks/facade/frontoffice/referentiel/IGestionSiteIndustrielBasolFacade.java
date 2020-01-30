@@ -13,13 +13,13 @@ public interface IGestionSiteIndustrielBasolFacade {
     
     List<SiteIndustrielBasolDTO> rechercherSiteDansRayonCentroideParcelle(String codeParcelle, double distance);
     
-    List<SiteIndustrielBasolDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<SiteIndustrielBasolDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
     List<SiteIndustrielBasolDTO> rechercherSitesSurParcelles(List<String> codes);
     
     List<SiteIndustrielBasolDTO> rechercherAvecCritere(AbstractQO... criteres);
     
-    List<SiteIndustrielBasolDTO> rechercherSitesDansPolygon(Geometry polygon);
+    List<SiteIndustrielBasolDTO> rechercherSitesDansPolygon(Geometry<?> polygon);
     
     List<SiteIndustrielBasolDTO> rechercherSitesAvecFaiblePrecisionDeGeolocalisation(String codeINSEE);
 }

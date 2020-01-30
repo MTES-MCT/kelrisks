@@ -12,8 +12,8 @@ import org.geolatte.geom.Geometry;
  */
 public interface ISecteurInformationSolDAO extends IAbstractDAO<SecteurInformationSol> {
     
-    List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry polygon);
+    List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry<?> polygon);
     
-    List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry> polygons);
+    List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry<?>> polygons);
 }
   

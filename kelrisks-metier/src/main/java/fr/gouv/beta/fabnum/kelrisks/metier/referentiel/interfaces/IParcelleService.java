@@ -13,19 +13,19 @@ import org.geolatte.geom.Geometry;
  */
 public interface IParcelleService extends IAbstractCRUDService<Parcelle> {
     
-    Parcelle rechercherClosestParcelleAvecPoint(Geometry point);
+    Parcelle rechercherClosestParcelleAvecPoint(Geometry<?> point);
     
-    List<Parcelle> rechercherParcellesContigues(Geometry geom);
+    List<Parcelle> rechercherParcellesContigues(Geometry<?> geom);
     
     Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y);
     
-    Geometry rechercherExpendedParcelle(String code, double distance);
+    Geometry<?> rechercherExpendedParcelle(String code, double distance);
     
-    Geometry rechercherUnionParcellesContigues(Geometry polygon);
+    Geometry<?> rechercherUnionParcellesContigues(Geometry<?> polygon);
     
-    Geometry rechercherCentroidParcelle(Geometry polygon);
+    Geometry<?> rechercherCentroidParcelle(Geometry<?> polygon);
     
-    Geometry rechercherParcellesIntersectionnantSurface(Geometry polygon);
+    Geometry<?> rechercherParcellesIntersectionnantSurface(Geometry<?> polygon);
     
     List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius);
 }

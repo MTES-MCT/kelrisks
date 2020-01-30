@@ -35,13 +35,13 @@ public class SecteurInformationSolService extends AbstractCRUDService<SecteurInf
     }
     
     @Override
-    public List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry geometry) {
+    public List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry<?> geometry) {
     
         return dao.rechercherSecteursDansPolygon(geometry);
     }
     
     @Override
-    public List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry> geometries) {
+    public List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry<?>> geometries) {
         
         return dao.rechercherSecteursDansPolygons(geometries);
     }

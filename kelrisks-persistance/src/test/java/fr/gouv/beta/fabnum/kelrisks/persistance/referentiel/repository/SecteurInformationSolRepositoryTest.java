@@ -32,7 +32,7 @@ public class SecteurInformationSolRepositoryTest extends AbstractRepositoryTest 
     @Test
     public void desPolygonsDoiventRetournerUnSecteurInformationSols() {
     
-        List<Geometry> polygons = new ArrayList<>();
+        List<Geometry<?>> polygons = new ArrayList<>();
     
         polygons.add(parcelleRepository.getOne(1045474L).getMultiPolygon()); // match
         polygons.add(parcelleRepository.getOne(311762L).getMultiPolygon());

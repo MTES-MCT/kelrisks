@@ -15,11 +15,11 @@ public interface IGestionSiteIndustrielBasiasFacade {
     
     List<SiteIndustrielBasiasDTO> rechercherSitesParRaisonSociale(String nomProprietaire);
     
-    List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygons);
+    List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygons);
     
-    List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry multiPolygons);
+    List<SiteIndustrielBasiasDTO> rechercherSitesDansPolygon(Geometry<?> multiPolygons);
     
-    List<SiteIndustrielBasiasDTO> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
+    List<SiteIndustrielBasiasDTO> rechercherParNomProprietaireDansRayonGeometry(Geometry<?> geometry, String nomProprietaire, double distance);
     
     List<AutocompleteDTO> rechercherRaisonsSociales(String codeINSEE, String query);
     

@@ -20,10 +20,10 @@ public interface SecteurInformationSolRepository extends IAbstractRepository<Sec
     @Query(value = "SELECT * " +
                    " FROM kelrisks.sis sis " +
                    " WHERE public.st_intersects(:polygon, sis.geog)", nativeQuery = true)
-    List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry polygon);
+    List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry<?> polygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.sis sis " +
                    " WHERE public.st_intersects((SELECT public.st_union(:polygons)), sis.geog)", nativeQuery = true)
-    List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry> polygons);
+    List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry<?>> polygons);
 }

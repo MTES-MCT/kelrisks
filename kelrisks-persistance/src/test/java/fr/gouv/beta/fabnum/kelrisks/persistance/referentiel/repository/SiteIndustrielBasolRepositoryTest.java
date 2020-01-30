@@ -32,7 +32,7 @@ public class SiteIndustrielBasolRepositoryTest extends AbstractRepositoryTest {
     @Test
     public void desPolygonsDoiventRetournerUnSiteIndustrielBasol() {
         
-        List<Geometry> polygons = new ArrayList<>();
+        List<Geometry<?>> polygons = new ArrayList<>();
         
         polygons.add(parcelleRepository.getOne(2475428L).getMultiPolygon()); // match
         polygons.add(parcelleRepository.getOne(311762L).getMultiPolygon());

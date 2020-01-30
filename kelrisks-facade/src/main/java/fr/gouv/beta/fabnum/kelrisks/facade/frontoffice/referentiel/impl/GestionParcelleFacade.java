@@ -38,8 +38,8 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     }
     
     @Override
-    public List<ParcelleDTO> rechercherParcellesContigues(Geometry geom) {
-        
+    public List<ParcelleDTO> rechercherParcellesContigues(Geometry<?> geom) {
+    
         return parcelleMapper.toDTOs(parcelleService.rechercherParcellesContigues(geom));
     }
     
@@ -52,25 +52,25 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     }
     
     @Override
-    public Geometry rechercherExpendedParcelle(String code, double distance) {
+    public Geometry<?> rechercherExpendedParcelle(String code, double distance) {
         
         return parcelleService.rechercherExpendedParcelle(code, distance / 100000D);
     }
     
     @Override
-    public Geometry rechercherUnionParcellesContigues(Geometry polygon) {
-    
+    public Geometry<?> rechercherUnionParcellesContigues(Geometry<?> polygon) {
+        
         return parcelleService.rechercherUnionParcellesContigues(polygon);
     }
     
     @Override
-    public Geometry rechercherCentroidParcelle(Geometry polygon) {
-    
+    public Geometry<?> rechercherCentroidParcelle(Geometry<?> polygon) {
+        
         return parcelleService.rechercherCentroidParcelle(polygon);
     }
     
     @Override
-    public ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry polygon) {
+    public ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry<?> polygon) {
         
         return parcelleMapper.toDTO(parcelleService.rechercherParcellesIntersectionnantSurface(polygon));
     }

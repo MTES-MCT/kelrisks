@@ -49,8 +49,8 @@ public class SiteSolPolueDAO extends AbstractDAO<SiteSolPolue> implements ISiteS
     }
     
     @Override
-    public List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry) {
-        
+    public List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry<?> geometry) {
+    
         return siteSolPolueRepository.rechercherZoneContenantPolygon(geometry);
     }
     

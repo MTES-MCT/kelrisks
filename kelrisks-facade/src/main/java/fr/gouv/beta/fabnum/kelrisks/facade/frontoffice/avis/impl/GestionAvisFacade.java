@@ -161,10 +161,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private AvisDTO getAvisFromParcelle(AvisDTO avisDTO, ParcelleDTO parcelleDTO, CommuneDTO communeDTO, String nomProprietaire) {
-        
-        Geometry expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcelleDTO.getCode(), 100);
-        Geometry touchesParcelle  = gestionParcelleFacade.rechercherUnionParcellesContigues(parcelleDTO.getMultiPolygon());
-        
+    
+        Geometry<?> expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcelleDTO.getCode(), 100);
+        Geometry<?> touchesParcelle  = gestionParcelleFacade.rechercherUnionParcellesContigues(parcelleDTO.getMultiPolygon());
+    
         avisDTO.getSummary().setCodeParcelle(parcelleDTO.getSection() + "-" + parcelleDTO.getNumero());
         avisDTO.getLeaflet().setParcelle(GeoJsonUtils.toGeoJson(parcelleDTO.getMultiPolygon(),
                                                                 Stream.of(new AbstractMap.SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
@@ -264,7 +264,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setInstallationClasseeNonGeorerenceesDTOs(gestionInstallationClasseeFacade.rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
-    private void getAvisBasol(AvisDTO avisDTO, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String codeINSEE) {
+    private void getAvisBasol(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, Geometry<?> touchesParcelle, Geometry<?> expendedParcelle, String codeINSEE) {
         
         avisDTO.setSiteIndustrielBasolSurParcelleDTOs((List<SiteIndustrielBasolDTO>) removeLowPrecision(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));
         avisDTO.setSiteIndustrielBasolProximiteParcelleDTOs((List<SiteIndustrielBasolDTO>) removeLowPrecision(gestionSiteIndustrielBasolFacade.rechercherSitesDansPolygon(touchesParcelle)));
@@ -296,7 +296,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setSecteurInformationSolNonGeorerenceesDTOs(gestionSecteurInformationSolFacade.rechercherSecteursAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
     }
     
-    private void getAvisBasias(AvisDTO avisDTO, Geometry parcelle, List<Geometry> parcelleSitesSolsPolues, Geometry touchesParcelle, Geometry expendedParcelle, String nomProprietaire,
+    private void getAvisBasias(AvisDTO avisDTO, Geometry<?> parcelle, List<Geometry<?>> parcelleSitesSolsPolues, Geometry<?> touchesParcelle, Geometry<?> expendedParcelle, String nomProprietaire,
                                String codeINSEE) {
         
         avisDTO.setSiteIndustrielBasiasSurParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));

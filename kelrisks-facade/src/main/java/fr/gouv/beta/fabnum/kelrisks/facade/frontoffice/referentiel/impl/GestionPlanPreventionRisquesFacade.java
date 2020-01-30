@@ -24,15 +24,15 @@ public class GestionPlanPreventionRisquesFacade extends AbstractFacade implement
     IPlanPreventionRisquesMapper  planPreventionRisquesMapper;
     
     @Override
-    public List<PlanPreventionRisquesDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
-        
+    public List<PlanPreventionRisquesDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon) {
+    
         List<PlanPreventionRisquesDTO> planPreventionRisquesDTOs = planPreventionRisquesMapper.toDTOs(planPreventionRisquesService.rechercherSitesDansPolygons(multiPolygon));
-        
+    
         return planPreventionRisquesDTOs;
     }
     
     @Override
-    public List<PlanPreventionRisquesDTO> rechercherSitesDansPolygon(Geometry polygon) {
+    public List<PlanPreventionRisquesDTO> rechercherSitesDansPolygon(Geometry<?> polygon) {
         
         List<PlanPreventionRisquesDTO> planPreventionRisquesDTOs = planPreventionRisquesMapper.toDTOs(planPreventionRisquesService.rechercherSitesDansPolygon(polygon));
         

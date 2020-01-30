@@ -49,13 +49,13 @@ public class SecteurInformationSolDAO extends AbstractDAO<SecteurInformationSol>
     }
     
     @Override
-    public List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry polygon) {
+    public List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry<?> polygon) {
     
         return secteurInformationSolRepository.rechercherSecteursDansPolygon(polygon);
     }
     
     @Override
-    public List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry> polygons) {
+    public List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry<?>> polygons) {
         
         return secteurInformationSolRepository.rechercherSecteursDansPolygons(polygons);
     }

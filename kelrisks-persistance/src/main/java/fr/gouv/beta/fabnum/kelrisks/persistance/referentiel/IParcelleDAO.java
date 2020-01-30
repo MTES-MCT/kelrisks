@@ -13,19 +13,19 @@ import org.geolatte.geom.Geometry;
  */
 public interface IParcelleDAO extends IAbstractDAO<Parcelle> {
     
-    Parcelle rechercherClosestParcelleAvecPoint(Geometry point);
+    Parcelle rechercherClosestParcelleAvecPoint(Geometry<?> point);
     
-    Geometry rechercherExpendedParcelle(String code, double distance);
+    Geometry<?> rechercherExpendedParcelle(String code, double distance);
     
-    List<Parcelle> rechercherParcellesContigues(Geometry point);
+    List<Parcelle> rechercherParcellesContigues(Geometry<?> point);
     
     Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y);
     
-    Geometry rechercherUnionParcellesContigues(Geometry polygon);
+    Geometry<?> rechercherUnionParcellesContigues(Geometry<?> polygon);
     
-    Geometry rechercherCentroidParcelle(Geometry polygon);
+    Geometry<?> rechercherCentroidParcelle(Geometry<?> polygon);
     
-    Geometry rechercherParcellesIntersectionnantSurface(Geometry polygon);
+    Geometry<?> rechercherParcellesIntersectionnantSurface(Geometry<?> polygon);
     
     List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius);
 }

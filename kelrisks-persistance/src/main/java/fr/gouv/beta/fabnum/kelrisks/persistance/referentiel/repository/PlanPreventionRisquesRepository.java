@@ -18,10 +18,10 @@ public interface PlanPreventionRisquesRepository extends IAbstractRepository<Pla
     @Query(value = "SELECT * " +
                    " FROM kelrisks.ppr AS plan" +
                    " WHERE public.st_intersects(plan.geog, (SELECT public.st_union(:multiPolygons)))", nativeQuery = true)
-    List<PlanPreventionRisques> rechercherSitesDansPolygons(List<Geometry> multiPolygons);
+    List<PlanPreventionRisques> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygons);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.ppr AS plan" +
                    " WHERE public.st_intersects(plan.geog, :multiPolygon)", nativeQuery = true)
-    List<PlanPreventionRisques> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<PlanPreventionRisques> rechercherSitesDansPolygon(Geometry<?> multiPolygon);
 }

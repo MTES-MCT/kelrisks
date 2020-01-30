@@ -28,7 +28,7 @@ public class PlanPreventionRisques extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
     
-    Geometry geog;
+    Geometry<?> geog;
     
     @Column(name = "id_gaspar")
     String idGaspar;

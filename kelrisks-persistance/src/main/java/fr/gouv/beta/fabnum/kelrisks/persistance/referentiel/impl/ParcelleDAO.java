@@ -50,21 +50,21 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     }
     
     @Override
-    public Parcelle rechercherClosestParcelleAvecPoint(Geometry point) {
+    public Parcelle rechercherClosestParcelleAvecPoint(Geometry<?> point) {
     
         return parcelleRepository.rechercherClosestParcelleAvecPoint(point);
     }
     
     @Override
-    public Geometry rechercherExpendedParcelle(String code, double distance) {
+    public Geometry<?> rechercherExpendedParcelle(String code, double distance) {
         
         String wkt = parcelleRepository.rechercherExpendedParcelle(code, distance);
         return Wkt.fromWkt(wkt);
     }
     
     @Override
-    public List<Parcelle> rechercherParcellesContigues(Geometry polygon) {
-    
+    public List<Parcelle> rechercherParcellesContigues(Geometry<?> polygon) {
+        
         return parcelleRepository.rechercherParcellesContigues(polygon);
     }
     
@@ -75,11 +75,11 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     }
     
     @Override
-    public Geometry rechercherUnionParcellesContigues(Geometry polygon) {
+    public Geometry<?> rechercherUnionParcellesContigues(Geometry<?> polygon) {
         
         //        List<Parcelle> parcelles  = parcelleRepository.rechercherParcellesContigues(polygon);
         //        Geometry[]     geometries = parcelles.stream().map(Parcelle::getMultiPolygon).toArray(Geometry[]::new);
-        //        List<Geometry> geometries = parcelles.stream().limit(2).map(Parcelle::getMultiPolygon).collect(Collectors.toList());
+        //        List<Geometry<?>> geometries = parcelles.stream().limit(2).map(Parcelle::getMultiPolygon).collect(Collectors.toList());
         
         String wkt = parcelleRepository.rechercherUnionParcellesContigues(polygon);
         if (wkt == null) { return polygon; }
@@ -87,14 +87,14 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     }
     
     @Override
-    public Geometry rechercherCentroidParcelle(Geometry polygon) {
-    
+    public Geometry<?> rechercherCentroidParcelle(Geometry<?> polygon) {
+        
         String wkt = parcelleRepository.rechercherCentroidParcelle(polygon);
         return Wkt.fromWkt(wkt);
     }
     
     @Override
-    public Geometry rechercherParcellesIntersectionnantSurface(Geometry polygon) {
+    public Geometry<?> rechercherParcellesIntersectionnantSurface(Geometry<?> polygon) {
         
         return Wkt.fromWkt(parcelleRepository.rechercherParcellesIntersectionnantSurface(polygon));
     }

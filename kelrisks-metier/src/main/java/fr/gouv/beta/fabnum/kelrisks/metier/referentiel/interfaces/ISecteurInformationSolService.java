@@ -12,8 +12,8 @@ import org.geolatte.geom.Geometry;
  */
 public interface ISecteurInformationSolService extends IAbstractCRUDService<SecteurInformationSol> {
     
-    List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry geometry);
+    List<SecteurInformationSol> rechercherSecteursDansPolygon(Geometry<?> geometry);
     
-    List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry> geometry);
+    List<SecteurInformationSol> rechercherSecteursDansPolygons(List<Geometry<?>> geometry);
 }
   

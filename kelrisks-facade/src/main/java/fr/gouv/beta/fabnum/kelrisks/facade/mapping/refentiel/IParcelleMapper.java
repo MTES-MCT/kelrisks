@@ -38,5 +38,5 @@ public interface IParcelleMapper extends IGeometryMapper {
     @Mappings(
             @Mapping(target = "ewkt", qualifiedByName = "toWKT")
     )
-    ParcelleDTO toDTO(Geometry geometry);
+    ParcelleDTO toDTO(Geometry<?> geometry);
 }

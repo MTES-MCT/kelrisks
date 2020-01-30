@@ -15,6 +15,6 @@ public interface ISiteSolPolueService extends IAbstractCRUDService<SiteSolPolue>
     
     List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle);
     
-    List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry);
+    List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry<?> geometry);
 }
   

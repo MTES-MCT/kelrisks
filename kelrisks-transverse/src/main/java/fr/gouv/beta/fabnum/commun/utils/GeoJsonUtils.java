@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.geolatte.geom.Feature;
 import org.geolatte.geom.Geometry;
+import org.geolatte.geom.MultiPolygon;
+import org.geolatte.geom.Polygon;
 import org.geolatte.geom.json.GeoJsonFeature;
 import org.geolatte.geom.json.GeolatteGeomModule;
 

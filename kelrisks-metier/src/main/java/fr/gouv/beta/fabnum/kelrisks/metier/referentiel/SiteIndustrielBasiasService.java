@@ -42,21 +42,21 @@ public class SiteIndustrielBasiasService extends AbstractCRUDService<SiteIndustr
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideGeometry(Geometry geometry, double distance) {
+    public List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideGeometry(Geometry<?> geometry, double distance) {
     
         return dao.rechercherSiteDansRayonCentroideParcelle(geometry, distance / 100000D); // Conversion en mètres
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
+    public List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon) {
         
         if (multiPolygon == null || multiPolygon.isEmpty()) { return new ArrayList<>(); }
-    
+        
         return dao.rechercherSitesDansPolygons(multiPolygon);
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry polygon) {
+    public List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry<?> polygon) {
         
         if (polygon == null || polygon.isEmpty()) { return new ArrayList<>(); }
         
@@ -64,8 +64,8 @@ public class SiteIndustrielBasiasService extends AbstractCRUDService<SiteIndustr
     }
     
     @Override
-    public List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance) {
-    
+    public List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry<?> geometry, String nomProprietaire, double distance) {
+        
         return dao.rechercherParNomProprietaireDansRayonGeometry(geometry, nomProprietaire, distance / 100000D);
     }
     
