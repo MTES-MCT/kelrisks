@@ -3,13 +3,12 @@ package fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl;
 import fr.gouv.beta.fabnum.commun.persistance.impl.AbstractDAO;
 import fr.gouv.beta.fabnum.commun.transverse.exception.technique.TechniqueException;
 import fr.gouv.beta.fabnum.commun.transverse.qo.AbstractQO;
-import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.IPlanPreventionRisquesGasparDAO;
-import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.PlanPreventionRisquesGasparRepository;
-import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.PlanPreventionRisquesGaspar;
+import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.IAleaDAO;
+import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.AleaRepository;
+import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Alea;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QAlea;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QFamilleAlea;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QFamillePPR;
-import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QPlanPreventionRisquesGaspar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,52 +19,51 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAQueryBase;
 
 /**
- * Classe d'accès DAO à la table planPreventionRisquesGaspar
+ * Classe d'accès DAO à la table alea
  * Date : jeu. 28 juin 2018 - 15:05:15
  *
  * @author DAOACAI Version 2.1.11 du CPII/DOSE
  * @version : 1.0
  */
 
-@Repository("planPreventionRisquesGasparDAO")
-public class PlanPreventionRisquesGasparDAO extends AbstractDAO<PlanPreventionRisquesGaspar> implements IPlanPreventionRisquesGasparDAO {
+@Repository("aleaDAO")
+public class AleaDAO extends AbstractDAO<Alea> implements IAleaDAO {
     
     /**
      * L'objet issu de QueryDSL pour générer les requêtes "typesafe"
      */
-    private QPlanPreventionRisquesGaspar planPreventionRisquesGaspar;
+    private QAlea alea;
     
     /**
      * Le repository servant à lancer les requêtes JPA.
      */
-    private PlanPreventionRisquesGasparRepository planPreventionRisquesGasparRepository;
+    private AleaRepository aleaRepository;
     
     @Autowired
-    public PlanPreventionRisquesGasparDAO(@Qualifier("planPreventionRisquesGasparRepository") PlanPreventionRisquesGasparRepository repo) {
+    public AleaDAO(@Qualifier("aleaRepository") AleaRepository repo) {
         
         this.setRepo(repo);
-        this.planPreventionRisquesGasparRepository = repo;
-        this.planPreventionRisquesGaspar = QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar;
+        this.aleaRepository = repo;
+        this.alea = QAlea.alea;
     }
     
     @Override
     protected void ajouterChargementsOptionnels(JPAQueryBase<?, ?> query, AbstractQO[] leCritere) throws TechniqueException {
     
-        query.leftJoin(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.alea(), QAlea.alea).fetchJoin();
         query.leftJoin(QAlea.alea.familleAlea(), QFamilleAlea.familleAlea).fetchJoin();
         query.leftJoin(QFamilleAlea.familleAlea.famillePPR(), QFamillePPR.famillePPR).fetchJoin();
     }
     
     @Override
-    protected PathBuilder<PlanPreventionRisquesGaspar> getPathBuilder() {
+    protected PathBuilder<Alea> getPathBuilder() {
         
-        return new PathBuilder<>(PlanPreventionRisquesGaspar.class, "planPreventionRisquesGaspar");
+        return new PathBuilder<>(Alea.class, "alea");
     }
     
     @Override
-    protected EntityPathBase<PlanPreventionRisquesGaspar> getQueryObject() {
+    protected EntityPathBase<Alea> getQueryObject() {
         
-        return planPreventionRisquesGaspar;
+        return alea;
     }
 }
   

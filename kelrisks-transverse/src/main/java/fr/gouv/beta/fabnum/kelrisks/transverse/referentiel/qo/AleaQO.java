@@ -8,7 +8,7 @@ import com.querydsl.core.BooleanBuilder;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CategorieRisqueQO extends AbstractQO {
+public class AleaQO extends AbstractQO {
     
     @Override
     public void feedBuilder(BooleanBuilder builder) {

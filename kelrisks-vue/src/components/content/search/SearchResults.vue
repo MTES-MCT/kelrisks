@@ -207,7 +207,8 @@
                     <p style="font-size: 20px; color: #2C3E50;"
                        v-bind:key="plan"
                        v-else
-                       v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.categorieRisque.code }} de type {{ plan.libelleRisque }},
+                       v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.alea.familleAlea.famillePPR.code }} de type
+                                                {{ plan.alea.familleAlea.libelle }} - {{ plan.alea.libelle }},
                                                 approuvé le {{ plan.dateApprobation | formatDate('DD/MM/YYYY') }}.</p>
                 </template>
 
@@ -238,13 +239,7 @@
                 </template>
                 <template v-if="avis.basiasRaisonSociale.numberOf > 0">
                     <p class="indent">{{ avis.basiasRaisonSociale.lib }}</p>
-                    <ul class="site-list">
-                        <li :key="sibasias.id"
-                            v-for="sibasias in avis.basiasRaisonSociale.liste">
-                            <a :href="'http://fiches-risques.brgm.fr/georisques/basias-synthetique/' + sibasias.identifiant"
-                               target="_blank">http://fiches-risques.brgm.fr/georisques/basias-synthetique/{{ sibasias.identifiant }}</a>
-                        </li>
-                    </ul>
+
                 </template>
                 <br/>
             </template>

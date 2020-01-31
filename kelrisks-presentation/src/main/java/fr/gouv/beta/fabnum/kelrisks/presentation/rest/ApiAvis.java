@@ -612,8 +612,8 @@ public class ApiAvis extends AbstractBasicApi {
                 for (PlanPreventionRisquesGasparDTO plan : avisDTO.getPlanPreventionRisquesDTOs()) {
                     element = htmlDocument.select("#pprWrapper").first();
                     element = element.appendElement("p");
-                    element.append("L’immeuble est situé dans le périmètre d’un " + plan.getCategorieRisque().getCode() +
-                                   " de type " + plan.getLibelleRisque() +
+                    element.append("L’immeuble est situé dans le périmètre d’un " + plan.getAlea().getFamilleAlea().getFamillePPR().getCode() +
+                                   " de type " + plan.getAlea().getFamilleAlea().getLibelle() + " - " + plan.getAlea().getLibelle() +
                                    ", approuvé le " + simpleDateFormat.format(plan.getDateApprobation()));
                 }
             }

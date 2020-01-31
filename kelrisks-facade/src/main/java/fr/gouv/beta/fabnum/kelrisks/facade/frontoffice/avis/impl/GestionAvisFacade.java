@@ -201,8 +201,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues) {
     
         String parcelleSitesSolsPoluesGeoJson = GeoJsonUtils.toGeoJson(parcelleSitesSolsPolues);
-        //        parcelleSitesSolsPoluesGeoJson = "{\"type\":\"Polygon\",\"coordinates\":[[[2.3138931,48.9582821],[2.4219254,48.8492427],[2.5726089,48.8202455],[2.5524193,49.0017666],[2.3138931,48" +
-        //                                         ".9582821]]]}";
+        parcelleSitesSolsPoluesGeoJson = "{\"type\":\"Polygon\",\"coordinates\":[[[2.3138931,48.9582821],[2.4219254,48.8492427],[2.5726089,48.8202455],[2.5524193,49.0017666],[2.3138931,48" +
+                                         ".9582821]]]}";
     
         List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList = new ArrayList<>();
     

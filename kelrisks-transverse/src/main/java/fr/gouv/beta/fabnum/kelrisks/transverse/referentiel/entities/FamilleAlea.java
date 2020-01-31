@@ -4,8 +4,6 @@ import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,39 +19,24 @@ import javax.persistence.Table;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "gaspar")
-public class PlanPreventionRisquesGaspar extends AbstractEntity {
+@Table(name = "ref_famille_alea")
+public class FamilleAlea extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
     
-    String idGaspar;
+    @Column(name = "code_famille_alea")
+    String code;
+    @Column(name = "libelle_famille_alea")
+    String libelle;
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "id_ref_alea")
-    Alea alea;
-    
-    @Column(name = "code_insee", columnDefinition = "DATE")
-    String codeINSEE;
-    
-    @Column(name = "date_prescription", columnDefinition = "DATE")
-    Date datePrescription;
-    
-    @Column(name = "date_application_anticipee", columnDefinition = "DATE")
-    Date dateApplicationAnticipee;
-    
-    @Column(name = "date_deprescription", columnDefinition = "DATE")
-    Date dateDeprescription;
-    
-    @Column(name = "date_approbation", columnDefinition = "DATE")
-    Date dateApprobation;
-    
-    @Column(name = "date_abrogation", columnDefinition = "DATE")
-    Date dateAbrogation;
+    @JoinColumn(name = "id_ref_famille_ppr")
+    FamillePPR famillePPR;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_gaspar")
-    @SequenceGenerator(name = "seq_gaspar", sequenceName = "gaspar_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_ref_famille_alea")
+    @SequenceGenerator(name = "seq_ref_famille_alea", sequenceName = "ref_famille_alea_id_seq", allocationSize = 1)
     private Long id;
     
     public String getCleFonc() {
