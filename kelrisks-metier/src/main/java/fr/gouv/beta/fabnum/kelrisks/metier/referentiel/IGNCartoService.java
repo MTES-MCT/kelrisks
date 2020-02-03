@@ -33,7 +33,7 @@ public class IGNCartoService implements IIGNCartoService {
                                                                      .accept(MediaType.APPLICATION_JSON)
                                                                      .exchange()
                                                                      .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoAssiettePaginatedFeatures.class))
-                                                                     .block(Duration.ofSeconds(30L));
+                                                                     .block(Duration.ofSeconds(60L));
         return assietteFeatures;
     }
     
@@ -53,6 +53,6 @@ public class IGNCartoService implements IIGNCartoService {
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
                        .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoGenerateurPaginatedFeatures.class))
-                       .block(Duration.ofSeconds(30L));
+                       .block(Duration.ofSeconds(60L));
     }
 }

@@ -59,8 +59,21 @@ public class GeoJsonUtils {
             // TODO : Catcher cette exception correctement !
             e.printStackTrace();
         }
-        
+    
         return geoJsonOutput;
+    }
+    
+    public static String getGeometryFromGeoJson(String geoJson) {
+        
+        String geometry;
+        
+        geoJson = geoJson.replace("\\", "");
+        String geoJsonType        = geoJson.replaceFirst(".*?(\"type\"[\\s\\S]*?),.*", "$1");
+        String geoJsonCoordinates = geoJson.replaceAll(".*?(\"coordinates\"[\\s\\S]*\\]).*", "$1");
+        
+        geometry = "{" + geoJsonType + "," + geoJsonCoordinates + "}";
+        
+        return geometry;
     }
     
     public static Geometry<?> fromGeoJson(String geoJson) {
@@ -68,23 +81,19 @@ public class GeoJsonUtils {
         if (geoJson == null) {
             return null;
         }
-        Geometry<?> geometry = null;
+        Geometry<?> geom = null;
         try {
-            geoJson = geoJson.replace("\\", "");
-            String geoJsonType        = geoJson.replaceFirst(".*?(\"type\"[\\s\\S]*?),.*", "$1");
-            String geoJsonCoordinates = geoJson.replaceAll(".*?(\"coordinates\"[\\s\\S]*\\]).*", "$1");
-    
-            geoJson = "{" + geoJsonType + "," + geoJsonCoordinates + "}";
-    
+            String geometry = getGeometryFromGeoJson(geoJson);
+            
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new GeolatteGeomModule());
-            geometry = mapper.readValue(geoJson, Geometry.class);
+            geom = mapper.readValue(geometry, Geometry.class);
         }
         catch (IOException e) {
             // TODO : Catcher cette exception correctement !
             e.printStackTrace();
         }
         
-        return geometry;
+        return geom;
     }
 }

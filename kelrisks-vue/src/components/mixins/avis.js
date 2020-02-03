@@ -77,7 +77,7 @@ export default {
 
             this.querying = true
 
-            fetchWithError(url, null, 1000 * 20)
+            fetchWithError(url, null, 1000 * 60)
                 .then(stream => stream.json())
                 .then(value => {
 
