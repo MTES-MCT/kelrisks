@@ -189,7 +189,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         getAvisSis(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
     
-        getAvisPPR(avisDTO, parcelleSitesSolsPolues);
+        getAvisPPR(avisDTO, parcelleSitesSolsPolues, communeDTO.getCodeINSEE());
     
         getAvisSismicite(avisDTO, communeDTO.getCodeINSEE());
     
@@ -198,22 +198,23 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         return avisDTO;
     }
     
-    private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues) {
-    
-        String parcelleSitesSolsPoluesGeoJson = GeoJsonUtils.toGeoJson(parcelleSitesSolsPolues);
-    
-        List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList = new ArrayList<>();
-    
-        IGNCartoAssiettePaginatedFeatures assiettes = gestionIGNCartoFacade.rechercherAssiettesContenantPolygon(parcelleSitesSolsPoluesGeoJson);
-    
-        for (IGNCartoAssiettePaginatedFeatures.Assiette assiette : assiettes.getFeatures()) {
+    private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, String codeINSEE) {
         
+        String parcelleSitesSolsPoluesGeoJson = GeoJsonUtils.getGeometryFromGeoJson(GeoJsonUtils.toGeoJson(parcelleSitesSolsPolues));
+        
+        List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList = new ArrayList<>();
+        
+        IGNCartoAssiettePaginatedFeatures assiettes = gestionIGNCartoFacade.rechercherAssiettesContenantPolygon(parcelleSitesSolsPoluesGeoJson);
+        
+        for (IGNCartoAssiettePaginatedFeatures.Assiette assiette : assiettes.getFeatures()) {
+            
             IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateurContenantPolygon(parcelleSitesSolsPoluesGeoJson, assiette.getProperties().getPartition());
         
             if (!generateurs.getFeatures().isEmpty()) {
                 
                 PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
                 planPreventionRisquesGasparQO.setIdGaspar(generateurs.getFeatures().get(0).getProperties().getId_gaspar());
+                planPreventionRisquesGasparQO.setCodeINSEE(codeINSEE);
                 
                 List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
                 

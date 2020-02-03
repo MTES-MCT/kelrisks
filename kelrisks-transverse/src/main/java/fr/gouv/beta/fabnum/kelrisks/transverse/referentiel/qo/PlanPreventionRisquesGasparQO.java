@@ -12,11 +12,13 @@ import com.querydsl.core.BooleanBuilder;
 public class PlanPreventionRisquesGasparQO extends AbstractQO {
     
     private String idGaspar;
+    private String codeINSEE;
     
     @Override
     public void feedBuilder(BooleanBuilder builder) {
-        
+    
         if (idGaspar != null) { builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.idGaspar.eq(idGaspar)); }
+        if (codeINSEE != null) { builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.codeINSEE.eq(codeINSEE)); }
     }
 }
   
