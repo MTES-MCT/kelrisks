@@ -592,30 +592,24 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     private void redigerRisquesNaturels(Document htmlDocument, AvisDTO avisDTO) {
-        
+    
         Element element = htmlDocument.select("#zoneSismicite").first();
         element.append(String.valueOf(avisDTO.getCodeZoneSismicite()));
-        
+    
         element = htmlDocument.select("#potentielRadon").first();
         element.append(String.valueOf(avisDTO.getClassePotentielRadon()));
     
-        //        Petite couronne : 75 92 93 94, Grande couronne 78 91 77 95
-        if (!avisDTO.getSummary().getCommune().getCodeINSEE().matches("(?:75|92|93|94)\\d{3}")) {
-            htmlDocument.select("#pprWrapper").first().remove();
+        if (avisDTO.getPlanPreventionRisquesDTOs().size() == 0) {
+            htmlDocument.select("#pprWrapper").first().append("L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé");
         }
         else {
-            if (avisDTO.getPlanPreventionRisquesDTOs().size() == 0) {
-                htmlDocument.select("#pprWrapper").first().append("L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé");
-            }
-            else {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
-                for (PlanPreventionRisquesGasparDTO plan : avisDTO.getPlanPreventionRisquesDTOs()) {
-                    element = htmlDocument.select("#pprWrapper").first();
-                    element = element.appendElement("p");
-                    element.append("L’immeuble est situé dans le périmètre d’un " + plan.getAlea().getFamilleAlea().getFamillePPR().getCode() +
-                                   " de type " + plan.getAlea().getFamilleAlea().getLibelle() + " - " + plan.getAlea().getLibelle() +
-                                   ", approuvé le " + simpleDateFormat.format(plan.getDateApprobation()));
-                }
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
+            for (PlanPreventionRisquesGasparDTO plan : avisDTO.getPlanPreventionRisquesDTOs()) {
+                element = htmlDocument.select("#pprWrapper").first();
+                element = element.appendElement("p");
+                element.append("L’immeuble est situé dans le périmètre d’un " + plan.getAlea().getFamilleAlea().getFamillePPR().getCode() +
+                               " de type " + plan.getAlea().getFamilleAlea().getLibelle() + " - " + plan.getAlea().getLibelle() +
+                               ", approuvé le " + simpleDateFormat.format(plan.getDateApprobation()));
             }
         }
     }

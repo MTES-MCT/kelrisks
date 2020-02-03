@@ -174,8 +174,7 @@
                         </div>
                     </div>
 
-                    <div class="icon-risque-wrapper"
-                         v-if="avis.summary.commune.codePostal.match(/(?:75|92|93|94)\d{3}/g) !== null"> <!-- Petite couronne : 75 92 93 94, Grande couronne 78 91 77 95  -->
+                    <div class="icon-risque-wrapper">
                         <div class="icon-risque">
                             <img height="50"
                                  src="/images/icons/kelrisks/ppr_ko.svg"
@@ -201,7 +200,6 @@
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune de sismicité classée en zone {{this.avis.codeSismicite}}</p>
                 <p style="font-size: 20px; color: #2C3E50;">L’immeuble se situe dans une commune à potentiel radon classée en niveau {{this.avis.potentielRadon}}</p>
 
-                <template v-if="avis.summary.commune.codePostal.match(/(?:75|92|93|94)\d{3}/g) !== null"> <!-- Petite couronne : 75 92 93 94, Grande couronne 78 91 77 95  -->
                     <p style="font-size: 20px; color: #2C3E50;"
                        v-if="this.avis.ppr.length === 0">L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé</p>
                     <p style="font-size: 20px; color: #2C3E50;"
@@ -210,7 +208,6 @@
                        v-for="plan in avis.ppr">L’immeuble est situé dans le périmètre d’un {{ plan.alea.familleAlea.famillePPR.code }} de type
                                                 {{ plan.alea.familleAlea.libelle }} - {{ plan.alea.libelle }},
                                                 approuvé le {{ plan.dateApprobation | formatDate('DD/MM/YYYY') }}.</p>
-                </template>
 
                 <!--                <p class="renvoi">-->
                 <!--                    <sup>(1)</sup> - Au regard des risques pour lesquels la recherche a été faite (Radon, Sismicité et PPR).</p>-->
