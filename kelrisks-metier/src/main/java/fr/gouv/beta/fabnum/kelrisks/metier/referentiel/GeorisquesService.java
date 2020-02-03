@@ -33,7 +33,7 @@ public class GeorisquesService implements IGeorisquesService {
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
                        .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedRadon.class))
-                       .block(Duration.ofSeconds(10L));
+                       .block(Duration.ofSeconds(30L));
     }
     
     public GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE) {
@@ -47,7 +47,7 @@ public class GeorisquesService implements IGeorisquesService {
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
                        .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedSismique.class))
-                       .block(Duration.ofSeconds(10L));
+                       .block(Duration.ofSeconds(30L));
     }
     
     @Override
@@ -64,12 +64,12 @@ public class GeorisquesService implements IGeorisquesService {
                                     .queryParam("page", "1")
                                     .queryParam("page_size", "10")
                                     .build(latlon);
-        
+    
         return webClient.get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
                        .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedSIS.class))
-                       .block(Duration.ofSeconds(1000L)); //TODO : Repasser à 10
+                       .block(Duration.ofSeconds(30L));
     }
 }

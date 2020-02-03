@@ -26,7 +26,7 @@ public class GeoDataGouvService implements IGeoDataGouvService {
                                              .accept(MediaType.APPLICATION_JSON)
                                              .exchange()
                                              .flatMap(clientResponse -> clientResponse.bodyToMono(GeoDataGouvCommune[].class))
-                                             .block(Duration.ofSeconds(10L));
+                                             .block(Duration.ofSeconds(30L));
         
         if (block != null && block.length == 1) { return block[0]; }
         

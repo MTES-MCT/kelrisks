@@ -29,11 +29,11 @@ public class IGNCartoService implements IIGNCartoService {
         URI        assietteUri = uriBuilder.queryParam("geom", "{geom}").build(geom);
     
         IGNCartoAssiettePaginatedFeatures assietteFeatures = webClient.get()
-                                                          .uri(assietteUri)
-                                                          .accept(MediaType.APPLICATION_JSON)
-                                                          .exchange()
-                                                          .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoAssiettePaginatedFeatures.class))
-                                                          .block(Duration.ofSeconds(10L));
+                                                                     .uri(assietteUri)
+                                                                     .accept(MediaType.APPLICATION_JSON)
+                                                                     .exchange()
+                                                                     .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoAssiettePaginatedFeatures.class))
+                                                                     .block(Duration.ofSeconds(30L));
         return assietteFeatures;
     }
     
@@ -47,12 +47,12 @@ public class IGNCartoService implements IIGNCartoService {
                                     .queryParam("geom", "{geom}")
                                     .queryParam("partition", "{partition}")
                                     .build(geom, partition);
-        
+    
         return webClient.get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
                        .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoGenerateurPaginatedFeatures.class))
-                       .block(Duration.ofSeconds(10L));
+                       .block(Duration.ofSeconds(30L));
     }
 }
