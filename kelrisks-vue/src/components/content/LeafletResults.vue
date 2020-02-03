@@ -4,12 +4,9 @@
                :zoom="zoom"
                ref="leafletResults">
             <l-tile-layer :url="url"/>
-            <l-geo-json :geojson="parseJSON(data.adresse)"
-                        :options="adresseOptions"
-                        v-if="data.adresse"/>
-            <l-geo-json :geojson="parseJSON(data.parcelle)"
-                        :options="parcelleOptions"
-                        :options-style="parcelleStyleFunction"/>
+            <l-geo-json :geojson="parseJSONMap(data.ppr)"
+                        :options="pprOptions"
+                        :options-style="pprStyleFunction"/>
             <l-geo-json :geojson="parseJSONMap(data.basias)"
                         :options="basiasOptions"
                         :options-style="basiasStyleFunction"/>
@@ -21,10 +18,13 @@
             <l-geo-json :geojson="parseJSONMap(data.icpe)"
                         :options="icpeOptions"
                         :options-style="icpeStyleFunction"/>
-            <l-geo-json :geojson="parseJSONMap(data.ppr)"
-                        :options="pprOptions"
-                        :options-style="pprStyleFunction"/>
             <l-geo-json :geojson="parseJSONMap(data.ssp)"/>
+            <l-geo-json :geojson="parseJSON(data.parcelle)"
+                        :options="parcelleOptions"
+                        :options-style="parcelleStyleFunction"/>
+            <l-geo-json :geojson="parseJSON(data.adresse)"
+                        :options="adresseOptions"
+                        v-if="data.adresse"/>
         </l-map>
     </div>
 </template>
