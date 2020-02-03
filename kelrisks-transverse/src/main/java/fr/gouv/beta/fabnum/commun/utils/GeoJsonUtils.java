@@ -43,7 +43,7 @@ public class GeoJsonUtils {
         
         if (properties == null) {
             properties = new HashMap<>();
-            properties.put("code", geom.toString());
+            properties.put("code", geom.hashCode());
             properties.put("nom", "MyGeom");
         }
         
@@ -70,6 +70,11 @@ public class GeoJsonUtils {
         }
         Geometry<?> geometry = null;
         try {
+            geoJson = geoJson.replace("\\", "");
+            String geoJsonType        = geoJson.replaceFirst(".*?(\"type\"[\\s\\S]*?),.*", "$1");
+            String geoJsonCoordinates = geoJson.replaceAll(".*?(\"coordinates\"[\\s\\S]*\\]).*", "$1");
+    
+            geoJson = "{" + geoJsonType + "," + geoJsonCoordinates + "}";
     
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new GeolatteGeomModule());

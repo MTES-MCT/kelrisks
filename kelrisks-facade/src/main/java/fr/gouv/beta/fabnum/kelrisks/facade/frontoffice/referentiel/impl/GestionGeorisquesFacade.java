@@ -4,6 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeorisquesService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,10 @@ public class GestionGeorisquesFacade extends AbstractFacade implements IGestionG
     public GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE) {
         
         return georisquesService.rechercherSismiciteCommune(codeINSEE);
+    }
+    
+    public GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat) {
+        
+        return georisquesService.rechercherSisCoordonnees(lon, lat);
     }
 }
