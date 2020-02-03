@@ -32,9 +32,11 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums.PrecisionEnum;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.PlanPreventionRisquesGasparQO;
 
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -209,7 +211,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         for (IGNCartoAssiettePaginatedFeatures.Assiette assiette : assiettes.getFeatures()) {
             
             IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateurContenantPolygon(parcelleSitesSolsPoluesGeoJson, assiette.getProperties().getPartition());
-        
+    
             if (!generateurs.getFeatures().isEmpty()) {
                 
                 PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
@@ -219,8 +221,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                 List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
                 
                 if (gaspars.size() == 1) {
-                    
-                    avisDTO.getLeaflet().getPpr().add(GeoJsonUtils.toGeoJson(assiette.getGeometry()));
+    
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
+    
+                    Map<String, Object> properties = Stream.of(new AbstractMap.SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
+                                                               new AbstractMap.SimpleEntry<>("approuvéLe", sdf.format(gaspars.get(0).getDateApprobation())))
+                                                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    
+                    avisDTO.getLeaflet().getPpr().add(GeoJsonUtils.toGeoJson(assiette.getGeometry(), properties));
                     planPreventionRisquesList.add(gaspars.get(0));
                 }
             }

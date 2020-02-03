@@ -143,9 +143,9 @@ export default {
             return () => {
                 return {
                     weight: 2,
-                    color: "#0700FB",
-                    opacity: 0.6,
-                    fillColor: "#0700FB",
+                    color: "#FFA153",
+                    opacity: 0.8,
+                    fillColor: "#FFA153",
                     fillOpacity: 0.2
                 };
             };
@@ -201,11 +201,16 @@ export default {
                         let divs = ''
                         for (let property in feature.properties) {
                             let value = feature.properties[property]
-                            let label = property.replace(/([A-Z])/gm, function (v) {
-                                return ' ' + v.toLowerCase()
-                            }).replace(/(^.)/gm, function (v) {
-                                return v.toUpperCase()
-                            })
+                            let label = "";
+                            if (property.startsWith("'")) {
+                                label = property.substring(1, property.length - 1)
+                            } else {
+                                label = property.replace(/([A-Z])/gm, function (v) {
+                                    return ' ' + v.toLowerCase()
+                                }).replace(/(^.)/gm, function (v) {
+                                    return v.toUpperCase()
+                                })
+                            }
                             divs = divs.concat('<div>', label, ' : ', value, '</div>')
                         }
 
