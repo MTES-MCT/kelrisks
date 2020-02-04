@@ -51,15 +51,15 @@ public class GeorisquesService implements IGeorisquesService {
     }
     
     @Override
-    public GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat) {
-        
+    public GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat, int rayon) {
+    
         WebClient webClient = WebClient.create();
-        
+    
         String latlon = lon + "," + lat;
-        
+    
         UriBuilder uriBuilder = UriBuilder.fromPath(SIS_URL);
         URI generateurUri = uriBuilder
-                                    .queryParam("rayon", "1")
+                                    .queryParam("rayon", String.valueOf(rayon))
                                     .queryParam("latlon", "{latlon}")
                                     .queryParam("page", "1")
                                     .queryParam("page_size", "10")

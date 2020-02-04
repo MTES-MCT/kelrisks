@@ -10,5 +10,5 @@ public interface IGeorisquesService {
     
     GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE);
     
-    GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat);
+    GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat, int rayon);
 }

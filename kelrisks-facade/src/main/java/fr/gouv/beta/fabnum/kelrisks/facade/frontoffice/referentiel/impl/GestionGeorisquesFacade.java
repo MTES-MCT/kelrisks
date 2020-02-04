@@ -26,8 +26,15 @@ public class GestionGeorisquesFacade extends AbstractFacade implements IGestionG
         return georisquesService.rechercherSismiciteCommune(codeINSEE);
     }
     
-    public GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat) {
+    @Override
+    public GeorisquePaginatedSIS rechercherSisCoordonnees(double lon, double lat) {
         
-        return georisquesService.rechercherSisCoordonnees(lon, lat);
+        return georisquesService.rechercherSisCoordonnees(String.valueOf(lon), String.valueOf(lat), 1);
+    }
+    
+    @Override
+    public GeorisquePaginatedSIS rechercherSisCoordonneesRayon(double lon, double lat, int rayon) {
+        
+        return georisquesService.rechercherSisCoordonnees(String.valueOf(lon), String.valueOf(lat), rayon);
     }
 }

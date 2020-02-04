@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class SecteurInformationSolDTO extends AbstractLocalisationAvecPrecision {
     
-    private Long   id;
-    private String adresseId;
+    private String id;
+    private String nom;
+    private String ficheRisque;
 }
   
