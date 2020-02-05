@@ -10,6 +10,8 @@ public interface IGestionGeorisquesFacade {
     
     GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE);
     
+    GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat);
+    
     GeorisquePaginatedSIS rechercherSisCoordonnees(double lon, double lat);
     
     GeorisquePaginatedSIS rechercherSisCoordonneesRayon(double lon, double lat, int rayon);

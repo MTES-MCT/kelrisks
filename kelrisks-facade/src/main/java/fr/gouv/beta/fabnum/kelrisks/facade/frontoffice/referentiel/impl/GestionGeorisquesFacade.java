@@ -27,6 +27,12 @@ public class GestionGeorisquesFacade extends AbstractFacade implements IGestionG
     }
     
     @Override
+    public GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat) {
+        
+        return georisquesService.rechercherSisCoordonnees(lon, lat, 1);
+    }
+    
+    @Override
     public GeorisquePaginatedSIS rechercherSisCoordonnees(double lon, double lat) {
         
         return georisquesService.rechercherSisCoordonnees(String.valueOf(lon), String.valueOf(lat), 1);

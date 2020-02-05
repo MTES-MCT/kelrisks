@@ -197,28 +197,28 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                                                                                          100);
         
         if (!georisquePaginatedSisParcelle.getData().isEmpty()) {
-            
+    
             SecteurInformationSolDTO secteurInformationSolDTO = new SecteurInformationSolDTO();
-            
+    
             secteurInformationSolDTO.setId(georisquePaginatedSisParcelle.getData().get(0).getId_sis());
-            secteurInformationSolDTO.setNom(georisquePaginatedSisParcelle.getData().get(0).getId_sis());
-            secteurInformationSolDTO.setFicheRisque(georisquePaginatedSisParcelle.getData().get(0).getId_sis());
-            
-            avisDTO.getSecteurInformationSolRayonParcelleDTOs().add(secteurInformationSolDTO);
+            secteurInformationSolDTO.setNom(georisquePaginatedSisParcelle.getData().get(0).getNom());
+            secteurInformationSolDTO.setFicheRisque(georisquePaginatedSisParcelle.getData().get(0).getFiche_risque());
+    
+            avisDTO.getSecteurInformationSolSurParcelleDTOs().add(secteurInformationSolDTO);
         }
         
         if (!georisquePaginatedSisRayonParcelle.getData().isEmpty()) {
             georisquePaginatedSisParcelle.getData().forEach(secteurInformationSols -> {
-                
+    
                 avisDTO.getLeaflet().getSis().add(GeoJsonUtils.toGeoJson(secteurInformationSols.getGeom(),
                                                                          Stream.of(new AbstractMap.SimpleEntry<>("Nom", secteurInformationSols.getNom()))
                                                                                  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
-                
+    
                 SecteurInformationSolDTO secteurInformationSolDTO = new SecteurInformationSolDTO();
                 secteurInformationSolDTO.setId(secteurInformationSols.getId_sis());
-                secteurInformationSolDTO.setNom(secteurInformationSols.getId_sis());
-                secteurInformationSolDTO.setFicheRisque(secteurInformationSols.getId_sis());
-                
+                secteurInformationSolDTO.setNom(secteurInformationSols.getNom());
+                secteurInformationSolDTO.setFicheRisque(secteurInformationSols.getFiche_risque());
+    
                 avisDTO.getSecteurInformationSolRayonParcelleDTOs().add(secteurInformationSolDTO);
             });
         }

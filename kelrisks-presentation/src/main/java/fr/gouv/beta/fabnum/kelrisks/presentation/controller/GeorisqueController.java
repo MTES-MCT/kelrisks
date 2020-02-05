@@ -30,9 +30,7 @@ public class GeorisqueController {
     
     @GetMapping("/georisques/sis/{lon}/{lat}")
     public GeorisquePaginatedSIS sis(@PathVariable("lon") String lon, @PathVariable("lat") String lat) {
-        
-        GeorisquePaginatedSIS georisquePaginatedSIS = georisquesFacade.rechercherSisCoordonnees(lon, lat);
-        
-        return georisquePaginatedSIS;
+    
+        return georisquesFacade.rechercherSisCoordonnees(lon, lat);
     }
 }
