@@ -41,8 +41,8 @@ public class SiteSolPolueService extends AbstractCRUDService<SiteSolPolue> imple
     }
     
     @Override
-    public List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry) {
-        
+    public List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry<?> geometry) {
+    
         return dao.rechercherZoneContenantPolygon(geometry);
     }
 }

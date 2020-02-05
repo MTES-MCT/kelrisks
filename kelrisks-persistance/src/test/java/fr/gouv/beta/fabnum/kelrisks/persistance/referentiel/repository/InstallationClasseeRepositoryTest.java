@@ -32,7 +32,7 @@ public class InstallationClasseeRepositoryTest extends AbstractRepositoryTest {
     @Test
     public void desPolygonsDoiventRetournerUneInstallationClassees() {
         
-        List<Geometry> polygons = new ArrayList<>();
+        List<Geometry<?>> polygons = new ArrayList<>();
         
         polygons.add(parcelleRepository.getOne(2662371L).getMultiPolygon()); // match
         polygons.add(parcelleRepository.getOne(311762L).getMultiPolygon());

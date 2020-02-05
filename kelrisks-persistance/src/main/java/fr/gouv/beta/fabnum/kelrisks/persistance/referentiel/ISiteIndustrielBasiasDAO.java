@@ -14,13 +14,13 @@ public interface ISiteIndustrielBasiasDAO extends IAbstractDAO<SiteIndustrielBas
     
     List<SiteIndustrielBasias> rechercherSiteSurParcelle(String codeParcelle);
     
-    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(Geometry geometry, double distance);
+    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(Geometry<?> geometry, double distance);
     
-    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
-    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry<?> multiPolygon);
     
-    List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
+    List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry<?> geometry, String nomProprietaire, double distance);
     
     List<SiteIndustrielBasias> rechercherRaisonsSociales(String codeINSEE, String query);
     

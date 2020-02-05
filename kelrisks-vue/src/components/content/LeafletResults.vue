@@ -2,14 +2,11 @@
     <div class="leaflet">
         <l-map :center="center"
                :zoom="zoom"
-               ref="leafletMap">
+               ref="leafletResults">
             <l-tile-layer :url="url"/>
-            <l-geo-json :geojson="parseJSON(data.adresse)"
-                        v-if="data.adresse"
-                        :options="adresseOptions"/>
-            <l-geo-json :geojson="parseJSON(data.parcelle)"
-                        :options="parcelleOptions"
-                        :options-style="parcelleStyleFunction"/>
+            <l-geo-json :geojson="parseJSONMap(data.ppr)"
+                        :options="pprOptions"
+                        :options-style="pprStyleFunction"/>
             <l-geo-json :geojson="parseJSONMap(data.basias)"
                         :options="basiasOptions"
                         :options-style="basiasStyleFunction"/>
@@ -22,6 +19,12 @@
                         :options="icpeOptions"
                         :options-style="icpeStyleFunction"/>
             <l-geo-json :geojson="parseJSONMap(data.ssp)"/>
+            <l-geo-json :geojson="parseJSON(data.parcelle)"
+                        :options="parcelleOptions"
+                        :options-style="parcelleStyleFunction"/>
+            <l-geo-json :geojson="parseJSON(data.adresse)"
+                        :options="adresseOptions"
+                        v-if="data.adresse"/>
         </l-map>
     </div>
 </template>
@@ -46,12 +49,7 @@ export default {
             type: Object,
             default: () => {
                 return {
-                    parcelle: "",
-                    basias: "",
-                    basol: "",
-                    sis: "",
-                    icpe: "",
-                    ssp: ""
+                    parcelles: "",
                 }
             }
         }
@@ -105,6 +103,11 @@ export default {
                 pointToLayer: this.createIcpeIcon
             };
         },
+        pprOptions () {
+            return {
+                onEachFeature: this.onEachFeatureFunction,
+            };
+        },
         basiasOptions () {
             return {
                 onEachFeature: this.onEachFeatureFunction,
@@ -131,6 +134,18 @@ export default {
                     color: "#455674",
                     opacity: 0.8,
                     fillColor: "#455674",
+                    fillOpacity: 0.2
+                };
+            };
+        },
+        pprStyleFunction () {
+            // const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor
+            return () => {
+                return {
+                    weight: 2,
+                    color: "#FFA153",
+                    opacity: 0.8,
+                    fillColor: "#FFA153",
                     fillOpacity: 0.2
                 };
             };
@@ -186,11 +201,16 @@ export default {
                         let divs = ''
                         for (let property in feature.properties) {
                             let value = feature.properties[property]
-                            let label = property.replace(/([A-Z])/gm, function (v) {
-                                return ' ' + v.toLowerCase()
-                            }).replace(/(^.)/gm, function (v) {
-                                return v.toUpperCase()
-                            })
+                            let label = "";
+                            if (property.startsWith("'")) {
+                                label = property.substring(1, property.length - 1)
+                            } else {
+                                label = property.replace(/([A-Z])/gm, function (v) {
+                                    return ' ' + v.toLowerCase()
+                                }).replace(/(^.)/gm, function (v) {
+                                    return v.toUpperCase()
+                                })
+                            }
                             divs = divs.concat('<div>', label, ' : ', value, '</div>')
                         }
 
@@ -198,6 +218,9 @@ export default {
                     },
                     {permanent: false, sticky: true}
                 );
+                layer.on('click', function (e) {
+                    console.log(e)
+                })
             };
         },
         createAdresseIcon () {
@@ -260,13 +283,8 @@ export default {
     mounted () {
         this.$nextTick(() => {
 
-            const map = this.$refs.leafletMap.mapObject
-
-            if (typeof map.LGeoJson === "function") {
-                map.LGeoJson()
-                // console.log(map)
-                this.crippleMap(map)
-            }
+            // const map = this.$refs.leafletResults.mapObject
+            // this.crippleMap(map)
         })
     }
 }
@@ -274,7 +292,7 @@ export default {
 
 <style scoped>
     .leaflet {
-        width  : 100%;
         height : 100%;
+        width  : 100%;
     }
 </style>

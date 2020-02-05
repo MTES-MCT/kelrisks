@@ -14,13 +14,13 @@ public interface ISiteIndustrielBasiasService extends IAbstractCRUDService<SiteI
     
     List<SiteIndustrielBasias> rechercherSiteSurParcelle(String codeParcelle);
     
-    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideGeometry(Geometry codeParcelle, double distance);
+    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideGeometry(Geometry<?> codeParcelle, double distance);
     
-    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
-    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry<?> multiPolygon);
     
-    List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
+    List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry<?> geometry, String nomProprietaire, double distance);
     
     List<SiteIndustrielBasias> rechercherRaisonsSociales(String codeINSEE, String query);
     

@@ -3,9 +3,10 @@ package fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel;
 import lombok.Data;
 
 @Data
-public class SecteurInformationSolDTO extends AbstractLocalisationAvecPrecision {
+public class SecteurInformationSolDTO {
     
-    private Long   id;
-    private String adresseId;
+    private String id;
+    private String nom;
+    private String ficheRisque;
 }
   

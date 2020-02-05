@@ -17,24 +17,24 @@ import org.springframework.stereotype.Service;
 public class GestionPlanPreventionRisquesFacade extends AbstractFacade implements IGestionPlanPreventionRisquesFacade {
     
     @Autowired
-    IPlanPreventionRisquesService siteIndustrielService;
+    IPlanPreventionRisquesService planPreventionRisquesService;
     @Autowired
     IParcelleService              parcelleService;
     @Autowired
-    IPlanPreventionRisquesMapper  siteIndustrielMapper;
+    IPlanPreventionRisquesMapper  planPreventionRisquesMapper;
     
     @Override
-    public List<PlanPreventionRisquesDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
-        
-        List<PlanPreventionRisquesDTO> planPreventionRisquesDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygons(multiPolygon));
-        
+    public List<PlanPreventionRisquesDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon) {
+    
+        List<PlanPreventionRisquesDTO> planPreventionRisquesDTOs = planPreventionRisquesMapper.toDTOs(planPreventionRisquesService.rechercherSitesDansPolygons(multiPolygon));
+    
         return planPreventionRisquesDTOs;
     }
     
     @Override
-    public List<PlanPreventionRisquesDTO> rechercherSitesDansPolygon(Geometry polygon) {
+    public List<PlanPreventionRisquesDTO> rechercherSitesDansPolygon(Geometry<?> polygon) {
         
-        List<PlanPreventionRisquesDTO> planPreventionRisquesDTOs = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherSitesDansPolygon(polygon));
+        List<PlanPreventionRisquesDTO> planPreventionRisquesDTOs = planPreventionRisquesMapper.toDTOs(planPreventionRisquesService.rechercherSitesDansPolygon(polygon));
         
         return planPreventionRisquesDTOs;
     }

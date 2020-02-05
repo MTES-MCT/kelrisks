@@ -28,24 +28,24 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
                    " WHERE st_intersects(si.geog," +
                    " st_centroid(:geom)," +
                    " :distance)", nativeQuery = true)
-    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("geom") Geometry geom,
+    List<SiteIndustrielBasias> rechercherSiteDansRayonCentroideParcelle(@Param("geom") Geometry<?> geom,
                                                                         @Param("distance") double distance);
     
     @Query(value = "SELECT sib " +
                    " FROM SiteIndustrielBasias AS sib" +
                    " WHERE st_intersects(sib.multiPolygon, st_union(:multiPolygon)) = TRUE")
-    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
     @Query(value = "SELECT sib " +
                    " FROM SiteIndustrielBasias AS sib" +
                    " WHERE st_intersects(sib.multiPolygon, :multiPolygon) = TRUE")
-    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry<?> multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +
                    " WHERE st_dwithin(si.geog, st_centroid(:geometry), :distance)" +
                    " AND lower(si.raison_sociale) LIKE lower(concat('%',:nomProprietaire,'%'))", nativeQuery = true)
-    List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry geometry, String nomProprietaire, double distance);
+    List<SiteIndustrielBasias> rechercherParNomProprietaireDansRayonGeometry(Geometry<?> geometry, String nomProprietaire, double distance);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.basias AS si" +

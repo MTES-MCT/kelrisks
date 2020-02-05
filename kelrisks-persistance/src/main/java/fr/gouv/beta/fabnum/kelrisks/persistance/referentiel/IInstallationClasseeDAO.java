@@ -17,12 +17,12 @@ public interface IInstallationClasseeDAO extends IAbstractDAO<InstallationClasse
     
     List<InstallationClassee> rechercherInstallationsDansRayonCentroideParcelle(String codeParcelle, double distance);
     
-    List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
     List<InstallationClassee> rechercherInstallationsSurParcelles(List<String> codes);
     
     List<InstallationClassee> rechercherRaisonsSociales(String codeINSEE, String query);
     
-    List<InstallationClassee> rechercherSitesDansPolygon(Geometry polygon);
+    List<InstallationClassee> rechercherSitesDansPolygon(Geometry<?> polygon);
 }
   

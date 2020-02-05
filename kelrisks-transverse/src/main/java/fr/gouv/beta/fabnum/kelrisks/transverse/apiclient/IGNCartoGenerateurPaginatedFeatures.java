@@ -1,9 +1,16 @@
 package fr.gouv.beta.fabnum.kelrisks.transverse.apiclient;
 
+import fr.gouv.beta.fabnum.commun.utils.GeoJsonDeserialiser;
+import fr.gouv.beta.fabnum.commun.utils.GeoJsonSerialiser;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.geolatte.geom.Geometry;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Data
 public class IGNCartoGenerateurPaginatedFeatures {
@@ -14,7 +21,9 @@ public class IGNCartoGenerateurPaginatedFeatures {
     public static class Generateur {
         
         Properties properties = new Properties();
-//        String     geometry;
+        @JsonDeserialize(using = GeoJsonDeserialiser.class)
+        @JsonSerialize(using = GeoJsonSerialiser.class)
+        Geometry<?> geometry;
         
         @Data
         public static class Properties {

@@ -8,7 +8,7 @@ import org.geolatte.geom.Geometry;
 
 public interface IGestionPlanPreventionRisquesFacade {
     
-    List<PlanPreventionRisquesDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygons);
+    List<PlanPreventionRisquesDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygons);
     
-    List<PlanPreventionRisquesDTO> rechercherSitesDansPolygon(Geometry multiPolygons);
+    List<PlanPreventionRisquesDTO> rechercherSitesDansPolygon(Geometry<?> multiPolygons);
 }

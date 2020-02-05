@@ -34,9 +34,9 @@ public class SiteIndustrielBasias extends AbstractEntity {
     
     @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
     @Type(type = "org.geolatte.geom.Geometry")
-    private Geometry multiPolygon;
+    private Geometry<?> multiPolygon;
     @Column(name = "geog_precision")
-    private String   precision;
+    private String      precision;
     @Column(name = "adresse_id")
     private String   adresseId;
     

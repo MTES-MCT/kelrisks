@@ -25,16 +25,14 @@
 </template>
 
 <script>
-import mixinErrors from '@/components/mixins/errors'
 
 export default {
-  mixins: [mixinErrors],
-  name: 'SearchFormPart1',
-  computed: {
-    _paq: function () {
-      return window._paq
+    name: 'SearchFormVousEtes',
+    computed: {
+        _paq: function () {
+            return window._paq
+        }
     }
-  }
 }
 </script>
 

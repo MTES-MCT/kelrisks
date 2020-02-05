@@ -13,15 +13,17 @@ public interface IGestionParcelleFacade {
     
     List<ParcelleDTO> rechercherAvecCritere(ParcelleQO parcelleQO);
     
-    List<ParcelleDTO> rechercherParcellesContigues(Geometry geom);
+    List<ParcelleDTO> rechercherParcellesContigues(Geometry<?> geom);
     
     ParcelleDTO rechercherParcelleAvecCoordonnees(double x, double y);
     
-    Geometry rechercherExpendedParcelle(String code, double distance);
+    Geometry<?> rechercherExpendedParcelle(String code, double distance);
     
-    Geometry rechercherUnionParcellesContigues(Geometry multiPolygon);
+    Geometry<?> rechercherUnionParcellesContigues(Geometry<?> multiPolygon);
     
-    Geometry rechercherCentroidParcelle(Geometry polygon);
+    Geometry<?> rechercherCentroidParcelle(Geometry<?> polygon);
     
-    ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry polygon);
+    ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry<?> polygon);
+    
+    List<ParcelleDTO> rechercherParcellesDansRayon(double x, double y, double radius);
 }

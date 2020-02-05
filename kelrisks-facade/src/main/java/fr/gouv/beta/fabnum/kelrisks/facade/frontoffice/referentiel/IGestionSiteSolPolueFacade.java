@@ -10,5 +10,5 @@ public interface IGestionSiteSolPolueFacade {
     
     List<SiteSolPolueDTO> rechercherZoneContenantParcelle(String codeParcelle);
     
-    List<SiteSolPolueDTO> rechercherZoneContenantPolygon(Geometry geometry);
+    List<SiteSolPolueDTO> rechercherZoneContenantPolygon(Geometry<?> geometry);
 }

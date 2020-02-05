@@ -5,7 +5,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.ShortUrlDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesGasparDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
@@ -235,6 +235,7 @@ public class ApiAvis extends AbstractBasicApi {
             PdfWriter        pdfWriter        = new PdfWriter(byteArrayOutputStream, writerProperties);
             
             ConverterProperties converterProperties = new ConverterProperties();
+            converterProperties.setCreateAcroForm(true);
             converterProperties.setCharset(StandardCharsets.UTF_8.name());
             
             HtmlConverter.convertToPdf(byteArrayInputStream, pdfWriter, converterProperties);
@@ -591,30 +592,24 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     private void redigerRisquesNaturels(Document htmlDocument, AvisDTO avisDTO) {
-        
+    
         Element element = htmlDocument.select("#zoneSismicite").first();
         element.append(String.valueOf(avisDTO.getCodeZoneSismicite()));
-        
+    
         element = htmlDocument.select("#potentielRadon").first();
         element.append(String.valueOf(avisDTO.getClassePotentielRadon()));
     
-        //        Petite couronne : 75 92 93 94, Grande couronne 78 91 77 95
-        if (!avisDTO.getSummary().getCommune().getCodeINSEE().matches("(?:7592|93|94)\\d{3}")) {
-            htmlDocument.select("#pprWrapper").first().remove();
+        if (avisDTO.getPlanPreventionRisquesDTOs().size() == 0) {
+            htmlDocument.select("#pprWrapper").first().append("L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé");
         }
         else {
-            if (avisDTO.getPlanPreventionRisquesDTOs().size() == 0) {
-                htmlDocument.select("#pprWrapper").first().append("L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé");
-            }
-            else {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
-                for (PlanPreventionRisquesDTO plan : avisDTO.getPlanPreventionRisquesDTOs()) {
-                    element = htmlDocument.select("#pprWrapper").first();
-                    element = element.appendElement("p");
-                    element.append("L’immeuble est situé dans le périmètre d’un " + plan.getCategorie().getFamille().getCode() +
-                                   " de type " + plan.getCategorie().getLibelle() +
-                                   ", approuvé le " + simpleDateFormat.format(plan.getDateValidite()));
-                }
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
+            for (PlanPreventionRisquesGasparDTO plan : avisDTO.getPlanPreventionRisquesDTOs()) {
+                element = htmlDocument.select("#pprWrapper").first();
+                element = element.appendElement("p");
+                element.append("L’immeuble est situé dans le périmètre d’un " + plan.getAlea().getFamilleAlea().getFamillePPR().getCode() +
+                               " de type " + plan.getAlea().getFamilleAlea().getLibelle() + " - " + plan.getAlea().getLibelle() +
+                               ", approuvé le " + simpleDateFormat.format(plan.getDateApprobation()));
             }
         }
     }

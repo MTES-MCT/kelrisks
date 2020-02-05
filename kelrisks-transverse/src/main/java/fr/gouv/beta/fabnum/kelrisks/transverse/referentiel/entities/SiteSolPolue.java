@@ -22,10 +22,10 @@ public class SiteSolPolue extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
     
-    private String   nom;
-    private String   description;
+    private String      nom;
+    private String      description;
     @Column(name = "geog", columnDefinition = "geometry")
-    private Geometry multiPolygon;
+    private Geometry<?> multiPolygon;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)

@@ -49,14 +49,14 @@ public class PlanPreventionRisquesDAO extends AbstractDAO<PlanPreventionRisques>
     }
     
     @Override
-    public List<PlanPreventionRisques> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
-        
+    public List<PlanPreventionRisques> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon) {
+    
         if (multiPolygon.size() == 1) { return planPreventionRisquesRepository.rechercherSitesDansPolygon(multiPolygon.get(0)); }
         else { return planPreventionRisquesRepository.rechercherSitesDansPolygons(multiPolygon); }
     }
     
     @Override
-    public List<PlanPreventionRisques> rechercherSitesDansPolygon(Geometry polygon) {
+    public List<PlanPreventionRisques> rechercherSitesDansPolygon(Geometry<?> polygon) {
         
         return planPreventionRisquesRepository.rechercherSitesDansPolygon(polygon);
     }

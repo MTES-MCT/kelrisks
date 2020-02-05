@@ -28,7 +28,7 @@ public class AdresseDataGouvService implements IAdresseDataGouvService {
                                                          .accept(MediaType.APPLICATION_JSON)
                                                          .exchange()
                                                          .flatMap(clientResponse -> clientResponse.bodyToMono(AdresseDataGouvPaginatedFeatures.class))
-                                                         .block(Duration.ofSeconds(10L));
+                                                         .block(Duration.ofSeconds(30L));
         
         if (block != null) { return block.getFeatures(); }
         

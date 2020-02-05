@@ -36,15 +36,15 @@ public class PlanPreventionRisquesService extends AbstractCRUDService<PlanPreven
     }
     
     @Override
-    public List<PlanPreventionRisques> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
-        
+    public List<PlanPreventionRisques> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon) {
+    
         if (multiPolygon == null || multiPolygon.isEmpty()) { return new ArrayList<>(); }
-        
+    
         return dao.rechercherSitesDansPolygons(multiPolygon);
     }
     
     @Override
-    public List<PlanPreventionRisques> rechercherSitesDansPolygon(Geometry polygon) {
+    public List<PlanPreventionRisques> rechercherSitesDansPolygon(Geometry<?> polygon) {
         
         if (polygon == null || polygon.isEmpty()) { return new ArrayList<>(); }
         

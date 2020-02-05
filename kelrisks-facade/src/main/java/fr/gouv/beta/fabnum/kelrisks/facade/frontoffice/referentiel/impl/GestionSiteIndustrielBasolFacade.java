@@ -44,7 +44,7 @@ public class GestionSiteIndustrielBasolFacade extends AbstractFacade implements 
     }
     
     @Override
-    public List<SiteIndustrielBasolDTO> rechercherSitesDansPolygons(List<Geometry> multiPolygon) {
+    public List<SiteIndustrielBasolDTO> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon) {
     
         List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs = siteIndustrielBasolMapper.toDTOs(siteIndustrielBasolService.rechercherSitesDansPolygons(multiPolygon));
     
@@ -67,7 +67,7 @@ public class GestionSiteIndustrielBasolFacade extends AbstractFacade implements 
     }
     
     @Override
-    public List<SiteIndustrielBasolDTO> rechercherSitesDansPolygon(Geometry polygon) {
+    public List<SiteIndustrielBasolDTO> rechercherSitesDansPolygon(Geometry<?> polygon) {
         
         List<SiteIndustrielBasolDTO> siteIndustrielBasolDTOs = siteIndustrielBasolMapper.toDTOs(siteIndustrielBasolService.rechercherSitesDansPolygon(polygon));
         

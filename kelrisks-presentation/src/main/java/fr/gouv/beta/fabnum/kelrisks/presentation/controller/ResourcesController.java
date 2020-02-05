@@ -17,10 +17,10 @@ public class ResourcesController {
     
     @GetMapping(value = "/api/image/{image}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
-    public byte[] avisPdf(@PathVariable("image") String imageName) {
-        
+    public byte[] getImage(@PathVariable("image") String imageName) {
+    
         File imageFile;
-        
+    
         try {
             imageFile = ResourceUtils.getFile("classpath:" + imageName + ".jpg");
         }

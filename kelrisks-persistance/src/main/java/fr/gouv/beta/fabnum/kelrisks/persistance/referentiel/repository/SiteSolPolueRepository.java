@@ -26,6 +26,6 @@ public interface SiteSolPolueRepository extends IAbstractRepository<SiteSolPolue
     @Query(value = "SELECT * " +
                    " FROM kelrisks.ssp ssp " +
                    " WHERE public.st_intersects(:geometry, ssp.geog)", nativeQuery = true)
-    List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry geometry);
+    List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry<?> geometry);
 }
   

@@ -12,8 +12,8 @@ import org.geolatte.geom.Geometry;
  */
 public interface IPlanPreventionRisquesService extends IAbstractCRUDService<PlanPreventionRisques> {
     
-    List<PlanPreventionRisques> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<PlanPreventionRisques> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
-    List<PlanPreventionRisques> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<PlanPreventionRisques> rechercherSitesDansPolygon(Geometry<?> multiPolygon);
 }
   

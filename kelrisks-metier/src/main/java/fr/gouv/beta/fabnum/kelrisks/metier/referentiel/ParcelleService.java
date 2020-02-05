@@ -35,13 +35,13 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     }
     
     @Override
-    public Parcelle rechercherClosestParcelleAvecPoint(Geometry point) {
+    public Parcelle rechercherClosestParcelleAvecPoint(Geometry<?> point) {
     
         return dao.rechercherClosestParcelleAvecPoint(point);
     }
     
     @Override
-    public List<Parcelle> rechercherParcellesContigues(Geometry geom) {
+    public List<Parcelle> rechercherParcellesContigues(Geometry<?> geom) {
         
         return dao.rechercherParcellesContigues(geom);
     }
@@ -53,27 +53,33 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     }
     
     @Override
-    public Geometry rechercherExpendedParcelle(String code, double distance) {
+    public Geometry<?> rechercherExpendedParcelle(String code, double distance) {
         
         return dao.rechercherExpendedParcelle(code, distance);
     }
     
     @Override
-    public Geometry rechercherUnionParcellesContigues(Geometry polygon) {
+    public Geometry<?> rechercherUnionParcellesContigues(Geometry<?> polygon) {
         
         return dao.rechercherUnionParcellesContigues(polygon);
     }
     
     @Override
-    public Geometry rechercherCentroidParcelle(Geometry polygon) {
+    public Geometry<?> rechercherCentroidParcelle(Geometry<?> polygon) {
         
         return dao.rechercherCentroidParcelle(polygon);
     }
     
     @Override
-    public Geometry rechercherParcellesIntersectionnantSurface(Geometry polygon) {
+    public Geometry<?> rechercherParcellesIntersectionnantSurface(Geometry<?> polygon) {
         
         return dao.rechercherParcellesIntersectionnantSurface(polygon);
+    }
+    
+    @Override
+    public List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius) {
+        
+        return dao.rechercherParcellesDansRayon(x, y, radius);
     }
 }
   

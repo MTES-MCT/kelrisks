@@ -2,10 +2,13 @@ package fr.gouv.beta.fabnum.commun.utils;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.geolatte.geom.Feature;
 import org.geolatte.geom.Geometry;
+import org.geolatte.geom.MultiPolygon;
+import org.geolatte.geom.Polygon;
 import org.geolatte.geom.json.GeoJsonFeature;
 import org.geolatte.geom.json.GeolatteGeomModule;
 
@@ -19,7 +22,14 @@ public class GeoJsonUtils {
         return toGeoJson(geom, null, null);
     }
     
-    public static String toGeoJson(Geometry<?> geom, Object id) {
+    public static String toGeoJson(List<Geometry<?>> polygons) {
+        
+        MultiPolygon<?> multipolygon = new MultiPolygon(polygons.toArray(new Polygon[0]));
+        
+        return toGeoJson(multipolygon, null, null);
+    }
+    
+    public static String toGeoJson(Geometry<?> geom, String id) {
         
         return toGeoJson(geom, id, null);
     }
@@ -29,11 +39,11 @@ public class GeoJsonUtils {
         return toGeoJson(geom, null, properties);
     }
     
-    public static String toGeoJson(Geometry<?> geom, Object id, Map<String, Object> properties) {
+    public static String toGeoJson(Geometry<?> geom, String id, Map<String, Object> properties) {
         
         if (properties == null) {
             properties = new HashMap<>();
-            properties.put("code", geom.toString());
+            properties.put("code", geom.hashCode());
             properties.put("nom", "MyGeom");
         }
         
@@ -49,8 +59,21 @@ public class GeoJsonUtils {
             // TODO : Catcher cette exception correctement !
             e.printStackTrace();
         }
-        
+    
         return geoJsonOutput;
+    }
+    
+    public static String getGeometryFromGeoJson(String geoJson) {
+        
+        String geometry;
+        
+        geoJson = geoJson.replace("\\", "");
+        String geoJsonType        = geoJson.replaceFirst(".*?(\"type\"[\\s\\S]*?),.*", "$1");
+        String geoJsonCoordinates = geoJson.replaceAll(".*?(\"coordinates\"[\\s\\S]*\\]).*", "$1");
+        
+        geometry = "{" + geoJsonType + "," + geoJsonCoordinates + "}";
+        
+        return geometry;
     }
     
     public static Geometry<?> fromGeoJson(String geoJson) {
@@ -58,18 +81,19 @@ public class GeoJsonUtils {
         if (geoJson == null) {
             return null;
         }
-        Geometry<?> geometry = null;
+        Geometry<?> geom = null;
         try {
-    
+            String geometry = getGeometryFromGeoJson(geoJson);
+            
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new GeolatteGeomModule());
-            geometry = mapper.readValue(geoJson, Geometry.class);
+            geom = mapper.readValue(geometry, Geometry.class);
         }
         catch (IOException e) {
             // TODO : Catcher cette exception correctement !
             e.printStackTrace();
         }
         
-        return geometry;
+        return geom;
     }
 }

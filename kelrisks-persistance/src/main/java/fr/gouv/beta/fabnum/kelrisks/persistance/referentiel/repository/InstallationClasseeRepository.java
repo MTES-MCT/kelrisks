@@ -35,13 +35,13 @@ public interface InstallationClasseeRepository extends IAbstractRepository<Insta
                    " FROM kelrisks.s3ic ic " +
                    " WHERE st_intersects(ic.geog, :multiPolygon) OR " +
                    "       st_intersects(ic.geog, :multiPolygon)", nativeQuery = true)
-    List<InstallationClassee> rechercherSitesDansPolygon(Geometry multiPolygon);
+    List<InstallationClassee> rechercherSitesDansPolygon(Geometry<?> multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.s3ic ic " +
                    " WHERE st_intersects(ic.geog, st_union(:multiPolygon)) OR " +
                    "       st_intersects(ic.geog, st_union(:multiPolygon))", nativeQuery = true)
-    List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry> multiPolygon);
+    List<InstallationClassee> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.s3ic ic, " +
