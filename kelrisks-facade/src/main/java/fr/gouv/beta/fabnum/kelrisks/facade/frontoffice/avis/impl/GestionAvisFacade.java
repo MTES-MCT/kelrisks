@@ -225,35 +225,37 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, String codeINSEE) {
-        
+    
         String parcelleSitesSolsPoluesGeoJson = GeoJsonUtils.getGeometryFromGeoJson(GeoJsonUtils.toGeoJson(parcelleSitesSolsPolues));
-        
+    
         List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList = new ArrayList<>();
-        
+    
         IGNCartoAssiettePaginatedFeatures assiettes = gestionIGNCartoFacade.rechercherAssiettesContenantPolygon(parcelleSitesSolsPoluesGeoJson);
-        
-        for (IGNCartoAssiettePaginatedFeatures.Assiette assiette : assiettes.getFeatures()) {
+    
+        if (assiettes != null) {
+            for (IGNCartoAssiettePaginatedFeatures.Assiette assiette : assiettes.getFeatures()) {
             
-            IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateurContenantPolygon(parcelleSitesSolsPoluesGeoJson, assiette.getProperties().getPartition());
+                IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateurContenantPolygon(parcelleSitesSolsPoluesGeoJson, assiette.getProperties().getPartition());
             
-            if (!generateurs.getFeatures().isEmpty()) {
+                if (generateurs != null && !generateurs.getFeatures().isEmpty()) {
                 
-                PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
-                planPreventionRisquesGasparQO.setIdGaspar(generateurs.getFeatures().get(0).getProperties().getId_gaspar());
-                planPreventionRisquesGasparQO.setCodeINSEE(codeINSEE);
+                    PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
+                    planPreventionRisquesGasparQO.setIdGaspar(generateurs.getFeatures().get(0).getProperties().getId_gaspar());
+                    planPreventionRisquesGasparQO.setCodeINSEE(codeINSEE);
                 
-                List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
+                    List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
                 
-                if (gaspars.size() == 1) {
-    
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
-    
-                    Map<String, Object> properties = Stream.of(new AbstractMap.SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
-                                                               new AbstractMap.SimpleEntry<>("approuvéLe", sdf.format(gaspars.get(0).getDateApprobation())))
-                                                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    
-                    avisDTO.getLeaflet().getPpr().add(GeoJsonUtils.toGeoJson(assiette.getGeometry(), properties));
-                    planPreventionRisquesList.add(gaspars.get(0));
+                    if (gaspars.size() == 1) {
+                    
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
+                    
+                        Map<String, Object> properties = Stream.of(new AbstractMap.SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
+                                                                   new AbstractMap.SimpleEntry<>("approuvéLe", sdf.format(gaspars.get(0).getDateApprobation())))
+                                                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                    
+                        avisDTO.getLeaflet().getPpr().add(GeoJsonUtils.toGeoJson(assiette.getGeometry(), properties));
+                        planPreventionRisquesList.add(gaspars.get(0));
+                    }
                 }
             }
         }
