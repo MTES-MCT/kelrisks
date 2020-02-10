@@ -63,17 +63,16 @@ public class GeoJsonUtils {
         return geoJsonOutput;
     }
     
-    public static String getGeometryFromGeoJson(String geoJson) {
+    public static String getGeometryFromGeoJson(String featureGeoJson) {
         
-        String geometry;
+        String simpleGeoJson;
+        String fixedGeoJson       = featureGeoJson.replace("\\", "");
+        String geoJsonType        = fixedGeoJson.replaceFirst(".*geom.*?(\"type\"[\\s\\S]*?),.*", "$1");
+        String geoJsonCoordinates = fixedGeoJson.replaceAll(".*?(\"coordinates\"[\\s\\S]*\\]).*", "$1");
         
-        geoJson = geoJson.replace("\\", "");
-        String geoJsonType        = geoJson.replaceFirst(".*?(\"type\"[\\s\\S]*?),.*", "$1");
-        String geoJsonCoordinates = geoJson.replaceAll(".*?(\"coordinates\"[\\s\\S]*\\]).*", "$1");
+        simpleGeoJson = "{" + geoJsonType + "," + geoJsonCoordinates + "}";
         
-        geometry = "{" + geoJsonType + "," + geoJsonCoordinates + "}";
-        
-        return geometry;
+        return simpleGeoJson;
     }
     
     public static Geometry<?> fromGeoJson(String geoJson) {
