@@ -55,7 +55,7 @@ export default {
         }
     },
     data: () => ({
-        url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         zoom: 16,
         bounds: null
     }),

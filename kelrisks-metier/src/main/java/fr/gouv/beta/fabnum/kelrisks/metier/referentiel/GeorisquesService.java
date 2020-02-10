@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeorisquesService;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
@@ -21,6 +22,7 @@ public class GeorisquesService implements IGeorisquesService {
     private static final String RADON_URL          = GEORISQUE_BASE_URL + "/radon?code_insee=PARAM_INSEE&page=1&page_size=10";
     private static final String SISMIQUE_URL       = GEORISQUE_BASE_URL + "/zonage_sismique?&code_insee=PARAM_INSEE&page=1&page_size=10";
     private static final String SIS_URL            = GEORISQUE_BASE_URL + "/sis";
+    private static final String PPR_URL            = GEORISQUE_BASE_URL + "/ppr";
     
     public GeorisquePaginatedRadon rechercherRadonCommune(String codeINSEE) {
         
@@ -70,6 +72,29 @@ public class GeorisquesService implements IGeorisquesService {
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
                        .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedSIS.class))
+                       .block(Duration.ofSeconds(30L));
+    }
+    
+    @Override
+    public GeorisquePaginatedPPR rechercherPprCoordonnees(String lon, String lat, int rayon) {
+        
+        WebClient webClient = WebClient.create();
+        
+        String latlon = lon + "," + lat;
+        
+        UriBuilder uriBuilder = UriBuilder.fromPath(PPR_URL);
+        URI generateurUri = uriBuilder
+                                    .queryParam("rayon", String.valueOf(rayon))
+                                    .queryParam("latlon", "{latlon}")
+                                    .queryParam("page", "1")
+                                    .queryParam("page_size", "10")
+                                    .build(latlon);
+        
+        return webClient.get()
+                       .uri(generateurUri)
+                       .accept(MediaType.APPLICATION_JSON)
+                       .exchange()
+                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedPPR.class))
                        .block(Duration.ofSeconds(30L));
     }
 }

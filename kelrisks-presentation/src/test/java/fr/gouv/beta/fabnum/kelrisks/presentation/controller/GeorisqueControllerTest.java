@@ -3,6 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.presentation.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fr.gouv.beta.fabnum.kelrisks.Application;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
@@ -52,5 +53,16 @@ public class GeorisqueControllerTest {
         
         assertThat(sis.getData()).isNotEmpty();
         assertThat(sis.getData().get(0).getNom()).containsIgnoringCase("gare de triage");
+    }
+    
+    @Test
+    public void doitRetournerTroisPPR() {
+        
+        GeorisquePaginatedPPR ppr = restTemplate.getForObject("/georisques/ppr/{lon}/{lat}",
+                                                              GeorisquePaginatedPPR.class,
+                                                              "2.2528", "48.9494");
+        
+        assertThat(ppr.getData()).isNotEmpty();
+        assertThat(ppr.getData()).hasSize(3);
     }
 }
