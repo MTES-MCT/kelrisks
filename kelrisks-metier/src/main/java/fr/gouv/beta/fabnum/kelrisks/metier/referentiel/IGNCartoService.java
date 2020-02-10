@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service("iGNCartoService")
 public class IGNCartoService implements IIGNCartoService {
     
-    private static final String IGNCarto_BASE_URL = "https://apicarto-preprod.ign.fr/api";
+    private static final String IGNCarto_BASE_URL = "https://apicarto.ign.fr/api";
     private static final String ASSIETTE_URL      = IGNCarto_BASE_URL + "/gpu/assiette-sup-s";
     private static final String SURFACIQUE_URL    = IGNCarto_BASE_URL + "/gpu/generateur-sup-s";
     
@@ -46,6 +46,7 @@ public class IGNCartoService implements IIGNCartoService {
         URI generateurUri = uriBuilder
                                     .queryParam("geom", "{geom}")
                                     .queryParam("partition", "{partition}")
+                                    .queryParam("idgen", "PM1-130012073-07-02")
                                     .build(geom, partition);
     
         return webClient.get()

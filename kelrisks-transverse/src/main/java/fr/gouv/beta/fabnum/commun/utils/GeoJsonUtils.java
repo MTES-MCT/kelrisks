@@ -64,14 +64,15 @@ public class GeoJsonUtils {
     }
     
     public static String getGeometryFromGeoJson(String featureGeoJson) {
-        
+    
         String simpleGeoJson;
-        String fixedGeoJson       = featureGeoJson.replace("\\", "");
-        String geoJsonType        = fixedGeoJson.replaceFirst(".*geom.*?(\"type\"[\\s\\S]*?),.*", "$1");
-        String geoJsonCoordinates = fixedGeoJson.replaceAll(".*?(\"coordinates\"[\\s\\S]*\\]).*", "$1");
-        
-        simpleGeoJson = "{" + geoJsonType + "," + geoJsonCoordinates + "}";
-        
+        String fixedGeoJson = simpleGeoJson = featureGeoJson.replace("\\", "");
+        if (fixedGeoJson.contains("geom") && fixedGeoJson.contains("coordinates")) {
+            String geoJsonType        = fixedGeoJson.replaceAll(".*geom.*?(\"type\"[\\s\\S]*?),.*", "$1");
+            String geoJsonCoordinates = fixedGeoJson.replaceAll(".*?(\"coordinates\"[\\s\\S]*\\]).*", "$1");
+            simpleGeoJson = "{" + geoJsonType + "," + geoJsonCoordinates + "}";
+        }
+    
         return simpleGeoJson;
     }
     
