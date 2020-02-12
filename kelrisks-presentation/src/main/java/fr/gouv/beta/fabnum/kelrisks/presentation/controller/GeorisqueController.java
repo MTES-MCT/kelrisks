@@ -20,23 +20,27 @@ public class GeorisqueController {
     @GetMapping("/georisques/radon/{insee}")
     public GeorisquePaginatedRadon radon(@PathVariable("insee") String codeINSEE) {
     
+        if (!codeINSEE.matches("^\\d{3,5}$")) { return null; }
+    
         return georisquesFacade.rechercherRadonCommune(codeINSEE);
     }
     
     @GetMapping("/georisques/sismique/{insee}")
     public GeorisquePaginatedSismique sismique(@PathVariable("insee") String codeINSEE) {
     
+        if (!codeINSEE.matches("^\\d{3,5}$")) { return null; }
+    
         return georisquesFacade.rechercherSismiciteCommune(codeINSEE);
     }
     
     @GetMapping("/georisques/sis/{lon}/{lat}")
-    public GeorisquePaginatedSIS sis(@PathVariable("lon") String lon, @PathVariable("lat") String lat) {
+    public GeorisquePaginatedSIS sis(@PathVariable("lon") Double lon, @PathVariable("lat") Double lat) {
         
         return georisquesFacade.rechercherSisCoordonnees(lon, lat);
     }
     
     @GetMapping("/georisques/ppr/{lon}/{lat}")
-    public GeorisquePaginatedPPR ppr(@PathVariable("lon") String lon, @PathVariable("lat") String lat) {
+    public GeorisquePaginatedPPR ppr(@PathVariable("lon") Double lon, @PathVariable("lat") Double lat) {
         
         return georisquesFacade.rechercherPprCoordonnees(lon, lat);
     }

@@ -28,12 +28,6 @@ public class GestionGeorisquesFacade extends AbstractFacade implements IGestionG
     }
     
     @Override
-    public GeorisquePaginatedSIS rechercherSisCoordonnees(String lon, String lat) {
-        
-        return georisquesService.rechercherSisCoordonnees(lon, lat, 1);
-    }
-    
-    @Override
     public GeorisquePaginatedSIS rechercherSisCoordonnees(double lon, double lat) {
     
         return georisquesService.rechercherSisCoordonnees(String.valueOf(lon), String.valueOf(lat), 1);
@@ -46,8 +40,8 @@ public class GestionGeorisquesFacade extends AbstractFacade implements IGestionG
     }
     
     @Override
-    public GeorisquePaginatedPPR rechercherPprCoordonnees(String lon, String lat) {
-        
-        return georisquesService.rechercherPprCoordonnees(lon, lat, 1);
+    public GeorisquePaginatedPPR rechercherPprCoordonnees(double lon, double lat) {
+    
+        return georisquesService.rechercherPprCoordonnees(String.valueOf(lon), String.valueOf(lat), 1);
     }
 }
