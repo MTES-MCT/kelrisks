@@ -235,20 +235,25 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         IGNCartoAssiettePaginatedFeatures assiettes = gestionIGNCartoFacade.rechercherAssiettesContenantPolygon(parcelleSitesSolsPoluesGeoJson);
         
         if (assiettes != null) {
+    
             assiettes.getFeatures().forEach(assiette -> {
                 
                 IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateurContenantPolygon(parcelleSitesSolsPoluesGeoJson, assiette.getProperties().getPartition());
-                
-                if (generateurs != null && !generateurs.getFeatures().isEmpty()) {
-                    
-                    IGNCartoGenerateurPaginatedFeatures.Generateur generateur = generateurs.getFeatures().get(0);
-                    
-                    Pair<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
-                    
-                    if (gasparGeoJsonPair != null) {
-                        avisDTO.getLeaflet().getPpr().add(gasparGeoJsonPair.getValue());
-                        planPreventionRisquesList.add(gasparGeoJsonPair.getKey());
-                    }
+        
+                if (generateurs != null) {
+            
+                    generateurs.getFeatures().stream()
+                            .filter(generateur -> generateur.getProperties().getIdgen().equals(assiette.getProperties().getIdgen())) // Sécurisation de la jointure assiette / générateur qui ne peut
+                            // être faite via l'API GpU
+                            .findFirst()
+                            .ifPresent(generateur -> {
+                                Pair<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
+                        
+                                if (gasparGeoJsonPair != null) {
+                                    avisDTO.getLeaflet().getPpr().add(gasparGeoJsonPair.getValue());
+                                    planPreventionRisquesList.add(gasparGeoJsonPair.getKey());
+                                }
+                            });
                 }
             });
         }
@@ -256,18 +261,19 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         GeorisquePaginatedPPR georisquePaginatedPPR = gestionGeorisquesFacade.rechercherPprCoordonnees(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis()),
                                                                                                        centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()));
         if (georisquePaginatedPPR != null) {
-            georisquePaginatedPPR.getData().forEach(ppr -> {
+    
+            georisquePaginatedPPR.getData().stream()
+                    .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
+                    // multiplicité des sources
+                    .forEach(ppr -> {
                 
-                if (planPreventionRisquesList.stream().noneMatch(planPreventionRisquesGasparDTO -> planPreventionRisquesGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) {
-                    
-                    Pair<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
-                    
-                    if (gasparGeoJsonPair != null) {
-                        avisDTO.getLeaflet().getPpr().add(gasparGeoJsonPair.getValue());
-                        planPreventionRisquesList.add(gasparGeoJsonPair.getKey());
-                    }
-                }
-            });
+                        Pair<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
+                
+                        if (gasparGeoJsonPair != null) {
+                            avisDTO.getLeaflet().getPpr().add(gasparGeoJsonPair.getValue());
+                            planPreventionRisquesList.add(gasparGeoJsonPair.getKey());
+                        }
+                    });
         }
         
         avisDTO.setPlanPreventionRisquesDTOs(planPreventionRisquesList);
