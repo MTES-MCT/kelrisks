@@ -32,10 +32,9 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoGenerateurPagin
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums.PrecisionEnum;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.PlanPreventionRisquesGasparQO;
-import javafx.util.Pair;
 
 import java.text.SimpleDateFormat;
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -98,7 +97,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             G2D g2D = canMakeG2D.mkPosition(Double.parseDouble(geolocAdresse.split("\\|")[0]),
                                             Double.parseDouble(geolocAdresse.split("\\|")[1]));
             Point point = new Point(g2D, CoordinateReferenceSystems.WGS84);
-            avisDTO.getLeaflet().setAdresse(GeoJsonUtils.toGeoJson(point, Stream.of(new AbstractMap.SimpleEntry<>("adresse", nomAdresse))
+            avisDTO.getLeaflet().setAdresse(GeoJsonUtils.toGeoJson(point, Stream.of(new SimpleEntry<>("adresse", nomAdresse))
                                                                                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
             avisDTO.getSummary().setAdresse(nomAdresse);
     
@@ -159,7 +158,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         avisDTO.getSummary().setCodeParcelle(parcelleDTO.getSection() + "-" + parcelleDTO.getNumero());
         avisDTO.getLeaflet().setParcelle(GeoJsonUtils.toGeoJson(parcelleDTO.getMultiPolygon(),
-                                                                Stream.of(new AbstractMap.SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
+                                                                Stream.of(new SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
                                                                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
         
         // Recherche d'une éventuelle zone poluée contenant la parcelle
@@ -213,7 +212,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             georisquePaginatedSisParcelle.getData().forEach(secteurInformationSols -> {
     
                 avisDTO.getLeaflet().getSis().add(GeoJsonUtils.toGeoJson(secteurInformationSols.getGeom(),
-                                                                         Stream.of(new AbstractMap.SimpleEntry<>("Nom", secteurInformationSols.getNom()))
+                                                                         Stream.of(new SimpleEntry<>("Nom", secteurInformationSols.getNom()))
                                                                                  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
     
                 SecteurInformationSolDTO secteurInformationSolDTO = new SecteurInformationSolDTO();
@@ -247,7 +246,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                             // être faite via l'API GpU
                             .findFirst()
                             .ifPresent(generateur -> {
-                                Pair<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
+                                SimpleEntry<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
                         
                                 if (gasparGeoJsonPair != null) {
                                     avisDTO.getLeaflet().getPpr().add(gasparGeoJsonPair.getValue());
@@ -266,9 +265,9 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                     .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
                     // multiplicité des sources
                     .forEach(ppr -> {
-                
-                        Pair<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
-                
+    
+                        SimpleEntry<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
+    
                         if (gasparGeoJsonPair != null) {
                             avisDTO.getLeaflet().getPpr().add(gasparGeoJsonPair.getValue());
                             planPreventionRisquesList.add(gasparGeoJsonPair.getKey());
@@ -279,7 +278,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setPlanPreventionRisquesDTOs(planPreventionRisquesList);
     }
     
-    private Pair<PlanPreventionRisquesGasparDTO, String> getGaspar(String codeINSEE, String idGaspar, Geometry<?> geometry) {
+    private SimpleEntry<PlanPreventionRisquesGasparDTO, String> getGaspar(String codeINSEE, String idGaspar, Geometry<?> geometry) {
         
         PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
         planPreventionRisquesGasparQO.setIdGaspar(idGaspar);
@@ -291,11 +290,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
             
-            Map<String, Object> properties = Stream.of(new AbstractMap.SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
-                                                       new AbstractMap.SimpleEntry<>("approuvéLe", sdf.format(gaspars.get(0).getDateApprobation())))
+            Map<String, Object> properties = Stream.of(new SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
+                                                       new SimpleEntry<>("approuvéLe", sdf.format(gaspars.get(0).getDateApprobation())))
                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             
-            return new Pair<>(gaspars.get(0), GeoJsonUtils.toGeoJson(geometry, properties));
+            return new SimpleEntry<>(gaspars.get(0), GeoJsonUtils.toGeoJson(geometry, properties));
         }
         
         return null;
