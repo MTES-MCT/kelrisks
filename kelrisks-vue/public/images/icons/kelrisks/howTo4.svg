@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px"
+     height="71px"
+     viewBox="0 0 64 71"
+     version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Kelrisks"
+       stroke="none"
+       stroke-width="1"
+       fill="none"
+       fill-rule="evenodd"
+       stroke-linecap="round"
+       stroke-linejoin="round">
+        <g id="Accueil-horizontal"
+           transform="translate(-1224.000000, -1588.000000)"
+           stroke="#000000"
+           stroke-width="4.5">
+            <g id="explication"
+               transform="translate(0.000000, 1448.000000)">
+                <g id="explication-4"
+                   transform="translate(1126.000000, 108.000000)">
+                    <g id="Group"
+                       transform="translate(100.000000, 35.000000)">
+                        <g id="monitor-download">
+                            <path d="M14.25,17.44 L5.25,17.44 C2.76471863,17.44 0.75,19.3741299 0.75,21.76 L0.75,49.84 C0.75,52.2258701 2.76471863,54.16 5.25,54.16 L54.75,54.16 C57.2352814,54.16 59.25,52.2258701 59.25,49.84 L59.25,21.76 C59.25,19.3741299 57.2352814,17.44 54.75,17.44 L45.75,17.44"
+                                  id="Shape"></path>
+                            <line x1="30"
+                                  y1="54.16"
+                                  x2="30"
+                                  y2="64.96"
+                                  id="Shape"></line>
+                            <line x1="18.75"
+                                  y1="64.96"
+                                  x2="41.25"
+                                  y2="64.96"
+                                  id="Shape"></line>
+                            <line x1="0.75"
+                                  y1="45.52"
+                                  x2="59.25"
+                                  y2="45.52"
+                                  id="Shape"></line>
+                            <polyline id="Shape"
+                                      points="21 26.08 30 34.72 39 26.08"></polyline>
+                            <line x1="30"
+                                  y1="34.72"
+                                  x2="30"
+                                  y2="0.16"
+                                  id="Shape"></line>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

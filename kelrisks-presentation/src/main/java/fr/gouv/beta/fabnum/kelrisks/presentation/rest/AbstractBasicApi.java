@@ -16,13 +16,21 @@ public class AbstractBasicApi {
     @Autowired
     IGestionParcelleFacade gestionParcelleFacade;
     
-    String getParcelleCode(String codeINSEE, String parcelleCode) {
+    public String getParcelleCode(String codeINSEE, String parcelleCode) {
+        
+        ParcelleDTO parcelle = getParcelle(codeINSEE, parcelleCode);
+        
+        if (parcelle == null) { return null; }
+        else { return parcelle.getCode(); }
+    }
     
+    public ParcelleDTO getParcelle(String codeINSEE, String parcelleCode) {
+        
         Pattern pattern = Pattern.compile("((?:[a-zA-Z]+)|(?:\\d{1,2})).*?(\\d+)");
         Matcher matcher = pattern.matcher(parcelleCode);
-    
+        
         List<ParcelleDTO> parcelleDTOs = new ArrayList<>();
-    
+        
         while (matcher.find()) {
             ParcelleQO parcelleQO = new ParcelleQO();
             parcelleQO.setCodeINSEE(codeINSEE);
@@ -31,9 +39,9 @@ public class AbstractBasicApi {
             
             parcelleDTOs = gestionParcelleFacade.rechercherAvecCritere(parcelleQO);
         }
-    
-        if (parcelleDTOs.isEmpty()) { return null;}
-        else if (parcelleDTOs.size() > 1) { return null;}
-        else { return parcelleDTOs.get(0).getCode(); }
+        
+        if (parcelleDTOs.isEmpty()) { return null; }
+        else if (parcelleDTOs.size() > 1) { return null; }
+        else { return parcelleDTOs.get(0); }
     }
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px"
+     height="72px"
+     viewBox="0 0 72 72"
+     version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>paper-write</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Kelrisks"
+       stroke="none"
+       stroke-width="1"
+       fill="none"
+       fill-rule="evenodd"
+       stroke-linecap="round"
+       stroke-linejoin="round">
+        <g id="Accueil-horizontal"
+           transform="translate(-864.000000, -1587.000000)"
+           stroke="#000000"
+           stroke-width="4.5">
+            <g id="explication"
+               transform="translate(0.000000, 1448.000000)">
+                <g id="Explication-3"
+                   transform="translate(770.000000, 108.000000)">
+                    <g id="Howto-3"
+                       transform="translate(96.000000, 33.000000)">
+                        <g id="paper-write">
+                            <path d="M37.135,53.908 L25.999,55.498 L27.589,44.362 L56.227,15.724 C58.8630551,13.0879449 63.1369449,13.0879449 65.773,15.724 C68.4090551,18.3600551 68.4090551,22.6339449 65.773,25.27 L37.135,53.908 Z"
+                                  id="Shape"></path>
+                            <rect id="Rectangle-path"
+                                  x="13.75"
+                                  y="0.247"
+                                  width="22.5"
+                                  height="9"
+                                  rx="2.25"></rect>
+                            <path d="M36.25,4.747 L45.25,4.747 C47.7352814,4.747 49.75,6.76171863 49.75,9.247"
+                                  id="Shape"></path>
+                            <path d="M49.75,54.247 L49.75,63.247 C49.75,65.7322814 47.7352814,67.747 45.25,67.747 L4.75,67.747 C2.26471863,67.747 0.25,65.7322814 0.25,63.247 L0.25,9.247 C0.25,6.76171863 2.26471863,4.747 4.75,4.747 L13.75,4.747"
+                                  id="Shape"></path>
+                            <line x1="13.75"
+                                  y1="22.747"
+                                  x2="36.25"
+                                  y2="22.747"
+                                  id="Shape"></line>
+                            <line x1="13.75"
+                                  y1="36.247"
+                                  x2="22.75"
+                                  y2="36.247"
+                                  id="Shape"></line>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

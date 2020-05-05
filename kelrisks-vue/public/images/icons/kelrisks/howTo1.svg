@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px"
+     height="72px"
+     viewBox="0 0 72 72"
+     version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Kelrisks"
+       stroke="none"
+       stroke-width="1"
+       fill="none"
+       fill-rule="evenodd"
+       stroke-linecap="round"
+       stroke-linejoin="round">
+        <g id="Accueil-horizontal"
+           transform="translate(-151.000000, -1587.000000)"
+           stroke="#000000"
+           stroke-width="4.5">
+            <g id="explication"
+               transform="translate(0.000000, 1448.000000)">
+                <g id="explication-1"
+                   transform="translate(57.000000, 108.000000)">
+                    <g id="Group"
+                       transform="translate(96.000000, 33.000000)">
+                        <g id="maps-search">
+                            <path d="M67.7500001,31.75 L67.7500001,11.95 C67.7500001,10.1095539 66.6298536,8.45441898 64.921,7.771 L46.921,0.571 C45.8483023,0.141997756 44.6516977,0.141997756 43.579,0.571 L24.421,8.236 C23.3483023,8.66500224 22.1516977,8.66500224 21.079,8.236 L3.337,1.138 C2.64184648,0.859397858 1.8536374,0.944931103 1.23442699,1.36616268 C0.615216578,1.78739425 0.246176224,2.48910551 0.249970573,3.238 L0.249970573,46.357 C0.249970573,48.1974461 1.37014643,49.852581 3.079,50.536 L21.079,57.736 C22.1516977,58.1650022 23.3483023,58.1650022 24.421,57.736"
+                                  id="Shape"></path>
+                            <line x1="22.75"
+                                  y1="8.557"
+                                  x2="22.75"
+                                  y2="31.75"
+                                  id="Shape"></line>
+                            <line x1="45.25"
+                                  y1="0.25"
+                                  x2="45.25"
+                                  y2="20.5"
+                                  id="Shape"></line>
+                            <circle id="Oval"
+                                    cx="47.5"
+                                    cy="47.5"
+                                    r="15.75"></circle>
+                            <line x1="67.75"
+                                  y1="67.75"
+                                  x2="58.708"
+                                  y2="58.708"
+                                  id="Shape"></line>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

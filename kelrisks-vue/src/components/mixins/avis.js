@@ -6,22 +6,19 @@ export default {
     data: () => ({
         querying: false,
         tinyUrl: {
-            codeParcelle: undefined,
-            codeInsee: undefined,
-            nomAdresse: undefined,
-            geolocAdresse: undefined,
-            codeProprio: undefined
+            selectedParcellesList: []
         },
         form: {
             codeInsee: '',
             nomAdresse: '',
-            geolocAdresse: '',
-            codeProprio: '',
-            codeParcelle: ''
+            codeParcelle: '',
+            selectedParcellesList: []
         },
         leaflet: {
             data: undefined,
-            center: [0, 0]
+            center: [0, 0],
+            parcelleFound: '',
+            hasGeoloc: false
         },
         avis: {
             summary: {
@@ -48,9 +45,14 @@ export default {
             installationClasseeNonGeorerencee: {},
             sisParcelle: {},
             sisNonGeorerencee: {},
+            lentillesArgile: {},
             codeSismicite: 0,
             potentielRadon: 0,
-            ppr: {}
+            ppr: {},
+            TRIs: {},
+            AZIs: {},
+            canalisations: {},
+            nucleaires: {}
         },
     }),
     methods: {
@@ -117,6 +119,8 @@ export default {
                     this.avis.sisParcelle = avisHelper.getSISSurParcelle(value)
                     this.avis.sisNonGeorerencee = avisHelper.getSISNonGeoreferencees(value)
 
+                    this.avis.lentillesArgile = value.entity.lentillesArgile
+
                     this.leaflet.data = value.entity.leaflet
                     this.leaflet.center = [parseFloat(value.entity.leaflet.center.y), parseFloat(value.entity.leaflet.center.x)]
 
@@ -124,6 +128,16 @@ export default {
                     this.avis.potentielRadon = value.entity.classePotentielRadon
 
                     this.avis.ppr = value.entity.planPreventionRisquesDTOs
+
+                    // console.log(value.entity.planPreventionRisquesDTOs)
+                    // console.log(this.avis.ppr)
+
+                    this.avis.TRIs = value.entity.tris
+                    this.avis.AZIs = value.entity.azis
+
+                    this.avis.canalisations = value.entity.geogCanalisations
+                    this.avis.nucleaires.positions = value.entity.geogInstallationsNucleaires
+                    this.avis.nucleaires.installations = value.entity.installationNucleaireDTOS
 
                     functions.scrollToElement('app', 500, 0, false)
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])
