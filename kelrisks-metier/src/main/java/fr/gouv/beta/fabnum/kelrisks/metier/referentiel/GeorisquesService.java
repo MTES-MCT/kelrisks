@@ -1,10 +1,12 @@
 package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeorisquesService;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedTRI;
 
 import java.net.URI;
 import java.time.Duration;
@@ -20,6 +22,8 @@ public class GeorisquesService implements IGeorisquesService {
     
     private static final String GEORISQUE_BASE_URL = "http://www.georisques.gouv.fr/api/v1";
     private static final String RADON_URL          = GEORISQUE_BASE_URL + "/radon?code_insee=PARAM_INSEE&page=1&page_size=10";
+    private static final String TRI_URL            = GEORISQUE_BASE_URL + "/tri?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=10";
+    private static final String AZI_URL            = GEORISQUE_BASE_URL + "/azi?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=10";
     private static final String SISMIQUE_URL       = GEORISQUE_BASE_URL + "/zonage_sismique?&code_insee=PARAM_INSEE&page=1&page_size=10";
     private static final String SIS_URL            = GEORISQUE_BASE_URL + "/sis";
     private static final String PPR_URL            = GEORISQUE_BASE_URL + "/ppr";
@@ -38,12 +42,40 @@ public class GeorisquesService implements IGeorisquesService {
                        .block(Duration.ofSeconds(30L));
     }
     
+    public GeorisquePaginatedAZI rechercherAZICommune(String codeINSEE) {
+        
+        String uri = AZI_URL.replace("PARAM_INSEE", codeINSEE);
+        
+        WebClient webClient = WebClient.create();
+        
+        return webClient.get()
+                       .uri(uri)
+                       .accept(MediaType.APPLICATION_JSON)
+                       .exchange()
+                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedAZI.class))
+                       .block(Duration.ofSeconds(30L));
+    }
+    
+    public GeorisquePaginatedTRI rechercherTRICommune(String codeINSEE) {
+        
+        String uri = TRI_URL.replace("PARAM_INSEE", codeINSEE);
+        
+        WebClient webClient = WebClient.create();
+        
+        return webClient.get()
+                       .uri(uri)
+                       .accept(MediaType.APPLICATION_JSON)
+                       .exchange()
+                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedTRI.class))
+                       .block(Duration.ofSeconds(30L));
+    }
+    
     public GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE) {
         
         String uri = SISMIQUE_URL.replace("PARAM_INSEE", codeINSEE);
-    
+        
         WebClient webClient = WebClient.create();
-    
+        
         return webClient.get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
