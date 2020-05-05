@@ -4,7 +4,7 @@
                :ref="'leafletMap_' + reference"
                :zoom="zoom">
             <l-tile-layer :url="url"/>
-            <l-geo-json :geojson="parseJSON(data)"
+            <l-geo-json :geojson="getData"
                         :options="risqueOptions"
                         :options-style="risqueStyleFunction"
                         :ref="'geoJson_' + reference"/>
@@ -28,11 +28,7 @@ export default {
             default: () => [48.8737762014, 2.2950365488]
         },
         data: {
-            type: String,
-            default: ''
-        },
-        arrayData: {
-            type: Array,
+            type: [String, Array],
             default: () => []
         }
     },
@@ -54,7 +50,7 @@ export default {
             map.dragging.disable()
         },
         centerMap (map) {
-            map.fitBounds(this.$refs['geoJson_' + this.reference].getBounds(), {maxZoom: 16});
+            map.fitBounds(this.$refs['geoJson_' + this.reference].getBounds(), {maxZoom: 17});
         },
         parseJSON (data) {
             // console.log(data)
@@ -94,6 +90,11 @@ export default {
                     fillOpacity: 0.2
                 };
             };
+        },
+        getData () {
+
+            if (typeof this.data === 'string') return this.parseJSON(this.data)
+            return this.parseJSONMap(this.data)
         }
     },
     mounted () {

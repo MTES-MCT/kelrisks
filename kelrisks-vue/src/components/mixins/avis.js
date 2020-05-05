@@ -50,7 +50,9 @@ export default {
             potentielRadon: 0,
             ppr: {},
             TRIs: {},
-            AZIs: {}
+            AZIs: {},
+            canalisations: {},
+            nucleaires: {}
         },
     }),
     methods: {
@@ -132,6 +134,10 @@ export default {
 
                     this.avis.TRIs = value.entity.tris
                     this.avis.AZIs = value.entity.azis
+
+                    this.avis.canalisations = value.entity.geogCanalisations
+                    this.avis.nucleaires.positions = value.entity.geogInstallationsNucleaires
+                    this.avis.nucleaires.installations = value.entity.installationNucleaireDTOS
 
                     functions.scrollToElement('app', 500, 0, false)
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])

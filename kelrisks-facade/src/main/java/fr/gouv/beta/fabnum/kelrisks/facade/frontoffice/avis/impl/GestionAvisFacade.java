@@ -7,6 +7,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AbstractLocalisationA
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ArgileDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationNucleaireDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesGasparDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
@@ -15,6 +16,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDT
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionArgileFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionBRGMFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeoDataGouvFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
@@ -25,6 +27,8 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanP
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedCanalisation;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedInstallationNuclaire;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
@@ -83,6 +87,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionIGNCartoFacade                    gestionIGNCartoFacade;
     @Autowired
     IGestionPlanPreventionRisquesGasparFacade gestionPlanPreventionRisquesGasparFacade;
+    @Autowired
+    IGestionBRGMFacade                        gestionBRGMFacade;
     
     @Override
     public AvisDTO rendreAvis(String codeParcelle, CommuneDTO communeDTO, @NotNull String nomAdresse, @NotNull String geolocAdresse, @NotNull String nomProprietaire) {
@@ -198,6 +204,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
         getAvisRadon(avisDTO, communeDTO.getCodeINSEE());
     
+        getAvisCanalisations(avisDTO, centroid);
+    
+        getAvisInstallationsNucleaires(avisDTO, centroid);
+    
         return avisDTO;
     }
     
@@ -284,8 +294,38 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                         }
                     });
         }
-        
+    
         avisDTO.setPlanPreventionRisquesDTOs(planPreventionRisquesList);
+    }
+    
+    private void getAvisCanalisations(AvisDTO avisDTO, Point<?> centroid) {
+        
+        BRGMPaginatedCanalisation brgmPaginatedCanalisation =
+                gestionBRGMFacade.rechercherCanalisationsCoordonnees(String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
+                                                                     String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())),
+                                                                     500);
+        
+        brgmPaginatedCanalisation.getFeatures().forEach(canalisation -> avisDTO.getGeogCanalisations().add(canalisation.getGeometry()));
+    }
+    
+    private void getAvisInstallationsNucleaires(AvisDTO avisDTO, Point<?> centroid) {
+        
+        BRGMPaginatedInstallationNuclaire brgmPaginatedInstallationNuclaire =
+                gestionBRGMFacade.rechercherInstallationsNucleairesCoordonnees(String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
+                                                                               String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())),
+                                                                               20000);
+        
+        List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
+        
+        brgmPaginatedInstallationNuclaire.getFeatures().forEach(installationNucleaire -> {
+            
+            InstallationNucleaireDTO installationNucleaireDTO = new InstallationNucleaireDTO();
+            installationNucleaireDTO.setNomInstallation(installationNucleaire.getProperties().getNom_inst());
+            installationNucleaireDTO.setLibCommune(installationNucleaire.getProperties().getNom_com());
+            installationNucleaireDTOS.add(installationNucleaireDTO);
+        });
+        
+        avisDTO.setInstallationNucleaireDTOS(installationNucleaireDTOS);
     }
     
     private PlanPreventionRisquesGasparDTO getGaspar(String codeINSEE, String idGaspar, Geometry<?> geometry) {

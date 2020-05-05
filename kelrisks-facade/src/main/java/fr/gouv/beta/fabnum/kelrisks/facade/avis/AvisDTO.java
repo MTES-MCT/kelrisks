@@ -4,6 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ArgileDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationNucleaireDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesGasparDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
@@ -14,6 +15,8 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.geolatte.geom.Geometry;
 
 @Data
 public class AvisDTO extends JsonInfoDTO {
@@ -49,8 +52,11 @@ public class AvisDTO extends JsonInfoDTO {
     private int codeZoneSismicite;
     private int classePotentielRadon;
     
-    private List<GeorisquePaginatedTRI.TRI> TRIs;
-    private List<GeorisquePaginatedAZI.AZI> AZIs;
+    private List<GeorisquePaginatedTRI.TRI> TRIs = new ArrayList<>();
+    private List<GeorisquePaginatedAZI.AZI> AZIs = new ArrayList<>();
+    
+    private List<Geometry<?>>              geogCanalisations         = new ArrayList<>();
+    private List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
     
     @Data
     public static class Summary {

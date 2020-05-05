@@ -90,7 +90,7 @@ export default {
             default: ''
         },
         leafletData: {
-            type: String,
+            type: [String, Array],
             default: undefined
         },
     },

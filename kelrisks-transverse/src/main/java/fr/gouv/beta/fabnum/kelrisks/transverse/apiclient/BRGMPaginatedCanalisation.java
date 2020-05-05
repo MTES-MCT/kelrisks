@@ -30,20 +30,14 @@ public class BRGMPaginatedCanalisation extends BasicGeorisqueBean {
         
         @Data
         public static class Properties {
-            
-            private String gid;
-            private String insee_com;
+    
+            //            private String gid;
+            private String num_com;
             private String nom_com;
-            private String nom_inst;
-            //            private String label;
-            //            private String num_inb;
-            //            private String info;
-            //            private String type;
-            //            private String site;
-            //            private String exploitant;
-            //            private String longitude;
-            //            private String latitude;
-            private String type_leg;
+            //            private String transporteur;
+            //            private String desc_ouv;
+            //            private String cat_fluide;
+            //            private String longueur;
         }
     }
 }

@@ -121,12 +121,11 @@
                     :title="'Radon'"
                     v-if="hasRadonHaut"/>
 
-            <risque :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
-                    :detail="'<p>- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classéees pour la protection de l\'environnement [si SIIIC]</br>'+
-                             '- La parcelle est située en secteur d’information sur les sols [si SIS]</br>'+
-                             '- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées [si PM2]</p>'+
+            <risque :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d\'usage des sols (travaux, aménagements changement d\'affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
+                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classées pour la protection de l\'environnement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>' : '') +
+                             (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d\'information sur les sols.</br>' : '') +
+                             (false ? '- La parcelle est affectée d\'une servitude d\'utilité publique au titre des installations classées au titre du L 515-12 du code de l\'environnement.' : '') +
                              '<p><a href=\'#recommendations_pollution\'>Lire les recommandations</a></p>'"
-                    :level="'A'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
                     v-if="hasPollutionPrincipale"/>
@@ -247,10 +246,10 @@
 
             <risque :description="'Votre bien est situé à moins de [10 km] [20 km] d\'une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
                     :detail="'<p>Ces installations sont contrôlés par l\'Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
-                             '<p>Installation(s) concerné(e)  : </p>'"
+                             '<p>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires + '</p>'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_nucleaires_bleu.svg'"
                     :title="'Installations nucléaires de base'"
-                    v-if="true"/>
+                    v-if="avis.nucleaires.installations.length > 0"/>
 
             <risque :center="leaflet.center"
                     :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d\'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa afin de prévenir les sinistres.'"
@@ -267,10 +266,10 @@
 
             <risque :center="leaflet.center"
                     :description="'Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de votre parcelle. La carte représente les implantations présentes autour de votre localisation.'"
-                    :leaflet-data="''"
+                    :leaflet-data="avis.canalisations"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_reseaux_canalisation_bleu.svg'"
                     :title="'Canalisations transport de matières dangereuses'"
-                    v-if="true"/>
+                    v-if="avis.canalisations.length > 0"/>
 
             <div class="clearfix"/>
         </section>
@@ -446,8 +445,6 @@ export default {
         },
         hasTypePPR (type) {
             for (let plan in this.avis.ppr) {
-                // console.log(plan)
-                // console.log(type)
                 plan = this.avis.ppr[plan]
                 if (plan.alea.familleAlea.famillePPR.code === type) return true
             }
@@ -546,6 +543,16 @@ export default {
         hasAZI: function () {
             if (this.avis.AZIs === null) return false
             return this.avis.AZIs.length > 0
+        },
+        getLibelleInstallationsNucleaires () {
+            let libelle = ''
+
+            for (let installation in this.avis.nucleaires.installations) {
+                installation = this.avis.nucleaires.installations[installation]
+                libelle += '- ' + installation.nomInstallation + ' (' + installation.libCommune + ')<br/>'
+            }
+
+            return libelle
         }
     },
     mounted () {
