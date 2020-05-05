@@ -16,5 +16,6 @@ public class PlanPreventionRisquesGasparDTO {
     private Date    dateApprobation;
     private Date    dateAbrogation;
     private Long    id;
+    private String  assiette;
 }
   

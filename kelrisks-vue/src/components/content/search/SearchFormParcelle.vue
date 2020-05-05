@@ -1,26 +1,44 @@
 <template>
     <section class="section section-white"
-             id="section3">
+             id="section3"
+             style="margin-bottom: 40px">
         <div class="container">
-            <div class="panel">
-                <h2 class="section__title title">Rechercher votre terrain</h2>
-                <p class="subtitle">Saisissez le code de la parcelle à analyser</p>
-                <p style="font-size: 16px; color: rgb(83, 101, 125); text-align: center">
-                    <b>(les recherches par code parcelle sont plus pertinentes que par adresse)</b>
-                </p>
+            <div class="panel noborder">
+                <h3 class="">Localiser votre bien pour préparer votre EPR « État des Risques et Pollutions »</h3>
 
                 <errors ref="searchErrors"/>
 
                 <br/>
 
-                <div style="width: 40%; margin: 0 5%; float: left">
+                <div id="sfp_form_wrapper"
+                     v-bind:class="{'has-geoloc':leaflet.hasGeoloc}">
+                    <!--                <div style="width: 40%; float: left; margin-left: 5%">-->
+                    <kr-input :get-option-label-function="(option => {return option['properties']['name'] + ', ' + option['properties']['postcode'] + ' ' + option['properties']['city']})"
+                              :get-option-value-function="(option => {return option['properties']['id']})"
+                              :get-results-list-function="(data => {return data['features']})"
+                              :start-at="3"
+                              @selected="onAdresseChanged"
+                              label="Adresse complète"
+                              name="adresse"
+                              v-bind:source="'https://api-adresse.data.gouv.fr/search/?type=housenumber&limit=10&q='">
+                        <template slot="kr-no-results"
+                                  slot-scope="slotProps">
+                            Aucune adresse trouvée pour "{{ slotProps.query }}"
+                        </template>
+                    </kr-input>
+
+                    <div class="clearfix"></div>
+
+                    <p class="subtitle"
+                       style="margin: 30px 0 15px 0; color: #8A8F96">Ou</p>
+
                     <kr-input :errors="error.field.codeCommune"
                               :get-option-label-function="(option => {return option['properties']['postcode'] + ' - ' + option['properties']['city']})"
                               :get-option-value-function="(option => {return option['properties']['citycode']})"
                               :get-results-list-function="(data => {return data['features']})"
                               :start-at="3"
                               @selected="onCodePostalSelected"
-                              label="Nom de commune ou Code postal"
+                              label="Nom de la commune ou code postal"
                               name="codePostal"
                               v-bind:source="'https://api-adresse.data.gouv.fr/search/?type=municipality&limit=10&q='">
                         <!--suppress JSUnresolvedVariable -->
@@ -38,85 +56,56 @@
                             Aucune commune trouvé pour "{{ slotProps.query }}"
                         </template>
                     </kr-input>
-                </div>
 
-                <div style="width: 40%; margin: 0 5%; float: left">
-                    <kr-input @query="onCodeParcelleChanged"
-                              label="Code Parcelle"
+                    <kr-input @delayedquery="onCodeParcelleChanged"
+                              label="Code de la parcelle"
                               name="codeparcelle"
-                              placeholder="BA-115 ou 912250000A0352">
-                        <template slot="kr-helper">BA-115 ou 912250000A0352
+                              placeholder="BA-115 ou BA-115, BA-116.
+                              Séparer les numéros des parcelles pour en saisir plusieurs.">
+                        <template slot="kr-helper">BA-115 ou BA-115, BA-116. Séparer les numéros des parcelles pour en saisir plusieurs.
                         </template>
                     </kr-input>
+
+                    <div class="clearfix"></div>
+
+                    <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
+                        <button class="button"
+                                disabled="disabled"
+                                name="subscribe"
+                                type="submit"
+                                v-if="querying">
+                            <font-awesome-icon icon="spinner"
+                                               spin/>
+                            Recherche en cours...
+                        </button>
+                        <button @click="search"
+                                class="bouton"
+                                id="submit"
+                                name="subscribe"
+                                type="submit"
+                                v-bind:disabled="form.selectedParcellesList.length === 0"
+                                v-else>
+                            <font-awesome-icon icon="search"/>
+                            Afficher le résultat
+                        </button>
+                    </div>
+
+                    <div id="cgu">
+                        <p>En poursuivant votre navigation, vous acceptez nos <a v-on:click="$emit('cgu')">CGU</a>.</p>
+                    </div>
                 </div>
 
-                <div class="clearfix"></div>
-
-                <p class="subtitle"
-                   style="margin: 30px 0 15px 0; color: #8A8F96">Ou</p>
-
-                <div style="width: 40%; margin-left: 30%">
-                    <!--                <div style="width: 40%; float: left; margin-left: 5%">-->
-                    <kr-input :get-option-label-function="(option => {return option['properties']['name'] + ', ' + option['properties']['postcode'] + ' ' + option['properties']['city']})"
-                              :get-option-value-function="(option => {return option['properties']['id']})"
-                              :get-results-list-function="(data => {return data['features']})"
-                              :start-at="3"
-                              @selected="onAdresseChanged"
-                              label="Adresse complète"
-                              name="adresse"
-                              v-bind:source="'https://api-adresse.data.gouv.fr/search/?type=housenumber&limit=10&q='">
-                        <template slot="kr-no-results"
-                                  slot-scope="slotProps">
-                            Aucune adresse trouvée pour "{{ slotProps.query }}"
-                        </template>
-                    </kr-input>
-                </div>
-
-                <div class="clearfix"></div>
-                <p class="subtitle"
-                   style="margin: 25px 0 0 5%; text-align: left; color: #8A8F96">Optionnel</p>
-
-                <div style="width: 90%; margin-left: 5%">
-                    <kr-input :start-at="3"
-                              @query="onNomProprietaireChanged"
-                              @selected="onNomProprietaireSelected"
-                              label="Nom de l'ancien propriétaire / Raison sociale"
-                              name="raisonSociale"
-                              v-bind:source="env.apiPath + 'raison/autocomplete/' + form.codeInsee + '/'">
-                        <template slot="kr-no-results"
-                                  slot-scope="slotProps">
-                            Aucun numéro trouvé pour "{{ slotProps.query }}"
-                        </template>
-                    </kr-input>
-                </div>
-
-                <div style="width: 100%; display: flex; justify-content: center; margin-top: 40px;">
-                    <button class="button"
-                            name="subscribe"
-                            type="submit"
-                            v-if="querying">
-                        <font-awesome-icon icon="spinner"
-                                           spin/>
-                        Recherche en cours...
-                    </button>
-                    <button @click="search"
-                            class="bouton"
-                            id="submit"
-                            name="subscribe"
-                            type="submit"
-                            v-else>
-                        <font-awesome-icon icon="search"/>
-                        Rechercher
-                    </button>
-                </div>
-
-                <Leaflet @parcelleselected="onSelectedParcellesChanged"
-                         v-if="false"/>
-
-                <div style="width: 90%; margin: 50px 5% 0;">
-                    <p id="cgu">En poursuivant votre navigation, vous acceptez nos <a v-on:click="$emit('cgu')">CGU</a>.</p>
-                </div>
+                <Leaflet :center="leaflet.center"
+                         :parcelle-found="this.leaflet.parcelleFound"
+                         @parcelleselected="onSelectedParcellesChanged"
+                         id="sfp_form_leaflet"
+                         ref="sfp_form_leaflet"
+                         v-bind:class="{'has-geoloc':leaflet.hasGeoloc}"
+                         v-if="true"/>
             </div>
+
+            <div class="clearfix"></div>
+
         </div>
     </section>
 </template>
@@ -126,6 +115,7 @@ import Errors from '../../../components/content/base/Errors'
 import mixinAvis from '../../../components/mixins/avis'
 import KrInput from '../../../components/ui/KrInput'
 import Leaflet from "../LeafletParcelle";
+import fetchWithError from "../../../script/fetchWithError";
 
 export default {
     name: 'SearchFormParcelle',
@@ -155,12 +145,32 @@ export default {
     }),
     methods: {
         onAdresseChanged (option) {
-            this.form.codeInsee = option['properties']['citycode']
-            this.form.nomAdresse = option['properties']['name']
-            this.form.geolocAdresse = option['geometry']['coordinates']['0'] + '|' + option['geometry']['coordinates']['1']
+            if (option.properties) {
+                this.form.codeInsee = option['properties']['citycode']
+                this.form.nomAdresse = option['properties']['name']
+                this.form.geolocAdresse = option['geometry']['coordinates']['0'] + '|' + option['geometry']['coordinates']['1']
+                this.leaflet.center = [parseFloat(option['geometry']['coordinates']['1']), parseFloat(option['geometry']['coordinates']['0'])]
+                this.showLeaflet(true)
+
+                fetchWithError("http://localhost:8080/api/cadastre/proximite/" + option['geometry']['coordinates']['0'] + "/" + option['geometry']['coordinates']['1'], null, 1000 * 10)
+                    .then(stream => stream.json())
+                    .then(data => {
+                        if (data.entity) {
+                            this.leaflet.parcelleFound = data.entity.section + '-' + data.entity.numero
+                        }
+                    })
+
+            } else {
+                this.form.codeInsee = ''
+                this.form.nomAdresse = ''
+                this.form.geolocAdresse = ''
+                this.leaflet.center = [0, 0]
+                this.clearSelectedParcelles()
+            }
         },
         onCodeParcelleChanged (value) {
             this.form.codeParcelle = value
+            this.checkAndGetParcelles()
         },
         onNomProprietaireSelected (value) {
             this.form.codeProprio = value.code
@@ -170,27 +180,106 @@ export default {
         },
         onCodePostalSelected (option) {
             this.form.codeInsee = option['properties']['citycode']
+            this.checkAndGetParcelles()
         },
         onSelectedParcellesChanged (array) {
-            console.log(array)
+            this.form.selectedParcellesList = array
         },
         search () {
             this.getAvis();
         },
-    },
+        checkAndGetParcelles () {
+
+            if (this.form.codeInsee && this.form.codeParcelle && this.form.codeParcelle.length >= 2) {
+
+                fetchWithError("http://localhost:8080/api/cadastre/match/" + this.form.codeInsee + "/" + this.form.codeParcelle, null, 1000 * 10)
+                    .then(stream => stream.json())
+                    .then(data => {
+
+                        if (data.entity) {
+                            this.leaflet.center = [parseFloat(data.entity.centroid.y), parseFloat(data.entity.centroid.x)]
+                            this.showLeaflet(true)
+                            this.leaflet.parcelleFound = data.entity.parcelle.section + '-' + data.entity.parcelle.numero
+                        } else {
+                            this.clearSelectedParcelles()
+                        }
+                    })
+            }
+            if (!this.form.codeParcelle) {
+                this.clearSelectedParcelles()
+            }
+        },
+        clearSelectedParcelles () {
+            this.leaflet.parcelleFound = ''
+            this.form.selectedParcellesList = []
+            this.showLeaflet(false)
+        },
+        showLeaflet (visible) {
+            if (visible && !this.leaflet.hasGeoloc) {
+                setTimeout(() => {
+                    this.$refs.sfp_form_leaflet.invalidate()
+                }, 500);
+            }
+            this.leaflet.hasGeoloc = visible
+        }
+    }
 }
 </script>
 
 <style scoped>
 
+    .container {
+        max-width : unset;
+    }
+
+    #sfp_form_wrapper {
+        float      : left;
+        margin     : 80px calc(50% - 450px / 2) 0;
+        transition : all 0.5s;
+        width      : 450px;
+    }
+
+    #sfp_form_wrapper.has-geoloc {
+        float  : left;
+        margin : 80px 50px 0 0;
+    }
+
+    #sfp_form_leaflet {
+        float      : left;
+        height     : 600px;
+        transition : all 0.5s;
+        width      : 0;
+    }
+
+    #sfp_form_leaflet.has-geoloc {
+        float  : left;
+        height : 600px;
+        width  : calc(100% - 500px)
+    }
+
+    .panel.noborder {
+        border     : none;
+        box-shadow : unset;
+    }
+
     #cgu {
-        color      : rgb(138, 143, 150);
+        /*margin : 0px 5% 0;*/
+    }
+
+    #cgu p {
+        color      : rgb(50, 50, 50);
         font-size  : 0.85em;
         margin     : 0;
         text-align : center;
     }
 
-    #cgu a {
-        text-decoration : none;
+    #cgu p a {
+        color           : rgb(50, 50, 50);
+        text-decoration : underline;
+    }
+
+    #cgu p a:visited {
+        color           : rgb(50, 50, 50);
+        text-decoration : underline;
     }
 </style>

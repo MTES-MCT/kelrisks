@@ -225,7 +225,8 @@ export default {
             query: '',
             arrowCounter: 0,
             hasNoResults: false,
-            delayInstance: null,
+            searchDelayInstance: null,
+            changeDelayInstance: null,
             isAutocomplete: undefined !== this.source
         }
     },
@@ -256,11 +257,17 @@ export default {
             } else {
                 this.$emit('input', this.query)
             }
+
             this.$emit('query', this.query)
+
+            if (this.changeDelayInstance) clearTimeout(this.changeDelayInstance)
+            this.changeDelayInstance = setTimeout(() => {
+                this.$emit('delayedquery', this.query)
+            }, 500)
         },
         search () {
-            if (this.delayInstance) clearTimeout(this.delayInstance)
-            this.delayInstance = setTimeout(() => {
+            if (this.searchDelayInstance) clearTimeout(this.searchDelayInstance)
+            this.searchDelayInstance = setTimeout(() => {
                 if (this.query && this.query.length >= this.startAt) {
                     if (typeof this.source === 'string') {
                         this.hasNoResults = false

@@ -1,12 +1,12 @@
 <template>
-    <div class="leaflet">
+    <div class="leaflet_wrapper">
         <l-map :center="center"
                :zoom="zoom"
                ref="leafletResults">
             <l-tile-layer :url="url"/>
-            <l-geo-json :geojson="parseJSONMap(data.ppr)"
-                        :options="pprOptions"
-                        :options-style="pprStyleFunction"/>
+            <!--            <l-geo-json :geojson="parseJSONMap(data.ppr)"-->
+            <!--                        :options="pprOptions"-->
+            <!--                        :options-style="pprStyleFunction"/>-->
             <l-geo-json :geojson="parseJSONMap(data.basias)"
                         :options="basiasOptions"
                         :options-style="basiasStyleFunction"/>
@@ -43,7 +43,7 @@ export default {
     props: {
         center: {
             type: Array,
-            default: () => [0, 0]
+            default: () => [48.8737762014, 2.2950365488]
         },
         data: {
             type: Object,
@@ -103,11 +103,11 @@ export default {
                 pointToLayer: this.createIcpeIcon
             };
         },
-        pprOptions () {
-            return {
-                onEachFeature: this.onEachFeatureFunction,
-            };
-        },
+        // pprOptions () {
+        //     return {
+        //         onEachFeature: this.onEachFeatureFunction,
+        //     };
+        // },
         basiasOptions () {
             return {
                 onEachFeature: this.onEachFeatureFunction,
@@ -138,18 +138,18 @@ export default {
                 };
             };
         },
-        pprStyleFunction () {
-            // const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor
-            return () => {
-                return {
-                    weight: 2,
-                    color: "#FFA153",
-                    opacity: 0.8,
-                    fillColor: "#FFA153",
-                    fillOpacity: 0.2
-                };
-            };
-        },
+        // pprStyleFunction () {
+        // const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor
+        // return () => {
+        //     return {
+        //         weight: 2,
+        //         color: "#FFA153",
+        //         opacity: 0.8,
+        //         fillColor: "#FFA153",
+        //         fillOpacity: 0.2
+        //     };
+        // };
+        // },
         basiasStyleFunction () {
             return () => {
                 return {
@@ -283,15 +283,15 @@ export default {
     mounted () {
         this.$nextTick(() => {
 
-            // const map = this.$refs.leafletResults.mapObject
-            // this.crippleMap(map)
+            const map = this.$refs.leafletResults.mapObject
+            this.crippleMap(map)
         })
     }
 }
 </script>
 
 <style scoped>
-    .leaflet {
+    .leaflet_wrapper {
         height : 100%;
         width  : 100%;
     }

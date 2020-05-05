@@ -1,6 +1,5 @@
 <template>
-    <div class="leaflet"
-         style="height: 600px;">
+    <div class="leaflet">
         <l-map :center="center"
                :zoom="18"
                ref="leafletParcelles">
@@ -9,31 +8,48 @@
                         :options="parcellesOptions"
                         :options-style="parcellesStyleFunction"
                         v-if="data && currentZoom >= 17"/>
+            <l-marker :icon="createAdresseIcon"
+                      :lat-lng="center"
+                      v-if="center"/>
         </l-map>
     </div>
 </template>
 
 <script>
-import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
+import {LGeoJson, LMap, LMarker, LTileLayer} from 'vue2-leaflet';
 import fetchWithError from "../../script/fetchWithError";
+import {icon} from "leaflet";
 
 export default {
     name: "Leaflet",
     components: {
         LMap,
         LTileLayer,
+        LMarker,
         LGeoJson
     },
-    props: {},
+    props: {
+        center: {
+            type: Array,
+            default: () => [48.8737762014, 2.2950365488]
+        },
+        parcelleFound: {
+            type: String,
+            default: undefined
+        }
+    },
     data: () => ({
         url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         currentZoom: 18,
         bounds: null,
-        center: [0, 0],
         data: null,
         selectedList: []
     }),
     methods: {
+        invalidate () {
+            // console.log('invalidated')
+            this.$refs.leafletParcelles.mapObject.invalidateSize()
+        },
         crippleMap (map) {
             map.zoomControl.disable()
             map.touchZoom.disable()
@@ -68,8 +84,6 @@ export default {
                 .then(stream => stream.json())
                 .then(data => {
 
-                    this.center = [48.917351, 2.443221]
-
                     this.data = {
                         parcelles: data.entity
                     }
@@ -101,9 +115,22 @@ export default {
 
                 this.$emit('parcelleselected', this.selectedList)
             });
+
+            this.$emit('parcelleselected', this.selectedList)
         }
     },
     computed: {
+        createAdresseIcon () {
+            return icon({
+                iconUrl: '/images/leaflet/adresse.svg',
+                shadowUrl: '/images/leaflet/shadow.png',
+                iconSize: [35, 35], // width and height of the image in pixels
+                shadowSize: [30, 22], // width, height of optional shadow image
+                iconAnchor: [17, 35], // point of the icon which will correspond to marker's location
+                shadowAnchor: [0, 24],  // anchor point of the shadow. should be offset
+                popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+            })
+        },
         parcellesOptions () {
             return {
                 onEachFeature: this.onEachFeatureFunction,
@@ -141,11 +168,17 @@ export default {
             };
         }
     },
+    watch: {
+        parcelleFound: function () {
+            if (this.parcelleFound && this.parcelleFound !== '') {
+                this.selectedList = [this.parcelleFound]
+            } else this.selectedList = []
+        }
+    },
     mounted () {
         this.$nextTick(() => {
 
             const map = this.$refs.leafletParcelles.mapObject
-            // this.crippleMap(map)
 
             map.on('moveend', () => {
                 this.updateParcelles(map.getCenter().lng, map.getCenter().lat)
@@ -155,7 +188,7 @@ export default {
             })
         })
 
-        this.updateParcelles(2.443221, 48.917351)
+        this.updateParcelles(this.center[0], this.center[1])
     }
 }
 </script>

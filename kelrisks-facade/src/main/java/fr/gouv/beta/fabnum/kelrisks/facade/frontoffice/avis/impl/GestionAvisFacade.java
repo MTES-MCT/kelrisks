@@ -4,6 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.commun.utils.GeoJsonUtils;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.AbstractLocalisationAvecPrecision;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ArgileDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
@@ -13,6 +14,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasD
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionArgileFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeoDataGouvFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
@@ -23,10 +25,12 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanP
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedTRI;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoAssiettePaginatedFeatures;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoGenerateurPaginatedFeatures;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums.PrecisionEnum;
@@ -69,6 +73,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionCommuneFacade                     gestionCommuneFacade;
     @Autowired
     IGestionParcelleFacade                    gestionParcelleFacade;
+    @Autowired
+    IGestionArgileFacade                      gestionArgileFacade;
     @Autowired
     IGestionGeorisquesFacade                  gestionGeorisquesFacade;
     @Autowired
@@ -121,12 +127,12 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             }
             parcelleDTO = parcelleDTOS.get(0);
         }
-    
+        
         Point<?> centroid = (Point<?>) gestionParcelleFacade.rechercherCentroidParcelle(parcelleDTO.getMultiPolygon());
-    
+        
         avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                  Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
-    
+        
         return getAvisFromParcelle(avisDTO, parcelleDTO, centroid, communeDTO, nomProprietaire);
     }
     
@@ -171,21 +177,27 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             });
         }
         else { parcelleSitesSolsPolues.add(parcelleDTO.getMultiPolygon()); }
-        
+    
         getAvisBasias(avisDTO, parcelleDTO.getMultiPolygon(), parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, nomProprietaire, communeDTO.getCodeINSEE());
-        
+    
         getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-        
+    
         getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-        
+    
         getAvisSis(avisDTO, centroid);
     
         getAvisPPR(avisDTO, parcelleSitesSolsPolues, centroid, communeDTO.getCodeINSEE());
-        
+    
+        getAvisAZI(avisDTO, communeDTO.getCodeINSEE());
+    
+        getAvisTRI(avisDTO, communeDTO.getCodeINSEE());
+    
+        getAvisArgile(avisDTO, parcelleDTO.getMultiPolygon());
+    
         getAvisSismicite(avisDTO, communeDTO.getCodeINSEE());
-        
+    
         getAvisRadon(avisDTO, communeDTO.getCodeINSEE());
-        
+    
         return avisDTO;
     }
     
@@ -246,11 +258,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                             // être faite via l'API GpU
                             .findFirst()
                             .ifPresent(generateur -> {
-                                SimpleEntry<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
-                        
-                                if (gasparGeoJsonPair != null) {
-                                    avisDTO.getLeaflet().getPpr().add(gasparGeoJsonPair.getValue());
-                                    planPreventionRisquesList.add(gasparGeoJsonPair.getKey());
+                                PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
+    
+                                if (gaspar != null) {
+                                    planPreventionRisquesList.add(gaspar);
                                 }
                             });
                 }
@@ -266,11 +277,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                     // multiplicité des sources
                     .forEach(ppr -> {
     
-                        SimpleEntry<PlanPreventionRisquesGasparDTO, String> gasparGeoJsonPair = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
+                        PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
     
-                        if (gasparGeoJsonPair != null) {
-                            avisDTO.getLeaflet().getPpr().add(gasparGeoJsonPair.getValue());
-                            planPreventionRisquesList.add(gasparGeoJsonPair.getKey());
+                        if (gaspar != null) {
+                            planPreventionRisquesList.add(gaspar);
                         }
                     });
         }
@@ -278,7 +288,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         avisDTO.setPlanPreventionRisquesDTOs(planPreventionRisquesList);
     }
     
-    private SimpleEntry<PlanPreventionRisquesGasparDTO, String> getGaspar(String codeINSEE, String idGaspar, Geometry<?> geometry) {
+    private PlanPreventionRisquesGasparDTO getGaspar(String codeINSEE, String idGaspar, Geometry<?> geometry) {
         
         PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
         planPreventionRisquesGasparQO.setIdGaspar(idGaspar);
@@ -294,7 +304,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                        new SimpleEntry<>("approuvéLe", sdf.format(gaspars.get(0).getDateApprobation())))
                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             
-            return new SimpleEntry<>(gaspars.get(0), GeoJsonUtils.toGeoJson(geometry, properties));
+            PlanPreventionRisquesGasparDTO planPreventionRisquesGasparDTO = gaspars.get(0);
+            planPreventionRisquesGasparDTO.setAssiette(GeoJsonUtils.toGeoJson(geometry, properties));
+            
+            return planPreventionRisquesGasparDTO;
         }
         
         return null;
@@ -309,12 +322,43 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         }
     }
     
+    private void getAvisArgile(AvisDTO avisDTO, Geometry<?> parcelle) {
+        
+        List<ArgileDTO> argileDTOs = gestionArgileFacade.rechercherLentillesDansPolygon(parcelle);
+        
+        for (ArgileDTO argileDTO : argileDTOs) {
+            if (avisDTO.getLentillesArgile() == null ||
+                avisDTO.getLentillesArgile().getNiveauAlea() < argileDTO.getNiveauAlea()) {
+                
+                avisDTO.setLentillesArgile(argileDTO);
+            }
+        }
+    }
+    
     private void getAvisRadon(AvisDTO avisDTO, String codeINSEE) {
         
         GeorisquePaginatedRadon georisquePaginatedRadon = gestionGeorisquesFacade.rechercherRadonCommune(codeINSEE);
         
         if (!georisquePaginatedRadon.getData().isEmpty()) {
             avisDTO.setClassePotentielRadon(Integer.parseInt(georisquePaginatedRadon.getData().get(0).getClasse_potentiel()));
+        }
+    }
+    
+    private void getAvisTRI(AvisDTO avisDTO, String codeINSEE) {
+        
+        GeorisquePaginatedTRI georisquePaginatedRadon = gestionGeorisquesFacade.rechercherTRICommune(codeINSEE);
+        
+        if (!georisquePaginatedRadon.getData().isEmpty()) {
+            avisDTO.setTRIs(georisquePaginatedRadon.getData());
+        }
+    }
+    
+    private void getAvisAZI(AvisDTO avisDTO, String codeINSEE) {
+        
+        GeorisquePaginatedAZI georisquePaginatedRadon = gestionGeorisquesFacade.rechercherAZICommune(codeINSEE);
+        
+        if (!georisquePaginatedRadon.getData().isEmpty()) {
+            avisDTO.setAZIs(georisquePaginatedRadon.getData());
         }
     }
     

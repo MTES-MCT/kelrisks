@@ -112,8 +112,7 @@
                 </a>
 
                 <nav>
-                    <ul class="nav__links">
-                    </ul>
+                    <ul class="nav__links"></ul>
                 </nav>
             </div>
         </header>
@@ -132,6 +131,11 @@
 
         <main id="main"
               role="main">
+
+            <div id="bullet-progress-bar_wrapper">
+                <bullet-progress-bar :current-step="flow.index - 1"
+                                     :steps="['Rechercher une parcelle', 'Afficher de résultat', 'Compléter l\'état des risques et Pollutions', 'Télécharger']"/>
+            </div>
 
             <search-form-parcelle @avis="avis = $event"
                                   @cgu="$refs.cgu.open()"
@@ -156,23 +160,26 @@
 
         </main>
 
-        <how-to class="clearfix container"
+        <how-to class="clearfix"
                 v-show="flow.index <= 2"/>
+
+        <e-r-p class="clearfix"
+               v-show="flow.index <= 2"/>
 
         <footer>
             <div>
+                <c-g-u ref="cgu"/>
+                <who-are-we ref="haw"/>
                 <div class="column">
-                    <who-are-we ref="haw"/>
+                    <img alt="Fabrique Numérique - Ministère de la Transition Écologique et Solidaire"
+                         height="175"
+                         src="/images/logo-fabriquenumerique.svg"
+                         width="175">
+                </div>
+                <div class="column">
                     <a @click="$refs.haw.open()">Qui sommes nous ?</a>
-                </div>
-                <div class="column">
-                    <c-g-u ref="cgu"/>
                     <a @click="$refs.cgu.open()">CGU</a>
-                </div>
-                <div class="column">
                     <a @click="showStats()">Stats</a>
-                </div>
-                <div class="column">
                     <a href="/swagger-ui.html">API</a>
                 </div>
             </div>
@@ -205,6 +212,8 @@ import SearchFormParcelle from '../components/content/search/SearchFormParcelle'
 import SearchResults from '../components/content/search/SearchResults'
 import Stats from '../components/content/Stats'
 import fetchWithError from '../script/fetchWithError'
+import BulletProgressBar from "./content/BulletProgressBar";
+import ERP from "./content/ERP";
 
 export default {
     name: 'Kelrisks',
@@ -232,6 +241,8 @@ export default {
         }
     }),
     components: {
+        ERP,
+        BulletProgressBar,
         Stats,
         SearchResults,
         SearchFormParcelle,
@@ -297,9 +308,9 @@ export default {
 
 <style>
     html, body {
-        height           : 100%;
-        background-color : #FAFAFA;
+        background-color : #FFFFFF;
         font-family      : 'Nunito Sans', sans-serif;
+        height           : 100%;
     }
 
     body {
@@ -307,12 +318,11 @@ export default {
     }
 
     .title {
-        margin-top    : 0;
-        font-weight   : 900;
-        font-size     : 1.7em;
-        color         : #53657D;
-        margin-bottom : 20px;
-        text-align    : center;
+        color       : #26353F;
+        font-size   : 1.7em;
+        font-weight : 900;
+        margin      : 20px;
+        text-align  : center;
     }
 
     .subtitle {
@@ -354,6 +364,12 @@ export default {
         height : 12vh;
     }
 
+    #bullet-progress-bar_wrapper {
+        background-color : white;
+        padding          : 100px 12.5% 0;
+        width            : 100%;
+    }
+
     p.note {
         font-size : 1em; color : #555555;
     }
@@ -367,9 +383,27 @@ export default {
         color : #777777;
     }
 
-    section.section {
-        position       : relative;
-        padding-bottom : 25px;
+    .container-grey {
+        background-color : #EBEFF3;
+        width            : 100%;
+    }
+
+    .section {;
+        font-family    : 'Nunito Sans', sans-serif;
+        font-size      : 16px;
+        font-stretch   : normal;
+        font-style     : normal;
+        font-weight    : normal;
+        letter-spacing : normal;
+        line-height    : normal;
+        padding        : 30px 40px 0;
+        text-align     : left;
+    }
+
+    @media (min-width : 1000px) {
+        .section {
+            padding : 30px 140px 0;
+        }
     }
 
     .section__subtitle {
@@ -420,20 +454,31 @@ export default {
     }
 
     footer {
-        /*border-top: #CCCCCC solid 1px;*/
-        width  : 60%;
-        margin : 30px auto;
+        background-color : #26353F;
+        color            : #838383;
+        margin           : 30px auto;
+        padding          : 20px 10%;
     }
 
     footer a {
+        color           : #FFFFFF;
         text-decoration : none;
-        /*color           : #2C3E50;*/
     }
 
     footer .column {
         float   : left;
-        padding : 15px;
-        width   : 25%;
+        margin  : 0;
+        padding : 0 15%;
+        width   : 50%;
+    }
+
+    footer .column a {
+        clear : both;
+        float : left;
+    }
+
+    footer .column a:first-child {
+        margin-top : 38px;
     }
 
     footer .column:nth-last-child(n+2) {
@@ -441,6 +486,7 @@ export default {
     }
 
     #version {
+        clear       : both;
         font-family : "Bradley Hand ITC", Arial, sans-serif;
         padding-top : 65px;
     }
@@ -451,8 +497,8 @@ export default {
     .bouton:visited {
         background-color : #0053B3;
         border           : 0;
-        border-bottom    : solid 3px #003B80;
-        border-radius    : 2px;
+        /*border-bottom    : solid 3px #003B80;*/
+        border-radius    : 4px;
         color            : #FFFFFF;
         display          : block;
         float            : left;
@@ -466,11 +512,29 @@ export default {
         transition       : background-color .25s ease;
     }
 
+    .bouton.success,
+    .bouton.success:active,
+    .bouton.success:focus,
+    .bouton.success:visited {
+        background-color : #03BD5B;
+        border-color     : #039347;
+    }
+
     .bouton:hover {
         background-color : #003B80;
-        border-bottom    : solid 3px #003B80;
-        border-radius    : 2px;
+        /*border-bottom    : solid 3px #003B80;*/
         color            : #FFFFFF;
+    }
+
+    .bouton.success:hover {
+        background-color : #039347;
+    }
+
+    .bouton:disabled {
+        background-color : #8393A7;
+        border           : 0;
+        /*border-bottom    : solid 3px #4A535E;*/
+        cursor           : not-allowed;
     }
 
     .lien {
@@ -499,5 +563,11 @@ export default {
     .bouton svg {
         color  : #FFFFFF;
         margin : 0 10px 0 0;
+    }
+
+    .button svg.end,
+    .bouton svg.end {
+        color  : #FFFFFF;
+        margin : 0 0 0 10px;
     }
 </style>
