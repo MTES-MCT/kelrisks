@@ -43,7 +43,10 @@ export default {
         currentZoom: 18,
         bounds: null,
         data: null,
-        selectedList: []
+        selectedList: [],
+        env: {
+            apiPath: process.env.VUE_APP_API_PATH
+        }
     }),
     methods: {
         invalidate () {
