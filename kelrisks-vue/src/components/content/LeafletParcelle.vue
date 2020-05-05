@@ -80,7 +80,7 @@ export default {
         },
         updateParcelles (x, y) {
 
-            fetchWithError("http://localhost:8080/api/cadastre/" + x + "/" + y, null, 1000 * 10)
+            fetchWithError(this.env.apiPath + "cadastre/" + x + "/" + y, null, 1000 * 10)
                 .then(stream => stream.json())
                 .then(data => {
 

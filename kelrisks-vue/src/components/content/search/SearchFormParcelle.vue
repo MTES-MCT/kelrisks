@@ -152,7 +152,7 @@ export default {
                 this.leaflet.center = [parseFloat(option['geometry']['coordinates']['1']), parseFloat(option['geometry']['coordinates']['0'])]
                 this.showLeaflet(true)
 
-                fetchWithError("http://localhost:8080/api/cadastre/proximite/" + option['geometry']['coordinates']['0'] + "/" + option['geometry']['coordinates']['1'], null, 1000 * 10)
+                fetchWithError(this.env.apiPath + "cadastre/proximite/" + option['geometry']['coordinates']['0'] + "/" + option['geometry']['coordinates']['1'], null, 1000 * 10)
                     .then(stream => stream.json())
                     .then(data => {
                         if (data.entity) {
@@ -192,7 +192,7 @@ export default {
 
             if (this.form.codeInsee && this.form.codeParcelle && this.form.codeParcelle.length >= 2) {
 
-                fetchWithError("http://localhost:8080/api/cadastre/match/" + this.form.codeInsee + "/" + this.form.codeParcelle, null, 1000 * 10)
+                fetchWithError(this.env.apiPath + "cadastre/match/" + this.form.codeInsee + "/" + this.form.codeParcelle, null, 1000 * 10)
                     .then(stream => stream.json())
                     .then(data => {
 
