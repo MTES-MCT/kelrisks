@@ -503,7 +503,7 @@ export default {
             return this.avis.potentielRadon === 2
         },
         hasArgile: function () {
-            return this.avis.lentillesArgile !== undefined
+            return this.avis.lentillesArgile !== undefined && this.avis.lentillesArgile !== null
         },
         hasSismisiteHaute: function () {
             return this.avis.codeSismicite >= 3
