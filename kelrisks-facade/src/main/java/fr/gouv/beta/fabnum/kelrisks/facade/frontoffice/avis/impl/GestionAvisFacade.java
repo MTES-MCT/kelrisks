@@ -299,32 +299,36 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private void getAvisCanalisations(AvisDTO avisDTO, Point<?> centroid) {
-        
+    
         BRGMPaginatedCanalisation brgmPaginatedCanalisation =
                 gestionBRGMFacade.rechercherCanalisationsCoordonnees(String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                      String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())),
                                                                      500);
-        
-        brgmPaginatedCanalisation.getFeatures().forEach(canalisation -> avisDTO.getGeogCanalisations().add(canalisation.getGeometry()));
+    
+        if (brgmPaginatedCanalisation != null) {
+            brgmPaginatedCanalisation.getFeatures().forEach(canalisation -> avisDTO.getGeogCanalisations().add(canalisation.getGeometry()));
+        }
     }
     
     private void getAvisInstallationsNucleaires(AvisDTO avisDTO, Point<?> centroid) {
-        
+    
         BRGMPaginatedInstallationNuclaire brgmPaginatedInstallationNuclaire =
                 gestionBRGMFacade.rechercherInstallationsNucleairesCoordonnees(String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                                String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())),
                                                                                20000);
-        
+    
         List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
-        
-        brgmPaginatedInstallationNuclaire.getFeatures().forEach(installationNucleaire -> {
+    
+        if (brgmPaginatedInstallationNuclaire != null) {
+            brgmPaginatedInstallationNuclaire.getFeatures().forEach(installationNucleaire -> {
             
-            InstallationNucleaireDTO installationNucleaireDTO = new InstallationNucleaireDTO();
-            installationNucleaireDTO.setNomInstallation(installationNucleaire.getProperties().getNom_inst());
-            installationNucleaireDTO.setLibCommune(installationNucleaire.getProperties().getNom_com());
-            installationNucleaireDTOS.add(installationNucleaireDTO);
-        });
-        
+                InstallationNucleaireDTO installationNucleaireDTO = new InstallationNucleaireDTO();
+                installationNucleaireDTO.setNomInstallation(installationNucleaire.getProperties().getNom_inst());
+                installationNucleaireDTO.setLibCommune(installationNucleaire.getProperties().getNom_com());
+                installationNucleaireDTOS.add(installationNucleaireDTO);
+            });
+        }
+    
         avisDTO.setInstallationNucleaireDTOS(installationNucleaireDTOS);
     }
     
