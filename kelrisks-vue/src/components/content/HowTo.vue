@@ -52,14 +52,17 @@ export default {
     name: 'HowTo',
     mounted: function () {
         window.addEventListener('resize', this.handleResize)
+        this.handleResize()
     },
     beforeDestroy: function () {
         window.removeEventListener('resize', this.handleResize)
     },
     methods: {
         handleResize () {
+            console.log('handleResize')
             let width = $('#howto_wrapper div.box:first').width()
-            $('#howto_wrapper svg').css('font-size', width / 247 * 3 + 'em')
+            let imgHW = width / 247 * 4.51 + 'em'
+            $('#howto_wrapper img').css('width', imgHW).css('height', imgHW)
             $('#howto_wrapper p').css('font-size', width / 247 + 'em').css('line-height', width / 247 * 1.5 + 'em')
             $('#howto_wrapper p.subtext').css('font-size', width / 247 * 0.75 + 'em')
         }

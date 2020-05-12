@@ -302,7 +302,6 @@
                                       '- des terrains pollués affectés d’une servitude d’utilité publique.</p>'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
-                    style="width: calc(100% - 40px);"
                     v-if="!hasPollutionPrincipale"/>
 
             <risque :center="leaflet.center"
