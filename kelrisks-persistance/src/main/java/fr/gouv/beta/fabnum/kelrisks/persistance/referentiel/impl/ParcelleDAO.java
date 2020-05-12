@@ -56,9 +56,9 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     }
     
     @Override
-    public Geometry<?> rechercherExpendedParcelle(String code, double distance) {
-        
-        String wkt = parcelleRepository.rechercherExpendedParcelle(code, distance);
+    public Geometry<?> rechercherExpendedParcelle(Geometry<?> parcelleGeog, double distance) {
+    
+        String wkt = parcelleRepository.rechercherExpendedParcelle(parcelleGeog, distance);
         return Wkt.fromWkt(wkt);
     }
     
@@ -95,7 +95,7 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     
     @Override
     public Geometry<?> rechercherParcellesIntersectionnantSurface(Geometry<?> polygon) {
-        
+    
         return Wkt.fromWkt(parcelleRepository.rechercherParcellesIntersectionnantSurface(polygon));
     }
     
@@ -103,6 +103,12 @@ public class ParcelleDAO extends AbstractDAO<Parcelle> implements IParcelleDAO {
     public List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius) {
         
         return parcelleRepository.rechercherParcellesDansRayon(x, y, radius);
+    }
+    
+    @Override
+    public Geometry<?> rechercherUnionParcelles(List<Long> ids) {
+        
+        return Wkt.fromWkt(parcelleRepository.rechercherUnionParcelles(ids));
     }
     
     @Override

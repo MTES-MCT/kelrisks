@@ -17,7 +17,7 @@ public interface IGestionParcelleFacade {
     
     ParcelleDTO rechercherParcelleAvecCoordonnees(double x, double y);
     
-    Geometry<?> rechercherExpendedParcelle(String code, double distance);
+    Geometry<?> rechercherExpendedParcelle(Geometry<?> parcelleGeom, double distance);
     
     Geometry<?> rechercherUnionParcellesContigues(Geometry<?> multiPolygon);
     
@@ -26,4 +26,6 @@ public interface IGestionParcelleFacade {
     ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry<?> polygon);
     
     List<ParcelleDTO> rechercherParcellesDansRayon(double x, double y, double radius);
+    
+    Geometry<?> rechercherUnionParcelles(List<Long> ids);
 }

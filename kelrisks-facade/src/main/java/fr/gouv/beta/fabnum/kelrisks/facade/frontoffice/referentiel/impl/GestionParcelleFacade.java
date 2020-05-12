@@ -52,9 +52,9 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     }
     
     @Override
-    public Geometry<?> rechercherExpendedParcelle(String code, double distance) {
-        
-        return parcelleService.rechercherExpendedParcelle(code, distance / 100000D);
+    public Geometry<?> rechercherExpendedParcelle(Geometry<?> parcelleGeog, double distance) {
+    
+        return parcelleService.rechercherExpendedParcelle(parcelleGeog, distance / 100000D);
     }
     
     @Override
@@ -71,7 +71,7 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     
     @Override
     public ParcelleDTO rechercherParcellesIntersectionnantSurface(Geometry<?> polygon) {
-        
+    
         return parcelleMapper.toDTO(parcelleService.rechercherParcellesIntersectionnantSurface(polygon));
     }
     
@@ -79,5 +79,11 @@ public class GestionParcelleFacade extends AbstractFacade implements IGestionPar
     public List<ParcelleDTO> rechercherParcellesDansRayon(double x, double y, double radius) {
         
         return parcelleMapper.toDTOs(parcelleService.rechercherParcellesDansRayon(x, y, radius));
+    }
+    
+    @Override
+    public Geometry<?> rechercherUnionParcelles(List<Long> ids) {
+        
+        return parcelleService.rechercherUnionParcelles(ids);
     }
 }

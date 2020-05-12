@@ -15,7 +15,7 @@ public interface IParcelleDAO extends IAbstractDAO<Parcelle> {
     
     Parcelle rechercherClosestParcelleAvecPoint(Geometry<?> point);
     
-    Geometry<?> rechercherExpendedParcelle(String code, double distance);
+    Geometry<?> rechercherExpendedParcelle(Geometry<?> parcelleGeom, double distance);
     
     List<Parcelle> rechercherParcellesContigues(Geometry<?> point);
     
@@ -28,5 +28,7 @@ public interface IParcelleDAO extends IAbstractDAO<Parcelle> {
     Geometry<?> rechercherParcellesIntersectionnantSurface(Geometry<?> polygon);
     
     List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius);
+    
+    Geometry<?> rechercherUnionParcelles(List<Long> ids);
 }
   

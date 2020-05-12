@@ -13,7 +13,7 @@ import org.geolatte.geom.Geometry;
  */
 public interface ISiteSolPolueService extends IAbstractCRUDService<SiteSolPolue> {
     
-    List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle);
+    List<SiteSolPolue> rechercherZoneContenantParcelle(Geometry<?> parcelleGeog);
     
     List<SiteSolPolue> rechercherZoneContenantPolygon(Geometry<?> geometry);
 }

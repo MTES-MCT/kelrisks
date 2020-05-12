@@ -67,28 +67,26 @@ public class AvisDTO extends JsonInfoDTO {
         private CommuneDTO commune;
         
         private String codeParcelle = "";
-        
-        private String nomProprietaire = "";
     }
     
     @Data
     public static class Leaflet {
     
-        private Point        center   = new Point();
-        private String       parcelle = "";
-        private String       adresse  = "";
-        private List<String> basias   = new ArrayList<>();
-        private List<String> basol    = new ArrayList<>();
-        private List<String> sis      = new ArrayList<>();
-        private List<String> icpe     = new ArrayList<>();
-        private List<String> ssp      = new ArrayList<>();
-        
+        private Point        center    = new Point();
+        private List<String> parcelles = new ArrayList<>();
+        private String       adresse   = "";
+        private List<String> basias    = new ArrayList<>();
+        private List<String> basol     = new ArrayList<>();
+        private List<String> sis       = new ArrayList<>();
+        private List<String> icpe      = new ArrayList<>();
+        private List<String> ssp       = new ArrayList<>();
+    
         @Data
         public static class Point {
-            
+        
             String x = "";
             String y = "";
-            
+        
             public Point() {
             
             }

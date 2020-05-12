@@ -19,7 +19,7 @@
             <!--                        :options="icpeOptions"-->
             <!--                        :options-style="icpeStyleFunction"/>-->
             <!--            <l-geo-json :geojson="parseJSONMap(data.ssp)"/>-->
-            <l-geo-json :geojson="parseJSON(data.parcelle)"
+            <l-geo-json :geojson="parseJSONMap(data.parcelles)"
                         :options="parcelleOptions"
                         :options-style="parcelleStyleFunction"
                         :ref="'parcelle_' + reference"/>
@@ -73,11 +73,11 @@ export default {
             map.dragging.disable()
         },
         centerMap (map) {
-            map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 17});
+            map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
         },
         parseJSON (data) {
             // console.log(data)
-            if (data !== '') {
+            if (data !== '' && data !== undefined) {
                 return JSON.parse(data)
             }
             return {
@@ -87,7 +87,7 @@ export default {
         },
         parseJSONMap (data) {
             // console.log(data)
-            if (data !== '') {
+            if (data !== '' && data !== undefined) {
                 return data.map(x => JSON.parse(x))
             }
             return {

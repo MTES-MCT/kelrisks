@@ -134,7 +134,7 @@
 
             <div id="bullet-progress-bar_wrapper">
                 <bullet-progress-bar :current-step="flow.index - 1"
-                                     :steps="['Rechercher une parcelle', 'Afficher de résultat', 'Compléter l\'état des risques et Pollutions', 'Télécharger']"/>
+                                     :steps="['Rechercher une parcelle', 'Afficher le résultat', 'Compléter l\'état des risques et Pollutions', 'Télécharger']"/>
             </div>
 
             <search-form-parcelle @avis="avis = $event"

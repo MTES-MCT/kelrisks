@@ -1,6 +1,8 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
+import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
@@ -47,10 +49,18 @@ public class ApiRestBasias extends AbstractBasicApi {
                                 @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                 @PathVariable("codeParcelle") String codeParcelle) {
     
-        List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
+        ParcelleDTO parcelleDTO = getParcelleDTO(codeINSEE, codeParcelle);
+    
+        if (parcelleDTO == null) {
+            JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
+            jsonInfoDTO.addError("Aucune parcelle n'a été trouvé avec le code INSEE / code Parcelle fourni");
+            return Response.ok(jsonInfoDTO).build();
+        }
+    
+        List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcelleDTO.getMultiPolygon());
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs =
                 gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(siteSolPolueDTO.stream().map(SiteSolPolueDTO::getMultiPolygon).collect(Collectors.toList()));
-        
+    
         return Response.ok(siteIndustrielBasiasDTOs).build();
     }
     

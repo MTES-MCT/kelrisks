@@ -4,7 +4,7 @@
              style="margin-bottom: 40px">
         <div class="container">
             <div class="panel noborder">
-                <h3 class="">Localiser votre bien pour préparer votre EPR « État des Risques et Pollutions »</h3>
+                <h3 class="">Localisez votre bien pour réaliser votre État des risques Réglementés,<br/>Information des Acquéreurs et des Locataires (ERRIAL)</h3>
 
                 <errors ref="searchErrors"/>
 
@@ -172,12 +172,6 @@ export default {
             this.form.codeParcelle = value
             this.checkAndGetParcelles()
         },
-        onNomProprietaireSelected (value) {
-            this.form.codeProprio = value.code
-        },
-        onNomProprietaireChanged (value) {
-            this.form.codeProprio = value.code
-        },
         onCodePostalSelected (option) {
             this.form.codeInsee = option['properties']['citycode']
             this.checkAndGetParcelles()
@@ -227,6 +221,10 @@ export default {
 </script>
 
 <style scoped>
+
+    h3 {
+        text-align : center;
+    }
 
     .container {
         max-width : unset;
