@@ -174,23 +174,16 @@
                     <p>http://www.planseisme.fr/Regles-parasismiques-applicables-aux-batiments-a-risque.html#existant).</p>
                 </template>
 
-                <template v-if="hasRadonMoyen || hasRadonHaut">
+                <template v-if="hasRadonHaut">
                     <h4 id="recommendations_radon">Radon</h4>
-                    <template v-if="hasRadonHaut">
-                        <p>Le bien est situé dans une zone à potentiel radon significatif. Il donc est fortement recommandé de procéder au mesurage du radon dans le bien afin de s'assurer que sa
-                           concentration est inférieure au niveau de référence fixé à 300 Bq/m3, et idéalement la plus basse raisonnablement possible. Il est conseillé de faire appel à des
-                           professionnels du bâtiment pour réaliser un diagnostic de la situation et vous aider à choisir les solutions les plus adaptées selon le type de logement et la mesure. Ces
-                           solutions peuvent être mises en œuvre progressivement en fonction des difficultés de réalisation ou de leur coût. À l’issue des travaux, vous devrez réaliser de nouvelles
-                           mesures de radon pour vérifier leur efficacité.</p>
-                        <p>Une fiche d'informations sur le radon, le risque associé, son mesurage, les solutions techniques et les recommandations à suivre en fonction des résultats du mesurage est
-                           disponible : </p>
-                        <p>http://www.georisques.gouv.fr/sites/default/files/2018-Fiche%20d_information_sur_le_risque_potentiel_radon_DHUP-DGS-DGPR_102018_v3.pdf</p>
-                    </template>
-                    <template v-if="hasRadonMoyen">
-                        <p>En plus des bonnes pratiques de qualité de l'air (aérer quotidiennement le logement par ouverture des fenêtres au moins 10 minutes par jour, ne pas obstruer les systèmes de
-                           ventilation), il est recommandé de mettre en œuvre des solutions techniques pour réduire l’exposition au radon dans votre habitation. A l’issue des travaux, vous devrez
-                           réaliser de nouvelles mesures pour vérifier leur efficacité.</p>
-                    </template>
+                    <p>Le bien est situé dans une zone à potentiel radon significatif. Il donc est fortement recommandé de procéder au mesurage du radon dans le bien afin de s'assurer que sa
+                       concentration est inférieure au niveau de référence fixé à 300 Bq/m3, et idéalement la plus basse raisonnablement possible. Il est conseillé de faire appel à des
+                       professionnels du bâtiment pour réaliser un diagnostic de la situation et vous aider à choisir les solutions les plus adaptées selon le type de logement et la mesure. Ces
+                       solutions peuvent être mises en œuvre progressivement en fonction des difficultés de réalisation ou de leur coût. À l’issue des travaux, vous devrez réaliser de nouvelles
+                       mesures de radon pour vérifier leur efficacité.</p>
+                    <p>Une fiche d'informations sur le radon, le risque associé, son mesurage, les solutions techniques et les recommandations à suivre en fonction des résultats du mesurage est
+                       disponible : </p>
+                    <p>http://www.georisques.gouv.fr/sites/default/files/2018-Fiche%20d_information_sur_le_risque_potentiel_radon_DHUP-DGS-DGPR_102018_v3.pdf</p>
                 </template>
 
                 <template v-if="hasPollutionPrincipale">
