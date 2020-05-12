@@ -113,7 +113,7 @@
                     :title="'Sismisité'"
                     v-if="hasSismisiteMoyenne"/>
 
-            <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments. Il a été reconnu cancérigène pulmonaire certain pour l’homme depuis 1987 par le centre international de recherche sur le cancer (CIRC) de l’Organisation mondiale pour la santé (OMS). En savoir plus sur le radon<br/>'+
+            <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.<br/>'+
                                   '<a href=\'#recommendations_radon\'>Lire les recommandations</a>'"
                     :level="avis.potentielRadon"
                     :level-max="3"
@@ -149,12 +149,12 @@
 
             <div class="recommandations_wrapper">
 
-                <p>Pourquoi l'État des risques est important ? A chaque vente ou location d'un bien, le propriétaire est tenu d'informer l’acquéreur ou le locataire de son bien immobilier (bâti et non
-                   bâti) de l'état des risques et pollutions de ce dernier. Cette obligation d'information est prévue par la loi.</p>
-                <p>L'État des risques est pollution permet de faire un bilan des principaux risques pouvant affecter ce bien afin de bien informer les parties prenantes et de mettre en œuvre les
-                   mesures de protection éventuelles.</p><br/>
-                <p>Cet état des risques peut-être réalisé à partir des informations mises à disposition en mairie et sur les sites internet des préfectures ou via le site Kelrisks qui s'appuie sur les
-                   bases de données des services de l'État.</p>
+                <p>Pourquoi l'Etat des risques est important ?</p>
+                <p>A chaque vente ou location d'un bien, le propriétaire est tenu d'informer l’acquéreur ou le locataire de son bien immobilier (bâti et non bâti) de l'état des risques et pollutions
+                   auxquelles le bien immobilier est exposé. Cette obligation d'information est prévue par la loi du 30 juillet 2003. L'état des risques et pollutions doit dater de moins de six mois
+                   lors de la signature de l'acte de vente ou du bail.</p><br/>
+                <p>L'État des risques et pollution permet de faire un bilan des principaux risques pouvant affecter ce bien afin de bien informer les parties prenantes et de mettre en œuvre les
+                   mesures de protection éventuelles.</p>
 
                 <template v-if="hasPPR">
                     <h4 id="recommendations_PPR">Plans de Prévention des Risques</h4>
@@ -179,10 +179,9 @@
                     <template v-if="hasRadonHaut">
                         <p>Le bien est situé dans une zone à potentiel radon significatif. Il donc est fortement recommandé de procéder au mesurage du radon dans le bien afin de s'assurer que sa
                            concentration est inférieure au niveau de référence fixé à 300 Bq/m3, et idéalement la plus basse raisonnablement possible. Il est conseillé de faire appel à des
-                           professionnels
-                           du bâtiment pour réaliser un diagnostic de la situation et vous aider à choisir les solutions les plus adaptées selon le type de logement et la mesure. Ces solutions peuvent
-                           être mises en œuvre progressivement en fonction des difficultés de réalisation ou de leur coût. À l’issue des travaux, vous devrez réaliser de nouvelles mesures de radon
-                           pour vérifier leur efficacité.</p>
+                           professionnels du bâtiment pour réaliser un diagnostic de la situation et vous aider à choisir les solutions les plus adaptées selon le type de logement et la mesure. Ces
+                           solutions peuvent être mises en œuvre progressivement en fonction des difficultés de réalisation ou de leur coût. À l’issue des travaux, vous devrez réaliser de nouvelles
+                           mesures de radon pour vérifier leur efficacité.</p>
                         <p>Une fiche d'informations sur le radon, le risque associé, son mesurage, les solutions techniques et les recommandations à suivre en fonction des résultats du mesurage est
                            disponible : </p>
                         <p>http://www.georisques.gouv.fr/sites/default/files/2018-Fiche%20d_information_sur_le_risque_potentiel_radon_DHUP-DGS-DGPR_102018_v3.pdf</p>
@@ -215,8 +214,7 @@
 
             <div><span class="title">Autres risques ne faisant pas l'objet d'une obligation d'information</span></div>
 
-            <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments. Il a été reconnu cancérigène pulmonaire certain pour l’homme depuis 1987 par le centre international de recherche sur le cancer (CIRC) de l’Organisation mondiale pour la santé (OMS). En savoir plus sur le radon<br/>'+
-                                  '<a href=\'#recommendations_radon\'>Lire les recommandations</a>'"
+            <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
                     :level="avis.potentielRadon"
                     :level-max="3"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"

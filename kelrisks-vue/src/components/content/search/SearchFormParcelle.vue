@@ -4,7 +4,7 @@
              style="margin-bottom: 40px">
         <div class="container">
             <div class="panel noborder">
-                <h3 class="">Localiser votre bien pour préparer votre EPR « État des Risques et Pollutions »</h3>
+                <h3 class="">Localisez votre bien pour réaliser votre État des risques Réglementés,<br/>Information des Acquéreurs et des Locataires (ERRIAL)</h3>
 
                 <errors ref="searchErrors"/>
 
@@ -227,6 +227,10 @@ export default {
 </script>
 
 <style scoped>
+
+    h3 {
+        text-align : center;
+    }
 
     .container {
         max-width : unset;
