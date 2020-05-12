@@ -47,18 +47,18 @@ public class CadastreController extends AbstractBasicApi {
     
     @GetMapping("/api/cadastre/match/{insee}/{code}")
     public Response parcelleMatch(@PathVariable("insee") String insee, @PathVariable("code") String code) {
-        
+    
         if (StringUtils.isEmpty(insee) || StringUtils.isEmpty(code)) { return Response.ok(null).build(); }
-        
-        ParcelleDTO parcelle = getParcelle(insee, code);
-        if (parcelle != null) {
+    
+        List<ParcelleDTO> parcelles = getParcelles(insee, code);
+        if (parcelles != null && !parcelles.isEmpty()) {
             ParcelleWithCentroidDTO parcelleWithCentroid = new ParcelleWithCentroidDTO();
-            parcelleWithCentroid.setParcelle(parcelle);
+            parcelleWithCentroid.setParcelle(parcelles.get(0));
             Geometry<?> centroid = gestionParcelleFacade.rechercherCentroidParcelle(parcelleWithCentroid.getParcelle().getMultiPolygon());
             AvisDTO.Leaflet.Point point = new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                     Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())));
             parcelleWithCentroid.setCentroid(point);
-            
+        
             return Response.ok(parcelleWithCentroid).build();
         }
         

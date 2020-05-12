@@ -172,12 +172,6 @@ export default {
             this.form.codeParcelle = value
             this.checkAndGetParcelles()
         },
-        onNomProprietaireSelected (value) {
-            this.form.codeProprio = value.code
-        },
-        onNomProprietaireChanged (value) {
-            this.form.codeProprio = value.code
-        },
         onCodePostalSelected (option) {
             this.form.codeInsee = option['properties']['citycode']
             this.checkAndGetParcelles()

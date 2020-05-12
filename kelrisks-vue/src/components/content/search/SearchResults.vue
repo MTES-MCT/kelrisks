@@ -93,8 +93,8 @@
                         ['#FF8000', '3 - modéré'],
                         ['#E02B17', '4 - moyen'],
                         ['#840505', '5 - fort']]"
-                    :level="avis.codeSismicite"
-                    :level-max="5"
+                    :level="avis.codeSismicite + ''"
+                    :level-max="'5'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
                     :title="'Sismisité'"
                     v-if="hasSismisiteHaute"/>
@@ -107,16 +107,16 @@
                         ['#FF8000', '3 - modéré'],
                         ['#E02B17', '4 - moyen'],
                         ['#840505', '5 - fort']]"
-                    :level="avis.codeSismicite"
-                    :level-max="5"
+                    :level="avis.codeSismicite + ''"
+                    :level-max="'5'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
                     :title="'Sismisité'"
                     v-if="hasSismisiteMoyenne"/>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.<br/>'+
                                   '<a href=\'#recommendations_radon\'>Lire les recommandations</a>'"
-                    :level="avis.potentielRadon"
-                    :level-max="3"
+                    :level="avis.potentielRadon + ''"
+                    :level-max="'3'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
                     :title="'Radon'"
                     v-if="hasRadonHaut"/>
@@ -215,8 +215,8 @@
             <div><span class="title">Autres risques ne faisant pas l'objet d'une obligation d'information</span></div>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
-                    :level="avis.potentielRadon"
-                    :level-max="3"
+                    :level="avis.potentielRadon + ''"
+                    :level-max="'3'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
                     :title="'Radon'"
                     v-if="hasRadonMoyen"/>

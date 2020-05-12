@@ -19,7 +19,7 @@ public interface IParcelleService extends IAbstractCRUDService<Parcelle> {
     
     Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y);
     
-    Geometry<?> rechercherExpendedParcelle(String code, double distance);
+    Geometry<?> rechercherExpendedParcelle(Geometry<?> parcelleGeom, double distance);
     
     Geometry<?> rechercherUnionParcellesContigues(Geometry<?> polygon);
     
@@ -28,5 +28,7 @@ public interface IParcelleService extends IAbstractCRUDService<Parcelle> {
     Geometry<?> rechercherParcellesIntersectionnantSurface(Geometry<?> polygon);
     
     List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius);
+    
+    Geometry<?> rechercherUnionParcelles(List<Long> ids);
 }
   

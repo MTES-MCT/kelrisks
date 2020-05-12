@@ -53,9 +53,9 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     }
     
     @Override
-    public Geometry<?> rechercherExpendedParcelle(String code, double distance) {
-        
-        return dao.rechercherExpendedParcelle(code, distance);
+    public Geometry<?> rechercherExpendedParcelle(Geometry<?> parcelleGeog, double distance) {
+    
+        return dao.rechercherExpendedParcelle(parcelleGeog, distance);
     }
     
     @Override
@@ -72,7 +72,7 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     
     @Override
     public Geometry<?> rechercherParcellesIntersectionnantSurface(Geometry<?> polygon) {
-        
+    
         return dao.rechercherParcellesIntersectionnantSurface(polygon);
     }
     
@@ -80,6 +80,12 @@ public class ParcelleService extends AbstractCRUDService<Parcelle> implements IP
     public List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius) {
         
         return dao.rechercherParcellesDansRayon(x, y, radius);
+    }
+    
+    @Override
+    public Geometry<?> rechercherUnionParcelles(List<Long> ids) {
+        
+        return dao.rechercherUnionParcelles(ids);
     }
 }
   

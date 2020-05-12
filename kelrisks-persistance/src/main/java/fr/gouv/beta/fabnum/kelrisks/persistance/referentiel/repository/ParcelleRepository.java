@@ -33,9 +33,8 @@ public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
                    " LIMIT 1 ", nativeQuery = true)
     Parcelle rechercherClosestParcelleAvecCoordonnees(double x, double y);
     
-    @Query(value = "SELECT public.st_asewkt(public.st_buffer(p.geog, :distance)) FROM kelrisks.cadastre AS p" +
-                   " WHERE p.code = :code", nativeQuery = true)
-    String rechercherExpendedParcelle(String code, double distance);
+    @Query(value = "SELECT public.st_asewkt(public.st_buffer(:parcelleGeog, :distance))", nativeQuery = true)
+    String rechercherExpendedParcelle(Geometry<?> parcelleGeog, double distance);
     
     @Query(value = "SELECT public.st_asewkt(public.st_union(p.geog)) FROM kelrisks.cadastre AS p" +
                    " WHERE public.st_touches(p.geog, :geog)", nativeQuery = true)
@@ -52,5 +51,9 @@ public interface ParcelleRepository extends IAbstractRepository<Parcelle> {
                    " FROM kelrisks.cadastre AS p " +
                    " WHERE public.st_dwithin(public.st_setsrid(public.st_point(:x ,:y), 4326), p.geog, :radius)", nativeQuery = true)
     List<Parcelle> rechercherParcellesDansRayon(double x, double y, double radius);
+    
+    @Query(value = "SELECT public.st_asewkt(public.st_union(p.geog)) FROM kelrisks.cadastre AS p" +
+                   " WHERE p.id IN :ids", nativeQuery = true)
+    String rechercherUnionParcelles(List<Long> ids);
 }
   

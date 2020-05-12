@@ -59,23 +59,26 @@ export default {
         getAvis () {
             this.$refs.searchErrors.clearAll()
 
-            let parcelle = this.tinyUrl.codeParcelle ? this.tinyUrl.codeParcelle : this.form.codeParcelle
+            if (this.form.selectedParcellesList.length === 0) {
+                this.$refs.searchErrors.sendError('Merci de bien vouloir vérifier qu\'au moins une parcelle est sélectionnée sur la carte.')
+                return
+            }
+
+            let parcelle = this.form.selectedParcellesList.join(',')
             let insee = this.tinyUrl.codeInsee ? this.tinyUrl.codeInsee : this.form.codeInsee
             let nom = this.tinyUrl.nomAdresse ? this.tinyUrl.nomAdresse : this.form.nomAdresse
-            let geoloc = this.tinyUrl.geolocAdresse ? this.tinyUrl.geolocAdresse : this.form.geolocAdresse
-            let proprio = this.tinyUrl.codeProprio ? this.tinyUrl.codeProprio : this.form.codeProprio
 
-            if (!parcelle && !geoloc) {
+            if (!parcelle && !nom) {
                 this.$refs.searchErrors.sendError('Merci de bien vouloir choisir une rue/numéro ou entrer une parcelle.')
                 return
             }
 
-            if (parcelle && !insee && !geoloc) {
-                this.$refs.searchErrors.sendWarning('Dans le cas d\'une recherche par code parcelle, merci de choisir une commune parmi les résultats proposés dans le champ.')
-                return
-            }
+            // if (parcelle && !insee && !this.form.selectedParcellesList) {
+            //     this.$refs.searchErrors.sendWarning('Dans le cas d\'une recherche par code parcelle, merci de choisir une commune parmi les résultats proposés dans le champ.')
+            //     return
+            // }
 
-            let url = this.env.apiPath + 'avis?' + 'codeINSEE=' + insee + '&' + 'codeParcelle=' + parcelle + '&' + 'nomAdresse=' + nom + '&' + 'geolocAdresse=' + geoloc.replace(/\|/, '%7C') + '&' + 'nomProprietaire=' + proprio
+            let url = this.env.apiPath + 'avis?' + 'codeINSEE=' + insee + '&' + 'codeParcelle=' + parcelle + '&' + 'nomAdresse=' + nom
 
             this.querying = true
 

@@ -1,5 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
+import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import io.swagger.annotations.Api;
@@ -33,11 +35,19 @@ public class ApiSSP extends AbstractBasicApi {
                                         @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                         @PathVariable("codeParcelle") String codeParcelle) {
     
-        List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(getParcelleCode(codeINSEE, codeParcelle));
+        ParcelleDTO parcelleDTO = getParcelleDTO(codeINSEE, codeParcelle);
+    
+        if (parcelleDTO == null) {
+            JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
+            jsonInfoDTO.addError("Aucune parcelle n'a été trouvé avec le code INSEE / code Parcelle fourni");
+            return Response.ok(jsonInfoDTO).build();
+        }
+    
+        List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcelleDTO.getMultiPolygon());
     
         // TODO : com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Direct self-reference leading to cycle
         siteSolPolueDTO.forEach(siteSolPolueDTO1 -> siteSolPolueDTO1.setMultiPolygon(null));
-        
+    
         return Response.ok(siteSolPolueDTO).build();
     }
 }

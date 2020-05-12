@@ -8,7 +8,7 @@ import org.geolatte.geom.Geometry;
 
 public interface IGestionSiteSolPolueFacade {
     
-    List<SiteSolPolueDTO> rechercherZoneContenantParcelle(String codeParcelle);
+    List<SiteSolPolueDTO> rechercherZoneContenantParcelle(Geometry<?> parcelleGeog);
     
     List<SiteSolPolueDTO> rechercherZoneContenantPolygon(Geometry<?> geometry);
 }

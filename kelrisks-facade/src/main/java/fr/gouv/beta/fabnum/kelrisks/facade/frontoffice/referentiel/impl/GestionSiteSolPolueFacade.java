@@ -21,9 +21,9 @@ public class GestionSiteSolPolueFacade extends AbstractFacade implements IGestio
     ISiteSolPolueService siteSolPolueService;
     
     @Override
-    public List<SiteSolPolueDTO> rechercherZoneContenantParcelle(String codeParcelle) {
+    public List<SiteSolPolueDTO> rechercherZoneContenantParcelle(Geometry<?> parcelleGeog) {
     
-        return siteSolPolueMapper.toDTOs(siteSolPolueService.rechercherZoneContenantParcelle(codeParcelle));
+        return siteSolPolueMapper.toDTOs(siteSolPolueService.rechercherZoneContenantParcelle(parcelleGeog));
     }
     
     @Override

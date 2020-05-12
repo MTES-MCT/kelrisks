@@ -35,9 +35,9 @@ public class SiteSolPolueService extends AbstractCRUDService<SiteSolPolue> imple
     }
     
     @Override
-    public List<SiteSolPolue> rechercherZoneContenantParcelle(String codeParcelle) {
+    public List<SiteSolPolue> rechercherZoneContenantParcelle(Geometry<?> parcelleGeog) {
     
-        return dao.rechercherZoneContenantParcelle(codeParcelle);
+        return dao.rechercherZoneContenantParcelle(parcelleGeog);
     }
     
     @Override
