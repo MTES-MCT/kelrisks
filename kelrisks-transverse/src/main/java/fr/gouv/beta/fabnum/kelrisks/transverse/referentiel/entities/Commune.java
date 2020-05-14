@@ -12,10 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.geolatte.geom.Geometry;
+
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "adresse_commune")
+@Table(name = "commune")
 public class Commune extends AbstractEntity {
     
     @Column(name = "code_insee")
@@ -26,6 +28,9 @@ public class Commune extends AbstractEntity {
     
     @Column(name = "nom_commune")
     String nomCommune;
+    
+    @Column(name = "geog", columnDefinition = "geometry")
+    private Geometry<?> multiPolygon;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)

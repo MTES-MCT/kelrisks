@@ -15,6 +15,8 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface ArgileRepository extends IAbstractRepository<Argile> {
     
+    //    TODO : prendre le plus de risque dans un buffer de 50m
+    
     @Query(value = "SELECT * " +
                    " FROM kelrisks.argile AS lentille" +
                    " WHERE public.st_intersects(lentille.geog, (SELECT public.st_union(:multiPolygons)))", nativeQuery = true)

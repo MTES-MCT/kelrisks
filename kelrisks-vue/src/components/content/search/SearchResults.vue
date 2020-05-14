@@ -218,11 +218,17 @@
                     :detail="'<p>Dans un rayon de 500 m autour de votre parcelle, sont identifiés :</br>'+
                               (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites référencés dans l\'inventaire des installations classées pour la protection de l\'environnement (ICPE)</br>' : '') +
                               (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites potentiellement pollués, référencés dans l\'inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS).</br>' : '') +
-                              (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
+                              (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale ? '<p>Parmi ces sites, ' + numberOfParcelleMatches + ' présentent une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
                               (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n\'en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
+                    :leaflet-data="[{ data : avis.installationClasseeRayonParcelle.liste,
+                                      color : '#455675'},
+                                    { data : avis.basiasRayonParcelle.liste,
+                                      color : '#455676'},
+                                    { data : avis.basolRayonParcelle.liste,
+                                      color : '#455674'}]"
                     v-if="true"/>
 
             <risque :description="'Votre bien est concerné par le risque inondation puisqu’il est situé en territoire à risque important d’inondation (TRI). Il s’agit d’un territoire exposé à un risque d’inondation sur lequel l\'État et les EPCI (établissement publics de coopération intercommunale) qui disposent de la compétence GEMAPI (gestion des milieux aquatiques et prévention des inondations) ont engagé une démarche d’identification et de gestion de ce risque pour anticiper et réduire l’impact d’une inondation.'"
