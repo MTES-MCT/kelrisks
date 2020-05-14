@@ -223,12 +223,12 @@
                               (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n\'en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
-                    :leaflet-data="[{ data : avis.installationClasseeRayonParcelle.liste,
-                                      color : '#455675'},
-                                    { data : avis.basiasRayonParcelle.liste,
-                                      color : '#455676'},
-                                    { data : avis.basolRayonParcelle.liste,
-                                      color : '#455674'}]"
+                    :leaflet-data="[{ data : avis.installationClasseeRayonParcelle.liste.map(x => x.ewkt),
+                                      color : '#AA0800'},
+                                    { data : avis.basiasRayonParcelle.liste.map(x => x.ewkt),
+                                      color : '#D9D900'},
+                                    { data : avis.basolRayonParcelle.liste.map(x => x.ewkt),
+                                      color : '#BF7000'}]"
                     v-if="true"/>
 
             <risque :description="'Votre bien est concerné par le risque inondation puisqu’il est situé en territoire à risque important d’inondation (TRI). Il s’agit d’un territoire exposé à un risque d’inondation sur lequel l\'État et les EPCI (établissement publics de coopération intercommunale) qui disposent de la compétence GEMAPI (gestion des milieux aquatiques et prévention des inondations) ont engagé une démarche d’identification et de gestion de ce risque pour anticiper et réduire l’impact d’une inondation.'"
@@ -393,16 +393,6 @@ export default {
     methods: {
         formatDate (date) {
             return moment(date).format('DD/MM/YYYY')
-        },
-        showHideContent () {
-            this.visibility.details = !this.visibility.details
-        },
-        switchTab (name) {
-            this.tab.concordances.index = name;
-            if (this.tab.concordances.index === 'RISQUES' && !this.tab.concordances.pollution.vu) {
-                this._paq.push(['trackEvent', 'Flow', 'Avis', 'Risques'])
-                this.tab.concordances.pollution.vu = true
-            }
         },
         loadAvis (codeAvis) {
             // console.log('loadAvis')

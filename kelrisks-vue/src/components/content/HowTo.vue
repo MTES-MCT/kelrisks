@@ -59,7 +59,7 @@ export default {
     },
     methods: {
         handleResize () {
-            console.log('handleResize')
+            // console.log('handleResize')
             let width = $('#howto_wrapper div.box:first').width()
             let imgHW = width / 247 * 4.51 + 'em'
             $('#howto_wrapper img').css('width', imgHW).css('height', imgHW)
