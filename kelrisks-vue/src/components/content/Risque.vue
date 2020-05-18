@@ -59,7 +59,7 @@ export default {
     props: {
         center: {
             type: Array,
-            default: () => [48.8737762014, 2.2950365488]
+            default: null
         },
         logoURL: {
             type: String,

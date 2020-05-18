@@ -9,6 +9,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationNucleaireDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanExpositionBruitDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesGasparDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
@@ -23,6 +24,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeori
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionIGNCartoFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanExpositionBruitFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanPreventionRisquesGasparFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
@@ -81,6 +83,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionGeoDataGouvFacade                 gestionGeoDataGouvFacade;
     @Autowired
     IGestionIGNCartoFacade                    gestionIGNCartoFacade;
+    @Autowired
+    IGestionPlanExpositionBruitFacade         gestionPlanExpositionBruitFacade;
     @Autowired
     IGestionPlanPreventionRisquesGasparFacade gestionPlanPreventionRisquesGasparFacade;
     @Autowired
@@ -189,9 +193,12 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         getAvisCanalisations(avisDTO, centroid);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisCanalisations");
     
+        getAvisPlanExpositionBruit(avisDTO, centroid);
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPlanExpositionBruit");
+    
         getAvisInstallationsNucleaires(avisDTO, centroid);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisInstallationsNucleaires");
-        
+    
         return avisDTO;
     }
     
@@ -388,6 +395,15 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         if (!georisquePaginatedRadon.getData().isEmpty()) {
             avisDTO.setAZIs(georisquePaginatedRadon.getData());
         }
+    }
+    
+    private void getAvisPlanExpositionBruit(AvisDTO avisDTO, Point<?> centroid) {
+        
+        String zone = gestionPlanExpositionBruitFacade.rechercherZoneCentroid(centroid);
+        avisDTO.setZonePlanExpositionBruit(zone);
+        
+        List<PlanExpositionBruitDTO> plansExposition = gestionPlanExpositionBruitFacade.rechercherPlanExpositionBruitDansRayon(centroid, 1000d);
+        avisDTO.setPlansExpositionBruit(plansExposition);
     }
     
     private void getAvisICPE(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, Geometry<?> touchesParcelle, Geometry<?> expendedParcelle, String codeINSEE) {

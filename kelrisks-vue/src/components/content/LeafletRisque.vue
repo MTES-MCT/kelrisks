@@ -6,16 +6,16 @@
                :zoom="zoom">
             <l-tile-layer :url="url"/>
             <l-geo-json :geojson="getData(data)"
+                        :ref="'lGeoJson_' + reference"
                         :options="featureOptions"
                         :options-style="styleFunction('#455674')"
-                        :ref="'lGeoJson_' + reference"
                         v-if="typeof data === 'string'"/>
             <l-geo-json :geojson="getData(json.data)"
+                        :ref="'lGeoJson_' + reference + '_' + index"
+                        v-else
                         :key="json.color + '_' + index"
                         :options="featureOptions"
                         :options-style="styleFunction(json.color)"
-                        :ref="'lGeoJson_' + reference + '_' + index"
-                        v-else
                         v-for="(json, index) in data"/>
         </l-map>
     </div>
@@ -35,7 +35,7 @@ export default {
     props: {
         center: {
             type: Array,
-            default: () => [48.8737762014, 2.2950365488]
+            default: () => [0, 0]
         },
         data: {
             type: [String, Array],
@@ -88,6 +88,19 @@ export default {
             }
 
             if (bounds !== null) {
+
+                if (!this.isCenterDefault()) {
+
+                    console.log(bounds)
+                    console.log(this.center)
+
+
+                    if (bounds._northEast.lat < this.center[0]) bounds._northEast.lat = this.center[0] + 0.0015
+                    if (bounds._northEast.lng < this.center[1]) bounds._northEast.lng = this.center[1] + 0.0015
+                    if (bounds._southWest.lat > this.center[0]) bounds._southWest.lat = this.center[0] - 0.0015
+                    if (bounds._southWest.lng > this.center[1]) bounds._southWest.lng = this.center[1] - 0.0015
+                }
+
                 map.fitBounds(bounds)
             }
         },
@@ -155,6 +168,9 @@ export default {
                     console.log(e)
                 })
             };
+        },
+        isCenterDefault () {
+            return this.center[0] === 0 && this.center[1] === 0
         }
     },
     computed: {

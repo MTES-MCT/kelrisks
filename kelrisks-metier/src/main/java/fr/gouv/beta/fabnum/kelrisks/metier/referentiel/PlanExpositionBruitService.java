@@ -6,6 +6,9 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.IPlanExpositionBruit
 import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.impl.PlanExpositionBruitDAO;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.PlanExpositionBruit;
 
+import java.util.List;
+
+import org.geolatte.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,18 @@ public class PlanExpositionBruitService extends AbstractCRUDService<PlanExpositi
         
         this.setFdao(fdao);
         dao = fdao;
+    }
+    
+    @Override
+    public String rechercherZoneCentroid(Point<?> centroid) {
+        
+        return dao.rechercherZoneCentroid(centroid);
+    }
+    
+    @Override
+    public List<PlanExpositionBruit> rechercherPlanExpositionBruitDansRayon(Point<?> centroid, double distance) {
+        
+        return dao.rechercherPlanExpositionBruitDansRayon(centroid, distance);
     }
 }
   

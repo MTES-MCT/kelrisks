@@ -52,7 +52,9 @@ export default {
             TRIs: {},
             AZIs: {},
             canalisations: {},
-            nucleaires: {}
+            nucleaires: {},
+            zonePlanExpositionBruit: '',
+            plansExpositionBruit: {}
         },
     }),
     methods: {
@@ -72,11 +74,6 @@ export default {
                 this.$refs.searchErrors.sendError('Merci de bien vouloir choisir une rue/numéro ou entrer une parcelle.')
                 return
             }
-
-            // if (parcelle && !insee && !this.form.selectedParcellesList) {
-            //     this.$refs.searchErrors.sendWarning('Dans le cas d\'une recherche par code parcelle, merci de choisir une commune parmi les résultats proposés dans le champ.')
-            //     return
-            // }
 
             let url = this.env.apiPath + 'avis?' + 'codeINSEE=' + insee + '&' + 'codeParcelle=' + parcelle + '&' + 'nomAdresse=' + nom
 
@@ -141,6 +138,9 @@ export default {
                     this.avis.canalisations = value.entity.geogCanalisations
                     this.avis.nucleaires.positions = value.entity.geogInstallationsNucleaires
                     this.avis.nucleaires.installations = value.entity.installationNucleaireDTOS
+
+                    this.avis.zonePlanExpositionBruit = value.entity.zonePlanExpositionBruit
+                    this.avis.plansExpositionBruit = value.entity.plansExpositionBruit
 
                     functions.scrollToElement('app', 500, 0, false)
                     this._paq.push(['trackEvent', 'Flow', 'Avis', 'Rendu'])

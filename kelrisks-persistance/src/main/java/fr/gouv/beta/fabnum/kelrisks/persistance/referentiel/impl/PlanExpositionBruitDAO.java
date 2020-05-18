@@ -8,6 +8,9 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.PlanExpos
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.PlanExpositionBruit;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QPlanExpositionBruit;
 
+import java.util.List;
+
+import org.geolatte.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -43,6 +46,18 @@ public class PlanExpositionBruitDAO extends AbstractDAO<PlanExpositionBruit> imp
         this.setRepo(repo);
         this.planExpositionBruitRepository = repo;
         this.planExpositionBruit = QPlanExpositionBruit.planExpositionBruit;
+    }
+    
+    @Override
+    public String rechercherZoneCentroid(Point<?> centroid) {
+        
+        return planExpositionBruitRepository.rechercherZoneCentroid(centroid);
+    }
+    
+    @Override
+    public List<PlanExpositionBruit> rechercherPlanExpositionBruitDansRayon(Point<?> centroid, double distance) {
+        
+        return planExpositionBruitRepository.rechercherPlanExpositionBruitDansRayon(centroid, distance);
     }
     
     @Override
