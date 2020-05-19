@@ -72,7 +72,7 @@
             <span class="title">Risques Principaux</span>
 
             <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle + ', approuvé le '+formatDate(plan.dateApprobation)+'.<br/><br/>' +
-                                  'Le plan de prévents risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.<br/>' +
+                                  'Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
                     :parcelle="leaflet.data.parcelles"
                     :leaflet-data="plan.assiette"
