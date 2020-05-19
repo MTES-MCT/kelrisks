@@ -129,12 +129,16 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                                                             .map(ParcelleDTO::getId)
                                                                                             .collect(Collectors.toList()));
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherUnionParcelles");
+        startTime = System.currentTimeMillis();
         Geometry<?> touchesParcelle = gestionParcelleFacade.rechercherUnionParcellesContigues(parcellesUnion);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherUnionParcellesContigues");
+        startTime = System.currentTimeMillis();
         Geometry<?> expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcellesUnion, 500);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherExpendedParcelle");
+        startTime = System.currentTimeMillis();
         Point<?> centroid = (Point<?>) gestionParcelleFacade.rechercherCentroidParcelle(parcellesUnion);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherCentroidParcelle");
+        startTime = System.currentTimeMillis();
         
         avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                  Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
@@ -159,42 +163,55 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         }
         else { parcelleSitesSolsPolues.add(parcellesUnion); }
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionSiteSolPolueFacade.rechercherZoneContenantParcelle");
+        startTime = System.currentTimeMillis();
     
         getAvisBasias(avisDTO, parcellesUnion, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasias");
+        startTime = System.currentTimeMillis();
     
         getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasol");
+        startTime = System.currentTimeMillis();
     
         getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisICPE");
+        startTime = System.currentTimeMillis();
     
         getAvisSis(avisDTO, centroid);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSis");
+        startTime = System.currentTimeMillis();
     
         getAvisPPR(avisDTO, parcelleSitesSolsPolues, centroid, communeDTO.getCodeINSEE());
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPPR");
+        startTime = System.currentTimeMillis();
     
         getAvisAZI(avisDTO, communeDTO.getCodeINSEE());
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisAZI");
+        startTime = System.currentTimeMillis();
     
         getAvisTRI(avisDTO, communeDTO.getCodeINSEE());
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisTRI");
+        startTime = System.currentTimeMillis();
     
         getAvisArgile(avisDTO, parcellesUnion);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisArgile");
+        startTime = System.currentTimeMillis();
     
         getAvisSismicite(avisDTO, communeDTO.getCodeINSEE());
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSismicite");
+        startTime = System.currentTimeMillis();
     
         getAvisRadon(avisDTO, communeDTO.getCodeINSEE());
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisRadon");
+        startTime = System.currentTimeMillis();
     
         getAvisCanalisations(avisDTO, centroid);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisCanalisations");
+        startTime = System.currentTimeMillis();
     
         getAvisPlanExpositionBruit(avisDTO, centroid);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPlanExpositionBruit");
+        startTime = System.currentTimeMillis();
     
         getAvisInstallationsNucleaires(avisDTO, centroid);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisInstallationsNucleaires");

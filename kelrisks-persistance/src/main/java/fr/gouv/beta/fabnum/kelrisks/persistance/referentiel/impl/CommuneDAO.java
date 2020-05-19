@@ -9,6 +9,9 @@ import fr.gouv.beta.fabnum.kelrisks.persistance.referentiel.repository.CommuneRe
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.Commune;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QCommune;
 
+import java.util.List;
+
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -53,7 +56,7 @@ public class CommuneDAO extends AbstractDAO<Commune> implements ICommuneDAO {
     
     @Override
     protected PathBuilder<Commune> getPathBuilder() {
-        
+    
         return new PathBuilder<>(Commune.class, "commune");
     }
     
@@ -61,6 +64,12 @@ public class CommuneDAO extends AbstractDAO<Commune> implements ICommuneDAO {
     protected EntityPathBase<Commune> getQueryObject() {
         
         return commune;
+    }
+    
+    @Override
+    public List<Commune> rechercherCommunesLimitrophes(Geometry<?> geog, String notINSEE) {
+        
+        return communeRepository.rechercherCommunesLimitrophes(geog, notINSEE);
     }
 }
   
