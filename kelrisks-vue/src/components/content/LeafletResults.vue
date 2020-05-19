@@ -47,7 +47,10 @@ export default {
         reference: null
     }),
     methods: {
-        crippleMap (map) {
+        crippleMap () {
+
+            let map = this.$refs['leafletMap_' + this.reference].mapObject
+
             map.zoomControl.disable()
             map.touchZoom.disable()
             map.doubleClickZoom.disable()
@@ -57,7 +60,10 @@ export default {
 
             map.dragging.disable()
         },
-        centerMap (map) {
+        centerMap () {
+
+            let map = this.$refs['leafletMap_' + this.reference].mapObject
+
             map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
         },
         parseJSON (data) {
@@ -147,7 +153,7 @@ export default {
                 })
                 return marker(latlng, {icon: myIcon})
             };
-        }
+        },
     },
     mounted () {
 
@@ -155,11 +161,14 @@ export default {
 
         this.$nextTick(() => {
 
-            const map = this.$refs['leafletMap_' + this.reference].mapObject
-            this.crippleMap(map)
-            this.centerMap(map)
+            this.crippleMap()
+            this.centerMap()
         })
-    }
+        window.addEventListener('resize', this.centerMap)
+    },
+    beforeDestroy: function () {
+        window.removeEventListener('resize', this.centerMap)
+    },
 }
 </script>
 

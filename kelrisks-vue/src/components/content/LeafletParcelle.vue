@@ -7,6 +7,7 @@
             <l-geo-json :geojson="parseJSONMap(data.parcelles)"
                         :options="parcellesOptions"
                         :options-style="parcellesStyleFunction"
+                        :ref="'parcelle_' + reference"
                         v-if="data && currentZoom >= 17"/>
             <l-marker :icon="createAdresseIcon"
                       :lat-lng="center"
@@ -46,9 +47,13 @@ export default {
         selectedList: [],
         env: {
             apiPath: process.env.VUE_APP_API_PATH
-        }
+        },
+        reference: null
     }),
     methods: {
+        centerMap (map) {
+            map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
+        },
         invalidate () {
             // console.log('invalidated')
             this.$refs.leafletParcelles.mapObject.invalidateSize()
@@ -179,12 +184,15 @@ export default {
         }
     },
     mounted () {
+
+        this.reference = this._uid
+
         this.$nextTick(() => {
 
             const map = this.$refs.leafletParcelles.mapObject
 
             map.on('moveend', () => {
-                this.updateParcelles(map.getCenter().lng, map.getCenter().lat)
+                if (this.currentZoom >= 17) this.updateParcelles(map.getCenter().lng, map.getCenter().lat)
             })
             map.on('zoomend', () => {
                 this.currentZoom = map.getZoom()

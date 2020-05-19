@@ -5,6 +5,10 @@
                :ref="'leafletMap_' + reference"
                :zoom="zoom">
             <l-tile-layer :url="url"/>
+            <l-geo-json :geojson="getData(parcelle)"
+                        :options="featureOptions"
+                        :options-style="styleFunction('#455674')"
+                        :ref="'lGeoJson_Parcelle_' + reference"/>
             <l-geo-json :geojson="getData(data)"
                         :ref="'lGeoJson_' + reference"
                         :options="featureOptions"
@@ -36,6 +40,10 @@ export default {
         center: {
             type: Array,
             default: () => [0, 0]
+        },
+        parcelle: {
+            type: [String, Array],
+            default: () => []
         },
         data: {
             type: [String, Array],
@@ -89,11 +97,7 @@ export default {
 
             if (bounds !== null) {
 
-                if (!this.isCenterDefault()) {
-
-                    console.log(bounds)
-                    console.log(this.center)
-
+                if (!this.isCenterDefault() && this.center) {
 
                     if (bounds._northEast.lat < this.center[0]) bounds._northEast.lat = this.center[0] + 0.0015
                     if (bounds._northEast.lng < this.center[1]) bounds._northEast.lng = this.center[1] + 0.0015
@@ -170,7 +174,7 @@ export default {
             };
         },
         isCenterDefault () {
-            return this.center[0] === 0 && this.center[1] === 0
+            return this.center && this.center[0] === 0 && this.center[1] === 0
         }
     },
     computed: {
@@ -204,6 +208,10 @@ export default {
             this.crippleMap()
             this.centerMap()
         })
+        window.addEventListener('resize', this.centerMap)
+    },
+    beforeDestroy: function () {
+        window.removeEventListener('resize', this.centerMap)
     },
     watch: {
         data: function () {

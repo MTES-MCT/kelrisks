@@ -45,6 +45,7 @@
         <div class="risque_map"
              v-if="leafletData">
             <leaflet :center="center"
+                     :parcelle="parcelle"
                      :data="leafletData"/>
         </div>
     </div>
@@ -60,6 +61,10 @@ export default {
         center: {
             type: Array,
             default: null
+        },
+        parcelle: {
+            type: [String, Array],
+            default: () => []
         },
         logoURL: {
             type: String,
@@ -131,7 +136,7 @@ export default {
 
     .risque_summary {
         display   : flex;
-        flex : 1 0 auto
+        flex      : 1 0 auto;
         flex-wrap : wrap;
         padding   : 9px 22px;
     }
