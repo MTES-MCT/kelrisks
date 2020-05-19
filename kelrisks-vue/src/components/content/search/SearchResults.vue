@@ -67,11 +67,9 @@
 
         </section>
 
-        <section class="section section-grey">
+        <section class="section section-grey v-flex">
 
             <span class="title">Risques Principaux</span>
-
-            <div class="clearfix"/>
 
             <risque :center="leaflet.center"
                     :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle + ', approuvé le '+formatDate(plan.dateApprobation)+'.<br/><br/>' +
@@ -218,9 +216,9 @@
             <div class="clearfix"/>
         </section>
 
-        <section class="section">
+        <section class="section v-flex">
 
-            <div><span class="title">Autres risques ne faisant pas l'objet d'une obligation d'information</span></div>
+            <span class="title">Autres risques ne faisant pas l'objet d'une obligation d'information</span>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
                     :level="avis.potentielRadon + ''"
@@ -289,11 +287,9 @@
             <div class="clearfix"/>
         </section>
 
-        <section class="section">
+        <section class="section v-flex">
 
             <span class="title">Cette parcelle n'est pas concernée par :</span>
-
-            <div class="clearfix"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
@@ -586,6 +582,7 @@ export default {
     }
 
     #bottomButtonsWrapper {
+        flex       : 0 0 100%;
         margin-top : 25px;
         text-align : center;
     }
@@ -677,6 +674,16 @@ export default {
             margin-top  : 20px;
             width       : 100%;
         }
+    }
+
+    section.v-flex {
+        display   : flex;
+        flex-wrap : wrap;
+    }
+
+    section.v-flex > span {
+        flex       : 0 0 100%;
+        text-align : left;
     }
 
     .recommandations_wrapper {

@@ -120,16 +120,18 @@ export default {
 
 <style scoped>
     .risque_wrapper {
-        background : #FFFFFF;
-        border     : 2px solid #BAB9B9;
-        color      : #26353F;
-        float      : left;
-        margin     : 20px;
-        width      : calc(50% - 40px);
+        background     : #FFFFFF;
+        border         : 2px solid #BAB9B9;
+        color          : #26353F;
+        display        : flex;
+        flex-basis     : calc(50% - 40px);
+        flex-direction : column;
+        margin         : 20px;
     }
 
     .risque_summary {
         display   : flex;
+        flex : 1 0 auto
         flex-wrap : wrap;
         padding   : 9px 22px;
     }
@@ -235,7 +237,7 @@ export default {
 
     .risque_map {
         background-color : #2C3E50;
-        height           : 255px;
+        flex             : 0 0 255px;
         margin-top       : 10px;
         width            : 100%;
     }
