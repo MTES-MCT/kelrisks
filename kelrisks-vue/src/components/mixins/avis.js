@@ -124,8 +124,9 @@ export default {
                     this.leaflet.data = value.entity.leaflet
                     this.leaflet.center = [parseFloat(value.entity.leaflet.center.y), parseFloat(value.entity.leaflet.center.x)]
 
-                    this.avis.codeSismicite = value.entity.codeZoneSismicite
-                    this.avis.potentielRadon = value.entity.classePotentielRadon
+                    this.avis.codeSismicite = value.entity.summary.commune.codeZoneSismicite
+                    this.avis.potentielRadon = value.entity.summary.commune.classePotentielRadon
+                    this.avis.communes = value.entity.summary.commune
 
                     this.avis.ppr = value.entity.planPreventionRisquesDTOs
 

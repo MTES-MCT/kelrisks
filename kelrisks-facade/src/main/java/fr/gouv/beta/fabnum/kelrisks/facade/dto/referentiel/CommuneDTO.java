@@ -14,4 +14,6 @@ public class CommuneDTO {
     private String           nomCommune;
     private Geometry<?>      multiPolygon;
     private List<CommuneDTO> communesLimitrophes;
+    private String           codeZoneSismicite;
+    private String           classePotentielRadon;
 }

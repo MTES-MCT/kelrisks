@@ -34,6 +34,7 @@ public class IGNCartoService implements IIGNCartoService {
                                                                      .exchange()
                                                                      .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoAssiettePaginatedFeatures.class))
                                                                      .block(Duration.ofSeconds(60L));
+    
         return assietteFeatures;
     }
     

@@ -50,9 +50,6 @@ public class AvisDTO extends JsonInfoDTO {
     
     private List<PlanPreventionRisquesGasparDTO> planPreventionRisquesDTOs;
     
-    private int codeZoneSismicite;
-    private int classePotentielRadon;
-    
     private List<GeorisquePaginatedTRI.TRI> TRIs = new ArrayList<>();
     private List<GeorisquePaginatedAZI.AZI> AZIs = new ArrayList<>();
     

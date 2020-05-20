@@ -123,21 +123,22 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private AvisDTO getAvisFromParcelle(AvisDTO avisDTO, List<ParcelleDTO> parcelleDTOs, CommuneDTO communeDTO) {
-        
+    
+        System.out.println("------------- " + parcelleDTOs.stream().map(parcelleDTO -> parcelleDTO.getSection() + parcelleDTO.getNumero()).collect(Collectors.joining(", ")) + " @ " + communeDTO.getCodeINSEE() + " -------------");
         long startTime = System.currentTimeMillis();
         Geometry<?> parcellesUnion = gestionParcelleFacade.rechercherUnionParcelles(parcelleDTOs.stream()
                                                                                             .map(ParcelleDTO::getId)
                                                                                             .collect(Collectors.toList()));
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherUnionParcelles");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherUnionParcelles");
         startTime = System.currentTimeMillis();
         Geometry<?> touchesParcelle = gestionParcelleFacade.rechercherUnionParcellesContigues(parcellesUnion);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherUnionParcellesContigues");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherUnionParcellesContigues");
         startTime = System.currentTimeMillis();
         Geometry<?> expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcellesUnion, 500);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherExpendedParcelle");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherExpendedParcelle");
         startTime = System.currentTimeMillis();
         Point<?> centroid = (Point<?>) gestionParcelleFacade.rechercherCentroidParcelle(parcellesUnion);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherCentroidParcelle");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherCentroidParcelle");
         startTime = System.currentTimeMillis();
         
         avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
@@ -162,7 +163,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             });
         }
         else { parcelleSitesSolsPolues.add(parcellesUnion); }
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionSiteSolPolueFacade.rechercherZoneContenantParcelle");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherZoneContenantParcelle");
         startTime = System.currentTimeMillis();
     
         getAvisBasias(avisDTO, parcellesUnion, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
@@ -197,11 +198,11 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisArgile");
         startTime = System.currentTimeMillis();
     
-        getAvisSismicite(avisDTO, communeDTO.getCodeINSEE());
+        getAvisSismicite(avisDTO, communeDTO);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSismicite");
         startTime = System.currentTimeMillis();
     
-        getAvisRadon(avisDTO, communeDTO.getCodeINSEE());
+        getAvisRadon(avisDTO, communeDTO);
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisRadon");
         startTime = System.currentTimeMillis();
     
@@ -365,12 +366,22 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         return null;
     }
     
-    private void getAvisSismicite(AvisDTO avisDTO, String codeINSEE) {
+    private void getAvisSismicite(AvisDTO avisDTO, CommuneDTO commune) {
         
-        GeorisquePaginatedSismique georisquePaginatedSismique = gestionGeorisquesFacade.rechercherSismiciteCommune(codeINSEE);
+        //TODO : Dans la mesure ou le front bouge encore beaucoup, on ne prend pour l'instant que 10 communes pour le pas multiplier inutilement le nombre d'appels à l'API
+        String listeCodesINSEE = commune.getCodeINSEE() + "," + commune.getCommunesLimitrophes().stream().limit(9).map(CommuneDTO::getCodeINSEE).collect(Collectors.joining(","));
+        
+        GeorisquePaginatedSismique georisquePaginatedSismique = gestionGeorisquesFacade.rechercherSismiciteCommune(listeCodesINSEE);
         
         if (!georisquePaginatedSismique.getData().isEmpty()) {
-            avisDTO.setCodeZoneSismicite(Integer.parseInt(georisquePaginatedSismique.getData().get(0).getCode_zone()));
+            avisDTO.getSummary().getCommune().setCodeZoneSismicite(georisquePaginatedSismique.getData().stream()
+                                                                           .filter(zs -> zs.getCode_insee().equals(commune.getCodeINSEE()))
+                                                                           .findFirst().get().getCode_zone());
+            
+            avisDTO.getSummary().getCommune().getCommunesLimitrophes()
+                    .forEach(communeDTO -> communeDTO.setCodeZoneSismicite(georisquePaginatedSismique.getData().stream()
+                                                                                   .filter(zs -> zs.getCode_insee().equals(commune.getCodeINSEE()))
+                                                                                   .findFirst().get().getCode_zone()));
         }
     }
     
@@ -387,12 +398,22 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         }
     }
     
-    private void getAvisRadon(AvisDTO avisDTO, String codeINSEE) {
+    private void getAvisRadon(AvisDTO avisDTO, CommuneDTO commune) {
         
-        GeorisquePaginatedRadon georisquePaginatedRadon = gestionGeorisquesFacade.rechercherRadonCommune(codeINSEE);
+        //TODO : Dans la mesure ou le front bouge encore beaucoup, on ne prend pour l'instant que 10 communes pour le pas multiplier inutilement le nombre d'appels à l'API
+        String listeCodesINSEE = commune.getCodeINSEE() + "," + commune.getCommunesLimitrophes().stream().limit(9).map(CommuneDTO::getCodeINSEE).collect(Collectors.joining(","));
+        
+        GeorisquePaginatedRadon georisquePaginatedRadon = gestionGeorisquesFacade.rechercherRadonCommune(listeCodesINSEE);
         
         if (!georisquePaginatedRadon.getData().isEmpty()) {
-            avisDTO.setClassePotentielRadon(Integer.parseInt(georisquePaginatedRadon.getData().get(0).getClasse_potentiel()));
+            avisDTO.getSummary().getCommune().setClassePotentielRadon(georisquePaginatedRadon.getData().stream()
+                                                                              .filter(zs -> zs.getCode_insee().equals(commune.getCodeINSEE()))
+                                                                              .findFirst().get().getClasse_potentiel());
+            
+            avisDTO.getSummary().getCommune().getCommunesLimitrophes()
+                    .forEach(communeDTO -> communeDTO.setClassePotentielRadon(georisquePaginatedRadon.getData().stream()
+                                                                                      .filter(zs -> zs.getCode_insee().equals(commune.getCodeINSEE()))
+                                                                                      .findFirst().get().getClasse_potentiel()));
         }
     }
     

@@ -587,10 +587,10 @@ public class ApiAvis extends AbstractBasicApi {
     private void redigerRisquesNaturels(Document htmlDocument, AvisDTO avisDTO) {
     
         Element element = htmlDocument.select("#zoneSismicite").first();
-        element.append(String.valueOf(avisDTO.getCodeZoneSismicite()));
+        element.append(String.valueOf(avisDTO.getSummary().getCommune().getCodeZoneSismicite()));
     
         element = htmlDocument.select("#potentielRadon").first();
-        element.append(String.valueOf(avisDTO.getClassePotentielRadon()));
+        element.append(String.valueOf(avisDTO.getSummary().getCommune().getClassePotentielRadon()));
     
         if (avisDTO.getPlanPreventionRisquesDTOs().size() == 0) {
             htmlDocument.select("#pprWrapper").first().append("L’immeuble ne se situe dans aucun Plan de Prévention des Risques référencé");
