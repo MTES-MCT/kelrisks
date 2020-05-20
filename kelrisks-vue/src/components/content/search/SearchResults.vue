@@ -84,38 +84,66 @@
 
             <risque :description="'Le zonage sismique est une zone géographique dans laquelle la probabilité d’occurrence d’un séisme de caractéristiques données (magnitude, profondeur focale) peut être considérée homogène en tout point.<br/>'+
                                   '<a href=\'#recommendations_sismicite\'>Lire les recommandations</a>'"
+                    :leaflet-data="typeof avis.summary.commune.communesLimitrophes.map ===  'function' ?
+                                   [{ data : avis.summary.commune.codeZoneSismicite === '1' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#D8D8D8'},
+                                    { data : avis.summary.commune.codeZoneSismicite === '2' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#FFD332'},
+                                    { data : avis.summary.commune.codeZoneSismicite === '3' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#FF8000'},
+                                    { data : avis.summary.commune.codeZoneSismicite === '4' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#E02B17'},
+                                    { data : avis.summary.commune.codeZoneSismicite === '5' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#840505'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '1').map(x => x.multiPolygon),
+                                      color : '#D8D8D8'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '2').map(x => x.multiPolygon),
+                                      color : '#FFD332'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '3').map(x => x.multiPolygon),
+                                      color : '#FF8000'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '4').map(x => x.multiPolygon),
+                                      color : '#E02B17'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '5').map(x => x.multiPolygon),
+                                      color : '#840505'}] :
+                                    undefined"
                     :legend-blocks="[
                         ['#D8D8D8', '1 - très faible'],
                         ['#FFD332', '2 - faible'],
                         ['#FF8000', '3 - modéré'],
                         ['#E02B17', '4 - moyen'],
                         ['#840505', '5 - fort']]"
-                    :level="avis.codeSismicite + ''"
+                    :level="avis.summary.commune.codeZoneSismicite + ''"
                     :level-max="'5'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
                     :title="'Sismisité'"
-                    v-if="hasSismisiteHaute"/>
-
-            <risque :description="'Le zonage sismique est une zone géographique dans laquelle la probabilité d’occurrence d’un séisme de caractéristiques données (magnitude, profondeur focale) peut être considérée homogène en tout point.<br/>'+
-                                  '<a href=\'#recommendations_sismicite\'>Lire les recommandations</a>'"
-                    :legend-blocks="[
-                        ['#D8D8D8', '1 - très faible'],
-                        ['#FFD332', '2 - faible'],
-                        ['#FF8000', '3 - modéré'],
-                        ['#E02B17', '4 - moyen'],
-                        ['#840505', '5 - fort']]"
-                    :level="avis.codeSismicite + ''"
-                    :level-max="'5'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
-                    :title="'Sismisité'"
-                    v-if="hasSismisiteMoyenne"/>
+                    :parcelle="leaflet.data.parcelles"
+                    v-if="hasSismisiteHaute || hasSismisiteMoyenne"/>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.<br/>'+
                                   '<a href=\'#recommendations_radon\'>Lire les recommandations</a>'"
-                    :level="avis.potentielRadon + ''"
+                    :leaflet-data="typeof avis.summary.commune.communesLimitrophes.map ===  'function' ?
+                                   [{ data : avis.summary.commune.classePotentielRadon === '1' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#FFD332'},
+                                    { data : avis.summary.commune.classePotentielRadon === '2' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#FF8000'},
+                                    { data : avis.summary.commune.classePotentielRadon === '3' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#840505'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '1').map(x => x.multiPolygon),
+                                      color : '#FFD332'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '2').map(x => x.multiPolygon),
+                                      color : '#FF8000'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon),
+                                      color : '#840505'}] :
+                                    undefined"
+                    :legend-blocks="[
+                        ['#FFD332', '2 - faible'],
+                        ['#FF8000', '3 - modéré'],
+                        ['#840505', '5 - fort']]"
+                    :level="avis.summary.commune.classePotentielRadon + ''"
                     :level-max="'3'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
                     :title="'Radon'"
+                    :parcelle="leaflet.data.parcelles"
                     v-if="hasRadonHaut"/>
 
             <risque :parcelle="leaflet.data.parcelles"
@@ -149,8 +177,7 @@
                         ['#840505', 'A - très fort'],
                         ['#FF8000', 'B - fort'],
                         ['#FFD332', 'C - modéré'],
-                        ['#058E0C', 'D - faible'],
-                        ]"
+                        ['#058E0C', 'D - faible']]"
                     :level="avis.zonePlanExpositionBruit"
                     :title="'Bruit'"
                     v-if="hasPEB"/>
@@ -493,10 +520,10 @@ export default {
             return window._paq
         },
         hasRadonHaut: function () {
-            return this.avis.potentielRadon === 3
+            return this.avis.summary.commune.classePotentielRadon === '3'
         },
         hasRadonMoyen: function () {
-            return this.avis.potentielRadon === 2
+            return this.avis.summary.commune.classePotentielRadon === '2'
         },
         hasArgile: function () {
             return this.avis.lentillesArgile !== undefined && this.avis.lentillesArgile !== null
@@ -505,10 +532,12 @@ export default {
             return this.avis.zonePlanExpositionBruit !== undefined && this.avis.zonePlanExpositionBruit !== null
         },
         hasSismisiteHaute: function () {
-            return this.avis.codeSismicite >= 3
+            return this.avis.summary.commune.codeZoneSismicite === '3' ||
+                this.avis.summary.commune.codeZoneSismicite === '4' ||
+                this.avis.summary.commune.codeZoneSismicite === '5'
         },
         hasSismisiteMoyenne: function () {
-            return this.avis.codeSismicite === 2
+            return this.avis.summary.commune.codeZoneSismicite === '2'
         },
         hasSismisite: function () {
             return this.hasSismisiteMoyenne || this.hasSismisiteHaute
@@ -560,7 +589,7 @@ export default {
         if (codeAvis !== undefined) this.loadAvis(codeAvis)
 
         this.$nextTick(() => {
-            this.$refs.resultsErrors.sendSuccess('Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min)<a target=\'_blank\' style=\'display:inline-block; margin: 0 10px; min-width: 0; float: none;\' class=\'bouton\' href=\'https://docs.google.com/forms/d/e/1FAIpQLSd3tB_gWGZsucCihp4VYDqv0Vxq61nqnpQJeMkI17nY39St_w/viewform?usp=sf_link\'>Répondre</a>')
+            // this.$refs.resultsErrors.sendSuccess('Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min)<a target=\'_blank\' style=\'display:inline-block; margin: 0 10px; min-width: 0; float: none;\' class=\'bouton\' href=\'https://docs.google.com/forms/d/e/1FAIpQLSd3tB_gWGZsucCihp4VYDqv0Vxq61nqnpQJeMkI17nY39St_w/viewform?usp=sf_link\'>Répondre</a>')
         })
     }
 }
