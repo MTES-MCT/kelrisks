@@ -4,6 +4,8 @@ import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,25 +19,22 @@ import org.geolatte.geom.Geometry;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "commune")
-public class Commune extends AbstractEntity {
+@Table(name = "peb")
+public class PlanExpositionBruit extends AbstractEntity {
     
-    @Column(name = "code_insee")
-    String codeINSEE;
+    @Column(name = "zone")
+    String zone;
     
-    @Column(name = "code_postal")
-    String codePostal;
-    
-    @Column(name = "nom_commune")
-    String nomCommune;
+    @Column(name = "date_arret", columnDefinition = "DATE")
+    Date dateArret;
     
     @Column(name = "geog", columnDefinition = "geometry")
     private Geometry<?> multiPolygon;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_commune")
-    @SequenceGenerator(name = "seq_commune", sequenceName = "adresse_commune_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_peb")
+    @SequenceGenerator(name = "seq_peb", sequenceName = "peb_id_seq", allocationSize = 1)
     private Long id;
     
     public String getCleFonc() {

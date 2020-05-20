@@ -9,6 +9,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationNucleaireDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanExpositionBruitDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesGasparDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
@@ -23,6 +24,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeori
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionIGNCartoFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
+import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanExpositionBruitFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanPreventionRisquesGasparFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
@@ -82,6 +84,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     @Autowired
     IGestionIGNCartoFacade                    gestionIGNCartoFacade;
     @Autowired
+    IGestionPlanExpositionBruitFacade         gestionPlanExpositionBruitFacade;
+    @Autowired
     IGestionPlanPreventionRisquesGasparFacade gestionPlanPreventionRisquesGasparFacade;
     @Autowired
     IGestionBRGMFacade                        gestionBRGMFacade;
@@ -124,13 +128,17 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         Geometry<?> parcellesUnion = gestionParcelleFacade.rechercherUnionParcelles(parcelleDTOs.stream()
                                                                                             .map(ParcelleDTO::getId)
                                                                                             .collect(Collectors.toList()));
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherUnionParcelles");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherUnionParcelles");
+        startTime = System.currentTimeMillis();
         Geometry<?> touchesParcelle = gestionParcelleFacade.rechercherUnionParcellesContigues(parcellesUnion);
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherUnionParcellesContigues");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherUnionParcellesContigues");
+        startTime = System.currentTimeMillis();
         Geometry<?> expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcellesUnion, 500);
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherExpendedParcelle");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherExpendedParcelle");
+        startTime = System.currentTimeMillis();
         Point<?> centroid = (Point<?>) gestionParcelleFacade.rechercherCentroidParcelle(parcellesUnion);
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherCentroidParcelle");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionParcelleFacade.rechercherCentroidParcelle");
+        startTime = System.currentTimeMillis();
         
         avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                  Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
@@ -154,44 +162,60 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             });
         }
         else { parcelleSitesSolsPolues.add(parcellesUnion); }
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionSiteSolPolueFacade.rechercherZoneContenantParcelle");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "gestionSiteSolPolueFacade.rechercherZoneContenantParcelle");
+        startTime = System.currentTimeMillis();
+    
         getAvisBasias(avisDTO, parcellesUnion, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasias");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasias");
+        startTime = System.currentTimeMillis();
+    
         getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasol");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasol");
+        startTime = System.currentTimeMillis();
+    
         getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisICPE");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisICPE");
+        startTime = System.currentTimeMillis();
+    
         getAvisSis(avisDTO, centroid);
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSis");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSis");
+        startTime = System.currentTimeMillis();
+    
         getAvisPPR(avisDTO, parcelleSitesSolsPolues, centroid, communeDTO.getCodeINSEE());
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPPR");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPPR");
+        startTime = System.currentTimeMillis();
+    
         getAvisAZI(avisDTO, communeDTO.getCodeINSEE());
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisAZI");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisAZI");
+        startTime = System.currentTimeMillis();
+    
         getAvisTRI(avisDTO, communeDTO.getCodeINSEE());
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisTRI");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisTRI");
+        startTime = System.currentTimeMillis();
+    
         getAvisArgile(avisDTO, parcellesUnion);
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisArgile");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisArgile");
+        startTime = System.currentTimeMillis();
+    
         getAvisSismicite(avisDTO, communeDTO.getCodeINSEE());
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSismicite");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSismicite");
+        startTime = System.currentTimeMillis();
+    
         getAvisRadon(avisDTO, communeDTO.getCodeINSEE());
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisRadon");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisRadon");
+        startTime = System.currentTimeMillis();
+    
         getAvisCanalisations(avisDTO, centroid);
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisCanalisations");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisCanalisations");
+        startTime = System.currentTimeMillis();
+    
+        getAvisPlanExpositionBruit(avisDTO, centroid);
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPlanExpositionBruit");
+        startTime = System.currentTimeMillis();
+    
         getAvisInstallationsNucleaires(avisDTO, centroid);
-        //        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisInstallationsNucleaires");
-        
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisInstallationsNucleaires");
+    
         return avisDTO;
     }
     
@@ -388,6 +412,15 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         if (!georisquePaginatedRadon.getData().isEmpty()) {
             avisDTO.setAZIs(georisquePaginatedRadon.getData());
         }
+    }
+    
+    private void getAvisPlanExpositionBruit(AvisDTO avisDTO, Point<?> centroid) {
+        
+        String zone = gestionPlanExpositionBruitFacade.rechercherZoneCentroid(centroid);
+        avisDTO.setZonePlanExpositionBruit(zone);
+        
+        List<PlanExpositionBruitDTO> plansExposition = gestionPlanExpositionBruitFacade.rechercherPlanExpositionBruitDansRayon(centroid, 1000d);
+        avisDTO.setPlansExpositionBruit(plansExposition);
     }
     
     private void getAvisICPE(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, Geometry<?> touchesParcelle, Geometry<?> expendedParcelle, String codeINSEE) {

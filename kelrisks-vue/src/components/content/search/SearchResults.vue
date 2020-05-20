@@ -38,7 +38,6 @@
                 <a :href="this.env.apiPath + 'avis/pdf?' +
                             'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : form.codeInsee) + '&' +
                             'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : form.nomAdresse) + '&' +
-                            'geolocAdresse=' + (tinyUrl.geolocAdresse ? tinyUrl.geolocAdresse.replace(/\|/, '%7C') : form.geolocAdresse.replace(/\|/, '%7C')) + '&' +
                             'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : form.codeParcelle) + '&' +
                             'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : form.codeProprio)"
                    @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
@@ -68,16 +67,14 @@
 
         </section>
 
-        <section class="section section-grey">
+        <section class="section section-grey v-flex">
 
             <span class="title">Risques Principaux</span>
 
-            <div class="clearfix"/>
-
-            <risque :center="leaflet.center"
-                    :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle + ', approuvé le '+formatDate(plan.dateApprobation)+'.<br/><br/>' +
+            <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle + ', approuvé le '+formatDate(plan.dateApprobation)+'.<br/><br/>' +
                                   'Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
+                    :parcelle="leaflet.data.parcelles"
                     :leaflet-data="plan.assiette"
                     :logo-u-r-l="'/images/pictogrammes_risque/'+ getLogoRisque(plan.alea.familleAlea.code) +'.svg'"
                     :title="plan.alea.familleAlea.libelle"
@@ -121,7 +118,8 @@
                     :title="'Radon'"
                     v-if="hasRadonHaut"/>
 
-            <risque :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d\'usage des sols (travaux, aménagements changement d\'affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
+            <risque :parcelle="leaflet.data.parcelles"
+                    :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d\'usage des sols (travaux, aménagements changement d\'affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
                     :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classées pour la protection de l\'environnement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>' : '') +
                              (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d\'information sur les sols.</br>' : '') +
                              (false ? '- La parcelle est affectée d\'une servitude d\'utilité publique au titre des installations classées au titre du L 515-12 du code de l\'environnement.' : '') +
@@ -131,14 +129,31 @@
                     v-if="hasPollutionPrincipale"/>
 
             <risque :description="'La parcelle est concernée par un plan d\'exposition au bruit car elle est exposée aux nuisances d\'un aéroport.'"
-                    :detail="(true ? '[A] - Le niveau d\'exposition au bruit de la parcelle est très fort (zone A en rouge).' : '')+
-                             (false ? '[B] - Le niveau d\'exposition au bruit de la parcelle est fort (zone orange).' : '')+
-                             (false ? '[C] - Le niveau d\'exposition au bruit de la parcelle est modéré (zone jaune).' : '')+
-                             (false ? '[D] - Le niveau d\'exposition au bruit de la parcelle est faible (zone verte).' : '')"
-                    :level="'A'"
+                    :parcelle="leaflet.data.parcelles"
+                    :detail="(avis.zonePlanExpositionBruit === 'A' ? 'Le niveau d\'exposition au bruit de la parcelle est très fort (zone A en rouge).' : '') +
+                             (avis.zonePlanExpositionBruit === 'B' ? 'Le niveau d\'exposition au bruit de la parcelle est fort (zone B en orange).' : '') +
+                             (avis.zonePlanExpositionBruit === 'C' ? 'Le niveau d\'exposition au bruit de la parcelle est modéré (zone C en jaune).' : '') +
+                             (avis.zonePlanExpositionBruit === 'D' ? 'Le niveau d\'exposition au bruit de la parcelle est faible (zone D en verte).' : '')"
                     :logo-u-r-l="'TODO'"
+                    :leaflet-data="typeof avis.plansExpositionBruit.map ===  'function' ?
+                                   [{ data : avis.plansExpositionBruit.filter(x => x.zone === 'D').map(x => x.multiPolygon),
+                                      color : '#058E0C'},
+                                    { data : avis.plansExpositionBruit.filter(x => x.zone === 'C').map(x => x.multiPolygon),
+                                      color : '#FFD332'},
+                                    { data : avis.plansExpositionBruit.filter(x => x.zone === 'B').map(x => x.multiPolygon),
+                                      color : '#FF8000'},
+                                    { data : avis.plansExpositionBruit.filter(x => x.zone === 'A').map(x => x.multiPolygon),
+                                      color : '#840505'}] :
+                                    undefined"
+                    :legend-blocks="[
+                        ['#840505', 'A - très fort'],
+                        ['#FF8000', 'B - fort'],
+                        ['#FFD332', 'C - modéré'],
+                        ['#058E0C', 'D - faible'],
+                        ]"
+                    :level="avis.zonePlanExpositionBruit"
                     :title="'Bruit'"
-                    v-if="true"/>
+                    v-if="hasPEB"/>
 
             <div class="clearfix"/>
         </section>
@@ -164,8 +179,6 @@
 
                 <template v-if="hasSismisite">
                     <h4 id="recommendations_sismicite">Sismicité</h4>
-                    <!--                    <template v-if="this.hasSismisiteHaute"></template>-->
-                    <!--                    <template v-if="this.hasSismisiteMoyenne"></template>-->
                     <p>Pour le bâti neuf, en fonction de la zone de sismicité (zone 2 "sismicité faible" à zone 5 "sismicité forte") et du type de construction (habitation individuelle, habitations
                        collectives, ERP, ...) des dispositions spécifiques s'appliquent selon la réglementation (arrêté du 22 octobre 2010).</p><br/>
                     <p>Un didactitiel est proposé sur le site du Plan Séisme pour connaître les dispositions à prendre en compte. Il est consultable à l'adresse suivante :</p>
@@ -203,9 +216,9 @@
             <div class="clearfix"/>
         </section>
 
-        <section class="section">
+        <section class="section v-flex">
 
-            <div><span class="title">Autres risques ne faisant pas l'objet d'une obligation d'information</span></div>
+            <span class="title">Autres risques ne faisant pas l'objet d'une obligation d'information</span>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
                     :level="avis.potentielRadon + ''"
@@ -218,11 +231,18 @@
                     :detail="'<p>Dans un rayon de 500 m autour de votre parcelle, sont identifiés :</br>'+
                               (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites référencés dans l\'inventaire des installations classées pour la protection de l\'environnement (ICPE)</br>' : '') +
                               (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites potentiellement pollués, référencés dans l\'inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS).</br>' : '') +
-                              (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
+                              (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale ? '<p>Parmi ces sites, ' + numberOfParcelleMatches + ' présentent une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
                               (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n\'en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
+                    :parcelle="leaflet.data.parcelles"
+                    :leaflet-data="[{ data : avis.installationClasseeRayonParcelle.liste.map(x => x.ewkt),
+                                      color : '#8E0800'},
+                                    { data : avis.basiasRayonParcelle.liste.map(x => x.ewkt),
+                                      color : '#9E9E00'},
+                                    { data : avis.basolRayonParcelle.liste.map(x => x.ewkt),
+                                      color : '#925600'}]"
                     v-if="true"/>
 
             <risque :description="'Votre bien est concerné par le risque inondation puisqu’il est situé en territoire à risque important d’inondation (TRI). Il s’agit d’un territoire exposé à un risque d’inondation sur lequel l\'État et les EPCI (établissement publics de coopération intercommunale) qui disposent de la compétence GEMAPI (gestion des milieux aquatiques et prévention des inondations) ont engagé une démarche d’identification et de gestion de ce risque pour anticiper et réduire l’impact d’une inondation.'"
@@ -242,22 +262,24 @@
                     :title="'Installations nucléaires de base'"
                     v-if="avis.nucleaires.installations.length > 0"/>
 
-            <risque :center="leaflet.center"
+            <risque :parcelle="leaflet.data.parcelles"
                     :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d\'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa afin de prévenir les sinistres.'"
                     :detail="(avis.lentillesArgile.niveauAlea === 3 ? 'Alea fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Veuillez consulter les recommandations au lien suivant pour prévenir les risques : https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3' : '')+
                              (avis.lentillesArgile.niveauAlea === 2 ? 'Alea moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée' : '')+
                              (avis.lentillesArgile.niveauAlea === 1 ? 'Alea faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol)' : '')+
                              (avis.lentillesArgile.niveauAlea === 0 ? 'Alea nul : Aucune présence de sols argileux n\'a été identifiée selon les cartes géologiques actuelles.' : '')"
-                    :leaflet-data="avis.lentillesArgile.multiPolygon"
+                    :leaflet-data="[{ data : avis.lentillesArgile.multiPolygon,
+                                      color : '#2A4999'}]"
                     :level="avis.lentillesArgile.niveauAlea + ''"
                     :level-max="'3'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_terre_bleu.svg'"
                     :title="'Argile'"
                     v-if="hasArgile"/>
 
-            <risque :center="leaflet.center"
+            <risque :parcelle="leaflet.data.parcelles"
                     :description="'Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de votre parcelle. La carte représente les implantations présentes autour de votre localisation.'"
-                    :leaflet-data="avis.canalisations"
+                    :leaflet-data="[{ data : avis.canalisations,
+                                      color : '#2A4999'}]"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_reseaux_canalisation_bleu.svg'"
                     :title="'Canalisations transport de matières dangereuses'"
                     v-if="avis.canalisations.length > 0"/>
@@ -265,11 +287,9 @@
             <div class="clearfix"/>
         </section>
 
-        <section class="section">
+        <section class="section v-flex">
 
             <span class="title">Cette parcelle n'est pas concernée par :</span>
-
-            <div class="clearfix"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
@@ -297,13 +317,10 @@
                     :title="'Pollution des sols'"
                     v-if="!hasPollutionPrincipale"/>
 
-            <risque :center="leaflet.center"
-                    :description="'La parcelle n\'est pas concernée par un plan d\'exposition au bruit.'"
-                    :leaflet-data="''"
-                    :level="'A'"
+            <risque :description="'La parcelle n\'est pas concernée par un plan d\'exposition au bruit.'"
                     :logo-u-r-l="'TODO'"
                     :title="'Bruit'"
-                    v-if="true"/>
+                    v-if="!hasPEB"/>
 
             <div class="clearfix"/>
 
@@ -311,7 +328,6 @@
                 <a :href="this.env.apiPath + 'avis/pdf?' +
                             'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : form.codeInsee) + '&' +
                             'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : form.nomAdresse) + '&' +
-                            'geolocAdresse=' + (tinyUrl.geolocAdresse ? tinyUrl.geolocAdresse.replace(/\|/, '%7C') : form.geolocAdresse.replace(/\|/, '%7C')) + '&' +
                             'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : form.codeParcelle) + '&' +
                             'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : form.codeProprio)"
                    @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
@@ -387,16 +403,6 @@ export default {
     methods: {
         formatDate (date) {
             return moment(date).format('DD/MM/YYYY')
-        },
-        showHideContent () {
-            this.visibility.details = !this.visibility.details
-        },
-        switchTab (name) {
-            this.tab.concordances.index = name;
-            if (this.tab.concordances.index === 'RISQUES' && !this.tab.concordances.pollution.vu) {
-                this._paq.push(['trackEvent', 'Flow', 'Avis', 'Risques'])
-                this.tab.concordances.pollution.vu = true
-            }
         },
         loadAvis (codeAvis) {
             // console.log('loadAvis')
@@ -495,6 +501,9 @@ export default {
         hasArgile: function () {
             return this.avis.lentillesArgile !== undefined && this.avis.lentillesArgile !== null
         },
+        hasPEB: function () {
+            return this.avis.zonePlanExpositionBruit !== undefined && this.avis.zonePlanExpositionBruit !== null
+        },
         hasSismisiteHaute: function () {
             return this.avis.codeSismicite >= 3
         },
@@ -572,6 +581,7 @@ export default {
     }
 
     #bottomButtonsWrapper {
+        flex       : 0 0 100%;
         margin-top : 25px;
         text-align : center;
     }
@@ -663,6 +673,16 @@ export default {
             margin-top  : 20px;
             width       : 100%;
         }
+    }
+
+    section.v-flex {
+        display   : flex;
+        flex-wrap : wrap;
+    }
+
+    section.v-flex > span {
+        flex       : 0 0 100%;
+        text-align : left;
     }
 
     .recommandations_wrapper {

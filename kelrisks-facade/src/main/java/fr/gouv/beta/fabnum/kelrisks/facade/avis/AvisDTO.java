@@ -5,6 +5,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ArgileDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationNucleaireDTO;
+import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanExpositionBruitDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesGasparDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
@@ -57,6 +58,8 @@ public class AvisDTO extends JsonInfoDTO {
     
     private List<Geometry<?>>              geogCanalisations         = new ArrayList<>();
     private List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
+    private String                         zonePlanExpositionBruit;
+    private List<PlanExpositionBruitDTO>   plansExpositionBruit;
     
     @Data
     public static class Summary {

@@ -188,7 +188,7 @@ public class ApiAvis extends AbstractBasicApi {
             return Response.ok(jsonInfoDTO).build();
         }
         
-        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneComplete(codeINSEE);
         
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(parcelleDTOs, communeDTO, nomAdresse);
         
@@ -218,8 +218,8 @@ public class ApiAvis extends AbstractBasicApi {
         if (parcelleDTOs == null || parcelleDTOs.isEmpty()) {
             return null;
         }
-        
-        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
+    
+        CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneComplete(codeINSEE);
         
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(parcelleDTOs, communeDTO, nomAdresse);
         

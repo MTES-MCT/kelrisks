@@ -4,21 +4,6 @@
                :zoom="zoom"
                :ref="'leafletMap_' + reference">
             <l-tile-layer :url="url"/>
-            <!--            <l-geo-json :geojson="parseJSONMap(data.ppr)"-->
-            <!--                        :options="pprOptions"-->
-            <!--                        :options-style="pprStyleFunction"/>-->
-            <!--            <l-geo-json :geojson="parseJSONMap(data.basias)"-->
-            <!--                        :options="basiasOptions"-->
-            <!--                        :options-style="basiasStyleFunction"/>-->
-            <!--            <l-geo-json :geojson="parseJSONMap(data.basol)"-->
-            <!--                        :options="basolOptions"-->
-            <!--                        :options-style="basolStyleFunction"/>-->
-            <!--            <l-geo-json :geojson="parseJSONMap(data.sis)"-->
-            <!--                        :options-style="sisStyleFunction"/>-->
-            <!--            <l-geo-json :geojson="parseJSONMap(data.icpe)"-->
-            <!--                        :options="icpeOptions"-->
-            <!--                        :options-style="icpeStyleFunction"/>-->
-            <!--            <l-geo-json :geojson="parseJSONMap(data.ssp)"/>-->
             <l-geo-json :geojson="parseJSONMap(data.parcelles)"
                         :options="parcelleOptions"
                         :options-style="parcelleStyleFunction"
@@ -62,7 +47,10 @@ export default {
         reference: null
     }),
     methods: {
-        crippleMap (map) {
+        crippleMap () {
+
+            let map = this.$refs['leafletMap_' + this.reference].mapObject
+
             map.zoomControl.disable()
             map.touchZoom.disable()
             map.doubleClickZoom.disable()
@@ -72,7 +60,10 @@ export default {
 
             map.dragging.disable()
         },
-        centerMap (map) {
+        centerMap () {
+
+            let map = this.$refs['leafletMap_' + this.reference].mapObject
+
             map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
         },
         parseJSON (data) {
@@ -102,29 +93,6 @@ export default {
                 onEachFeature: this.onEachFeatureFunction,
             };
         },
-        // icpeOptions () {
-        //     return {
-        //         onEachFeature: this.onEachFeatureFunction,
-        //         pointToLayer: this.createIcpeIcon
-        //     };
-        // },
-        // pprOptions () {
-        //     return {
-        //         onEachFeature: this.onEachFeatureFunction,
-        //     };
-        // },
-        // basiasOptions () {
-        //     return {
-        //         onEachFeature: this.onEachFeatureFunction,
-        //         pointToLayer: this.createBasiasIcon
-        //     };
-        // },
-        // basolOptions () {
-        //     return {
-        //         onEachFeature: this.onEachFeatureFunction,
-        //         pointToLayer: this.createBasolIcon
-        //     };
-        // },
         adresseOptions () {
             return {
                 onEachFeature: this.onEachFeatureFunction,
@@ -143,62 +111,6 @@ export default {
                 };
             };
         },
-        // pprStyleFunction () {
-        // const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor
-        // return () => {
-        //     return {
-        //         weight: 2,
-        //         color: "#FFA153",
-        //         opacity: 0.8,
-        //         fillColor: "#FFA153",
-        //         fillOpacity: 0.2
-        //     };
-        // };
-        // },
-        // basiasStyleFunction () {
-        //     return () => {
-        //         return {
-        //             weight: 2,
-        //             color: "#EFEF00",
-        //             opacity: 0.8,
-        //             fillColor: "#EFEF00",
-        //             fillOpacity: 0.2
-        //         };
-        //     };
-        // },
-        // basolStyleFunction () {
-        //     return () => {
-        //         return {
-        //             weight: 2,
-        //             color: "#FF9800",
-        //             opacity: 0.8,
-        //             fillColor: "#FF9800",
-        //             fillOpacity: 0.2
-        //         };
-        //     };
-        // },
-        // sisStyleFunction () {
-        //     return () => {
-        //         return {
-        //             weight: 2,
-        //             color: "#C500FF",
-        //             opacity: 0.8,
-        //             fillColor: "#C500FF",
-        //             fillOpacity: 0.2
-        //         };
-        //     };
-        // },
-        // icpeStyleFunction () {
-        //     return () => {
-        //         return {
-        //             weight: 2,
-        //             color: "#C00900",
-        //             opacity: 0.8,
-        //             fillColor: "#C00900",
-        //             fillOpacity: 0.2
-        //         };
-        //     };
-        // },
         onEachFeatureFunction () {
             return (feature, layer) => {
                 layer.bindTooltip(
@@ -242,48 +154,6 @@ export default {
                 return marker(latlng, {icon: myIcon})
             };
         },
-        // createIcpeIcon () {
-        //     return (feature, latlng) => {
-        //         let myIcon = icon({
-        //             iconUrl: '/images/leaflet/icpe.svg',
-        //             shadowUrl: '/images/leaflet/shadow.png',
-        //             iconSize: [35, 35], // width and height of the image in pixels
-        //             shadowSize: [30, 22], // width, height of optional shadow image
-        //             iconAnchor: [17, 35], // point of the icon which will correspond to marker's location
-        //             shadowAnchor: [0, 24],  // anchor point of the shadow. should be offset
-        //             popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
-        //         })
-        //         return marker(latlng, {icon: myIcon})
-        //     };
-        // },
-        // createBasiasIcon () {
-        //     return (feature, latlng) => {
-        //         let myIcon = icon({
-        //             iconUrl: '/images/leaflet/basias.svg',
-        //             shadowUrl: '/images/leaflet/shadow.png',
-        //             iconSize: [35, 35], // width and height of the image in pixels
-        //             shadowSize: [30, 22], // width, height of optional shadow image
-        //             iconAnchor: [17, 35], // point of the icon which will correspond to marker's location
-        //             shadowAnchor: [0, 24],  // anchor point of the shadow. should be offset
-        //             popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
-        //         })
-        //         return marker(latlng, {icon: myIcon})
-        //     };
-        // },
-        // createBasolIcon () {
-        //     return (feature, latlng) => {
-        //         let myIcon = icon({
-        //             iconUrl: '/images/leaflet/basol.svg',
-        //             shadowUrl: '/images/leaflet/shadow.png',
-        //             iconSize: [35, 35], // width and height of the image in pixels
-        //             shadowSize: [30, 22], // width, height of optional shadow image
-        //             iconAnchor: [17, 35], // point of the icon which will correspond to marker's location
-        //             shadowAnchor: [0, 24],  // anchor point of the shadow. should be offset
-        //             popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
-        //         })
-        //         return marker(latlng, {icon: myIcon})
-        //     };
-        // }
     },
     mounted () {
 
@@ -291,11 +161,14 @@ export default {
 
         this.$nextTick(() => {
 
-            const map = this.$refs['leafletMap_' + this.reference].mapObject
-            this.crippleMap(map)
-            this.centerMap(map)
+            this.crippleMap()
+            this.centerMap()
         })
-    }
+        window.addEventListener('resize', this.centerMap)
+    },
+    beforeDestroy: function () {
+        window.removeEventListener('resize', this.centerMap)
+    },
 }
 </script>
 

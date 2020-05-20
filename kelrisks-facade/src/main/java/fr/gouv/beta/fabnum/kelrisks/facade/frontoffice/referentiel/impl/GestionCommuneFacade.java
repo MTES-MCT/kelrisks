@@ -12,6 +12,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.CommuneQO;
 
 import java.util.List;
 
+import org.geolatte.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,15 +28,25 @@ public class GestionCommuneFacade extends AbstractFacade implements IGestionComm
     
     @Override
     public List<CommuneDTO> rechercherCommunePartielle(String query) {
-        
+    
         CommuneQO communeQO = new CommuneQO();
-        
+    
         communeQO.setCommunePartielle(query);
     
         CritereTri critereTri = new CritereTri();
         critereTri.ajouteOrdre(QCommune.commune.nomCommune.asc());
     
         return communeMapper.toDTOs(communeService.rechercherAvecCritere(critereTri, communeQO));
+    }
+    
+    @Override
+    public CommuneDTO rechercherCommuneComplete(String codeINSEE) {
+        
+        CommuneDTO communeDTO = rechercherCommuneAvecCodeINSEE(codeINSEE);
+        
+        communeDTO.setCommunesLimitrophes(rechercherCommunesLimitrophes(communeDTO.getMultiPolygon(), codeINSEE));
+        
+        return communeDTO;
     }
     
     @Override
@@ -46,5 +57,11 @@ public class GestionCommuneFacade extends AbstractFacade implements IGestionComm
         communeQO.setCodeINSEE(codeINSEE);
         
         return communeMapper.toDTO(communeService.rechercherResultatUniqueAvecCritere(communeQO));
+    }
+    
+    @Override
+    public List<CommuneDTO> rechercherCommunesLimitrophes(Geometry<?> geog, String notINSEE) {
+        
+        return communeMapper.toDTOs(communeService.rechercherCommunesLimitrophes(geog, notINSEE));
     }
 }
