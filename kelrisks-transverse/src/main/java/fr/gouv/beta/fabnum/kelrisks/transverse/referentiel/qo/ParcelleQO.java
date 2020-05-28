@@ -37,7 +37,7 @@ public class ParcelleQO extends AbstractQO {
             BooleanBuilder anySecNumCoupleBuilder = new BooleanBuilder();
             secNums.forEach(secNum -> {
                 BooleanBuilder secAndNumBuilder = new BooleanBuilder();
-                secAndNumBuilder.and(QParcelle.parcelle.section.eq(secNum.section));
+                secAndNumBuilder.and(QParcelle.parcelle.section.equalsIgnoreCase(secNum.section));
                 secAndNumBuilder.and(QParcelle.parcelle.numero.eq(secNum.numero));
                 anySecNumCoupleBuilder.or(secAndNumBuilder);
             });
