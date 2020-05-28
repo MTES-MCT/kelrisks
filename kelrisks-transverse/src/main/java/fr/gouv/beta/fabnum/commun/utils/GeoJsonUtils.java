@@ -23,9 +23,11 @@ public class GeoJsonUtils {
     }
     
     public static String toGeoJson(List<Geometry<?>> polygons) {
-        
+    
+        if (polygons == null) { return ""; }
+    
         MultiPolygon<?> multipolygon = new MultiPolygon(polygons.toArray(new Polygon[0]));
-        
+    
         return toGeoJson(multipolygon, null, null);
     }
     
@@ -40,15 +42,17 @@ public class GeoJsonUtils {
     }
     
     public static String toGeoJson(Geometry<?> geom, String id, Map<String, Object> properties) {
-        
+    
+        if (geom == null) { return ""; }
+    
         if (properties == null) {
             properties = new HashMap<>();
             properties.put("code", geom.hashCode());
             properties.put("nom", "MyGeom");
         }
-        
+    
         String geoJsonOutput = "";
-        
+    
         try {
             Feature<?, ?> f      = new GeoJsonFeature<>(geom, (id == null ? "1" : id), properties);
             ObjectMapper  mapper = new ObjectMapper();
