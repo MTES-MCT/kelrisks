@@ -7,5 +7,5 @@ public interface IGestionIGNCartoFacade {
     
     IGNCartoAssiettePaginatedFeatures rechercherAssiettesContenantPolygon(String geom);
     
-    IGNCartoGenerateurPaginatedFeatures rechercherGenerateurContenantPolygon(String geom, String partition);
+    IGNCartoGenerateurPaginatedFeatures rechercherGenerateur(String partition);
 }

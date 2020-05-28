@@ -5,7 +5,6 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoAssiettePaginat
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoGenerateurPaginatedFeatures;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,9 +21,13 @@ public class IGNCartoController {
         return ignCartoFacade.rechercherAssiettesContenantPolygon(geom);
     }
     
-    @GetMapping("/ign/generateur/{geom}/{partition}")
-    public IGNCartoGenerateurPaginatedFeatures generateur(@PathVariable("geom") String geom, @PathVariable("partition") String partition) {
+    @GetMapping("/ign/generateur/{idgen}/{partition}")
+    public IGNCartoGenerateurPaginatedFeatures generateur(@PathVariable("idgen") String idgen, @PathVariable("partition") String partition) {
         
-        return ignCartoFacade.rechercherGenerateurContenantPolygon(geom, partition);
+        IGNCartoGenerateurPaginatedFeatures ignCartoGenerateurPaginatedFeatures = ignCartoFacade.rechercherGenerateur(partition);
+        
+        ignCartoGenerateurPaginatedFeatures.getFeatures().removeIf(generateur -> !generateur.getProperties().getIdgen().equalsIgnoreCase(idgen));
+        
+        return ignCartoGenerateurPaginatedFeatures;
     }
 }
