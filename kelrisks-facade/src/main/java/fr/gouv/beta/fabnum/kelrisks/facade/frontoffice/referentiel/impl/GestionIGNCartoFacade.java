@@ -22,8 +22,8 @@ public class GestionIGNCartoFacade extends AbstractFacade implements IGestionIGN
     }
     
     @Override
-    public IGNCartoGenerateurPaginatedFeatures rechercherGenerateurContenantPolygon(String geom, String partition) {
-        
-        return ignCartoService.rechercherGenerateurContenantPolygon(geom, partition);
+    public IGNCartoGenerateurPaginatedFeatures rechercherGenerateur(String partition) {
+    
+        return ignCartoService.rechercherGenerateur(partition);
     }
 }

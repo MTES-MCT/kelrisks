@@ -267,22 +267,22 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         if (assiettes != null) {
     
             assiettes.getFeatures().forEach(assiette -> {
-                
-                IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateurContenantPolygon(parcelleSitesSolsPoluesGeoJson, assiette.getProperties().getPartition());
+        
+                IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateur(assiette.getProperties().getPartition());
         
                 if (generateurs != null) {
             
-                    generateurs.getFeatures().stream()
-                            .filter(generateur -> generateur.getProperties().getIdgen().equals(assiette.getProperties().getIdgen())) // Sécurisation de la jointure assiette / générateur qui ne peut
-                            // être faite via l'API GpU
-                            .findFirst()
-                            .ifPresent(generateur -> {
-                                PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
-    
-                                if (gaspar != null) {
-                                    planPreventionRisquesList.add(gaspar);
-                                }
-                            });
+                    // Sécurisation de la jointure assiette / générateur qui ne peut être faite via l'API GpU
+                    generateurs.getFeatures().removeIf(generateur -> !generateur.getProperties().getIdgen().equalsIgnoreCase(assiette.getProperties().getIdgen()));
+            
+                    generateurs.getFeatures().forEach(generateur -> {
+                
+                        PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
+                
+                        if (gaspar != null) {
+                            planPreventionRisquesList.add(gaspar);
+                        }
+                    });
                 }
             });
         }
@@ -354,7 +354,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
     
             Map<String, Object> properties = Stream.of(new SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
-                                                       new SimpleEntry<>("approuvéLe", sdf.format(gaspars.get(0).getDateApprobation())))
+                                                       new SimpleEntry<>("prescritLe", gaspars.get(0).getDateDeprescription() != null ? sdf.format(gaspars.get(0).getDateDeprescription()) : "n/a"),
+                                                       new SimpleEntry<>("approuvéLe", gaspars.get(0).getDateApprobation() != null ? sdf.format(gaspars.get(0).getDateApprobation()) : "n/a"))
                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     
             PlanPreventionRisquesGasparDTO planPreventionRisquesGasparDTO = gaspars.get(0);

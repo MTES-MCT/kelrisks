@@ -39,17 +39,15 @@ public class IGNCartoService implements IIGNCartoService {
     }
     
     @Override
-    public IGNCartoGenerateurPaginatedFeatures rechercherGenerateurContenantPolygon(String geom, String partition) {
+    public IGNCartoGenerateurPaginatedFeatures rechercherGenerateur(String partition) {
         
         WebClient webClient = WebClient.create();
         
         UriBuilder uriBuilder = UriBuilder.fromPath(SURFACIQUE_URL);
         URI generateurUri = uriBuilder
-                                    .queryParam("geom", "{geom}")
                                     .queryParam("partition", "{partition}")
-                                    .queryParam("idgen", "PM1-130012073-07-02")
-                                    .build(geom, partition);
-    
+                                    .build(partition);
+        
         return webClient.get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)

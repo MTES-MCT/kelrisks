@@ -71,7 +71,8 @@
 
             <span class="title">Risques Principaux</span>
 
-            <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle + ', approuvé le '+formatDate(plan.dateApprobation)+'.<br/><br/>' +
+            <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle +
+                                  (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) + '.<br/><br/>' +
                                   'Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
                     :parcelle="leaflet.data.parcelles"
@@ -155,9 +156,6 @@
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
                     v-if="hasPollutionPrincipale"/>
-
-            Installation(s) concerné(e) :
-            - Saint-Alban-1 (Le Péage-de-Roussillon) TODO
 
             <risque :description="'La parcelle est concernée par un plan d\'exposition au bruit car elle est exposée aux nuisances d\'un aéroport.'"
                     :parcelle="leaflet.data.parcelles"
