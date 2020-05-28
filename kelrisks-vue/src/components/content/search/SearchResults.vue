@@ -148,13 +148,16 @@
 
             <risque :parcelle="leaflet.data.parcelles"
                     :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d\'usage des sols (travaux, aménagements changement d\'affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
-                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classées pour la protection de l\'environnement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>' : '') +
+                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classées pour la protection de l\'environnement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires : '') +
                              (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d\'information sur les sols.</br>' : '') +
                              (false ? '- La parcelle est affectée d\'une servitude d\'utilité publique au titre des installations classées au titre du L 515-12 du code de l\'environnement.' : '') +
                              '<p><a href=\'#recommendations_pollution\'>Lire les recommandations</a></p>'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
                     v-if="hasPollutionPrincipale"/>
+
+            Installation(s) concerné(e) :
+            - Saint-Alban-1 (Le Péage-de-Roussillon) TODO
 
             <risque :description="'La parcelle est concernée par un plan d\'exposition au bruit car elle est exposée aux nuisances d\'un aéroport.'"
                     :parcelle="leaflet.data.parcelles"
@@ -590,6 +593,16 @@ export default {
         hasAZI: function () {
             if (this.avis.AZIs === null) return false
             return this.avis.AZIs.length > 0
+        },
+        getLibelleInstallationsclassees () {
+            let libelle = ''
+
+            for (let installation in this.avis.installationClasseeParcelle.liste) {
+                installation = this.avis.installationClasseeParcelle[installation]
+                libelle += '- ' + installation.nom + ' (' + installation.commune + ')<br/>'
+            }
+
+            return libelle
         },
         getLibelleInstallationsNucleaires () {
             let libelle = ''
