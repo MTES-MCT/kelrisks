@@ -349,14 +349,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
         List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
         
-        if (gaspars.size() == 1) {
-            
+        if (gaspars.size() >= 1) {
+    
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
-            
+    
             Map<String, Object> properties = Stream.of(new SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
                                                        new SimpleEntry<>("approuvéLe", sdf.format(gaspars.get(0).getDateApprobation())))
                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-            
+    
             PlanPreventionRisquesGasparDTO planPreventionRisquesGasparDTO = gaspars.get(0);
             planPreventionRisquesGasparDTO.setAssiette(GeoJsonUtils.toGeoJson(geometry, properties));
             

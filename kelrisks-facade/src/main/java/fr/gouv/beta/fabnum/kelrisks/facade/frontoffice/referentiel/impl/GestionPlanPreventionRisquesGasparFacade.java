@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
+import fr.gouv.beta.fabnum.commun.transverse.qo.CritereTri;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesGasparDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanPreventionRisquesGasparFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IPlanPreventionRisquesGasparMapper;
@@ -31,10 +32,12 @@ public class GestionPlanPreventionRisquesGasparFacade extends AbstractFacade imp
     
     @Override
     public List<PlanPreventionRisquesGasparDTO> rechercherAvecCritere(PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO) {
-        
+    
+        CritereTri datePrescription = new CritereTri("datePrescription", false);
+    
         List<PlanPreventionRisquesGasparDTO> planPreventionRisquesGasparDTOs =
-                planPreventionRisquesGasparMapper.toDTOs(planPreventionRisquesGasparService.rechercherAvecCritere(planPreventionRisquesGasparQO));
-        
+                planPreventionRisquesGasparMapper.toDTOs(planPreventionRisquesGasparService.rechercherAvecCritere(datePrescription, planPreventionRisquesGasparQO));
+    
         return planPreventionRisquesGasparDTOs;
     }
 }
