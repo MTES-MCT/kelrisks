@@ -163,7 +163,7 @@
                              (avis.zonePlanExpositionBruit === 'B' ? 'Le niveau d\'exposition au bruit de la parcelle est fort (zone B en orange).' : '') +
                              (avis.zonePlanExpositionBruit === 'C' ? 'Le niveau d\'exposition au bruit de la parcelle est modéré (zone C en jaune).' : '') +
                              (avis.zonePlanExpositionBruit === 'D' ? 'Le niveau d\'exposition au bruit de la parcelle est faible (zone D en verte).' : '')"
-                    :logo-u-r-l="'TODO'"
+                    :logo-u-r-l="'/images/pictogrammes_risque/ic_bruit_bleu.svg'"
                     :leaflet-data="typeof avis.plansExpositionBruit.map ===  'function' ?
                                    [{ data : avis.plansExpositionBruit.filter(x => x.zone === 'D').map(x => x.multiPolygon),
                                       color : '#058E0C'},
@@ -365,7 +365,7 @@
                     v-if="!hasPollutionPrincipale"/>
 
             <risque :description="'La parcelle n\'est pas concernée par un plan d\'exposition au bruit.'"
-                    :logo-u-r-l="'TODO'"
+                    :logo-u-r-l="'/images/pictogrammes_risque/ic_bruit_bleu.svg'"
                     :title="'Bruit'"
                     v-if="!hasPEB"/>
 
