@@ -186,6 +186,8 @@ export default {
 
             if (this.form.codeInsee && this.form.codeParcelle && this.form.codeParcelle.length >= 2) {
 
+                this.$refs.searchErrors.clearWarnings()
+
                 fetchWithError(this.env.apiPath + "cadastre/match/" + this.form.codeInsee + "/" + this.form.codeParcelle, null, 1000 * 10)
                     .then(stream => stream.json())
                     .then(data => {
@@ -196,6 +198,7 @@ export default {
                             this.leaflet.parcelleFound = data.entity.parcelle.section + '-' + data.entity.parcelle.numero
                         } else {
                             this.clearSelectedParcelles()
+                            if (this.form.codeParcelle !== '') this.$refs.searchErrors.sendWarning('Aucune parcelle n\'a été trouvé avec le code suivant : ' + this.form.codeParcelle + '.')
                         }
                     })
             }
