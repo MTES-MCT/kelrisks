@@ -115,9 +115,9 @@
                     :level="avis.summary.commune.codeZoneSismicite + ''"
                     :level-max="'5'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
-                    :title="'Sismisité'"
+                    :title="'Sismicité'"
                     :parcelle="leaflet.data.parcelles"
-                    v-if="hasSismisiteHaute || hasSismisiteMoyenne"/>
+                    v-if="hasSismiciteHaute || hasSismiciteMoyenne"/>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.<br/>'+
                                   '<a href=\'#recommendations_radon\'>Lire les recommandations</a>'"
@@ -136,9 +136,9 @@
                                       color : '#840505'}] :
                                     undefined"
                     :legend-blocks="[
-                        ['#FFD332', '2 - faible'],
-                        ['#FF8000', '3 - modéré'],
-                        ['#840505', '5 - fort']]"
+                        ['#FFD332', 'Zone 1 : zones à potentiel radon faible'],
+                        ['#FF8000', 'Zone 2 : zones à potentiel radon faible mais sur lesquelles des facteurs géologiques particuliers peuvent faciliter le transfert du radon vers les bâtiments'],
+                        ['#840505', 'Zone 3 : zones à potentiel radon significatif']]"
                     :level="avis.summary.commune.classePotentielRadon + ''"
                     :level-max="'3'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
@@ -204,7 +204,7 @@
                        associé à des risques accessible sur le site internet de votre préfecture.</p>
                 </template>
 
-                <template v-if="hasSismisite">
+                <template v-if="hasSismicite">
                     <h4 id="recommendations_sismicite">Sismicité</h4>
                     <p>Pour le bâti neuf, en fonction de la zone de sismicité (zone 2 "sismicité faible" à zone 5 "sismicité forte") et du type de construction (habitation individuelle, habitations
                        collectives, ERP, ...) des dispositions spécifiques s'appliquent selon la réglementation (arrêté du 22 octobre 2010).</p><br/>
@@ -252,6 +252,25 @@
                     :level-max="'3'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
                     :title="'Radon'"
+                    :leaflet-data="typeof avis.summary.commune.communesLimitrophes.map ===  'function' ?
+                                   [{ data : avis.summary.commune.classePotentielRadon === '1' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#FFD332'},
+                                    { data : avis.summary.commune.classePotentielRadon === '2' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#FF8000'},
+                                    { data : avis.summary.commune.classePotentielRadon === '3' ? [avis.summary.commune.multiPolygon] : [],
+                                      color : '#840505'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '1').map(x => x.multiPolygon),
+                                      color : '#FFD332'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '2').map(x => x.multiPolygon),
+                                      color : '#FF8000'},
+                                    { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon),
+                                      color : '#840505'}] :
+                                    undefined"
+                    :legend-blocks="[
+                        ['#FFD332', 'Zone 1 : zones à potentiel radon faible'],
+                        ['#FF8000', 'Zone 2 : zones à potentiel radon faible mais sur lesquelles des facteurs géologiques particuliers peuvent faciliter le transfert du radon vers les bâtiments'],
+                        ['#840505', 'Zone 3 : zones à potentiel radon significatif']]"
+                    :parcelle="leaflet.data.parcelles"
                     v-if="hasRadonMoyen"/>
 
             <risque :description="'Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.'"
@@ -531,16 +550,16 @@ export default {
         hasPEB: function () {
             return this.avis.zonePlanExpositionBruit !== undefined && this.avis.zonePlanExpositionBruit !== null
         },
-        hasSismisiteHaute: function () {
+        hasSismiciteHaute: function () {
             return this.avis.summary.commune.codeZoneSismicite === '3' ||
                 this.avis.summary.commune.codeZoneSismicite === '4' ||
                 this.avis.summary.commune.codeZoneSismicite === '5'
         },
-        hasSismisiteMoyenne: function () {
+        hasSismiciteMoyenne: function () {
             return this.avis.summary.commune.codeZoneSismicite === '2'
         },
-        hasSismisite: function () {
-            return this.hasSismisiteMoyenne || this.hasSismisiteHaute
+        hasSismicite: function () {
+            return this.hasSismiciteMoyenne || this.hasSismiciteHaute
         },
         hasPPR: function () {
             return this.avis.ppr.length > 0
