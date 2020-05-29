@@ -216,11 +216,9 @@ export default {
             this.showLeaflet(false)
         },
         showLeaflet (visible) {
-            if (visible && !this.leaflet.hasGeoloc) {
-                setTimeout(() => {
-                    this.$refs.sfp_form_leaflet.invalidate()
-                }, 500);
-            }
+            setTimeout(() => {
+                this.$refs.sfp_form_leaflet.invalidate()
+            }, 1000);
             this.leaflet.hasGeoloc = visible
         }
     }

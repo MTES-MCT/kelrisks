@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 
+import fr.gouv.beta.fabnum.commun.metier.IWebClient;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeoDataGouvService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeoDataGouvCommune;
 
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service("geoDataGouvService")
-public class GeoDataGouvService implements IGeoDataGouvService {
+public class GeoDataGouvService implements IGeoDataGouvService, IWebClient {
     
     private static final String ADRESSE_BASE_URL = "https://geo.api.gouv.fr";
     private static final String COMMUNE_URL      = ADRESSE_BASE_URL + "/communes?lat=PARAM_LAT&lon=PARAM_LON&fields=code&format=json&geometry=centre";
@@ -21,7 +22,7 @@ public class GeoDataGouvService implements IGeoDataGouvService {
         
         WebClient webClient = WebClient.create();
         
-        GeoDataGouvCommune[] block = webClient.get()
+        GeoDataGouvCommune[] block = getWebClient().get()
                                              .uri(uri)
                                              .accept(MediaType.APPLICATION_JSON)
                                              .exchange()
