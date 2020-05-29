@@ -124,7 +124,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
     private AvisDTO getAvisFromParcelle(AvisDTO avisDTO, List<ParcelleDTO> parcelleDTOs, CommuneDTO communeDTO) {
     
-        System.out.println("------------- " + parcelleDTOs.stream().map(parcelleDTO -> parcelleDTO.getSection() + parcelleDTO.getNumero()).collect(Collectors.joining(", ")) + " @ " + communeDTO.getCodeINSEE() + " -------------");
+        System.out.println("------------- " + parcelleDTOs.stream().map(parcelleDTO -> parcelleDTO.getSection() + parcelleDTO.getNumero()).collect(Collectors.joining(", ")) + " @ " + communeDTO.getNomCommune() + " - " + communeDTO.getCodePostal() + " (" + communeDTO.getCodeINSEE() + ") -------------");
         long startTime = System.currentTimeMillis();
         Geometry<?> parcellesUnion = gestionParcelleFacade.rechercherUnionParcelles(parcelleDTOs.stream()
                                                                                             .map(ParcelleDTO::getId)

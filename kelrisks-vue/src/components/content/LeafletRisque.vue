@@ -72,6 +72,8 @@ export default {
         },
         centerMap () {
 
+            // console.log(this.reference + " => centerMap")
+
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
             let bounds = null
@@ -202,9 +204,13 @@ export default {
     },
     mounted () {
 
+        // console.log(this.reference + " => mounted")
+
         this.reference = this._uid
 
         this.$nextTick(() => {
+
+            // console.log(this.reference + " => $nextTick")
 
             this.crippleMap()
             this.centerMap()
@@ -216,7 +222,14 @@ export default {
     },
     watch: {
         data: function () {
-            this.centerMap()
+
+            setTimeout(() => {
+
+                // console.log(this.reference + " => setTimeout")
+
+                this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
+                this.centerMap()
+            }, 2000);
         }
     }
 }

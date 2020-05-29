@@ -170,6 +170,16 @@ export default {
     beforeDestroy: function () {
         window.removeEventListener('resize', this.centerMap)
     },
+    watch: {
+        data: function () {
+
+            setTimeout(() => {
+
+                this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
+                this.centerMap()
+            }, 2000);
+        }
+    }
 }
 </script>
 
