@@ -496,8 +496,12 @@ export default {
         getLogoRisque (codeAlea) {
 
             switch (codeAlea) {
+                case '11' :
+                    return 'ic_inondation_bleu'
                 case '12' :
                     return 'ic_terre_bleu'
+                case '21' :
+                    return 'ic_industrie_bleu'
                 default :
                     console.log(codeAlea)
                     return 'ic_basias_bleu'
