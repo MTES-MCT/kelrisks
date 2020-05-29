@@ -290,7 +290,7 @@
                                       color : '#9E9E00'},
                                     { data : avis.basolRayonParcelle.liste.map(x => x.ewkt),
                                       color : '#925600'}]"
-                    v-if="true"/>
+                    v-if="hasPollutionNonReglementaire"/>
 
             <risque :description="'Votre bien est concerné par le risque inondation puisqu’il est situé en territoire à risque important d’inondation (TRI). Il s’agit d’un territoire exposé à un risque d’inondation sur lequel l\'État et les EPCI (établissement publics de coopération intercommunale) qui disposent de la compétence GEMAPI (gestion des milieux aquatiques et prévention des inondations) ont engagé une démarche d’identification et de gestion de ce risque pour anticiper et réduire l’impact d’une inondation.'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_inondation_bleu.svg'"
@@ -514,8 +514,7 @@ export default {
                 this.avis.sisParcelle.numberOf > 0
         },
         hasPollutionNonReglementaire: function () {
-            return this.avis.installationClasseeParcelle.numberOf > 0 ||
-                this.avis.sisParcelle.numberOf > 0
+            return this.avis.installationClasseeRayonParcelle.numberOf > 0 || this.avis.basiasRayonParcelle.numberOf > 0 || this.avis.basolRayonParcelle.numberOf > 0
         },
         numberOfParcelleMatches: function () {
             return this.avis.installationClasseeParcelle.numberOf +
