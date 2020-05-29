@@ -62,6 +62,7 @@ export default {
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
             map.zoomControl.disable()
+            map.zoomControl.remove()
             map.touchZoom.disable()
             map.doubleClickZoom.disable()
             map.scrollWheelZoom.disable()
