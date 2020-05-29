@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 
+import fr.gouv.beta.fabnum.commun.metier.IWebClient;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IIGNCartoService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoAssiettePaginatedFeatures;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoGenerateurPaginatedFeatures;
@@ -11,10 +12,9 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Service("iGNCartoService")
-public class IGNCartoService implements IIGNCartoService {
+public class IGNCartoService implements IIGNCartoService, IWebClient {
     
     private static final String IGNCarto_BASE_URL = "https://apicarto.ign.fr/api";
     private static final String ASSIETTE_URL      = IGNCarto_BASE_URL + "/gpu/assiette-sup-s";
@@ -23,32 +23,28 @@ public class IGNCartoService implements IIGNCartoService {
     @Override
     public IGNCartoAssiettePaginatedFeatures rechercherAssiettesContenantPolygon(String geom) {
         
-        WebClient webClient = WebClient.create();
-        
         UriBuilder uriBuilder  = UriBuilder.fromPath(ASSIETTE_URL);
         URI        assietteUri = uriBuilder.queryParam("geom", "{geom}").build(geom);
-    
-        IGNCartoAssiettePaginatedFeatures assietteFeatures = webClient.get()
+        
+        IGNCartoAssiettePaginatedFeatures assietteFeatures = getWebClient().get()
                                                                      .uri(assietteUri)
                                                                      .accept(MediaType.APPLICATION_JSON)
                                                                      .exchange()
                                                                      .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoAssiettePaginatedFeatures.class))
                                                                      .block(Duration.ofSeconds(60L));
-    
+        
         return assietteFeatures;
     }
     
     @Override
     public IGNCartoGenerateurPaginatedFeatures rechercherGenerateur(String partition) {
         
-        WebClient webClient = WebClient.create();
-        
         UriBuilder uriBuilder = UriBuilder.fromPath(SURFACIQUE_URL);
         URI generateurUri = uriBuilder
                                     .queryParam("partition", "{partition}")
                                     .build(partition);
-        
-        return webClient.get()
+    
+        return getWebClient().get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()

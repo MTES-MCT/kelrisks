@@ -20,44 +20,47 @@ export default {
             parcelleFound: '',
             hasGeoloc: false
         },
-        avis: {
-            summary: {
-                adresse: {
-                    rue: {}
-                },
-                commune: {}
-            },
-            basiasNbOf: 0,
-            basiasParcelle: {},
-            basiasProximiteParcelle: {},
-            basiasRayonParcelle: {},
-            basiasRaisonSociale: {},
-            basiasNonGeorerencee: {},
-            basolNbOf: 0,
-            basolParcelle: {},
-            basolProximiteParcelle: {},
-            basolRayonParcelle: {},
-            basolNonGeorerencee: {},
-            s3ICNbOf: 0,
-            installationClasseeParcelle: {},
-            installationClasseeProximiteParcelle: {},
-            installationClasseeRayonParcelle: {},
-            installationClasseeNonGeorerencee: {},
-            sisParcelle: {},
-            sisNonGeorerencee: {},
-            lentillesArgile: {},
-            codeSismicite: 0,
-            potentielRadon: 0,
-            ppr: {},
-            TRIs: {},
-            AZIs: {},
-            canalisations: {},
-            nucleaires: {},
-            zonePlanExpositionBruit: '',
-            plansExpositionBruit: {}
-        },
+        avis: {},
     }),
     methods: {
+        initAvis () {
+            return {
+                summary: {
+                    adresse: {
+                        rue: {}
+                    },
+                    commune: {}
+                },
+                basiasNbOf: 0,
+                basiasParcelle: {},
+                basiasProximiteParcelle: {},
+                basiasRayonParcelle: {},
+                basiasRaisonSociale: {},
+                basiasNonGeorerencee: {},
+                basolNbOf: 0,
+                basolParcelle: {},
+                basolProximiteParcelle: {},
+                basolRayonParcelle: {},
+                basolNonGeorerencee: {},
+                s3ICNbOf: 0,
+                installationClasseeParcelle: {},
+                installationClasseeProximiteParcelle: {},
+                installationClasseeRayonParcelle: {},
+                installationClasseeNonGeorerencee: {},
+                sisParcelle: {},
+                sisNonGeorerencee: {},
+                lentillesArgile: {},
+                codeSismicite: 0,
+                potentielRadon: 0,
+                ppr: {},
+                TRIs: {},
+                AZIs: {},
+                canalisations: {},
+                nucleaires: {},
+                zonePlanExpositionBruit: '',
+                plansExpositionBruit: {}
+            }
+        },
         getAvis () {
             this.$refs.searchErrors.clearAll()
 
@@ -82,6 +85,8 @@ export default {
             fetchWithError(url, null, 1000 * 60)
                 .then(stream => stream.json())
                 .then(value => {
+
+                    this.avis = this.initAvis()
 
                     this.$refs.searchErrors.checkInformations(value.entity)
 
@@ -157,6 +162,8 @@ export default {
                 .catch(() => {
 
                     this.$refs.searchErrors.sendError('Votre requête n\'a pu aboutir dans un délais raisonnable, merci de réessayer ou de nous le signaler au moyen du formulaire de contact.')
+
+                    this.avis = this.initAvis()
 
                     this.querying = false
                 })

@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 
+import fr.gouv.beta.fabnum.commun.metier.IWebClient;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IBRGMService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedCanalisation;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedInstallationNuclaire;
@@ -11,10 +12,9 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Service("brgmService")
-public class BRGMService implements IBRGMService {
+public class BRGMService implements IBRGMService, IWebClient {
     
     private static final String BRGM_BASE_URL                            = "https://mapsref.brgm.fr/wxs/georisques/rapport?";
     private static final String CANALISATIONS_COORDONNEES_URL            = BRGM_BASE_URL + "version=1.0.0&service=wfs&request=getfeature&typename=CANALISATIONS&propertyname=gid,num_com,nom_com," +
@@ -28,10 +28,8 @@ public class BRGMService implements IBRGMService {
     public BRGMPaginatedCanalisation rechercherCanalisationsCommune(String codeINSEE) {
         
         String uri = CANALISATIONS_COMMUNE_URL.replace("PARAM_INSEE", codeINSEE);
-        
-        WebClient webClient = WebClient.create();
-        
-        return webClient.get()
+    
+        return getWebClient().get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
@@ -42,16 +40,14 @@ public class BRGMService implements IBRGMService {
     @Override
     public BRGMPaginatedCanalisation rechercherCanalisationsCoordonnees(String lon, String lat, int rayon) {
         
-        WebClient webClient = WebClient.create();
-        
         UriBuilder uriBuilder = UriBuilder.fromPath(CANALISATIONS_COORDONNEES_URL);
         URI generateurUri = uriBuilder
                                     .queryParam("rayon", String.valueOf(rayon))
                                     .queryParam("X", lon)
                                     .queryParam("Y", lat)
                                     .build();
-        
-        return webClient.get()
+    
+        return getWebClient().get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
@@ -62,10 +58,8 @@ public class BRGMService implements IBRGMService {
     public BRGMPaginatedInstallationNuclaire rechercherInstallationsNucleairesCommune(String codeINSEE) {
         
         String uri = INSTALLATIONS_NUCLEAIRES_COMMUNE_URL.replace("PARAM_INSEE", codeINSEE);
-        
-        WebClient webClient = WebClient.create();
-        
-        return webClient.get()
+    
+        return getWebClient().get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
@@ -76,16 +70,14 @@ public class BRGMService implements IBRGMService {
     @Override
     public BRGMPaginatedInstallationNuclaire rechercherInstallationsNucleairesCoordonnees(String lon, String lat, int rayon) {
         
-        WebClient webClient = WebClient.create();
-        
         UriBuilder uriBuilder = UriBuilder.fromPath(INSTALLATIONS_NUCLEAIRES_COORDONNEES_URL);
         URI generateurUri = uriBuilder
                                     .queryParam("rayon", String.valueOf(rayon))
                                     .queryParam("X", lon)
                                     .queryParam("Y", lat)
                                     .build();
-        
-        return webClient.get()
+    
+        return getWebClient().get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
                        .exchange()
