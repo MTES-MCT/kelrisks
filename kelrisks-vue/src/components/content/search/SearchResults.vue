@@ -76,7 +76,8 @@
                                   'Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
                     :parcelle="leaflet.data.parcelles"
-                    :leaflet-data="plan.assiette"
+                    :leaflet-data="[{ data : plan.assiettes,
+                                      color : '#840505'}]"
                     :logo-u-r-l="'/images/pictogrammes_risque/'+ getLogoRisque(plan.alea.familleAlea.code) +'.svg'"
                     :title="plan.alea.familleAlea.libelle"
                     style="font-size: 20px; color: #2C3E50;"
