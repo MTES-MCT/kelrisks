@@ -28,9 +28,11 @@
 <script>
 import {icon, marker} from "leaflet";
 import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
+import mixinLeaflet from "./leaflet_common";
 
 export default {
     name: "Leaflet",
+    mixins: [mixinLeaflet],
     components: {
         LMap,
         LTileLayer,
@@ -51,28 +53,9 @@ export default {
         }
     },
     data: () => ({
-        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        zoom: 16,
-        bounds: null,
-        reference: null,
     }),
     methods: {
-        crippleMap () {
-
-            let map = this.$refs['leafletMap_' + this.reference].mapObject
-
-            map.zoomControl.disable()
-            map.zoomControl.remove()
-            map.touchZoom.disable()
-            map.doubleClickZoom.disable()
-            map.scrollWheelZoom.disable()
-            map.boxZoom.disable()
-            map.keyboard.disable()
-            map.dragging.disable()
-        },
         centerMap () {
-
-            // console.log(this.reference + " => centerMap")
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
@@ -108,30 +91,12 @@ export default {
                     if (bounds._southWest.lng > this.center[1]) bounds._southWest.lng = this.center[1] - 0.0015
                 }
 
-                map.fitBounds(bounds)
+                this.updateMapUntilFitsBounds(map, bounds)
             }
         },
         getData (data) {
             if (typeof data === 'string') return this.parseJSON(data)
             return this.parseJSONMap(data)
-        },
-        parseJSON (json) {
-            if (json !== '' && json !== undefined) {
-                return JSON.parse(json)
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
-        },
-        parseJSONMap (jsonMap) {
-            if (jsonMap !== '' && jsonMap !== undefined && jsonMap.length > 0) {
-                return jsonMap.map(x => JSON.parse(x))
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
         },
         styleFunction (color) {
 
@@ -212,7 +177,7 @@ export default {
 
             // console.log(this.reference + " => $nextTick")
 
-            this.crippleMap()
+            this.crippleMap('leafletMap_' + this.reference)
             this.centerMap()
         })
         window.addEventListener('resize', this.centerMap)

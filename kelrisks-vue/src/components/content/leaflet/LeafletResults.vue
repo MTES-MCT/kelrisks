@@ -18,9 +18,11 @@
 <script>
 import {icon, marker} from "leaflet";
 import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
+import mixinLeaflet from "./leaflet_common";
 
 export default {
     name: "Leaflet",
+    mixins: [mixinLeaflet],
     components: {
         LMap,
         LTileLayer,
@@ -40,52 +42,14 @@ export default {
             }
         }
     },
-    data: () => ({
-        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        zoom: 16,
-        bounds: null,
-        reference: null
-    }),
+    data: () => ({}),
     methods: {
-        crippleMap () {
 
-            let map = this.$refs['leafletMap_' + this.reference].mapObject
-
-            map.zoomControl.disable()
-            map.zoomControl.remove()
-            map.touchZoom.disable()
-            map.doubleClickZoom.disable()
-            map.scrollWheelZoom.disable()
-            map.boxZoom.disable()
-            map.keyboard.disable()
-
-            map.dragging.disable()
-        },
         centerMap () {
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
-            map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
-        },
-        parseJSON (data) {
-            // console.log(data)
-            if (data !== '' && data !== undefined) {
-                return JSON.parse(data)
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
-        },
-        parseJSONMap (data) {
-            // console.log(data)
-            if (data !== '' && data !== undefined) {
-                return data.map(x => JSON.parse(x))
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
+            this.updateMapUntilFitsBounds(map, this.$refs['parcelle_' + this.reference].getBounds())
         }
     },
     computed: {
@@ -162,7 +126,7 @@ export default {
 
         this.$nextTick(() => {
 
-            this.crippleMap()
+            this.crippleMap('leafletMap_' + this.reference)
             this.centerMap()
         })
         window.addEventListener('resize', this.centerMap)
@@ -173,11 +137,7 @@ export default {
     watch: {
         data: function () {
 
-            setTimeout(() => {
-
-                this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
-                this.centerMap()
-            }, 2000);
+            this.centerMap()
         }
     }
 }

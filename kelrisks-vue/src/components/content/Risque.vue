@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import Leaflet from "./LeafletRisque";
+import Leaflet from "./leaflet/LeafletRisque";
 
 export default {
     name: 'Risque',

@@ -1,12 +1,12 @@
 <template>
     <div class="kr-group">
-        <label :for="id"
+        <label :for="getId"
                v-bind:class="{'focus':inputHasFocus,
                           'top':inputHasFocus || query !== '',
                           'error': errors.length > 0}"
                v-if="label !== ''">{{ label }}</label>
         <!--suppress HtmlFormInputWithoutLabel -->
-        <input :id="id"
+        <input :id="getId"
                :name="name"
                :title="title"
                :type="type"
@@ -25,7 +25,7 @@
                 v-if="query">
             <font-awesome-icon icon="times"/>
         </button>
-        <input :id="id + '_code'"
+        <input :id="getId + '_code'"
                :name="name + '.code'"
                type="hidden"
                v-if="source"
@@ -91,7 +91,7 @@
         <div class="kr-autocomplete-options-wrapper"
              v-if="source"
              v-show="isOpen">
-            <ul :id="id + '_autocomplete_options'"
+            <ul :id="getId + '_autocomplete_options'"
                 class="kr-autocomplete-options">
                 <li :class="{ 'is-active': i === arrowCounter }"
                     :key="i"
@@ -134,8 +134,7 @@ export default {
         },
         id: {
             type: String,
-            required: false,
-            default: 'kr_' + (Math.floor(Math.random() * 900000000 + 99999999)).toString()
+            required: false
         },
         name: {
             type: String,
@@ -227,7 +226,8 @@ export default {
             hasNoResults: false,
             searchDelayInstance: null,
             changeDelayInstance: null,
-            isAutocomplete: undefined !== this.source
+            isAutocomplete: undefined !== this.source,
+            reference: null
         }
     },
 
@@ -345,8 +345,15 @@ export default {
             }
         }
     },
+    computed: {
+        getId () {
+            return this.id ? this.id : 'kr_' + this.reference
+        }
+    },
     mounted () {
         document.addEventListener('click', this.handleClickOutside)
+
+        this.reference = this._uid
     },
     destroyed () {
         document.removeEventListener('click', this.handleClickOutside)
