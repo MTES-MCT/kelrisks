@@ -55,6 +55,7 @@ export default {
         zoom: 16,
         bounds: null,
         reference: null,
+        interval: null
     }),
     methods: {
         crippleMap () {
@@ -71,8 +72,6 @@ export default {
             map.dragging.disable()
         },
         centerMap () {
-
-            // console.log(this.reference + " => centerMap")
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
@@ -108,7 +107,27 @@ export default {
                     if (bounds._southWest.lng > this.center[1]) bounds._southWest.lng = this.center[1] - 0.0015
                 }
 
-                map.fitBounds(bounds)
+                if (!this.interval) {
+
+                    this.interval = setInterval(() => {
+
+                        map.fitBounds(bounds)
+                        map.invalidateSize()
+
+                        let mapWidth = map.getBounds()._northEast.lng - map.getBounds()._southWest.lng
+                        let boundWidth = bounds._northEast.lng - bounds._southWest.lng
+                        let widthFillPercent = boundWidth / mapWidth
+
+                        let mapHeight = map.getBounds()._northEast.lat - map.getBounds()._southWest.lat
+                        let boundHeight = bounds._northEast.lat - bounds._southWest.lat
+                        let heightFillPercent = boundHeight / mapHeight
+
+                        if (widthFillPercent > 0.25 || heightFillPercent > 0.25) {
+                            clearInterval(this.interval)
+                            this.interval = null
+                        }
+                    }, 1000);
+                }
             }
         },
         getData (data) {

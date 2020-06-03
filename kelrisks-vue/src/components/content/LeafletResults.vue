@@ -44,7 +44,8 @@ export default {
         url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         zoom: 16,
         bounds: null,
-        reference: null
+        reference: null,
+        interval: null
     }),
     methods: {
         crippleMap () {
@@ -65,7 +66,31 @@ export default {
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
-            map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
+            if (!this.interval) {
+
+                this.interval = setInterval(() => {
+
+                    if (this.$refs['parcelle_' + this.reference]) {
+
+                        let mapWidth = map.getBounds()._northEast.lng - map.getBounds()._southWest.lng
+                        let boundWidth = this.$refs['parcelle_' + this.reference].getBounds()._northEast.lng - this.$refs['parcelle_' + this.reference].getBounds()._southWest.lng
+                        let widthFillPercent = boundWidth / mapWidth
+
+                        let mapHeight = map.getBounds()._northEast.lat - map.getBounds()._southWest.lat
+                        let boundHeight = this.$refs['parcelle_' + this.reference].getBounds()._northEast.lat - this.$refs['parcelle_' + this.reference].getBounds()._southWest.lat
+                        let heightFillPercent = boundHeight / mapHeight
+
+                        map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
+                        this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
+
+                        if (widthFillPercent > 0.25 || heightFillPercent > 0.25) {
+                            clearInterval(this.interval)
+                            this.interval = null
+                        }
+                    }
+                }, 1000);
+            }
+
         },
         parseJSON (data) {
             // console.log(data)
@@ -173,11 +198,7 @@ export default {
     watch: {
         data: function () {
 
-            setTimeout(() => {
-
-                this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
-                this.centerMap()
-            }, 2000);
+            this.centerMap()
         }
     }
 }
