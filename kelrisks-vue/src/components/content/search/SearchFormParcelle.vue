@@ -114,7 +114,7 @@
 import Errors from '../../../components/content/base/Errors'
 import mixinAvis from '../../../components/mixins/avis'
 import KrInput from '../../../components/ui/KrInput'
-import Leaflet from "../LeafletParcelle";
+import Leaflet from "../leaflet/LeafletParcelle";
 import fetchWithError from "../../../script/fetchWithError";
 
 export default {

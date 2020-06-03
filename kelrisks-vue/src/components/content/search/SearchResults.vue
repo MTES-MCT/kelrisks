@@ -394,7 +394,7 @@
 
 <script>
 import Errors from '../../../components/content/base/Errors'
-import Leaflet from "../LeafletResults";
+import Leaflet from "../leaflet/LeafletResults";
 import Risque from "../Risque";
 import moment from "moment"
 

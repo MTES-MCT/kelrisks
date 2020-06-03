@@ -28,9 +28,11 @@
 <script>
 import {icon, marker} from "leaflet";
 import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
+import mixinLeaflet from "./leaflet_common";
 
 export default {
     name: "Leaflet",
+    mixins: [mixinLeaflet],
     components: {
         LMap,
         LTileLayer,
@@ -51,26 +53,8 @@ export default {
         }
     },
     data: () => ({
-        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        zoom: 16,
-        bounds: null,
-        reference: null,
-        interval: null
     }),
     methods: {
-        crippleMap () {
-
-            let map = this.$refs['leafletMap_' + this.reference].mapObject
-
-            map.zoomControl.disable()
-            map.zoomControl.remove()
-            map.touchZoom.disable()
-            map.doubleClickZoom.disable()
-            map.scrollWheelZoom.disable()
-            map.boxZoom.disable()
-            map.keyboard.disable()
-            map.dragging.disable()
-        },
         centerMap () {
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
@@ -107,50 +91,12 @@ export default {
                     if (bounds._southWest.lng > this.center[1]) bounds._southWest.lng = this.center[1] - 0.0015
                 }
 
-                if (!this.interval) {
-
-                    this.interval = setInterval(() => {
-
-                        map.fitBounds(bounds)
-                        map.invalidateSize()
-
-                        let mapWidth = map.getBounds()._northEast.lng - map.getBounds()._southWest.lng
-                        let boundWidth = bounds._northEast.lng - bounds._southWest.lng
-                        let widthFillPercent = boundWidth / mapWidth
-
-                        let mapHeight = map.getBounds()._northEast.lat - map.getBounds()._southWest.lat
-                        let boundHeight = bounds._northEast.lat - bounds._southWest.lat
-                        let heightFillPercent = boundHeight / mapHeight
-
-                        if (widthFillPercent > 0.25 || heightFillPercent > 0.25) {
-                            clearInterval(this.interval)
-                            this.interval = null
-                        }
-                    }, 1000);
-                }
+                this.updateMapUntilFitsBounds(map, bounds)
             }
         },
         getData (data) {
             if (typeof data === 'string') return this.parseJSON(data)
             return this.parseJSONMap(data)
-        },
-        parseJSON (json) {
-            if (json !== '' && json !== undefined) {
-                return JSON.parse(json)
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
-        },
-        parseJSONMap (jsonMap) {
-            if (jsonMap !== '' && jsonMap !== undefined && jsonMap.length > 0) {
-                return jsonMap.map(x => JSON.parse(x))
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
         },
         styleFunction (color) {
 
@@ -231,7 +177,7 @@ export default {
 
             // console.log(this.reference + " => $nextTick")
 
-            this.crippleMap()
+            this.crippleMap('leafletMap_' + this.reference)
             this.centerMap()
         })
         window.addEventListener('resize', this.centerMap)

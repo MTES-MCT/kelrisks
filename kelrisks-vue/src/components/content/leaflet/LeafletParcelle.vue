@@ -18,11 +18,13 @@
 
 <script>
 import {LGeoJson, LMap, LMarker, LTileLayer} from 'vue2-leaflet';
-import fetchWithError from "../../script/fetchWithError";
+import fetchWithError from "../../../script/fetchWithError";
 import {icon} from "leaflet";
+import mixinLeaflet from "./leaflet_common";
 
 export default {
     name: "Leaflet",
+    mixins: [mixinLeaflet],
     components: {
         LMap,
         LTileLayer,
@@ -40,51 +42,17 @@ export default {
         }
     },
     data: () => ({
-        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         currentZoom: 18,
-        bounds: null,
         data: null,
         selectedList: [],
         env: {
             apiPath: process.env.VUE_APP_API_PATH
-        },
-        reference: null
+        }
     }),
     methods: {
-        centerMap (map) {
-            map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
-        },
         invalidate () {
             // console.log('invalidated')
             this.$refs.leafletParcelles.mapObject.invalidateSize()
-        },
-        crippleMap (map) {
-            map.zoomControl.disable()
-            map.touchZoom.disable()
-            map.doubleClickZoom.disable()
-            map.scrollWheelZoom.disable()
-            map.boxZoom.disable()
-            map.keyboard.disable()
-
-            map.dragging.disable()
-        },
-        parseJSON (data) {
-            if (data !== '') {
-                return JSON.parse(data)
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
-        },
-        parseJSONMap (data) {
-            if (data !== '') {
-                return data.map(x => JSON.parse(x))
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
         },
         updateParcelles (x, y) {
 

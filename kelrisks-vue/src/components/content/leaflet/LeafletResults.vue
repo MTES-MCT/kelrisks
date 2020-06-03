@@ -18,9 +18,11 @@
 <script>
 import {icon, marker} from "leaflet";
 import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
+import mixinLeaflet from "./leaflet_common";
 
 export default {
     name: "Leaflet",
+    mixins: [mixinLeaflet],
     components: {
         LMap,
         LTileLayer,
@@ -40,77 +42,14 @@ export default {
             }
         }
     },
-    data: () => ({
-        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        zoom: 16,
-        bounds: null,
-        reference: null,
-        interval: null
-    }),
+    data: () => ({}),
     methods: {
-        crippleMap () {
 
-            let map = this.$refs['leafletMap_' + this.reference].mapObject
-
-            map.zoomControl.disable()
-            map.zoomControl.remove()
-            map.touchZoom.disable()
-            map.doubleClickZoom.disable()
-            map.scrollWheelZoom.disable()
-            map.boxZoom.disable()
-            map.keyboard.disable()
-
-            map.dragging.disable()
-        },
         centerMap () {
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
-            if (!this.interval) {
-
-                this.interval = setInterval(() => {
-
-                    if (this.$refs['parcelle_' + this.reference]) {
-
-                        let mapWidth = map.getBounds()._northEast.lng - map.getBounds()._southWest.lng
-                        let boundWidth = this.$refs['parcelle_' + this.reference].getBounds()._northEast.lng - this.$refs['parcelle_' + this.reference].getBounds()._southWest.lng
-                        let widthFillPercent = boundWidth / mapWidth
-
-                        let mapHeight = map.getBounds()._northEast.lat - map.getBounds()._southWest.lat
-                        let boundHeight = this.$refs['parcelle_' + this.reference].getBounds()._northEast.lat - this.$refs['parcelle_' + this.reference].getBounds()._southWest.lat
-                        let heightFillPercent = boundHeight / mapHeight
-
-                        map.fitBounds(this.$refs['parcelle_' + this.reference].getBounds(), {maxZoom: 30});
-                        this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
-
-                        if (widthFillPercent > 0.25 || heightFillPercent > 0.25) {
-                            clearInterval(this.interval)
-                            this.interval = null
-                        }
-                    }
-                }, 1000);
-            }
-
-        },
-        parseJSON (data) {
-            // console.log(data)
-            if (data !== '' && data !== undefined) {
-                return JSON.parse(data)
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
-        },
-        parseJSONMap (data) {
-            // console.log(data)
-            if (data !== '' && data !== undefined) {
-                return data.map(x => JSON.parse(x))
-            }
-            return {
-                "type": "FeatureCollection",
-                "features": []
-            }
+            this.updateMapUntilFitsBounds(map, this.$refs['parcelle_' + this.reference].getBounds())
         }
     },
     computed: {
@@ -187,7 +126,7 @@ export default {
 
         this.$nextTick(() => {
 
-            this.crippleMap()
+            this.crippleMap('leafletMap_' + this.reference)
             this.centerMap()
         })
         window.addEventListener('resize', this.centerMap)
