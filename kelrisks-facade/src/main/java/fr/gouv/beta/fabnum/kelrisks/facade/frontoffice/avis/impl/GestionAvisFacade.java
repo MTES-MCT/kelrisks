@@ -278,10 +278,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                     generateurs.getFeatures().forEach(generateur -> {
                 
                         PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
-                
-                        if (gaspar != null) {
-                            planPreventionRisquesList.add(gaspar);
-                        }
+                        updatePprList(planPreventionRisquesList, gaspar);
                     });
                 }
             });
@@ -295,25 +292,37 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                     .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
                     // multiplicité des sources
                     .forEach(ppr -> {
-    
+                
                         PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
-    
-                        if (gaspar != null) {
-                            planPreventionRisquesList.add(gaspar);
-                        }
+                        updatePprList(planPreventionRisquesList, gaspar);
                     });
         }
     
         avisDTO.setPlanPreventionRisquesDTOs(planPreventionRisquesList);
     }
     
-    private void getAvisCanalisations(AvisDTO avisDTO, Point<?> centroid) {
+    private void updatePprList(List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList, PlanPreventionRisquesGasparDTO gaspar) {
+        
+        if (gaspar != null) {
+            if (planPreventionRisquesList.stream()
+                        .noneMatch(ppr -> ppr.getIdGaspar().equals(gaspar.getIdGaspar()))) {
+                planPreventionRisquesList.add(gaspar);
+            }
+            else {
+                planPreventionRisquesList.stream()
+                        .filter(ppr -> ppr.getIdGaspar().equals(gaspar.getIdGaspar()))
+                        .forEach(ppr -> ppr.getAssiettes().addAll(gaspar.getAssiettes()));
+            }
+        }
+    }
     
+    private void getAvisCanalisations(AvisDTO avisDTO, Point<?> centroid) {
+        
         BRGMPaginatedCanalisation brgmPaginatedCanalisation =
                 gestionBRGMFacade.rechercherCanalisationsCoordonnees(String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                      String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())),
                                                                      500);
-    
+        
         if (brgmPaginatedCanalisation != null) {
             brgmPaginatedCanalisation.getFeatures().forEach(canalisation -> avisDTO.getGeogCanalisations().add(canalisation.getGeometry()));
         }
@@ -359,7 +368,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     
             PlanPreventionRisquesGasparDTO planPreventionRisquesGasparDTO = gaspars.get(0);
-            planPreventionRisquesGasparDTO.setAssiette(GeoJsonUtils.toGeoJson(geometry, properties));
+            planPreventionRisquesGasparDTO.getAssiettes().add(GeoJsonUtils.toGeoJson(geometry, properties));
             
             return planPreventionRisquesGasparDTO;
         }
