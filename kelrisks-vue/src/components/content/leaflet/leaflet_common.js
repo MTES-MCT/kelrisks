@@ -1,11 +1,26 @@
+import JQuery from 'jquery'
+
+let $ = JQuery
+
 export default {
     data: () => ({
         url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         zoom: 16,
         bounds: null,
         reference: null,
-        interval: null
+        interval: null,
+        currentZoom: null,
+        maxZoom: 18,
+        minZoom: null,
+        minZoomCenter: {x: null, y: null},
+        intermediateZoomLevels: []
     }),
+    props: {
+        maxZoomCenter: {
+            type: Array,
+            default: () => [0, 0]
+        },
+    },
     methods: {
         crippleMap (ref) {
 
@@ -20,6 +35,65 @@ export default {
             map.keyboard.disable()
 
             map.dragging.disable()
+        },
+        zoomIn (zoomInControl, zoomOutControl, map) {
+
+            if (this.currentZoom >= this.maxZoom) return
+
+            if (zoomOutControl.hasClass('leaflet-disabled')) {
+
+                zoomOutControl.removeClass('leaflet-disabled')
+            }
+
+            ++this.currentZoom
+
+            if (this.currentZoom === this.maxZoom) zoomInControl.addClass('leaflet-disabled')
+
+            map.setView({lat: this.intermediateZoomLevels[this.currentZoom].y, lng: this.intermediateZoomLevels[this.currentZoom].x}, this.currentZoom, {animation: true});
+        },
+        zoomOut (zoomInControl, zoomOutControl, map) {
+
+            if (this.currentZoom <= this.minZoom) return
+
+            if (zoomInControl.hasClass('leaflet-disabled')) {
+
+                zoomInControl.removeClass('leaflet-disabled')
+            }
+
+            --this.currentZoom
+
+            if (this.currentZoom === this.minZoom) zoomOutControl.addClass('leaflet-disabled')
+
+            map.setView({lat: this.intermediateZoomLevels[this.currentZoom].y, lng: this.intermediateZoomLevels[this.currentZoom].x}, this.currentZoom, {animation: true});
+        },
+        injectCustomZoomControl (ref) {
+
+            let map = this.$refs[ref].mapObject
+
+            let control = "<div class=\"leaflet-control-zoom leaflet-bar leaflet-control\">" +
+                "   <a class=\"leaflet-control-zoom-in  leaflet-disabled\" title=\"Zoom in\" role=\"button\" aria-label=\"Zoom in\">+</a>" +
+                "   <a class=\"leaflet-control-zoom-out leaflet-disabled\" title=\"Zoom out\" role=\"button\" aria-label=\"Zoom out\">−</a>" +
+                "</div>"
+
+            $("#leafletMap_" + this.reference + " div.leaflet-top.leaflet-left").html(control)
+
+            let zoomInControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-in")
+            let zoomOutControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-out");
+
+            if (this.maxZoom > this.currentZoom) zoomInControl.removeClass('leaflet-disabled')
+            if (this.minZoom < this.currentZoom) zoomOutControl.removeClass('leaflet-disabled')
+
+            zoomInControl.click((e) => {
+
+                e.stopPropagation()
+                this.zoomIn(zoomInControl, zoomOutControl, map);
+            });
+
+            zoomOutControl.click((e) => {
+
+                e.stopPropagation()
+                this.zoomOut(zoomInControl, zoomOutControl, map);
+            });
         },
         parseJSON (json) {
             if (json !== '' && json !== undefined) {
@@ -39,7 +113,50 @@ export default {
                 "features": []
             }
         },
-        updateMapUntilFitsBounds (map, bounds) {
+        getBoundsCenter (bounds) {
+            let center = {x: null, y: null}
+
+            center.x = bounds._southWest.lng + Math.abs(bounds._northEast.lng - bounds._southWest.lng) / 2
+            center.y = bounds._southWest.lat + Math.abs(bounds._northEast.lat - bounds._southWest.lat) / 2
+
+            return center
+        },
+        initIntermediateZoomLevels () {
+
+            this.intermediateZoomLevels[this.maxZoom] = {x: this.maxZoomCenter[1], y: this.maxZoomCenter[0]}
+
+            let intervalX = Math.abs(this.minZoomCenter.x - this.maxZoomCenter[1])
+            let intervalY = Math.abs(this.minZoomCenter.y - this.maxZoomCenter[0])
+
+            for (let zoomLevel = this.minZoom + 1; zoomLevel < this.maxZoom; zoomLevel++) {
+
+                let currentCenter = {x: null, y: null}
+
+                intervalX = intervalX / 2
+                intervalY = intervalY / 2
+
+                currentCenter.x = this.maxZoomCenter[1] + (this.minZoomCenter.x > this.maxZoomCenter[1] ? intervalX : -intervalX)
+                currentCenter.y = this.maxZoomCenter[0] + (this.minZoomCenter.y > this.maxZoomCenter[0] ? intervalY : -intervalY)
+
+                this.intermediateZoomLevels[zoomLevel] = currentCenter
+            }
+        },
+        initMapZoom (map, mapRef) {
+
+            if (!this.minZoom) {
+
+                this.minZoom = map.getZoom()
+                this.minZoomCenter = this.getBoundsCenter(map.getBounds())
+                this.intermediateZoomLevels[this.minZoom] = this.minZoomCenter
+
+                this.currentZoom = this.minZoom
+
+                this.injectCustomZoomControl(mapRef)
+            }
+
+            this.initIntermediateZoomLevels();
+        },
+        updateMapUntilFitsBounds (map, mapRef, bounds) {
 
             if (!this.interval) {
 
@@ -57,11 +174,21 @@ export default {
                     let heightFillPercent = boundHeight / mapHeight
 
                     if (widthFillPercent > 0.25 || heightFillPercent > 0.25) {
+
                         clearInterval(this.interval)
                         this.interval = null
+
+                        setTimeout(() => {
+                            if (!this.isCenterDefault() && this.maxZoomCenter) {
+                                this.initMapZoom(map, mapRef)
+                            }
+                        }, 2000);
                     }
                 }, 1000);
             }
+        },
+        isCenterDefault () {
+            return this.maxZoomCenter && this.maxZoomCenter[0] === 0 && this.maxZoomCenter[1] === 0
         }
     }
 }

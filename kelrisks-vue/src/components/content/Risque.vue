@@ -44,7 +44,7 @@
         </div>
         <div class="risque_map"
              v-if="leafletData">
-            <leaflet :center="center"
+            <leaflet :max-zoom-center="maxZoomCenter"
                      :parcelle="parcelle"
                      :data="leafletData"/>
         </div>
@@ -58,7 +58,7 @@ export default {
     name: 'Risque',
     components: {Leaflet},
     props: {
-        center: {
+        maxZoomCenter: {
             type: Array,
             default: null
         },
