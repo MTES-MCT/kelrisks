@@ -1,7 +1,8 @@
 <template>
     <div class="leaflet_wrapper">
-        <l-map :center="center"
+        <l-map :center="maxZoomCenter"
                :zoom="zoom"
+               :id="'leafletMap_' + reference"
                :ref="'leafletMap_' + reference">
             <l-tile-layer :url="url"/>
             <l-geo-json :geojson="parseJSONMap(data.parcelles)"
@@ -29,10 +30,6 @@ export default {
         LGeoJson
     },
     props: {
-        center: {
-            type: Array,
-            default: () => [48.8737762014, 2.2950365488]
-        },
         data: {
             type: Object,
             default: () => {
@@ -49,7 +46,7 @@ export default {
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
-            this.updateMapUntilFitsBounds(map, this.$refs['parcelle_' + this.reference].getBounds())
+            this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, this.$refs['parcelle_' + this.reference].getBounds())
         }
     },
     computed: {
@@ -126,14 +123,17 @@ export default {
 
         this.$nextTick(() => {
 
-            this.crippleMap('leafletMap_' + this.reference)
-            this.centerMap()
-        })
+                this.crippleMap('leafletMap_' + this.reference)
+                this.centerMap()
+                // if (!this.isCenterDefault()) this.injectCustomZoomControl('leafletMap_' + this.reference)
+            }
+        )
         window.addEventListener('resize', this.centerMap)
     },
     beforeDestroy: function () {
         window.removeEventListener('resize', this.centerMap)
-    },
+    }
+    ,
     watch: {
         data: function () {
 

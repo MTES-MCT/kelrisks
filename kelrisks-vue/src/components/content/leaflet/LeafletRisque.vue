@@ -1,7 +1,8 @@
 <template>
     <div class="leaflet_wrapper">
-        <l-map :center="center"
+        <l-map :center="maxZoomCenter"
                v-if="reference !== null"
+               :id="'leafletMap_' + reference"
                :ref="'leafletMap_' + reference"
                :zoom="zoom">
             <l-tile-layer :url="url"/>
@@ -39,10 +40,6 @@ export default {
         LGeoJson
     },
     props: {
-        center: {
-            type: Array,
-            default: () => [0, 0]
-        },
         parcelle: {
             type: [String, Array],
             default: () => []
@@ -83,15 +80,15 @@ export default {
 
             if (bounds !== null) {
 
-                if (!this.isCenterDefault() && this.center) {
+                if (!this.isCenterDefault() && this.maxZoomCenter) {
 
-                    if (bounds._northEast.lat < this.center[0]) bounds._northEast.lat = this.center[0] + 0.0015
-                    if (bounds._northEast.lng < this.center[1]) bounds._northEast.lng = this.center[1] + 0.0015
-                    if (bounds._southWest.lat > this.center[0]) bounds._southWest.lat = this.center[0] - 0.0015
-                    if (bounds._southWest.lng > this.center[1]) bounds._southWest.lng = this.center[1] - 0.0015
+                    if (bounds._northEast.lat < this.maxZoomCenter[0]) bounds._northEast.lat = this.maxZoomCenter[0] + 0.0015
+                    if (bounds._northEast.lng < this.maxZoomCenter[1]) bounds._northEast.lng = this.maxZoomCenter[1] + 0.0015
+                    if (bounds._southWest.lat > this.maxZoomCenter[0]) bounds._southWest.lat = this.maxZoomCenter[0] - 0.0015
+                    if (bounds._southWest.lng > this.maxZoomCenter[1]) bounds._southWest.lng = this.maxZoomCenter[1] - 0.0015
                 }
 
-                this.updateMapUntilFitsBounds(map, bounds)
+                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds)
             }
         },
         getData (data) {
@@ -140,9 +137,6 @@ export default {
                     console.log(e)
                 })
             };
-        },
-        isCenterDefault () {
-            return this.center && this.center[0] === 0 && this.center[1] === 0
         }
     },
     computed: {
@@ -179,6 +173,7 @@ export default {
 
             this.crippleMap('leafletMap_' + this.reference)
             this.centerMap()
+            // if (!this.isCenterDefault()) this.injectCustomZoomControl('leafletMap_' + this.reference)
         })
         window.addEventListener('resize', this.centerMap)
     },

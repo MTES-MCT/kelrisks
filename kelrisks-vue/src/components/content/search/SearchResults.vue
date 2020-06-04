@@ -60,7 +60,7 @@
                     <br>
                 </div>
                 <div id="leaflet">
-                    <leaflet :center="leaflet.center"
+                    <leaflet :max-zoom-center="leaflet.center"
                              :data="leaflet.data"/>
                 </div>
             </div>
@@ -76,6 +76,7 @@
                                   'Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
                     :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     :leaflet-data="[{ data : plan.assiettes,
                                       color : '#840505'}]"
                     :logo-u-r-l="'/images/pictogrammes_risque/'+ getLogoRisque(plan.alea.familleAlea.code) +'.svg'"
@@ -119,6 +120,7 @@
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
                     :title="'Sismicité'"
                     :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     v-if="hasSismiciteHaute || hasSismiciteMoyenne"/>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.<br/>'+
@@ -146,9 +148,11 @@
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
                     :title="'Radon'"
                     :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     v-if="hasRadonHaut"/>
 
             <risque :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d\'usage des sols (travaux, aménagements changement d\'affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
                     :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classées pour la protection de l\'environnement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires : '') +
                              (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d\'information sur les sols.</br>' : '') +
@@ -160,6 +164,7 @@
 
             <risque :description="'La parcelle est concernée par un plan d\'exposition au bruit car elle est exposée aux nuisances d\'un aéroport.'"
                     :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     :detail="(avis.zonePlanExpositionBruit === 'A' ? 'Le niveau d\'exposition au bruit de la parcelle est très fort (zone A en rouge).' : '') +
                              (avis.zonePlanExpositionBruit === 'B' ? 'Le niveau d\'exposition au bruit de la parcelle est fort (zone B en orange).' : '') +
                              (avis.zonePlanExpositionBruit === 'C' ? 'Le niveau d\'exposition au bruit de la parcelle est modéré (zone C en jaune).' : '') +
@@ -273,6 +278,7 @@
                         ['#FF8000', 'Zone 2 : zones à potentiel radon faible mais sur lesquelles des facteurs géologiques particuliers peuvent faciliter le transfert du radon vers les bâtiments'],
                         ['#840505', 'Zone 3 : zones à potentiel radon significatif']]"
                     :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     v-if="hasRadonMoyen"/>
 
             <risque :description="'Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.'"
@@ -285,6 +291,7 @@
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
                     :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     :leaflet-data="[{ data : avis.installationClasseeRayonParcelle.liste.map(x => x.ewkt),
                                       color : '#8E0800'},
                                     { data : avis.basiasRayonParcelle.liste.map(x => x.ewkt),
@@ -311,6 +318,7 @@
                     v-if="avis.nucleaires.installations.length > 0"/>
 
             <risque :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d\'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa afin de prévenir les sinistres.'"
                     :detail="(avis.lentillesArgile.niveauAlea === 3 ? 'Alea fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Veuillez consulter les recommandations au lien suivant pour prévenir les risques : https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3' : '')+
                              (avis.lentillesArgile.niveauAlea === 2 ? 'Alea moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée' : '')+
@@ -325,6 +333,7 @@
                     v-if="hasArgile"/>
 
             <risque :parcelle="leaflet.data.parcelles"
+                    :max-zoom-center="leaflet.center"
                     :description="'Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de votre parcelle. La carte représente les implantations présentes autour de votre localisation.'"
                     :leaflet-data="[{ data : avis.canalisations,
                                       color : '#2A4999'}]"
