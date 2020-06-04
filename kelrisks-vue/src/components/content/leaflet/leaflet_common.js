@@ -125,18 +125,27 @@ export default {
 
             this.intermediateZoomLevels[this.maxZoom] = {x: this.maxZoomCenter[1], y: this.maxZoomCenter[0]}
 
-            let intervalX = Math.abs(this.minZoomCenter.x - this.maxZoomCenter[1])
-            let intervalY = Math.abs(this.minZoomCenter.y - this.maxZoomCenter[0])
+            let deltaX = Math.abs(this.minZoomCenter.x - this.maxZoomCenter[1])
+            let deltaY = Math.abs(this.minZoomCenter.y - this.maxZoomCenter[0])
+            let remainingX = deltaX
+            let remainingY = deltaY
+            let currentDeltaX = 0
+            let currentDeltaY = 0
+
+            const increaseRatio = 3 / 4
 
             for (let zoomLevel = this.minZoom + 1; zoomLevel < this.maxZoom; zoomLevel++) {
 
                 let currentCenter = {x: null, y: null}
 
-                intervalX = intervalX / 2
-                intervalY = intervalY / 2
+                currentDeltaX += remainingX * increaseRatio
+                currentDeltaY += remainingY * increaseRatio
 
-                currentCenter.x = this.maxZoomCenter[1] + (this.minZoomCenter.x > this.maxZoomCenter[1] ? intervalX : -intervalX)
-                currentCenter.y = this.maxZoomCenter[0] + (this.minZoomCenter.y > this.maxZoomCenter[0] ? intervalY : -intervalY)
+                currentCenter.x = this.minZoomCenter.x + (this.minZoomCenter.x < this.maxZoomCenter[1] ? currentDeltaX : -currentDeltaX)
+                currentCenter.y = this.minZoomCenter.y + (this.minZoomCenter.y < this.maxZoomCenter[0] ? currentDeltaY : -currentDeltaY)
+
+                remainingX = deltaX - currentDeltaX
+                remainingY = deltaY - currentDeltaY
 
                 this.intermediateZoomLevels[zoomLevel] = currentCenter
             }
