@@ -147,14 +147,24 @@
                                   v-show="flow.index === 2"/>
 
             <search-results :avis="avis"
-                            @setflow="setflow"
-                            :form="form"
                             :leaflet="leaflet"
                             :tinyUrl="tinyUrl"
                             @flow="updateflow"
                             ref="results"
                             v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0 && Object.entries(leaflet).length > 0 && Object.entries(tinyUrl).length > 0 "
                             v-show="flow.index === 3"/>
+
+            <completer-e-r-r-i-a-l :avis="avis"
+                                   @flow="updateflow"
+                                   ref="errial"
+                                   v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0"
+                                   v-show="flow.index === 4"/>
+
+            <telecharger-e-r-r-i-a-l :avis="avis"
+                                     @flow="updateflow"
+                                     ref="download"
+                                     v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0"
+                                     v-show="flow.index === 5"/>
 
             <stats v-show="flow.index === 666"/>
 
@@ -214,6 +224,8 @@ import Stats from '../components/content/Stats'
 import fetchWithError from '../script/fetchWithError'
 import BulletProgressBar from "./content/BulletProgressBar";
 import ERP from "./content/ERP";
+import CompleterERRIAL from "./content/search/CompleterERRIAL";
+import TelechargerERRIAL from "./content/search/TelechargerERRIAL";
 
 export default {
     name: 'Kelrisks',
@@ -241,6 +253,8 @@ export default {
         }
     }),
     components: {
+        CompleterERRIAL,
+        TelechargerERRIAL,
         ERP,
         BulletProgressBar,
         Stats,
@@ -321,7 +335,7 @@ export default {
         color       : #26353F;
         font-size   : 1.7em;
         font-weight : 900;
-        margin      : 20px;
+        /*margin      : 20px;*/
         text-align  : center;
     }
 
