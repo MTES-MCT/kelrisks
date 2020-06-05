@@ -335,7 +335,7 @@ export default {
         color       : #26353F;
         font-size   : 1.7em;
         font-weight : 900;
-        /*margin      : 20px;*/
+        margin-left : 20px;
         text-align  : center;
     }
 

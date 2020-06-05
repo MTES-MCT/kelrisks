@@ -135,9 +135,9 @@
                                       color : '#840505'}] :
                                     undefined"
                     :legend-blocks="[
-                        ['#FFD332', 'Zone 1 : zones à potentiel radon faible'],
-                        ['#FF8000', 'Zone 2 : zones à potentiel radon faible mais sur lesquelles des facteurs géologiques particuliers peuvent faciliter le transfert du radon vers les bâtiments'],
-                        ['#840505', 'Zone 3 : zones à potentiel radon significatif']]"
+                        ['#FFD332', '1 : zones à potentiel radon faible'],
+                        ['#FF8000', '2 : zones à potentiel radon moyen'],
+                        ['#840505', '3 : zones à potentiel radon significatif']]"
                     :level="avis.summary.commune.classePotentielRadon + ''"
                     :level-max="'3'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
@@ -282,7 +282,7 @@
                               (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites référencés dans l\'inventaire des installations classées pour la protection de l\'environnement (ICPE)</br>' : '') +
                               (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites potentiellement pollués, référencés dans l\'inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS).</br>' : '') +
                               (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
-                              (!hasPollutionPrincipale ? '<p>Parmi ces sites, ' + numberOfParcelleMatches + ' présentent une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
+                              (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
                               (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n\'en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
@@ -307,7 +307,7 @@
                     v-if="hasAZI && !hasTRI && !hasPPRi"/>
 
             <risque :description="'Votre bien est situé à moins de [10 km] [20 km] d\'une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
-                    :detail="'<p>Ces installations sont contrôlés par l\'Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
+                    :detail="'<p>Ces installations sont contrôlées par l\'Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
                              '<p>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires + '</p>'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_nucleaires_bleu.svg'"
                     :title="'Installations nucléaires de base'"
