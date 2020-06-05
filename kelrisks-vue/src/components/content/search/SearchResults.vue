@@ -35,12 +35,7 @@
                     <font-awesome-icon icon="copy"/>
                     Partager le résultat
                 </a>
-                <a :href="this.env.apiPath + 'avis/pdf?' +
-                            'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : form.codeInsee) + '&' +
-                            'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : form.nomAdresse) + '&' +
-                            'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : form.codeParcelle) + '&' +
-                            'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : form.codeProprio)"
-                   @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
+                <a @click="$emit('flow', 1)"
                    class="bouton success"
                    id="pdf"
                    target="_blank">
@@ -382,12 +377,7 @@
             <div class="clearfix"/>
 
             <div id="bottomButtonsWrapper">
-                <a :href="this.env.apiPath + 'avis/pdf?' +
-                            'codeINSEE=' + (tinyUrl.codeInsee ? tinyUrl.codeInsee : form.codeInsee) + '&' +
-                            'nomAdresse=' + (tinyUrl.nomAdresse ? tinyUrl.nomAdresse : form.nomAdresse) + '&' +
-                            'codeParcelle=' + (tinyUrl.codeParcelle ? tinyUrl.codeParcelle : form.codeParcelle) + '&' +
-                            'nomProprietaire=' + (tinyUrl.codeProprio ? tinyUrl.codeProprio : form.codeProprio)"
-                   @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"
+                <a @click="$emit('flow', 1)"
                    class="bouton success"
                    target="_blank">
                     <!--                <font-awesome-icon icon="file-pdf"/>-->
@@ -415,11 +405,6 @@ export default {
         Errors
     },
     props: {
-        form: {
-            type: Object,
-            default: () => {
-            }
-        },
         avis: {
             type: Object,
             default: () => {
@@ -772,87 +757,6 @@ export default {
         margin-top    : 0;
     }
 
-    .tabWrapper {
-        border-bottom           : none;
-        border-top-left-radius  : 2px;
-        border-top-right-radius : 2px;
-        /*border                  : 1px solid #CCCCCC;*/
-        float                   : left;
-        left                    : -1px;
-        margin-top              : 19px;
-        position                : absolute;
-        top                     : -4.1em;
-    }
-
-    .tabWrapper .tab {
-        background-color : #F8F8F8;
-        border-bottom    : 1px solid #FFFFFF;
-        border-left      : 1px solid #CCCCCC;
-        border-top       : 1px solid #CCCCCC;
-        cursor           : pointer;
-        float            : left;
-        padding          : 10px 20px 9px;
-    }
-
-    .tabWrapper .tab:first-child {
-        border-top-left-radius : 2px;
-    }
-
-    .tabWrapper .tab:last-child {
-        border-right            : 1px solid #CCCCCC;
-        border-top-right-radius : 2px;
-    }
-
-    .tabWrapper .tab.selected {
-        background-color : #0053B3;
-        border-bottom    : 1px solid #003B80;
-        border-left      : 1px solid #003B80;
-        border-top       : 1px solid #003B80;
-        color            : #FFFFFF;
-        padding          : 10px 20px;
-    }
-
-    .tabWrapper .tab:last-child.selected {
-        border-right : 1px solid #003B80;
-    }
-
-    #concordances_wrapper {
-        border-top              : 3px solid #003B80;
-        border-top-left-radius  : unset;
-        border-top-right-radius : 2px;
-        float                   : left;
-        margin-top              : calc(20px + 4em);
-        padding                 : 30px 0 0 0 !important;
-        text-align              : center;
-        width                   : 100%;
-    }
-
-    #concordances_wrapper p {
-        margin     : 5px;
-        text-align : center;
-    }
-
-    #concordances_wrapper .numbers_wrapper {
-        width            : 100%;
-        background-color : #FAFAFA;
-        padding-bottom   : 10px;
-        margin           : 30px 0;
-    }
-
-    @media (max-width : 500px) {
-        #concordances_wrapper .numbers_wrapper {
-            display : none;
-        }
-    }
-
-    #conclusion_wrapper, #resume_wrapper, #non_georef_wrapper {
-        float      : left;
-        margin-top : 20px;
-        padding    : 30px 20px !important;
-        width      : 100%;
-        text-align : left;
-    }
-
     .container.bordered {
         background-color : #FFFFFF;
         border           : 1px solid #CCCCCC;
@@ -861,43 +765,8 @@ export default {
         padding          : 20px;
     }
 
-    .site-list {
-        list-style : none;
-        padding    : 0;
-        margin     : 0;
-    }
-
-    .site-list li {
-        margin-bottom : 3px;
-    }
-
-    .icon-risque-wrapper {
-        display : inline-block;
-        width   : 25%;
-    }
-
-    .icon-risque {
-        margin      : 10px;
-        display     : inline-block;
-        height      : 80px;
-        padding-top : 20px;
-        color       : #53657D;
-    }
-
-    .icon-risque-label {
-        color : #2C3E50;
-    }
-
     sup {
         font-size : 0.6em;
-    }
-
-    .renvoi {
-        font-size   : 0.8em;
-        margin      : 30px 10px 10px !important;
-        text-align  : left !important;
-        color       : rgb(153, 153, 153);
-        line-height : 1.1em;
     }
 
     .infobulle {
@@ -912,10 +781,6 @@ export default {
         /*position: sticky;*/
         padding          : 5px;
         margin           : 5px;
-    }
-
-    .icon-risque-wrapper:hover .infobulle {
-        display : block;
     }
 
     .infobulle:hover {
