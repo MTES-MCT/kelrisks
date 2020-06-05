@@ -211,9 +211,9 @@
                     <p>Pour le bâti neuf, en fonction de la zone de sismicité (zone 2 "sismicité faible" à zone 5 "sismicité forte") et du type de construction (habitation individuelle, habitations
                        collectives, ERP, ...) des dispositions spécifiques s'appliquent selon la réglementation (arrêté du 22 octobre 2010).</p><br/>
                     <p>Un didactitiel est proposé sur le site du Plan Séisme pour connaître les dispositions à prendre en compte. Il est consultable à l'adresse suivante :</p>
-                    <p>http://www.planseisme.fr/-Didacticiel-.html</p><br/>
+                    <p><a href="http://www.planseisme.fr/-Didacticiel-.html">Réglementation parasismique</a>.</p><br/>
                     <p>Pour le bâti existant ces dispositions ne s'appliquent que dans le cas de travaux lourds entrainant une augmentation de la surface habitable (pour plus de précisions :</p>
-                    <p>http://www.planseisme.fr/Regles-parasismiques-applicables-aux-batiments-a-risque.html#existant).</p>
+                    <p><a href="http://www.planseisme.fr/Regles-parasismiques-applicables-aux-batiments-a-risque.html#existant)">Règles parasismiques applicables aux bâtiments</a>.</p>
                 </template>
 
                 <template v-if="hasRadonHaut">
@@ -225,7 +225,8 @@
                        mesures de radon pour vérifier leur efficacité.</p>
                     <p>Une fiche d'informations sur le radon, le risque associé, son mesurage, les solutions techniques et les recommandations à suivre en fonction des résultats du mesurage est
                        disponible : </p>
-                    <p>http://www.georisques.gouv.fr/sites/default/files/2018-Fiche%20d_information_sur_le_risque_potentiel_radon_DHUP-DGS-DGPR_102018_v3.pdf</p>
+                    <p><a href="http://www.georisques.gouv.fr/sites/default/files/2018-Fiche%20d_information_sur_le_risque_potentiel_radon_DHUP-DGS-DGPR_102018_v3.pdf">Information sur le risque
+                                                                                                                                                                        potentiel radon</a>.</p>
                 </template>
 
                 <template v-if="hasPollutionPrincipale">
