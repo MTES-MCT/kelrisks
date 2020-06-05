@@ -99,35 +99,40 @@
             </defs>
         </svg>
 
-        <header class="navbar"
-                role="navigation">
-            <div class="navbar__container">
-                <a class="navbar__home"
-                   href="index.html">
-                    <img alt="template.data.gouv.fr"
-                         class="navbar__logo"
-                         src="/images/logo-marianne.svg"/><span class="navbar__domain">kelrisks</span><img alt="data.gouv.fr"
-                                                                                                           class="navbar__gouvfr"
-                                                                                                           src="/images/pointbetagouvfr.svg"/>
-                </a>
+        <header role="navigation">
 
-                <nav>
-                    <ul class="nav__links"></ul>
-                </nav>
+            <a class="marianne"
+               href="index.html">
+                <img alt="template.data.gouv.fr"
+                     src="/images/MTES - Bloc marque/png/MIN_Transition_Ecologique_RVB.png"/>
+            </a>
+
+            <div class="product_wrapper">
+                <a class="product"
+                   href="index.html">
+                    <span class="">kelrisks</span><img alt="data.gouv.fr"
+                                                       class="beta"
+                                                       src="/images/pointbetagouvfr.svg"/>
+                </a>
+                <p class="tagline">Évaluez simplement et rapidement le risque de pollution de votre terrain</p>
             </div>
+
+            <nav>
+                <ul class=""></ul>
+            </nav>
         </header>
 
         <!--suppress CssUnknownTarget -->
-        <div class="hero"
-             role="banner"
-             style="background-image: url('/images/banner-min.png'); background-size: auto; background-position-y: -30px">
-            <div class="hero__container"
-                 v-bind:class="{'contracted':flow.index > 2}">
-                <h1 class="hero__white-background">Kelrisks</h1>
-                <p class="hero__white-background"
-                   v-bind:class="{'contracted':flow.index > 2}">Évaluez simplement et rapidement le risque de pollution de votre terrain</p>
-            </div>
-        </div>
+        <!--        <div class="hero"-->
+        <!--             role="banner"-->
+        <!--             style="background-image: url('/images/banner-min.png'); background-size: auto; background-position-y: -30px">-->
+        <!--            <div class="hero__container"-->
+        <!--                 v-bind:class="{'contracted':flow.index > 2}">-->
+        <!--                <h1 class="hero__white-background">Kelrisks</h1>-->
+        <!--                <p class="hero__white-background"-->
+        <!--                   v-bind:class="{'contracted':flow.index > 2}">Évaluez simplement et rapidement le risque de pollution de votre terrain</p>-->
+        <!--            </div>-->
+        <!--        </div>-->
 
         <main id="main"
               role="main">
@@ -177,23 +182,32 @@
                v-show="flow.index <= 2"/>
 
         <footer>
-            <div>
-                <c-g-u ref="cgu"/>
-                <who-are-we ref="haw"/>
-                <div class="column">
-                    <img alt="Fabrique Numérique - Ministère de la Transition Écologique et Solidaire"
-                         height="175"
-                         src="/images/logo-fabriquenumerique.svg"
-                         width="175">
-                </div>
-                <div class="column">
-                    <a @click="$refs.haw.open()">Qui sommes nous ?</a>
-                    <a @click="$refs.cgu.open()">CGU</a>
-                    <a @click="showStats()">Stats</a>
-                    <a href="/swagger-ui.html">API</a>
-                </div>
+
+            <a class="marianne"
+               href="index.html">
+                <img alt="template.data.gouv.fr"
+                     src="/images/MTES - Bloc marque/png/MIN_Transition_Ecologique_RVB.png"/>
+            </a>
+
+            <div class="partenaire">
+                <img alt="Fabrique Numérique - Ministère de la Transition Écologique et Solidaire"
+                     height="160"
+                     src="/images/logo-fabriquenumerique.svg"
+                     width="160">
             </div>
-            <div id="version">{{env.presentationVersion}}</div>
+
+            <div class="column">
+                <a @click="$refs.haw.open()">Qui sommes nous ?</a>
+                <a @click="$refs.cgu.open()">CGU</a>
+                <a @click="showStats()">Stats</a>
+                <a href="/swagger-ui.html">API</a>
+            </div>
+
+            <div class="version">{{env.presentationVersion}}</div>
+
+            <c-g-u ref="cgu"/>
+            <who-are-we ref="haw"/>
+
         </footer>
 
         <contact :timeout="45"/>
@@ -329,6 +343,58 @@ export default {
 
     body {
         overflow-y : scroll;
+    }
+
+    header, footer {
+        background-color : transparent;
+        border-bottom    : solid 2px #CCCCCC;
+        display          : flex;
+        flex-wrap        : wrap;
+        padding          : 0 100px;
+    }
+
+    header a,
+    header a:hover,
+    header a:visited,
+    footer a,
+    footer a:hover,
+    footer a:visited {
+        background-color : transparent;
+        color            : #373C42 !important;
+        text-decoration  : none !important;
+    }
+
+    a.marianne {
+        flex : 0 0 300px;
+    }
+
+    a.marianne img {
+        height : 208px;
+    }
+
+    header div.product_wrapper {
+        flex         : 1 0 auto;
+        padding-left : 50px;
+    }
+
+    header div.product_wrapper a.product {
+        align-content : center;
+        display       : flex;
+        font-size     : 1.7em;
+        font-weight   : bold;
+        line-height   : 62px;
+        margin-top    : 60px;
+    }
+
+    header div.product_wrapper p.tagline {
+        color     : #B0B0AF;
+        font-size : 1.2em;
+        margin    : -10px 0 0 0;
+    }
+
+    header img.beta {
+        height      : 64px;
+        margin-left : 2px;
     }
 
     .title {
@@ -468,41 +534,32 @@ export default {
     }
 
     footer {
-        background-color : #26353F;
-        color            : #838383;
-        margin           : 30px auto;
-        padding          : 20px 10%;
+        border-bottom  : none;
+        border-top     : solid 3px #CCCCCC;
+        padding-bottom : 25px;
+        padding-top    : 25px;
     }
 
-    footer a {
-        color           : #FFFFFF;
-        text-decoration : none;
+    footer div.partenaire {
+        display    : flex;
+        flex       : 1 0 auto;
+        margin-top : 25px;
     }
 
     footer .column {
-        float   : left;
-        margin  : 0;
-        padding : 0 15%;
-        width   : 50%;
+        border-left    : #222933 solid 1px;
+        display        : flex;
+        flex           : 0 0 350px;
+        flex-direction : column;
+        font-weight    : bold;
+        margin-top     : 25px;
+        padding-left   : 25px;
+        text-align     : left;
     }
 
-    footer .column a {
-        clear : both;
-        float : left;
-    }
-
-    footer .column a:first-child {
-        margin-top : 38px;
-    }
-
-    footer .column:nth-last-child(n+2) {
-        border-right : #CCCCCC solid 1px;
-    }
-
-    #version {
-        clear       : both;
+    footer div.version {
+        flex        : 1 0 100%;
         font-family : "Bradley Hand ITC", Arial, sans-serif;
-        padding-top : 65px;
     }
 
     .bouton,
