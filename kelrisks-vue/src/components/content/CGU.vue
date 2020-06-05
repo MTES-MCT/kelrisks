@@ -17,7 +17,7 @@
                l'information.</p>
 
             <p>Le présent document a pour objet de régler les relations entre les différents intervenants sur le service. Il définit les conditions et modalités d’utilisation des services
-               https://kelrisks.beta.gouv.fr/index.html#/ et https://kelrisks.beta.gouv.fr/swagger-ui.html sur Internet.</p>
+               https://kelrisks.beta.gouv.fr/#/ et https://kelrisks.beta.gouv.fr/swagger-ui.html sur Internet.</p>
 
             <p>Le service est développé et opéré par la Fabrique numérique des ministères de la Transition écologique et solidaire et de la Cohésion des territoires, avec l’appui de l’incubateur
                de
@@ -82,14 +82,14 @@
 
             <p>Ils sont disponibles sur Github à l'adresse suivante :</p>
 
-            <p>https://github.com/MTES-MCT/kelrisks</p>
+            <p><a href="https://github.com/MTES-MCT/kelrisks">Github</a></p>
 
             <p>Données administratives publiques relatives aux domaines et aux titres miniers
                Les informations publiques délivrées par le service le sont sous Licence Ouverte V 2.0. Vous êtes donc libres de réutiliser ces informations sous réserve de mentionner la
                paternité de
                l’information et la date de dernière mise à jour de l’information utilisée. Par exemple sur la forme « Ministère de la Transition écologique et solidaire – Données originales
                téléchargées sur
-               https://kelrisks.beta.gouv.fr, mise à jour du 01 septembre 2018 ».</p>
+                <a href="https://kelrisks.beta.gouv.fr">kelrisks</a>, mise à jour du 01 septembre 2018 ».</p>
 
             <h3 style="text-align: center">Vie privée</h3>
 

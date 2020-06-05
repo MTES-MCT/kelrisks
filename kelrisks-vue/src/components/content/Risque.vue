@@ -147,9 +147,8 @@ export default {
     .risque_summary__icon {
         display        : flex;
         flex-direction : column;
-        margin-right   : 6%;
-        max-width      : 300px;
-        min-width      : 130px;
+        margin-right   : 22px;
+        width          : 175px;
     }
 
     .risque_summary__icon > img {

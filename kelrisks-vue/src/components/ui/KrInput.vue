@@ -385,7 +385,7 @@ export default {
     }
 
     .kr-group label.focus {
-        color : #655FFF;
+        color : #0053B3;
     }
 
     .kr-group label.error {
@@ -403,7 +403,7 @@ export default {
     }
 
     .kr-group input:focus {
-        border-bottom : solid 2px #655FFF;
+        border-bottom : solid 2px #0053B3;
         margin-bottom : 23px;
     }
 

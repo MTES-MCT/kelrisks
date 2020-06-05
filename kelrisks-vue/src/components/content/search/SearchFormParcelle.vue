@@ -30,7 +30,7 @@
                     <div class="clearfix"></div>
 
                     <p class="subtitle"
-                       style="margin: 30px 0 15px 0; color: #8A8F96">Ou</p>
+                       id="or"><span>Ou</span></p>
 
                     <kr-input :errors="error.field.codeCommune"
                               :get-option-label-function="(option => {return option['properties']['postcode'] + ' - ' + option['properties']['city']})"
@@ -229,6 +229,30 @@ export default {
 
     h3 {
         text-align : center;
+    }
+
+    #or {
+        color    : #222933;
+        margin   : 30px 0 15px 0;
+        position : relative;
+    }
+
+    #or span:before,
+    #or span:after {
+        border-bottom : 2px solid #0053B3;
+        content       : '';
+        overflow      : hidden;
+        position      : absolute;
+        top           : 50%;
+        width         : 45%;
+    }
+
+    #or span:before {
+        right : 55%;
+    }
+
+    #or span:after {
+        left : 55%;
     }
 
     .container {
