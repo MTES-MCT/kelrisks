@@ -282,6 +282,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                     generateurs.getFeatures().forEach(generateur -> {
                     
                         PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
+                        if (gaspar == null) { System.out.println(" V " + "!!!! Id Gaspar : " + generateur.getProperties().getId_gaspar() + "(" + codeINSEE + ") NOT found !!!!"); }
                         updatePprList(planPreventionRisquesList, gaspar);
                     });
                 }
@@ -301,8 +302,9 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                     .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
                     // multiplicité des sources
                     .forEach(ppr -> {
-                    
+    
                         PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
+                        if (gaspar == null) { System.out.println(" V " + "!!!! Id Gaspar : " + ppr.getId_gaspar() + "(" + codeINSEE + ") NOT found !!!!"); }
                         updatePprList(planPreventionRisquesList, gaspar);
                     });
         }
@@ -404,29 +406,48 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private PlanPreventionRisquesGasparDTO getGaspar(String codeINSEE, String idGaspar, Geometry<?> geometry) {
-        
+    
+        codeINSEE = getEquivalenceInseeArrondissmentCommune(codeINSEE);
+    
         PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
         planPreventionRisquesGasparQO.setIdGaspar(idGaspar);
         planPreventionRisquesGasparQO.setCodeINSEE(codeINSEE);
-        
+    
         List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
-        
+    
         if (gaspars.size() >= 1) {
-            
+        
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
             
             Map<String, Object> properties = Stream.of(new SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
                                                        new SimpleEntry<>("prescritLe", gaspars.get(0).getDateDeprescription() != null ? sdf.format(gaspars.get(0).getDateDeprescription()) : "n/a"),
                                                        new SimpleEntry<>("approuvéLe", gaspars.get(0).getDateApprobation() != null ? sdf.format(gaspars.get(0).getDateApprobation()) : "n/a"))
                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-            
+        
             PlanPreventionRisquesGasparDTO planPreventionRisquesGasparDTO = gaspars.get(0);
             planPreventionRisquesGasparDTO.getAssiettes().add(GeoJsonUtils.toGeoJson(geometry, properties));
-            
+        
             return planPreventionRisquesGasparDTO;
         }
-        
+    
         return null;
+    }
+    
+    private String getEquivalenceInseeArrondissmentCommune(String codeINSEE) {
+        
+        List<String> arrondissementsMarseille =
+                Stream.of("13201", "13202", "13203", "13204", "13205", "13206", "13207", "13208", "13209", "13210", "13211", "13212", "13213", "13214", "13215", "13216").collect(Collectors.toList());
+        List<String> arrondissementsLyon =
+                Stream.of("69381", "69382", "69383", "69384", "69385", "69386", "69387", "69388", "69389").collect(Collectors.toList());
+        List<String> arrondissementsParis =
+                Stream.of("75101", "75102", "75103", "75104", "75105", "75106", "75107", "75108", "75109", "75110", "75111", "75112", "75113", "75114", "75115", "75116", "75117", "75118", "75119",
+                          "75120").collect(Collectors.toList());
+    
+        if (arrondissementsMarseille.contains(codeINSEE)) { return "13055"; }
+        if (arrondissementsLyon.contains(codeINSEE)) { return "69123"; }
+        if (arrondissementsParis.contains(codeINSEE)) { return "75056"; }
+        
+        return codeINSEE;
     }
     
     private void getAvisSismicite(AvisDTO avisDTO, CommuneDTO commune) {
