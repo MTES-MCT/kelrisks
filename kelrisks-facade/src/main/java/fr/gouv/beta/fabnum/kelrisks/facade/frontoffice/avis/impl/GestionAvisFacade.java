@@ -292,7 +292,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                     .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
                     // multiplicité des sources
                     .forEach(ppr -> {
-                
+    
                         PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
                         updatePprList(planPreventionRisquesList, gaspar);
                     });
@@ -322,32 +322,76 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                 gestionBRGMFacade.rechercherCanalisationsCoordonnees(String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                      String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())),
                                                                      500);
-        
+    
         if (brgmPaginatedCanalisation != null) {
             brgmPaginatedCanalisation.getFeatures().forEach(canalisation -> avisDTO.getGeogCanalisations().add(canalisation.getGeometry()));
         }
     }
     
     private void getAvisInstallationsNucleaires(AvisDTO avisDTO, Point<?> centroid) {
+        
+        List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
+        
+        installationNucleaireDTOS.addAll(getCentralesNucleaires(centroid));
+        avisDTO.setHasCentraleNucleaire(!installationNucleaireDTOS.isEmpty());
+        
+        installationNucleaireDTOS.addAll(getInstallationsNucleaires(centroid));
+        
+        avisDTO.setInstallationNucleaireDTOS(installationNucleaireDTOS);
+    }
     
-        BRGMPaginatedInstallationNuclaire brgmPaginatedInstallationNuclaire =
+    private List<InstallationNucleaireDTO> getCentralesNucleaires(Point<?> centroid) {
+        
+        List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
+        
+        BRGMPaginatedInstallationNuclaire brgmPaginatedInstallationNuclaire20 =
                 gestionBRGMFacade.rechercherInstallationsNucleairesCoordonnees(String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                                String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())),
                                                                                20000);
-    
-        List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
-    
-        if (brgmPaginatedInstallationNuclaire != null) {
-            brgmPaginatedInstallationNuclaire.getFeatures().forEach(installationNucleaire -> {
-    
+        
+        if (brgmPaginatedInstallationNuclaire20 != null) {
+            
+            List<BRGMPaginatedInstallationNuclaire.InstallationNucleaire> installationsNucleaires = brgmPaginatedInstallationNuclaire20.getFeatures();
+            
+            installationsNucleaires.removeIf(installationNucleaire -> !installationNucleaire.getProperties().getType_leg().toLowerCase().contains("centrale"));
+            
+            installationsNucleaires.forEach(centralesNucleaires -> {
+                
                 InstallationNucleaireDTO installationNucleaireDTO = new InstallationNucleaireDTO();
-                installationNucleaireDTO.setNomInstallation(installationNucleaire.getProperties().getNom_inst());
-                installationNucleaireDTO.setLibCommune(installationNucleaire.getProperties().getNom_com());
+                installationNucleaireDTO.setNomInstallation(centralesNucleaires.getProperties().getNom_inst());
+                installationNucleaireDTO.setLibCommune(centralesNucleaires.getProperties().getNom_com());
+                installationNucleaireDTO.setCentrale(true);
                 installationNucleaireDTOS.add(installationNucleaireDTO);
             });
         }
+        
+        return installationNucleaireDTOS;
+    }
     
-        avisDTO.setInstallationNucleaireDTOS(installationNucleaireDTOS);
+    private List<InstallationNucleaireDTO> getInstallationsNucleaires(Point<?> centroid) {
+        
+        List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
+        
+        BRGMPaginatedInstallationNuclaire brgmPaginatedInstallationNuclaire10 =
+                gestionBRGMFacade.rechercherInstallationsNucleairesCoordonnees(String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
+                                                                               String.valueOf(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis())),
+                                                                               10000);
+        
+        if (brgmPaginatedInstallationNuclaire10 != null) {
+            
+            List<BRGMPaginatedInstallationNuclaire.InstallationNucleaire> installationsNucleaires = brgmPaginatedInstallationNuclaire10.getFeatures();
+            
+            installationsNucleaires.forEach(installationNucleaire -> {
+                
+                InstallationNucleaireDTO installationNucleaireDTO = new InstallationNucleaireDTO();
+                installationNucleaireDTO.setNomInstallation(installationNucleaire.getProperties().getNom_inst());
+                installationNucleaireDTO.setLibCommune(installationNucleaire.getProperties().getNom_com());
+                installationNucleaireDTO.setCentrale(false);
+                installationNucleaireDTOS.add(installationNucleaireDTO);
+            });
+        }
+        
+        return installationNucleaireDTOS;
     }
     
     private PlanPreventionRisquesGasparDTO getGaspar(String codeINSEE, String idGaspar, Geometry<?> geometry) {
@@ -359,14 +403,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
         
         if (gaspars.size() >= 1) {
-    
+            
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
-    
+            
             Map<String, Object> properties = Stream.of(new SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
                                                        new SimpleEntry<>("prescritLe", gaspars.get(0).getDateDeprescription() != null ? sdf.format(gaspars.get(0).getDateDeprescription()) : "n/a"),
                                                        new SimpleEntry<>("approuvéLe", gaspars.get(0).getDateApprobation() != null ? sdf.format(gaspars.get(0).getDateApprobation()) : "n/a"))
                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    
+            
             PlanPreventionRisquesGasparDTO planPreventionRisquesGasparDTO = gaspars.get(0);
             planPreventionRisquesGasparDTO.getAssiettes().add(GeoJsonUtils.toGeoJson(geometry, properties));
             

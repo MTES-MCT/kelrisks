@@ -306,7 +306,7 @@
                     :title="'Inondations'"
                     v-if="hasAZI && !hasTRI && !hasPPRi"/>
 
-            <risque :description="'Votre bien est situé à moins de [10 km] [20 km] d\'une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
+            <risque :description="'Votre bien est situé à moins de ' + (avis.hasCentraleNucleaire ? '20 km' :  '10 km') + ' d\'une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
                     :detail="'<p>Ces installations sont contrôlées par l\'Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
                              '<p>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires + '</p>'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_nucleaires_bleu.svg'"

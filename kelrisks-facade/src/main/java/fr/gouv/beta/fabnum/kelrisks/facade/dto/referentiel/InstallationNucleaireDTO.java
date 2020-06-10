@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class InstallationNucleaireDTO {
     
-    private String nomInstallation;
-    private String libCommune;
+    private String  nomInstallation;
+    private String  libCommune;
+    private boolean centrale = false;
 }

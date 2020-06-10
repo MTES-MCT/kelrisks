@@ -55,6 +55,7 @@ public class AvisDTO extends JsonInfoDTO {
     
     private List<Geometry<?>>              geogCanalisations         = new ArrayList<>();
     private List<InstallationNucleaireDTO> installationNucleaireDTOS = new ArrayList<>();
+    private boolean                        hasCentraleNucleaire      = false;
     private String                         zonePlanExpositionBruit;
     private List<PlanExpositionBruitDTO>   plansExpositionBruit;
     
