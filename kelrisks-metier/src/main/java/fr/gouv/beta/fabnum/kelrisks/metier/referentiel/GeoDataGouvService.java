@@ -3,6 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 import fr.gouv.beta.fabnum.commun.metier.IWebClient;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeoDataGouvService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeoDataGouvCommune;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -27,6 +28,10 @@ public class GeoDataGouvService implements IGeoDataGouvService, IWebClient {
                                              .accept(MediaType.APPLICATION_JSON)
                                              .exchange()
                                              .flatMap(clientResponse -> clientResponse.bodyToMono(GeoDataGouvCommune[].class))
+                                             .onErrorResume(e -> {
+                                                 System.out.println(" V : " + e.getLocalizedMessage());
+                                                 return Mono.just(new GeoDataGouvCommune[0]);
+                                             })
                                              .block(Duration.ofSeconds(30L));
         
         if (block != null && block.length == 1) { return block[0]; }

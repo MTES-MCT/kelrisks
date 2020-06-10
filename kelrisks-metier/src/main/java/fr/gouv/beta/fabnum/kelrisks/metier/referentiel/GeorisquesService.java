@@ -8,6 +8,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSismique;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedTRI;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.Duration;
@@ -22,8 +23,8 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
     
     private static final String GEORISQUE_BASE_URL = "http://www.georisques.gouv.fr/api/v1";
     private static final String RADON_URL          = GEORISQUE_BASE_URL + "/radon?code_insee=PARAM_INSEE&page=1&page_size=10";
-    private static final String TRI_URL            = GEORISQUE_BASE_URL + "/tri?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=10";
-    private static final String AZI_URL            = GEORISQUE_BASE_URL + "/azi?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=10";
+    private static final String TRI_URL            = GEORISQUE_BASE_URL + "/gaspar/tri?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=10";
+    private static final String AZI_URL            = GEORISQUE_BASE_URL + "/gaspar/azi?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=10";
     private static final String SISMIQUE_URL       = GEORISQUE_BASE_URL + "/zonage_sismique?&code_insee=PARAM_INSEE&page=1&page_size=10";
     private static final String SIS_URL            = GEORISQUE_BASE_URL + "/sis";
     private static final String PPR_URL            = GEORISQUE_BASE_URL + "/ppr";
@@ -36,6 +37,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(GeorisquePaginatedRadon.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new GeorisquePaginatedRadon());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -48,6 +53,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(GeorisquePaginatedAZI.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new GeorisquePaginatedAZI());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -60,6 +69,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(GeorisquePaginatedTRI.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new GeorisquePaginatedTRI());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -72,6 +85,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(GeorisquePaginatedSismique.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new GeorisquePaginatedSismique());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -93,6 +110,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(GeorisquePaginatedSIS.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new GeorisquePaginatedSIS());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -114,6 +135,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(GeorisquePaginatedPPR.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new GeorisquePaginatedPPR());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
 }

@@ -4,6 +4,7 @@ import fr.gouv.beta.fabnum.commun.metier.IWebClient;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IIGNCartoService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoAssiettePaginatedFeatures;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.IGNCartoGenerateurPaginatedFeatures;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.Duration;
@@ -31,6 +32,10 @@ public class IGNCartoService implements IIGNCartoService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(IGNCartoAssiettePaginatedFeatures.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new IGNCartoAssiettePaginatedFeatures());
+                       })
                        .block(Duration.ofSeconds(60L));
     }
     
@@ -47,6 +52,10 @@ public class IGNCartoService implements IIGNCartoService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(IGNCartoGenerateurPaginatedFeatures.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new IGNCartoGenerateurPaginatedFeatures());
+                       })
                        .block(Duration.ofSeconds(60L));
     }
 }
