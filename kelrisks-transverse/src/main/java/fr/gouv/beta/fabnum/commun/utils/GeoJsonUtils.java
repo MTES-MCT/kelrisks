@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.commun.utils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +23,25 @@ public class GeoJsonUtils {
         return toGeoJson(geom, null, null);
     }
     
-    public static String toGeoJson(List<Geometry<?>> polygons) {
-    
-        if (polygons == null) { return ""; }
-    
+    public static String toGeoJson(List<Geometry<?>> geometries) {
+        
+        if (geometries == null) { return ""; }
+        
+        List<Polygon<?>> polygons = new ArrayList<>();
+        
+        geometries.forEach(geometry -> {
+            if (geometry instanceof MultiPolygon) {
+                MultiPolygon<?> multiPolygon = (MultiPolygon<?>) geometry;
+                
+                for (int index = 0; index < multiPolygon.getNumGeometries(); index++) {
+                    polygons.add(multiPolygon.getGeometryN(index));
+                }
+            }
+            else { polygons.add((Polygon<?>) geometry); }
+        });
+        
         MultiPolygon<?> multipolygon = new MultiPolygon(polygons.toArray(new Polygon[0]));
-    
+        
         return toGeoJson(multipolygon, null, null);
     }
     

@@ -82,7 +82,7 @@ export default {
 
             this.querying = true
 
-            fetchWithError(url, null, 1000 * 60)
+            fetchWithError(url, null, 1000 * 90)
                 .then(stream => stream.json())
                 .then(value => {
 
@@ -135,15 +135,13 @@ export default {
 
                     this.avis.ppr = value.entity.planPreventionRisquesDTOs
 
-                    // console.log(value.entity.planPreventionRisquesDTOs)
-                    // console.log(this.avis.ppr)
-
                     this.avis.TRIs = value.entity.tris
                     this.avis.AZIs = value.entity.azis
 
                     this.avis.canalisations = value.entity.geogCanalisations
                     this.avis.nucleaires.positions = value.entity.geogInstallationsNucleaires
                     this.avis.nucleaires.installations = value.entity.installationNucleaireDTOS
+                    this.avis.hasCentraleNucleaire = value.entity.hasCentraleNucleaire
 
                     this.avis.zonePlanExpositionBruit = value.entity.zonePlanExpositionBruit
                     this.avis.plansExpositionBruit = value.entity.plansExpositionBruit

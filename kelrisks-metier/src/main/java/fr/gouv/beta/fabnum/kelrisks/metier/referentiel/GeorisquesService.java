@@ -31,12 +31,11 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
     public GeorisquePaginatedRadon rechercherRadonCommune(String codeINSEE) {
         
         String uri = RADON_URL.replace("PARAM_INSEE", codeINSEE);
-        
         return getWebClient().get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedRadon.class))
+                       .retrieve()
+                       .bodyToMono(GeorisquePaginatedRadon.class)
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -47,8 +46,8 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
         return getWebClient().get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedAZI.class))
+                       .retrieve()
+                       .bodyToMono(GeorisquePaginatedAZI.class)
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -59,8 +58,8 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
         return getWebClient().get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedTRI.class))
+                       .retrieve()
+                       .bodyToMono(GeorisquePaginatedTRI.class)
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -71,8 +70,8 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
         return getWebClient().get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedSismique.class))
+                       .retrieve()
+                       .bodyToMono(GeorisquePaginatedSismique.class)
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -92,8 +91,8 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
         return getWebClient().get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedSIS.class))
+                       .retrieve()
+                       .bodyToMono(GeorisquePaginatedSIS.class)
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -113,8 +112,8 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
         return getWebClient().get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(GeorisquePaginatedPPR.class))
+                       .retrieve()
+                       .bodyToMono(GeorisquePaginatedPPR.class)
                        .block(Duration.ofSeconds(30L));
     }
 }

@@ -32,8 +32,8 @@ public class BRGMService implements IBRGMService, IWebClient {
         return getWebClient().get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(BRGMPaginatedCanalisation.class))
+                       .retrieve()
+                       .bodyToMono(BRGMPaginatedCanalisation.class)
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -50,8 +50,8 @@ public class BRGMService implements IBRGMService, IWebClient {
         return getWebClient().get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(BRGMPaginatedCanalisation.class))
+                       .retrieve()
+                       .bodyToMono(BRGMPaginatedCanalisation.class)
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -62,8 +62,8 @@ public class BRGMService implements IBRGMService, IWebClient {
         return getWebClient().get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(BRGMPaginatedInstallationNuclaire.class))
+                       .retrieve()
+                       .bodyToMono(BRGMPaginatedInstallationNuclaire.class)
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -80,8 +80,8 @@ public class BRGMService implements IBRGMService, IWebClient {
         return getWebClient().get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(BRGMPaginatedInstallationNuclaire.class))
+                       .retrieve()
+                       .bodyToMono(BRGMPaginatedInstallationNuclaire.class)
                        .block(Duration.ofSeconds(30L));
     }
 }

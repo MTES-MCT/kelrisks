@@ -156,7 +156,7 @@ export default {
                     .then(stream => stream.json())
                     .then(data => {
                         if (data.entity) {
-                            this.leaflet.parcelleFound = data.entity.section + '-' + data.entity.numero
+                            this.leaflet.parcelleFound = data.entity.section + '-' + data.entity.numero + '@' + data.entity.commune
                         }
                     })
 
@@ -177,6 +177,7 @@ export default {
             this.checkAndGetParcelles()
         },
         onSelectedParcellesChanged (array) {
+            console.log(array)
             this.form.selectedParcellesList = array
         },
         search () {

@@ -14,13 +14,13 @@ import com.querydsl.core.BooleanBuilder;
 @EqualsAndHashCode(callSuper = false)
 public class ParcelleQO extends AbstractQO {
     
-    private String       code;
-    private List<String> codes   = new ArrayList<>();
-    private String       section;
-    private String       numero;
-    private String       codePostal;
-    private String       codeINSEE;
-    private List<SecNum> secNums = new ArrayList<>();
+    private String            code;
+    private List<String>      codes     = new ArrayList<>();
+    private String            section;
+    private String            numero;
+    private String            codePostal;
+    private String            codeINSEE;
+    private List<SecNumInsee> parcelles = new ArrayList<>();
     
     @Override
     public void feedBuilder(BooleanBuilder builder) {
@@ -32,13 +32,14 @@ public class ParcelleQO extends AbstractQO {
         if (numero != null) {builder.and(QParcelle.parcelle.numero.eq(numero));}
         if (codeINSEE != null) {builder.and(QParcelle.parcelle.commune.eq(codeINSEE));}
         
-        if (secNums != null && !secNums.isEmpty()) {
+        if (parcelles != null && !parcelles.isEmpty()) {
             
             BooleanBuilder anySecNumCoupleBuilder = new BooleanBuilder();
-            secNums.forEach(secNum -> {
+            parcelles.forEach(secNumInsee -> {
                 BooleanBuilder secAndNumBuilder = new BooleanBuilder();
-                secAndNumBuilder.and(QParcelle.parcelle.section.equalsIgnoreCase(secNum.section));
-                secAndNumBuilder.and(QParcelle.parcelle.numero.eq(secNum.numero));
+                secAndNumBuilder.and(QParcelle.parcelle.section.equalsIgnoreCase(secNumInsee.section));
+                secAndNumBuilder.and(QParcelle.parcelle.numero.eq(secNumInsee.numero));
+                secAndNumBuilder.and(QParcelle.parcelle.commune.eq(secNumInsee.insee));
                 anySecNumCoupleBuilder.or(secAndNumBuilder);
             });
             builder.and(anySecNumCoupleBuilder);
@@ -46,15 +47,17 @@ public class ParcelleQO extends AbstractQO {
     }
     
     @Data
-    public static class SecNum {
+    public static class SecNumInsee {
         
         private String section;
         private String numero;
+        private String insee;
         
-        public SecNum(String section, String numero) {
+        public SecNumInsee(String section, String numero, String insee) {
             
             this.section = section;
             this.numero = numero;
+            this.insee = insee;
         }
     }
 }

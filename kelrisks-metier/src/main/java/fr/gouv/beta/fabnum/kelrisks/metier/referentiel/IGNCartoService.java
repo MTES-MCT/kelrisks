@@ -22,18 +22,16 @@ public class IGNCartoService implements IIGNCartoService, IWebClient {
     
     @Override
     public IGNCartoAssiettePaginatedFeatures rechercherAssiettesContenantPolygon(String geom) {
-        
+    
         UriBuilder uriBuilder  = UriBuilder.fromPath(ASSIETTE_URL);
         URI        assietteUri = uriBuilder.queryParam("geom", "{geom}").build(geom);
-        
-        IGNCartoAssiettePaginatedFeatures assietteFeatures = getWebClient().get()
-                                                                     .uri(assietteUri)
-                                                                     .accept(MediaType.APPLICATION_JSON)
-                                                                     .exchange()
-                                                                     .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoAssiettePaginatedFeatures.class))
-                                                                     .block(Duration.ofSeconds(60L));
-        
-        return assietteFeatures;
+    
+        return getWebClient().get()
+                       .uri(assietteUri)
+                       .accept(MediaType.APPLICATION_JSON)
+                       .retrieve()
+                       .bodyToMono(IGNCartoAssiettePaginatedFeatures.class)
+                       .block(Duration.ofSeconds(60L));
     }
     
     @Override
@@ -47,8 +45,8 @@ public class IGNCartoService implements IIGNCartoService, IWebClient {
         return getWebClient().get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
-                       .exchange()
-                       .flatMap(clientResponse -> clientResponse.bodyToMono(IGNCartoGenerateurPaginatedFeatures.class))
+                       .retrieve()
+                       .bodyToMono(IGNCartoGenerateurPaginatedFeatures.class)
                        .block(Duration.ofSeconds(60L));
     }
 }
