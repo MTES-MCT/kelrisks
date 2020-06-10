@@ -179,7 +179,7 @@ public class ApiAvis extends AbstractBasicApi {
             shortUrlDTO.setUrl(url);
         }
         
-        List<ParcelleDTO> parcelleDTOs = getParcelles(codeINSEE, codeParcelle);
+        List<ParcelleDTO> parcelleDTOs = getParcelles(codeParcelle);
         
         if (parcelleDTOs == null || parcelleDTOs.isEmpty()) {
             JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
@@ -212,8 +212,8 @@ public class ApiAvis extends AbstractBasicApi {
             jsonInfoDTO.addError("Merci d'entrer un code parcelle ou de choisir une adresse parmi les résultats proposés dans le champ.");
             return null;
         }
-        
-        List<ParcelleDTO> parcelleDTOs = getParcelles(codeINSEE, codeParcelle);
+    
+        List<ParcelleDTO> parcelleDTOs = getParcelles(codeParcelle);
         
         if (parcelleDTOs == null || parcelleDTOs.isEmpty()) {
             return null;

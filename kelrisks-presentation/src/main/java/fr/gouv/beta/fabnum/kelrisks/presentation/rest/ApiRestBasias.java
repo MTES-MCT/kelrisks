@@ -71,7 +71,7 @@ public class ApiRestBasias extends AbstractBasicApi {
                                      @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
                                      @PathVariable("codeParcelle") String codeParcelle) {
         
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSitesSurParcelle(getParcelleCode(codeINSEE, codeParcelle));
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSitesSurParcelle(getParcelleCode(codeParcelle + '@' + codeINSEE));
         
         return Response.ok(siteIndustrielBasiasDTOs).build();
     }
@@ -110,8 +110,8 @@ public class ApiRestBasias extends AbstractBasicApi {
                                               @PathVariable("distance") String distance) {
         
         Double rayon = distance.equals("") ? 100D : Double.parseDouble(distance);
-        
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSiteDansRayonCentroideParcelle(getParcelleCode(codeINSEE, codeParcelle), rayon);
+    
+        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs = gestionSiteIndustrielBasiasFacade.rechercherSiteDansRayonCentroideParcelle(getParcelleCode(codeParcelle + '@' + codeINSEE), rayon);
         
         return Response.ok(siteIndustrielBasiasDTOs).build();
     }

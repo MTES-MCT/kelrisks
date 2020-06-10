@@ -128,16 +128,15 @@ export default {
                 layer.bindTooltip(
                     () => {
                         let divs = ''
-                        let value = feature.properties['code']
-                        let label = 'Code'
-                        divs = divs.concat('<div>', label, ' : ', value, '</div>')
+                        divs = divs.concat('<div>', 'INSEE', ' : ', feature.properties['commune'], '</div>',
+                            '<div>', 'Code', ' : ', feature.properties['code'], '</div>')
                         return divs
                     },
                     {permanent: false, sticky: true}
                 );
 
                 if (feature.properties['code']) {
-                    layer.id = feature.properties['code']
+                    layer.id = ''.concat(feature.properties['code'], '@', feature.properties['commune'])
                 }
 
                 this.initLayerClick(layer)
