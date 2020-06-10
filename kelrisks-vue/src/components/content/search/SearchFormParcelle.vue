@@ -177,7 +177,6 @@ export default {
             this.checkAndGetParcelles()
         },
         onSelectedParcellesChanged (array) {
-            console.log(array)
             this.form.selectedParcellesList = array
         },
         search () {
