@@ -4,6 +4,7 @@ import fr.gouv.beta.fabnum.commun.metier.IWebClient;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IBRGMService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedCanalisation;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedInstallationNuclaire;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.Duration;
@@ -34,6 +35,10 @@ public class BRGMService implements IBRGMService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(BRGMPaginatedCanalisation.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new BRGMPaginatedCanalisation());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -52,6 +57,10 @@ public class BRGMService implements IBRGMService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(BRGMPaginatedCanalisation.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new BRGMPaginatedCanalisation());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -64,6 +73,10 @@ public class BRGMService implements IBRGMService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(BRGMPaginatedInstallationNuclaire.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new BRGMPaginatedInstallationNuclaire());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
     
@@ -82,6 +95,10 @@ public class BRGMService implements IBRGMService, IWebClient {
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
                        .bodyToMono(BRGMPaginatedInstallationNuclaire.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new BRGMPaginatedInstallationNuclaire());
+                       })
                        .block(Duration.ofSeconds(30L));
     }
 }

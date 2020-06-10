@@ -99,6 +99,8 @@ export default {
     bottom     : -1px;
     right      : 10px;
     padding    : 24px 14px;
+    /* pour passer au dessus de '1000', le z-index de leaflet */
+    z-index    : 1001;
   }
 
   #contact.hidden {

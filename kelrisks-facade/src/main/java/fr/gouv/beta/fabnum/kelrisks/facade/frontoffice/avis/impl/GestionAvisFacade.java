@@ -257,42 +257,51 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, Point<?> centroid, String codeINSEE) {
-        
-        String parcelleSitesSolsPoluesGeoJson = GeoJsonUtils.getGeometryFromGeoJson(GeoJsonUtils.toGeoJson(parcelleSitesSolsPolues));
-        
-        List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList = new ArrayList<>();
-        
-        IGNCartoAssiettePaginatedFeatures assiettes = gestionIGNCartoFacade.rechercherAssiettesContenantPolygon(parcelleSitesSolsPoluesGeoJson);
-        
-        if (assiettes != null) {
     
+        long startTime = System.currentTimeMillis();
+    
+        String parcelleSitesSolsPoluesGeoJson = GeoJsonUtils.getGeometryFromGeoJson(GeoJsonUtils.toGeoJson(parcelleSitesSolsPolues));
+    
+        List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList = new ArrayList<>();
+    
+        IGNCartoAssiettePaginatedFeatures assiettes = gestionIGNCartoFacade.rechercherAssiettesContenantPolygon(parcelleSitesSolsPoluesGeoJson);
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionIGNCartoFacade.rechercherAssiettesContenantPolygon");
+        startTime = System.currentTimeMillis();
+    
+        if (assiettes != null) {
+        
             assiettes.getFeatures().forEach(assiette -> {
-        
-                IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateur(assiette.getProperties().getPartition());
-        
-                if (generateurs != null) {
             
+                IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateur(assiette.getProperties().getPartition());
+            
+                if (generateurs != null) {
+                
                     // Sécurisation de la jointure assiette / générateur qui ne peut être faite via l'API GpU
                     generateurs.getFeatures().removeIf(generateur -> !generateur.getProperties().getIdgen().equalsIgnoreCase(assiette.getProperties().getIdgen()));
-            
-                    generateurs.getFeatures().forEach(generateur -> {
                 
+                    generateurs.getFeatures().forEach(generateur -> {
+                    
                         PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
                         updatePprList(planPreventionRisquesList, gaspar);
                     });
                 }
             });
         }
-        
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionIGNCartoFacade.rechercherGenerateur");
+        startTime = System.currentTimeMillis();
+    
         GeorisquePaginatedPPR georisquePaginatedPPR = gestionGeorisquesFacade.rechercherPprCoordonnees(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis()),
                                                                                                        centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()));
-        if (georisquePaginatedPPR != null) {
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionGeorisquesFacade.rechercherPprCoordonnees");
+        startTime = System.currentTimeMillis();
     
+        if (georisquePaginatedPPR != null) {
+        
             georisquePaginatedPPR.getData().stream()
                     .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
                     // multiplicité des sources
                     .forEach(ppr -> {
-    
+                    
                         PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
                         updatePprList(planPreventionRisquesList, gaspar);
                     });
@@ -532,23 +541,32 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
     private void getAvisBasias(AvisDTO avisDTO, Geometry<?> parcelle, List<Geometry<?>> parcelleSitesSolsPolues, Geometry<?> touchesParcelle, Geometry<?> expendedParcelle,
                                String codeINSEE) {
-        
+    
+        long startTime = System.currentTimeMillis();
+    
         avisDTO.setSiteIndustrielBasiasSurParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(parcelleSitesSolsPolues)));
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons");
+        startTime = System.currentTimeMillis();
         avisDTO.setSiteIndustrielBasiasProximiteParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(touchesParcelle)));
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon");
+        startTime = System.currentTimeMillis();
         avisDTO.setSiteIndustrielBasiasRayonParcelleDTOs((List<SiteIndustrielBasiasDTO>) removeLowPrecision(gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon(expendedParcelle)));
-        
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygon");
+        startTime = System.currentTimeMillis();
+    
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().forEach(sib -> avisDTO.getLeaflet().getBasias().add(sib.getEwkt()));
-        
+    
         avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
-        
+    
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().removeAll(avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs());
-        
+    
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasSurParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasProximiteParcelleDTOs());
         avisDTO.getSiteIndustrielBasiasParRaisonSocialeDTOs().removeAll(avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs());
-        
+    
         avisDTO.setSiteIndustrielBasiasNonGeorerenceesDTOs(gestionSiteIndustrielBasiasFacade.rechercherSitesAvecFaiblePrecisionDeGeolocalisation(codeINSEE));
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionSiteIndustrielBasiasFacade.rechercherSitesAvecFaiblePrecisionDeGeolocalisation");
     }
     
     private List<? extends AbstractLocalisationAvecPrecision> removeLowPrecision(List<? extends AbstractLocalisationAvecPrecision> sites) {

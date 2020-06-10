@@ -3,6 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 import fr.gouv.beta.fabnum.commun.metier.IWebClient;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IAdresseDataGouvService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.AdresseDataGouvPaginatedFeatures;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -28,7 +29,11 @@ public class AdresseDataGouvService implements IAdresseDataGouvService, IWebClie
                                                          .uri(uri)
                                                          .accept(MediaType.APPLICATION_JSON)
                                                          .exchange()
-                                                         .flatMap(clientResponse -> clientResponse.bodyToMono(AdresseDataGouvPaginatedFeatures.class))
+                                                         .flatMap(clientResponse -> clientResponse.bodyToMono(AdresseDataGouvPaginatedFeatures.class)
+                                                                                            .onErrorResume(e -> {
+                                                                                                System.out.println(" V : " + e.getLocalizedMessage());
+                                                                                                return Mono.just(new AdresseDataGouvPaginatedFeatures());
+                                                                                            }))
                                                          .block(Duration.ofSeconds(30L));
         
         if (block != null) { return block.getFeatures(); }

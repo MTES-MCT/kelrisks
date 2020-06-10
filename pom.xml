@@ -22,11 +22,11 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.1.RELEASE</version>
+        <version>2.1.14.RELEASE</version>
     </parent>
 
     <properties>
-        <revision>v1.3.1.2006051901</revision>
+        <revision>v1.3.1.2006101850</revision>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
