@@ -202,7 +202,8 @@ export default {
                             if (this.form.codeParcelle !== '') this.$refs.searchErrors.sendWarning('Aucune parcelle n\'a été trouvé avec le code suivant : ' + this.form.codeParcelle + '.')
                         }
                     })
-                    .catch(() => {
+                    .catch((e) => {
+                        console.log(e)
                         this.$refs.searchErrors.sendError('Une erreur est survenue.')
                     })
             }

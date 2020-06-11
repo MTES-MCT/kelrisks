@@ -1,8 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks;
 
-import reactor.netty.http.client.HttpClient;
-import reactor.netty.resources.ConnectionProvider;
-
 import org.geolatte.geom.json.GeolatteGeomModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,8 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.http.client.reactive.ClientHttpConnector;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -59,16 +54,8 @@ public class Application extends SpringBootServletInitializer {
     }
     
     @Bean
-    public WebClient webClient(final ClientHttpConnector clientHttpConnector) {
-        
-        return WebClient.builder()
-                       .clientConnector(clientHttpConnector)
-                       .build();
-    }
+    public WebClient webClient() {
     
-    @Bean
-    public ClientHttpConnector clientHttpConnector() {
-        
-        return new ReactorClientHttpConnector(HttpClient.create(ConnectionProvider.newConnection()));
+        return WebClient.create();
     }
 }
