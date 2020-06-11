@@ -12,8 +12,9 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/vue-fontawesome": "^0.1.8",
+    "@types/leaflet": "^1.2.11",
     "core-js": "^3.4.3",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.1",
     "leaflet": "^1.6.0",
     "moment": "^2.24.0",
     "vue": "^2.6.10",
@@ -23,10 +24,10 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "*",
     "@vue/cli-plugin-eslint": "*",
-    "@vue/cli-service": "*",
+    "@vue/cli-service": "^4.4.1",
     "babel-eslint": "*",
     "eslint": "*",
-    "eslint-plugin-vue": "*",
+    "eslint-plugin-vue": "^6.2.2",
     "vue-template-compiler": "*"
   },
   "eslintConfig": {
