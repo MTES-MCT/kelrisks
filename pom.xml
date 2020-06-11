@@ -40,6 +40,7 @@
         <springfox.version>2.9.2</springfox.version>
         <javax.ws.rs.version>2.0.1</javax.ws.rs.version>
 
+        <jackson.version>2.10.4</jackson.version>
         <org.geolatte.version>1.4.0</org.geolatte.version>
         <org.geolatte.common.version>0.8</org.geolatte.common.version>
         <com.vividsolutions.version>1.13</com.vividsolutions.version>
@@ -128,7 +129,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.9.7</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Just the annotations; use this dependency if you want to attach annotations
@@ -136,14 +137,14 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.9.7</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- databinding; ObjectMapper, JsonNode and related classes are here -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.7</version>
+            <version>${jackson.version}</version>
         </dependency>
 
     </dependencies>
