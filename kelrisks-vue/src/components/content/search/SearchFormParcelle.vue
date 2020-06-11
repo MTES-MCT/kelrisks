@@ -196,7 +196,7 @@ export default {
                         if (data.entity) {
                             this.leaflet.center = [parseFloat(data.entity.centroid.y), parseFloat(data.entity.centroid.x)]
                             this.showLeaflet(true)
-                            this.leaflet.parcelleFound = data.entity.parcelle.section + '-' + data.entity.parcelle.numero
+                            this.leaflet.parcelleFound = data.entity.parcelle.section + '-' + data.entity.parcelle.numero + '@' + data.entity.parcelle.commune
                         } else {
                             this.clearSelectedParcelles()
                             if (this.form.codeParcelle !== '') this.$refs.searchErrors.sendWarning('Aucune parcelle n\'a été trouvé avec le code suivant : ' + this.form.codeParcelle + '.')

@@ -49,8 +49,8 @@ public class AbstractBasicApi {
             Matcher matcher = pattern.matcher(secNumANDInsee[0]);
             
             while (matcher.find()) {
-                
-                parcelleQO.getParcelles().add(new ParcelleQO.SecNumInsee(matcher.group(1), matcher.group(2), secNumANDInsee[1]));
+    
+                if (secNumANDInsee.length == 2) { parcelleQO.getParcelles().add(new ParcelleQO.SecNumInsee(matcher.group(1), matcher.group(2), secNumANDInsee[1])); }
             }
         });
         
