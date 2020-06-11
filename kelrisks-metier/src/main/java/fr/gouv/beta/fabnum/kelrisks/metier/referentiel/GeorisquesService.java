@@ -1,6 +1,5 @@
 package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 
-import fr.gouv.beta.fabnum.commun.metier.IWebClient;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeorisquesService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
@@ -15,11 +14,13 @@ import java.time.Duration;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service("georisquesService")
-public class GeorisquesService implements IGeorisquesService, IWebClient {
+public class GeorisquesService implements IGeorisquesService {
     
     private static final String GEORISQUE_BASE_URL = "http://www.georisques.gouv.fr/api/v1";
     private static final String RADON_URL          = GEORISQUE_BASE_URL + "/radon?code_insee=PARAM_INSEE&page=1&page_size=10";
@@ -29,10 +30,13 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
     private static final String SIS_URL            = GEORISQUE_BASE_URL + "/sis";
     private static final String PPR_URL            = GEORISQUE_BASE_URL + "/ppr";
     
+    @Autowired
+    WebClient webClient;
+    
     public GeorisquePaginatedRadon rechercherRadonCommune(String codeINSEE) {
         
         String uri = RADON_URL.replace("PARAM_INSEE", codeINSEE);
-        return getWebClient().get()
+        return webClient.get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
@@ -45,10 +49,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
     }
     
     public GeorisquePaginatedAZI rechercherAZICommune(String codeINSEE) {
-        
+    
         String uri = AZI_URL.replace("PARAM_INSEE", codeINSEE);
     
-        return getWebClient().get()
+        return webClient.get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
@@ -61,10 +65,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
     }
     
     public GeorisquePaginatedTRI rechercherTRICommune(String codeINSEE) {
-        
+    
         String uri = TRI_URL.replace("PARAM_INSEE", codeINSEE);
     
-        return getWebClient().get()
+        return webClient.get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
@@ -77,10 +81,10 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
     }
     
     public GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE) {
-        
+    
         String uri = SISMIQUE_URL.replace("PARAM_INSEE", codeINSEE);
     
-        return getWebClient().get()
+        return webClient.get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
@@ -105,7 +109,7 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
                                     .queryParam("page_size", "10")
                                     .build(latlon);
     
-        return getWebClient().get()
+        return webClient.get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
@@ -119,9 +123,9 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
     
     @Override
     public GeorisquePaginatedPPR rechercherPprCoordonnees(String lon, String lat, int rayon) {
-        
+    
         String latlon = lon + "," + lat;
-        
+    
         UriBuilder uriBuilder = UriBuilder.fromPath(PPR_URL);
         URI generateurUri = uriBuilder
                                     .queryParam("rayon", String.valueOf(rayon))
@@ -130,7 +134,7 @@ public class GeorisquesService implements IGeorisquesService, IWebClient {
                                     .queryParam("page_size", "10")
                                     .build(latlon);
     
-        return getWebClient().get()
+        return webClient.get()
                        .uri(generateurUri)
                        .accept(MediaType.APPLICATION_JSON)
                        .retrieve()
