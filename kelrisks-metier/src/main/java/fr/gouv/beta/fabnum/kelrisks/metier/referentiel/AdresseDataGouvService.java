@@ -29,12 +29,12 @@ public class AdresseDataGouvService implements IAdresseDataGouvService {
         AdresseDataGouvPaginatedFeatures block = webClient.get()
                                                          .uri(uri)
                                                          .accept(MediaType.APPLICATION_JSON)
-                                                         .exchange()
-                                                         .flatMap(clientResponse -> clientResponse.bodyToMono(AdresseDataGouvPaginatedFeatures.class)
-                                                                                            .onErrorResume(e -> {
-                                                                                                System.out.println(" V : " + e.getLocalizedMessage());
-                                                                                                return Mono.just(new AdresseDataGouvPaginatedFeatures());
-                                                                                            }))
+                                                         .retrieve()
+                                                         .bodyToMono(AdresseDataGouvPaginatedFeatures.class)
+                                                         .onErrorResume(e -> {
+                                                             System.out.println(" V : " + e.getLocalizedMessage());
+                                                             return Mono.just(new AdresseDataGouvPaginatedFeatures());
+                                                         })
                                                          .block(Duration.ofSeconds(30L));
         
         if (block != null) { return block.getFeatures(); }

@@ -29,8 +29,8 @@ public class GeoDataGouvService implements IGeoDataGouvService {
         GeoDataGouvCommune[] block = webClient.get()
                                              .uri(uri)
                                              .accept(MediaType.APPLICATION_JSON)
-                                             .exchange()
-                                             .flatMap(clientResponse -> clientResponse.bodyToMono(GeoDataGouvCommune[].class))
+                                             .retrieve()
+                                             .bodyToMono(GeoDataGouvCommune[].class)
                                              .onErrorResume(e -> {
                                                  System.out.println(" V : " + e.getLocalizedMessage());
                                                  return Mono.just(new GeoDataGouvCommune[0]);
