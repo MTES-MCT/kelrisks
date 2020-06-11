@@ -138,12 +138,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherExpendedParcelle");
         startTime = System.currentTimeMillis();
         Point<?> centroid = (Point<?>) gestionParcelleFacade.rechercherCentroidParcelle(parcellesUnion);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherCentroidParcelle");
+        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherCentroidParcelle (" +
+                           centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis()) + ", " +
+                           centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()) + ")");
         startTime = System.currentTimeMillis();
-        
+    
         avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
                                                                  Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
-        
+    
         avisDTO.getSummary().setCodeParcelle(parcelleDTOs.stream()
                                                      .map(parcelleDTO -> parcelleDTO.getSection() + "-" + parcelleDTO.getNumero())
                                                      .collect(Collectors.joining(", ")));
