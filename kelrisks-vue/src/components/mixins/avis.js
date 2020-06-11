@@ -50,6 +50,7 @@ export default {
                 sisParcelle: {},
                 sisNonGeorerencee: {},
                 lentillesArgile: {},
+                niveauArgile: 0,
                 codeSismicite: 0,
                 potentielRadon: 0,
                 ppr: {},
@@ -125,6 +126,7 @@ export default {
                     this.avis.sisNonGeorerencee = avisHelper.getSISNonGeoreferencees(value)
 
                     this.avis.lentillesArgile = value.entity.lentillesArgile
+                    this.avis.niveauArgile = value.entity.niveauArgile
 
                     this.leaflet.data = value.entity.leaflet
                     this.leaflet.center = [parseFloat(value.entity.leaflet.center.y), parseFloat(value.entity.leaflet.center.x)]

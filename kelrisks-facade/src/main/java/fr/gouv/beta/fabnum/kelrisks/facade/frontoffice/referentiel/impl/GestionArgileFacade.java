@@ -16,23 +16,25 @@ import org.springframework.stereotype.Service;
 public class GestionArgileFacade extends AbstractFacade implements IGestionArgileFacade {
     
     @Autowired
-    IArgileService ArgileService;
+    IArgileService argileService;
     @Autowired
-    IArgileMapper  ArgileMapper;
+    IArgileMapper  argileMapper;
     
     @Override
     public List<ArgileDTO> rechercherLentillesDansPolygons(List<Geometry<?>> multiPolygon) {
         
-        List<ArgileDTO> ArgileDTOs = ArgileMapper.toDTOs(ArgileService.rechercherLentillesDansPolygons(multiPolygon));
-        
-        return ArgileDTOs;
+        return argileMapper.toDTOs(argileService.rechercherLentillesDansPolygons(multiPolygon));
     }
     
     @Override
-    public List<ArgileDTO> rechercherLentillesDansPolygon(Geometry<?> polygon) {
+    public List<ArgileDTO> rechercherLentillesDansPolygonEtendu(Geometry<?> polygon, double distance) {
         
-        List<ArgileDTO> ArgileDTOs = ArgileMapper.toDTOs(ArgileService.rechercherLentillesDansPolygon(polygon));
+        return argileMapper.toDTOs(argileService.rechercherLentillesDansPolygon(polygon, distance));
+    }
+    
+    @Override
+    public int rechercherNiveauMaximumArgileDansPolygonEtendu(Geometry<?> polygon, double distance) {
         
-        return ArgileDTOs;
+        return argileService.rechercherNiveauMaximumArgileDansPolygonEtendu(polygon, distance);
     }
 }

@@ -14,6 +14,8 @@ public interface IArgileService extends IAbstractCRUDService<Argile> {
     
     List<Argile> rechercherLentillesDansPolygons(List<Geometry<?>> multiPolygon);
     
-    List<Argile> rechercherLentillesDansPolygon(Geometry<?> multiPolygon);
+    List<Argile> rechercherLentillesDansPolygon(Geometry<?> multiPolygon, double distance);
+    
+    int rechercherNiveauMaximumArgileDansPolygonEtendu(Geometry<?> parcelle, double distance);
 }
   

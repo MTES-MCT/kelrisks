@@ -50,15 +50,21 @@ public class ArgileDAO extends AbstractDAO<Argile> implements IArgileDAO {
     
     @Override
     public List<Argile> rechercherLentillesDansPolygons(List<Geometry<?>> multiPolygon) {
-        
-        if (multiPolygon.size() == 1) { return argileRepository.rechercherLentillesDansPolygon(multiPolygon.get(0)); }
-        else { return argileRepository.rechercherLentillesDansPolygons(multiPolygon); }
+    
+        if (multiPolygon.size() == 1) { return argileRepository.rechercherLentillesDansPolygonEtendu(multiPolygon.get(0), 2000D / 100000D); }
+        else { return argileRepository.rechercherLentillesDansPolygonsEtendu(multiPolygon, 50D / 100000D); }
     }
     
     @Override
-    public List<Argile> rechercherLentillesDansPolygon(Geometry<?> polygon) {
+    public List<Argile> rechercherLentillesDansPolygon(Geometry<?> polygon, double distance) {
         
-        return argileRepository.rechercherLentillesDansPolygon(polygon);
+        return argileRepository.rechercherLentillesDansPolygonEtendu(polygon, distance / 100000D);
+    }
+    
+    @Override
+    public Integer rechercherNiveauMaximumArgileDansPolygonEtendu(Geometry<?> polygon, double distance) {
+        
+        return argileRepository.rechercherNiveauMaximumArgileDansPolygonEtendu(polygon, distance / 100000D);
     }
     
     @Override

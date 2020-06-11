@@ -316,13 +316,21 @@
             <risque :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
                     :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d\'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa afin de prévenir les sinistres.'"
-                    :detail="(avis.lentillesArgile.niveauAlea === 3 ? 'Alea fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Veuillez consulter les recommandations au lien suivant pour prévenir les risques : https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3' : '')+
-                             (avis.lentillesArgile.niveauAlea === 2 ? 'Alea moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée' : '')+
-                             (avis.lentillesArgile.niveauAlea === 1 ? 'Alea faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol)' : '')+
-                             (avis.lentillesArgile.niveauAlea === 0 ? 'Alea nul : Aucune présence de sols argileux n\'a été identifiée selon les cartes géologiques actuelles.' : '')"
-                    :leaflet-data="[{ data : avis.lentillesArgile.multiPolygon,
-                                      color : '#2A4999'}]"
-                    :level="avis.lentillesArgile.niveauAlea + ''"
+                    :detail="(avis.niveauArgile === 3 ? 'Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Veuillez consulter les recommandations au lien suivant pour prévenir les risques : </br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 2 ? 'Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée' : '') +
+                             (avis.niveauArgile === 1 ? 'Aléa faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol)' : '') +
+                             (avis.niveauArgile === 0 ? 'Aléa nul : Aucune présence de sols argileux n\'a été identifiée selon les cartes géologiques actuelles.' : '') "
+                    :leaflet-data="[{ data : avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon),
+                                      color : '#FFD332'},
+                                    { data : avis.lentillesArgile.filter(x => x.niveauAlea === 2).map(x => x.multiPolygon),
+                                      color : '#FF8000'},
+                                    { data : avis.lentillesArgile.filter(x => x.niveauAlea === 3).map(x => x.multiPolygon),
+                                      color : '#840505'}]"
+                    :legend-blocks="[
+                        ['#FFD332', 'Aléa faible'],
+                        ['#FF8000', 'Aléa moyen'],
+                        ['#840505', 'Aléa fort']]"
+                    :level="avis.niveauArgile + ''"
                     :level-max="'3'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_terre_bleu.svg'"
                     :title="'Argile'"
@@ -545,7 +553,7 @@ export default {
             return this.avis.summary.commune.classePotentielRadon === '2'
         },
         hasArgile: function () {
-            return this.avis.lentillesArgile !== undefined && this.avis.lentillesArgile !== null
+            return this.avis.lentillesArgile !== undefined && this.avis.lentillesArgile !== null && this.avis.lentillesArgile.length > 0
         },
         hasPEB: function () {
             return this.avis.zonePlanExpositionBruit !== undefined && this.avis.zonePlanExpositionBruit !== null

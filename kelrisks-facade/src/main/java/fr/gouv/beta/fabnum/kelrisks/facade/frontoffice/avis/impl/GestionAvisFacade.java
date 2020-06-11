@@ -472,16 +472,18 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private void getAvisArgile(AvisDTO avisDTO, Geometry<?> parcelle) {
-        
-        List<ArgileDTO> argileDTOs = gestionArgileFacade.rechercherLentillesDansPolygon(parcelle);
-        
-        for (ArgileDTO argileDTO : argileDTOs) {
-            if (avisDTO.getLentillesArgile() == null ||
-                avisDTO.getLentillesArgile().getNiveauAlea() < argileDTO.getNiveauAlea()) {
-                
-                avisDTO.setLentillesArgile(argileDTO);
-            }
-        }
+    
+        long startTime = System.currentTimeMillis();
+    
+        int niveau = gestionArgileFacade.rechercherNiveauMaximumArgileDansPolygonEtendu(parcelle, 50);
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionArgileFacade.rechercherNiveauMaximumArgileDansPolygonEtendu");
+        startTime = System.currentTimeMillis();
+        List<ArgileDTO> argileDTOs = gestionArgileFacade.rechercherLentillesDansPolygonEtendu(parcelle, 2000);
+        System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionArgileFacade.rechercherLentillesDansPolygonEtendu");
+        startTime = System.currentTimeMillis();
+    
+        avisDTO.setNiveauArgile(niveau);
+        avisDTO.setLentillesArgile(argileDTOs);
     }
     
     private void getAvisRadon(AvisDTO avisDTO, CommuneDTO commune) {

@@ -185,8 +185,6 @@ export default {
 
             setTimeout(() => {
 
-                // console.log(this.reference + " => setTimeout")
-
                 this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
                 this.centerMap()
             }, 2000);
