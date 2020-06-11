@@ -32,7 +32,7 @@ public class AbstractBasicApi {
     
     public List<ParcelleDTO> getParcelles(String codeINSEE, String codeParcelle) {
         
-        return getParcelles(codeParcelle + "@", codeINSEE);
+        return getParcelles(codeParcelle + "@" + codeINSEE);
     }
     
     public List<ParcelleDTO> getParcelles(String parcelleSecNumInseeList) {
