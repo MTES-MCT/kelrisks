@@ -124,7 +124,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IAbstract
     public List<T> rechercherTousPagination(final int first, final int maxResults, final CritereTri critereTri) throws DAOException {
         
         try {
-            return repo.findAll(new PageRequest(first / maxResults, maxResults, toSort(critereTri))).getContent();
+            return repo.findAll(PageRequest.of(first / maxResults, maxResults, toSort(critereTri))).getContent();
         }
         catch (Exception e) {
             throw new DAOException("Erreur dans AbstractDAO.rechercherTousPagination(first,maxResults,critereTri)", e);
@@ -394,8 +394,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IAbstract
             else {
                 tris.add(new Sort.Order(critereTri.isAscendant() ? Sort.Direction.ASC : Sort.Direction.DESC, critereTri.getPropriete()));
             }
-            
-            return new Sort(tris);
+    
+            return Sort.by(tris);
         }
         catch (Exception e) {
             throw new TechniqueException("Erreur lors de la conversion des tris", e);
