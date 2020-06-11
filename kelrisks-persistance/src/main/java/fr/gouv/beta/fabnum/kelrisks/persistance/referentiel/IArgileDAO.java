@@ -14,6 +14,8 @@ public interface IArgileDAO extends IAbstractDAO<Argile> {
     
     List<Argile> rechercherLentillesDansPolygons(List<Geometry<?>> multiPolygon);
     
-    List<Argile> rechercherLentillesDansPolygon(Geometry<?> multiPolygon);
+    List<Argile> rechercherLentillesDansPolygon(Geometry<?> multiPolygon, double distance);
+    
+    Integer rechercherNiveauMaximumArgileDansPolygonEtendu(Geometry<?> parcelle, double distance);
 }
   

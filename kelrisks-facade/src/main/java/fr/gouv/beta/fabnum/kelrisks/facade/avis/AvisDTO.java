@@ -46,7 +46,8 @@ public class AvisDTO extends JsonInfoDTO {
     private List<InstallationClasseeDTO> installationClasseeProximiteParcelleDTOs = new ArrayList<>();
     private List<InstallationClasseeDTO> installationClasseeNonGeorerenceesDTOs   = new ArrayList<>();
     
-    private ArgileDTO lentillesArgile;
+    private List<ArgileDTO> lentillesArgile = new ArrayList<>();
+    private int             niveauArgile;
     
     private List<PlanPreventionRisquesGasparDTO> planPreventionRisquesDTOs;
     

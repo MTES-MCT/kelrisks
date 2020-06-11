@@ -15,15 +15,18 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface ArgileRepository extends IAbstractRepository<Argile> {
     
-    //    TODO : prendre le plus de risque dans un buffer de 50m
+    @Query(value = "SELECT max(niveau_alea) " +
+                   " FROM kelrisks.argile AS lentille" +
+                   " WHERE public.st_intersects(lentille.geog, public.st_buffer(:multiPolygon, :distance))", nativeQuery = true)
+    Integer rechercherNiveauMaximumArgileDansPolygonEtendu(Geometry<?> multiPolygon, double distance);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.argile AS lentille" +
-                   " WHERE public.st_intersects(lentille.geog, (SELECT public.st_union(:multiPolygons)))", nativeQuery = true)
-    List<Argile> rechercherLentillesDansPolygons(List<Geometry<?>> multiPolygons);
+                   " WHERE public.st_intersects(lentille.geog, public.st_buffer(:multiPolygon, :distance))", nativeQuery = true)
+    List<Argile> rechercherLentillesDansPolygonEtendu(Geometry<?> multiPolygon, double distance);
     
     @Query(value = "SELECT * " +
                    " FROM kelrisks.argile AS lentille" +
-                   " WHERE public.st_intersects(lentille.geog, :multiPolygon)", nativeQuery = true)
-    List<Argile> rechercherLentillesDansPolygon(Geometry<?> multiPolygon);
+                   " WHERE public.st_intersects(lentille.geog, public.st_buffer((SELECT public.st_union(:multiPolygons)), :distance))", nativeQuery = true)
+    List<Argile> rechercherLentillesDansPolygonsEtendu(List<Geometry<?>> multiPolygons, double distance);
 }

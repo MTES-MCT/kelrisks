@@ -37,18 +37,25 @@ public class ArgileService extends AbstractCRUDService<Argile> implements IArgil
     
     @Override
     public List<Argile> rechercherLentillesDansPolygons(List<Geometry<?>> multiPolygon) {
-        
+    
         if (multiPolygon == null || multiPolygon.isEmpty()) { return new ArrayList<>(); }
-        
+    
         return dao.rechercherLentillesDansPolygons(multiPolygon);
     }
     
     @Override
-    public List<Argile> rechercherLentillesDansPolygon(Geometry<?> polygon) {
+    public List<Argile> rechercherLentillesDansPolygon(Geometry<?> polygon, double distance) {
         
         if (polygon == null || polygon.isEmpty()) { return new ArrayList<>(); }
         
-        return dao.rechercherLentillesDansPolygon(polygon);
+        return dao.rechercherLentillesDansPolygon(polygon, distance);
+    }
+    
+    @Override
+    public int rechercherNiveauMaximumArgileDansPolygonEtendu(Geometry<?> polygon, double distance) {
+        
+        Integer niveau = dao.rechercherNiveauMaximumArgileDansPolygonEtendu(polygon, distance);
+        return niveau == null ? 0 : niveau;
     }
 }
   
