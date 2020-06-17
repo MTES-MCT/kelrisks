@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -51,7 +52,7 @@ public class Application extends SpringBootServletInitializer {
                 registry.addMapping("/**/api/**");
                 registry.addMapping("/api/**");
                 // TODO : enlever en prod !!!
-                registry.addMapping("/mail");
+                //                registry.addMapping("/mail");
             }
         };
     }
@@ -63,10 +64,21 @@ public class Application extends SpringBootServletInitializer {
     }
     
     @Bean
-    public WebClient webClient(final ClientHttpConnector clientHttpConnector) {
+    public WebClient webClient(final ClientHttpConnector clientHttpConnector, final ExchangeStrategies exchangeStrategies) {
         
         return WebClient.builder()
                        .clientConnector(clientHttpConnector)
+                       .exchangeStrategies(exchangeStrategies)
+                       .build();
+    }
+    
+    @Bean
+    public ExchangeStrategies exchangeStrategies(@Value("${webclient.maxInMemorySizeInMB}") final int mb) {
+        
+        return ExchangeStrategies.builder()
+                       .codecs(configurer -> configurer
+                                                     .defaultCodecs()
+                                                     .maxInMemorySize(mb * 1024 * 1024))
                        .build();
     }
     
