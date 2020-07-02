@@ -8,6 +8,7 @@
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>kelrisks-presentation</artifactId>
@@ -46,7 +47,7 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>html2pdf</artifactId>
-            <version>2.1.1</version>
+            <version>3.0.0</version>
         </dependency>
 
         <dependency>

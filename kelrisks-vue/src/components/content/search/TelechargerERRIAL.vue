@@ -36,8 +36,12 @@
                     <div class="errial_title"><span class="title">Télécharger l'ERP « État des risques et pollution »</span></div>
                     <p>Le propriétaire du bien concerné par l’état des risques et pollution est tenu de relire et compléter si nécessaire ces informations afin de s’assurer qu’elles sont
                        exhaustives.</p>
-                    <div id="pdf">
-                        <a><span style="font-size: 5em;"><font-awesome-icon icon="file-pdf"/></span></a><br/>
+                    <div id="pdf"
+                         onclick="">
+                        <a :href="env.apiPath + 'avis/pdf?' +
+                                                'codeINSEE=' + form.codeInsee + '&' +
+                                                'codeParcelle=' + form.selectedParcellesList.join(',')"
+                           @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"><span style="font-size: 5em;"><font-awesome-icon icon="file-pdf"/></span></a><br/>
                         <a>État des risques et pollution au format PDF</a>
                     </div>
                     <p>En savoir plus sur les risques non règlementaires, consulter <a>Géorisque : Mieux connaître les risques sur le territoire</a>.</p>
@@ -61,6 +65,11 @@ export default {
     },
     props: {
         avis: {
+            type: Object,
+            default: () => {
+            }
+        },
+        form: {
             type: Object,
             default: () => {
             }

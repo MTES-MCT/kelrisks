@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel;
 
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
@@ -12,6 +13,8 @@ public interface IGestionGeorisquesFacade {
     GeorisquePaginatedRadon rechercherRadonCommune(String codeINSEE);
     
     GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE);
+    
+    GeorisquePaginatedCatNat rechercherCatNatCommune(String codeINSEE);
     
     GeorisquePaginatedSIS rechercherSisCoordonnees(double lon, double lat);
     

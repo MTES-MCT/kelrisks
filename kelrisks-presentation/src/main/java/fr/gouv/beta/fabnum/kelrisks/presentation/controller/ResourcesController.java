@@ -19,16 +19,15 @@ public class ResourcesController {
     @ResponseBody
     public byte[] getImage(@PathVariable("image") String imageName) {
     
-        File imageFile;
+        File imageFile = null;
     
-        try {
-            imageFile = ResourceUtils.getFile("classpath:" + imageName + ".jpg");
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-        
+        if (!imageName.endsWith(".jpg") && !imageName.endsWith(".png") && !imageName.endsWith(".svg")) { return null; }
+    
+        try { imageFile = ResourceUtils.getFile("classpath:" + imageName.replaceAll("&&", "/")); }
+        catch (FileNotFoundException ignored) { }
+    
+        if (imageFile == null) { return null; }
+    
         try {
             return Files.readAllBytes(imageFile.toPath());
         }

@@ -39,7 +39,6 @@
                    class="bouton success"
                    id="pdf"
                    target="_blank">
-                    <!--                <font-awesome-icon icon="file-pdf"/>-->
                     Créer un état des risques et pollutions
                     <font-awesome-icon class="end"
                                        icon="chevron-right"/>

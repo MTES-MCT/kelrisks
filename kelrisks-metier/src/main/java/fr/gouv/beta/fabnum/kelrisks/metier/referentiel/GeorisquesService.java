@@ -2,6 +2,7 @@ package fr.gouv.beta.fabnum.kelrisks.metier.referentiel;
 
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeorisquesService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
@@ -23,10 +24,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class GeorisquesService implements IGeorisquesService {
     
     private static final String GEORISQUE_BASE_URL = "http://www.georisques.gouv.fr/api/v1";
-    private static final String RADON_URL          = GEORISQUE_BASE_URL + "/radon?code_insee=PARAM_INSEE&page=1&page_size=10";
-    private static final String TRI_URL            = GEORISQUE_BASE_URL + "/gaspar/tri?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=10";
-    private static final String AZI_URL            = GEORISQUE_BASE_URL + "/gaspar/azi?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=10";
-    private static final String SISMIQUE_URL       = GEORISQUE_BASE_URL + "/zonage_sismique?&code_insee=PARAM_INSEE&page=1&page_size=10";
+    private static final String RADON_URL          = GEORISQUE_BASE_URL + "/radon?code_insee=PARAM_INSEE&page=1&page_size=20";
+    private static final String TRI_URL            = GEORISQUE_BASE_URL + "/gaspar/tri?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=20";
+    private static final String AZI_URL            = GEORISQUE_BASE_URL + "/gaspar/azi?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=20";
+    private static final String SISMIQUE_URL       = GEORISQUE_BASE_URL + "/zonage_sismique?&code_insee=PARAM_INSEE&page=1&page_size=20";
+    private static final String CATNAT_URL         = GEORISQUE_BASE_URL + "/gaspar/catnat?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=100";
     private static final String SIS_URL            = GEORISQUE_BASE_URL + "/sis";
     private static final String PPR_URL            = GEORISQUE_BASE_URL + "/ppr";
     
@@ -80,10 +82,26 @@ public class GeorisquesService implements IGeorisquesService {
                        .block(Duration.ofSeconds(30L));
     }
     
+    public GeorisquePaginatedCatNat rechercherCatNatCommune(String codeINSEE) {
+        
+        String uri = CATNAT_URL.replace("PARAM_INSEE", codeINSEE);
+        
+        return webClient.get()
+                       .uri(uri)
+                       .accept(MediaType.APPLICATION_JSON)
+                       .retrieve()
+                       .bodyToMono(GeorisquePaginatedCatNat.class)
+                       .onErrorResume(e -> {
+                           System.out.println(" V : " + e.getLocalizedMessage());
+                           return Mono.just(new GeorisquePaginatedCatNat());
+                       })
+                       .block(Duration.ofSeconds(30L));
+    }
+    
     public GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE) {
-    
+        
         String uri = SISMIQUE_URL.replace("PARAM_INSEE", codeINSEE);
-    
+        
         return webClient.get()
                        .uri(uri)
                        .accept(MediaType.APPLICATION_JSON)
