@@ -76,8 +76,8 @@ public class PdfRedactor {
         Element page  = addPage(htmlDocument);
         Element tbody;
         int     lines = 0;
-        
-        page.append("<div id=\"parcelle-non-concernee-par\"><h2>ANNEXE 3 : SITUATION DU RISQUE DE POLLUTION DES SOLS DANS UN RAYON DE 500M AUTOUR DE VOTRE BIEN</h2></div>");
+    
+        page.append("<div><h2>ANNEXE 3 : SITUATION DU RISQUE DE POLLUTION DES SOLS DANS UN RAYON DE 500M AUTOUR DE VOTRE BIEN</h2></div>");
         
         if (avisDTO.getInstallationClasseeRayonParcelleDTOs().size() > 0) {
             page.append("<p>Inventaire des installations classées soumises à autorisation ou à enregistement</p>");
@@ -186,8 +186,8 @@ public class PdfRedactor {
         Element page         = addPage(htmlDocument);
         int     rowNumbers   = 0;
         int     blockNumbers = 0;
-        
-        page.append("<div id=\"parcelle-non-concernee-par\"><h2>ANNEXE 2 : LISTE DES ARRÊTÉS PRIS SUR LA COMMUNE</h2></div>");
+    
+        page.append("<div><h2>ANNEXE 2 : LISTE DES ARRÊTÉS PRIS SUR LA COMMUNE</h2></div>");
         
         GeorisquePaginatedCatNat georisquePaginatedCatNat = gestionGeorisquesFacade.rechercherCatNatCommune(avisDTO.getSummary().getCommune().getCodeINSEE());
         
@@ -258,8 +258,8 @@ public class PdfRedactor {
     private void redigerAnnexe1AutresRisques(Document htmlDocument, AvisDTO avisDTO) {
         
         Element page = addPage(htmlDocument);
-        
-        page.append("<div id=\"parcelle-non-concernee-par\"><h2>ANNEXE 1 : AUTRES RISQUES NE FAISANT PAS L’OBJET D’UNE OBLIGATION D’INFORMATION</h2></div>");
+    
+        page.append("<div><h2>ANNEXE 1 : AUTRES RISQUES NE FAISANT PAS L’OBJET D’UNE OBLIGATION D’INFORMATION</h2></div>");
         
         if (hasRadonMoyen(avisDTO)) {
             addRisque(htmlDocument,
@@ -354,21 +354,46 @@ public class PdfRedactor {
     }
     
     private void redigerInformationsAPreciser(Document htmlDocument, AvisDTO avisDTO) {
-        
+    
         Element page = addPage(htmlDocument);
+    
+        page.append("<div id=\"informations-a-preciser\"><h2>INFORMATIONS À PRÉCISER</h2></div>\n");
+    
+        for (PlanPreventionRisquesGasparDTO planPreventionRisquesDTO : avisDTO.getPlanPreventionRisquesDTOs()) {
         
-        // @formatter:off
-        page.append("<div id=\"informations-a-preciser\"><h2>INFORMATIONS À PRÉCISER</h2>\n" +
-                    "   <div><h3>INFORMATION RELATIVE AUX SINISTRES INDEMNISÉS PAR L'ASSURANCE SUITE À UNE CATASTROPHE NATURELLE, MINIÈRE OU TECHNOLOGIQUE</h3></div>\n" +
-                    "</div>");
-        // @formatter:on
+            page.append("<h3>" + planPreventionRisquesDTO.getAlea().getFamilleAlea().getLibelle().toUpperCase() + "</h3/>\n" +
+                        "<p>Rappel du risque : " + planPreventionRisquesDTO.getAlea().getFamilleAlea().getLibelle() + ", " + planPreventionRisquesDTO.getAlea().getLibelle() + ".</p>\n" +
+                        "<div class=\"text_wrapper\"><b>Le bien est il concerné par des prescriptions de travaux ?</b></div>\n" +
+                        "<div class=\"input_wrapper\">\n" +
+                        "    <label><input type=\"checkbox\">Oui</label>\n" +
+                        "    <label><input type=\"checkbox\">Non</label>\n" +
+                        "</div>\n" +
+                        "<div class=\"text_wrapper\"><b>Si oui, les travaux prescrits ont été réalisés ?</b></div>\n" +
+                        "<div class=\"input_wrapper\">\n" +
+                        "    <label><input type=\"checkbox\">Oui</label>\n" +
+                        "    <label><input type=\"checkbox\">Non</label>\n" +
+                        "</div>\n");
+        }
+    
+        page.append("<div><h3>INFORMATION RELATIVE AUX SINISTRES INDEMNISÉS PAR L'ASSURANCE SUITE À UNE CATASTROPHE NATURELLE, MINIÈRE OU TECHNOLOGIQUE</h3></div>\n");
+    
+        page.append("<p>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des défâtes liés à une catastrophe ?</p>\n" +
+                    "<div class=\"text_wrapper\" ><b>L'information est mentionnée dans l' acte de vente</b></div>\n" +
+                    "<div class=\"input_wrapper\">\n" +
+                    "   <label><input type=\"checkbox\">Oui</label>\n" +
+                    "   <label><input type=\"checkbox\">Non</label>\n" +
+                    "</div>\n");
+    
+        page.append("<h4 id=\"signatures_title\">SIGNATURES</h4>");
+    
+        page.append("<div id=\"signatures\"><p>Vendeur / Bailleur</p><p>Date et lieu</p><p>Acheteur / Locataire</p></div>");
     }
     
     private void redigerParcelleNonConcerneePar(Document htmlDocument, AvisDTO avisDTO) {
         
         Element page = addPage(htmlDocument);
-        
-        page.append("<div id=\"parcelle-non-concernee-par\"><h2>CETTE PARCELLE N’EST PAS CONCERNÉE PAR :</h2></div>");
+    
+        page.append("<div><h2>CETTE PARCELLE N’EST PAS CONCERNÉE PAR :</h2></div>");
         
         if (!hasTypePPR(avisDTO, "PPRN")) {
             addRisque(htmlDocument,
