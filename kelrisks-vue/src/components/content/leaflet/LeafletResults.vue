@@ -22,7 +22,7 @@ import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
 import mixinLeaflet from "./leaflet_common";
 
 export default {
-    name: "Leaflet",
+    name: "LeafletResults",
     mixins: [mixinLeaflet],
     components: {
         LMap,
@@ -46,7 +46,7 @@ export default {
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
-            this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, this.$refs['parcelle_' + this.reference].getBounds())
+            this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, this.$refs['parcelle_' + this.reference].getBounds(), true)
         }
     },
     computed: {

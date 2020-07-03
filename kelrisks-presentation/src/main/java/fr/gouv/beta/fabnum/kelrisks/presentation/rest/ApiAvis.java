@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -147,9 +149,10 @@ public class ApiAvis extends AbstractBasicApi {
     }
     
     @ApiOperation(value = "Requête permettant de rendre un avis pdf.", hidden = true)
-    @GetMapping("/api/avis/pdf")
+    @PostMapping("/api/avis/pdf")
     @ResponseBody
-    public ResponseEntity<byte[]> avisPdf(@RequestParam("codeINSEE") String codeINSEE,
+    public ResponseEntity<byte[]> avisPdf(@RequestBody List<PdfRedactor.Png> pngs,
+                                          @RequestParam("codeINSEE") String codeINSEE,
                                           @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
                                           @RequestParam("codeParcelle") String codeParcelle) {
         
@@ -159,13 +162,13 @@ public class ApiAvis extends AbstractBasicApi {
             jsonInfoDTO.addError("Merci d'entrer un code parcelle ou de choisir une adresse parmi les résultats proposés dans le champ.");
             return null;
         }
-    
+        
         List<ParcelleDTO> parcelleDTOs = getParcelles(codeParcelle);
         
         if (parcelleDTOs == null || parcelleDTOs.isEmpty()) {
             return null;
         }
-    
+        
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneComplete(codeINSEE);
         
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(parcelleDTOs, communeDTO, nomAdresse);
@@ -176,6 +179,7 @@ public class ApiAvis extends AbstractBasicApi {
             org.jsoup.nodes.Document htmlDocument = Jsoup.parse(baseAvis, StandardCharsets.UTF_8.name());
     
             pdfRedactor.redigerAnalyse(htmlDocument, avisDTO, codeINSEE);
+            pdfRedactor.ajouterImages(htmlDocument, pngs);
             
             String html = htmlDocument.outerHtml();
             

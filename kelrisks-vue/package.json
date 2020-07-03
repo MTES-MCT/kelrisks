@@ -14,6 +14,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "@types/leaflet": "^1.5.12",
     "core-js": "^3.6.5",
+    "dom-to-image": "^2.6.0",
     "jquery": "^3.5.1",
     "leaflet": "^1.6.0",
     "moment": "^2.26.0",

@@ -57,9 +57,18 @@ public class PdfRedactor {
         redigerAnnexe1AutresRisques(htmlDocument, avisDTO);
         redigerAnnexe2ArretesCatNat(htmlDocument, avisDTO);
         redigerAnnexe3PollutionRayon(htmlDocument, avisDTO);
-        
+    
         int pagesNumberOf = htmlDocument.select(".page").size() + 1; // La première page n’a pas de class .page
         htmlDocument.select(".number-of-pages").html(String.valueOf(pagesNumberOf));
+    }
+    
+    public void ajouterImages(Document htmlDocument, List<Png> pngs) {
+        
+        for (Png png : pngs) {
+            
+            Elements img = htmlDocument.select("#" + png.name + " .carte img");
+            img.attr("src", png.png);
+        }
     }
     
     private void redigerAnnexe3PollutionRayon(Document htmlDocument, AvisDTO avisDTO) {
@@ -497,6 +506,7 @@ public class PdfRedactor {
         for (PlanPreventionRisquesGasparDTO ppr : avisDTO.getPlanPreventionRisquesDTOs()) {
             
             addRisquePrincipal(htmlDocument,
+                               ppr.getAlea().getFamilleAlea().getCode(),
                                ppr.getAlea().getFamilleAlea().getLibelle().toUpperCase(),
                                "http://localhost:8080/api/image/pictogrammes_risque&&" + getLogoRisque(ppr.getAlea().getFamilleAlea().getCode()) + ".png",
                                "<p>L’immeuble est situé dans le périmètre d’un " + ppr.getAlea().getFamilleAlea().getFamillePPR().getLibelle() + " de type " + ppr.getAlea().getFamilleAlea().getLibelle() + " - " + ppr.getAlea().getLibelle() +
@@ -506,6 +516,7 @@ public class PdfRedactor {
         
         if (hasSismicite(avisDTO)) {
             addRisquePrincipal(htmlDocument,
+                               "SISMICITE",
                                "SISMICITÉ",
                                "http://localhost:8080/api/image/pictogrammes_risque&&ic_seisme_bleu.png",
                                "<p>Le zonage sismique est une zone géographique dans laquelle la probabilité d’occurrence d’un séisme de " +
@@ -516,6 +527,7 @@ public class PdfRedactor {
         if (hasRadonHaut(avisDTO) || hasRadonMoyen(avisDTO)) {
             addRisquePrincipal(htmlDocument,
                                "RADON",
+                               "RADON",
                                "http://localhost:8080/api/image/pictogrammes_risque&&ic_rn_bleu.png",
                                "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et " +
                                "il s’accumule dans les espaces clos, notamment dans " +
@@ -525,6 +537,7 @@ public class PdfRedactor {
         
         if (hasPollutionPrincipale(avisDTO)) {
             addRisquePrincipal(htmlDocument,
+                               "POLLUTIONS",
                                "POLLUTIONS DES SOLS",
                                "http://localhost:8080/api/image/pictogrammes_risque&&ic_basias_bleu.png",
                                "<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements " +
@@ -545,6 +558,7 @@ public class PdfRedactor {
         
         if (avisDTO.getZonePlanExpositionBruit() != null) {
             addRisquePrincipal(htmlDocument,
+                               "PEB",
                                "BRUIT",
                                "http://localhost:8080/api/image/pictogrammes_risque&&ic_bruit_bleu.png",
                                "<p>La parcelle est concernée par un plan d’exposition au bruit car elle est exposée aux nuisances d’un aéroport.</p>" +
@@ -555,7 +569,7 @@ public class PdfRedactor {
         }
     }
     
-    private void addRisquePrincipal(Document htmlDocument, String libelle, String url, String text) {
+    private void addRisquePrincipal(Document htmlDocument, String id, String libelle, String url, String text) {
         
         Element page = htmlDocument.select(".page .content").last();
         
@@ -563,7 +577,7 @@ public class PdfRedactor {
         
         if (risquePrincipalNumberOf >= 2) { page = addPage(htmlDocument); }
         
-        Element description = addRisquePrincipalHtml(page);
+        Element description = addRisquePrincipalHtml(page, id);
         
         description.select(".libelle").html(libelle);
         description.select(".icon img").attr("src", url);
@@ -585,10 +599,10 @@ public class PdfRedactor {
         description.select(".text").html(text);
     }
     
-    private Element addRisquePrincipalHtml(Element page) {
+    private Element addRisquePrincipalHtml(Element page, String id) {
         
         // @formatter:off
-        page.append("<div class=\"risque-principal\">\n" +
+        page.append("<div id=\"" + id + "\"class=\"risque-principal\">\n" +
                     "    <div class=\"description\">\n" +
                     "        <div><b><h3 class=\"libelle\"></h3></b></div>\n" +
                     "        <div class=\"icon\"><img height=\"80px\"\n" +
@@ -596,7 +610,8 @@ public class PdfRedactor {
                     "                                 style=\"margin : 0;\"/></div>\n" +
                     "        <div class=\"text\"></div>\n" +
                     "    </div>\n" +
-                    "    <div class=\"carte\"></div>\n" +
+                    "    <div class=\"carte\"><img src=\"\"\n" +
+                    "                              style=\"margin : 0;\"/></div>\n" +
                     "</div>");
         // @formatter:on
         
@@ -698,7 +713,7 @@ public class PdfRedactor {
     }
     
     private boolean hasAZI(AvisDTO avisDTO) {
-        
+    
         if (avisDTO.getAZIs() == null) { return false; }
         return avisDTO.getAZIs().size() > 0;
     }
@@ -706,6 +721,13 @@ public class PdfRedactor {
     private boolean hasArgile(AvisDTO avisDTO) {
         
         return avisDTO.getLentillesArgile() != null && avisDTO.getLentillesArgile().size() > 0;
+    }
+    
+    @Data
+    public static class Png {
+        
+        private String name;
+        private String png;
     }
     
     @Data

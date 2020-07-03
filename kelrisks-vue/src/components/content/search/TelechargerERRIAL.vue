@@ -36,19 +36,21 @@
                     <div class="errial_title"><span class="title">Télécharger l'ERP « État des risques et pollution »</span></div>
                     <p>Le propriétaire du bien concerné par l’état des risques et pollution est tenu de relire et compléter si nécessaire ces informations afin de s’assurer qu’elles sont
                        exhaustives.</p>
+
+                    <div style="margin: 0 auto 25px; width: 350px;">
+                        <leaflet :data="currentData"
+                                 @png="pngGenerated"
+                                 v-show="currentPng !== undefined"/>
+                    </div>
                     <div id="pdf"
-                         onclick="">
-                        <a :href="env.apiPath + 'avis/pdf?' +
-                                                'codeINSEE=' + form.codeInsee + '&' +
-                                                'codeParcelle=' + form.selectedParcellesList.join(',')"
-                           @click="_paq.push(['trackEvent', 'Flow', 'Pdf'])"><span style="font-size: 5em;"><font-awesome-icon icon="file-pdf"/></span></a><br/>
+                         @click="() => {  getPdf()
+                                          _paq.push(['trackEvent', 'Flow', 'Pdf'])}">
+                        <a><span style="font-size: 5em;"><font-awesome-icon icon="file-pdf"/></span></a><br/>
                         <a>État des risques et pollution au format PDF</a>
                     </div>
                     <p>En savoir plus sur les risques non règlementaires, consulter <a>Géorisque : Mieux connaître les risques sur le territoire</a>.</p>
                 </div>
             </div>
-
-            <div id="bottomButtonsWrapper"></div>
 
         </section>
     </div>
@@ -57,18 +59,19 @@
 <script>
 
 import Errors from "../base/Errors";
+import Leaflet from "../leaflet/LeafletPdf";
+import fetchWithError from "../../../script/fetchWithError";
+import moment from "moment"
+import mixinAvisHas from "../../mixins/avisHas";
 
 export default {
-    name: 'CompleterERRIAL',
+    name: 'TelechargerERRIAL',
+    mixins: [mixinAvisHas],
     components: {
+        Leaflet,
         Errors
     },
     props: {
-        avis: {
-            type: Object,
-            default: () => {
-            }
-        },
         form: {
             type: Object,
             default: () => {
@@ -80,7 +83,133 @@ export default {
             basePath: process.env.VUE_APP_PATH,
             apiPath: process.env.VUE_APP_API_PATH
         },
+        dataList: [],
+        currentData: '',
+        currentPng: undefined,
+        currentPngName: '',
+        pngList: [],
     }),
+    methods: {
+        generatePngs () {
+            console.log('generatePngs')
+
+            this.dataList = []
+
+            for (let plan in this.avis.ppr) {
+                plan = this.avis.ppr[plan]
+                this.dataList.push([
+                    [{
+                        data: plan.assiettes,
+                        color: '#840505'
+                    }],
+                    plan.alea.familleAlea.code])
+            }
+
+            if (this.hasSismiciteHaute || this.hasSismiciteMoyenne) this.dataList.push([
+                typeof this.avis.summary.commune.communesLimitrophes.map === 'function' ?
+                    [{data: this.avis.summary.commune.codeZoneSismicite === '1' ? [this.avis.summary.commune.multiPolygon] : [], color: '#D8D8D8'},
+                        {data: this.avis.summary.commune.codeZoneSismicite === '2' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FFD332'},
+                        {data: this.avis.summary.commune.codeZoneSismicite === '3' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FF8000'},
+                        {data: this.avis.summary.commune.codeZoneSismicite === '4' ? [this.avis.summary.commune.multiPolygon] : [], color: '#E02B17'},
+                        {data: this.avis.summary.commune.codeZoneSismicite === '5' ? [this.avis.summary.commune.multiPolygon] : [], color: '#840505'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '1').map(x => x.multiPolygon), color: '#D8D8D8'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '2').map(x => x.multiPolygon), color: '#FFD332'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '3').map(x => x.multiPolygon), color: '#FF8000'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '4').map(x => x.multiPolygon), color: '#E02B17'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '5').map(x => x.multiPolygon), color: '#840505'}] :
+                    undefined,
+                "SISMICITE"])
+
+            if (this.hasRadonHaut) this.dataList.push([
+                typeof this.avis.summary.commune.communesLimitrophes.map === 'function' ?
+                    [{data: this.avis.summary.commune.classePotentielRadon === '1' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FFD332'},
+                        {data: this.avis.summary.commune.classePotentielRadon === '2' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FF8000'},
+                        {data: this.avis.summary.commune.classePotentielRadon === '3' ? [this.avis.summary.commune.multiPolygon] : [], color: '#840505'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '1').map(x => x.multiPolygon), color: '#FFD332'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '2').map(x => x.multiPolygon), color: '#FF8000'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon), color: '#840505'}] :
+                    undefined,
+                "RADON"])
+
+            if (this.hasPEB) this.dataList.push([
+                typeof this.avis.plansExpositionBruit.map === 'function' ?
+                    [{data: this.avis.plansExpositionBruit.filter(x => x.zone === 'D').map(x => x.multiPolygon), color: '#058E0C'},
+                        {data: this.avis.plansExpositionBruit.filter(x => x.zone === 'C').map(x => x.multiPolygon), color: '#FFD332'},
+                        {data: this.avis.plansExpositionBruit.filter(x => x.zone === 'B').map(x => x.multiPolygon), color: '#FF8000'},
+                        {data: this.avis.plansExpositionBruit.filter(x => x.zone === 'A').map(x => x.multiPolygon), color: '#840505'}] :
+                    undefined,
+                "PEB"])
+
+            this.currentPng = '';
+        },
+        pngGenerated (png) {
+            console.log('pngGenerated')
+
+            this.currentPng = png
+        },
+        getPdf () {
+            console.log('getPdf')
+
+            this.generatePngs()
+        },
+        feedLeaflet () {
+            console.log("feedLeaflet")
+
+            console.log(this.dataList)
+
+            while (this.dataList.length !== 0) {
+
+                let data = this.dataList.shift()
+
+                console.log(data)
+
+                if (data && data.length > 0) {
+                    this.currentPngName = data[1]
+                    this.currentData = data[0]
+                    return
+                }
+            }
+
+            this.currentPng = undefined
+            this.fetchPdf()
+        },
+        fetchPdf () {
+            console.log('fetchPdf')
+
+            fetchWithError(this.env.apiPath + 'avis/pdf?' +
+                'codeINSEE=' + this.form.codeInsee + '&' +
+                'codeParcelle=' + this.form.selectedParcellesList.join(','),
+                {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(this.pngList)
+                },
+                1000 * 30)
+                .then(resp => resp.arrayBuffer())
+                .then(resp => {
+                    return new Blob([resp], {type: "application/pdf"})
+                })
+                .then(resp => {
+                    const fileURL = window.URL.createObjectURL(resp)
+                    const link = document.createElement('a')
+                    link.href = fileURL
+                    link.download = "Kelrisks_Parcelle_" + this.form.codeParcelle + "_(" + this.avis.summary.commune.codePostal + ")_" + moment(new Date()).format('DD/MM/YYYY') + ".pdf"
+                    link.click()
+                    // window.location.assign(fileURL);
+                })
+        }
+    },
+    watch: {
+        currentPng: function () {
+            console.log('watch : currentPng')
+
+            if (this.currentPng) this.pngList.push({name: this.currentPngName, png: this.currentPng})
+            this.feedLeaflet()
+        }
+    },
     computed: {
         _paq: function () {
             return window._paq

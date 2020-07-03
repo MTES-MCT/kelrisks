@@ -1,26 +1,27 @@
 <template>
-    <div class="leaflet_wrapper">
+    <div class="leaflet_wrapper leaflet_pdf">
         <l-map :center="maxZoomCenter"
-               v-if="reference !== null"
                :id="'leafletMap_' + reference"
                :ref="'leafletMap_' + reference"
-               :zoom="zoom">
-            <l-tile-layer :url="url"/>
+               :zoom="zoom"
+               v-if="reference !== null">
+            <l-tile-layer :ref="'lTile_' + reference"
+                          :url="url"
+                          @load="tilesLoaded = true"
+                          @loading="tilesLoaded = false"/>
             <l-geo-json :geojson="getData(parcelle)"
-                        :options="featureOptions"
                         :options-style="styleFunction('#455674')"
-                        :ref="'lGeoJson_Parcelle_' + reference"/>
+                        :ref="'lGeoJson_Parcelle_' + reference"
+                        v-if="parcelle && parcelle.length !== 0"/>
             <l-geo-json :geojson="getData(data)"
-                        :ref="'lGeoJson_' + reference"
-                        :options="featureOptions"
                         :options-style="styleFunction('#455674')"
-                        v-if="typeof data === 'string'"/>
+                        :ref="'lGeoJson_' + reference"
+                        v-if="typeof data === 'string' && data.length !== 0"/>
             <l-geo-json :geojson="getData(json.data)"
-                        :ref="'lGeoJson_' + reference + '_' + index"
-                        v-else
                         :key="json.color + '_' + index"
-                        :options="featureOptions"
                         :options-style="styleFunction(json.color)"
+                        :ref="'lGeoJson_' + reference + '_' + index"
+                        v-else-if="data.length !== 0"
                         v-for="(json, index) in data"/>
         </l-map>
     </div>
@@ -30,9 +31,10 @@
 import {icon, marker} from "leaflet";
 import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
 import mixinLeaflet from "./leaflet_common";
+import domtoimage from "dom-to-image";
 
 export default {
-    name: "LeafletRisque",
+    name: "LeafletPdf",
     mixins: [mixinLeaflet],
     components: {
         LMap,
@@ -50,9 +52,13 @@ export default {
         }
     },
     data: () => ({
+        tilesLoaded: false
     }),
     methods: {
         centerMap () {
+            console.log('centerMap')
+
+            // this.mapCentered = false;
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
@@ -64,7 +70,7 @@ export default {
 
                 let lGeoJson = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
 
-                if (typeof lGeoJson.getBounds === 'function') {
+                if (lGeoJson && typeof lGeoJson.getBounds === 'function') {
 
                     if (Object.prototype.hasOwnProperty.call(lGeoJson.getBounds(), "_northEast")) {
                         if (bounds === null) bounds = lGeoJson.getBounds()
@@ -88,10 +94,11 @@ export default {
                     if (bounds._southWest.lng > this.maxZoomCenter[1]) bounds._southWest.lng = this.maxZoomCenter[1] - 0.0015
                 }
 
-                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds, true)
+                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds, false)
             }
         },
         getData (data) {
+            console.log(('getData : ' + data).substr(0, 100))
             if (typeof data === 'string') return this.parseJSON(data)
             return this.parseJSONMap(data)
         },
@@ -109,34 +116,25 @@ export default {
                 };
             };
         },
-        onEachFeatureFunction () {
-            return (feature, layer) => {
-                layer.bindTooltip(
-                    () => {
-                        let divs = ''
-                        for (let property in feature.properties) {
-                            let value = feature.properties[property]
-                            let label = "";
-                            if (property.startsWith("'")) {
-                                label = property.substring(1, property.length - 1)
-                            } else {
-                                label = property.replace(/([A-Z])/gm, function (v) {
-                                    return ' ' + v.toLowerCase()
-                                }).replace(/(^.)/gm, function (v) {
-                                    return v.toUpperCase()
-                                })
-                            }
-                            divs = divs.concat('<div>', label, ' : ', value, '</div>')
-                        }
+        exportToPng () {
+            console.log('exportToPng')
 
-                        return divs
-                    },
-                    {permanent: false, sticky: true}
-                );
-                layer.on('click', function (e) {
-                    console.log(e)
-                })
-            };
+            if (this.tilesLoaded && this.mapCentered) {
+                console.log('export !')
+
+                setTimeout(() => {
+                    domtoimage.toPng(document.getElementById('leafletMap_' + this.reference), {})
+                        .then((dataUrl) => {
+                            let img = new Image();
+                            img.src = dataUrl;
+                            // document.body.appendChild(img);
+                            this.$emit('png', dataUrl)
+                        })
+                        .catch(function (error) {
+                            console.error('oops, something went wrong!', error);
+                        })
+                }, 500)
+            }
         }
     },
     computed: {
@@ -163,39 +161,44 @@ export default {
     },
     mounted () {
 
-        // console.log(this.reference + " => mounted")
-
         this.reference = this._uid
 
         this.$nextTick(() => {
 
-            // console.log(this.reference + " => $nextTick")
-
             this.crippleMap('leafletMap_' + this.reference)
-            this.centerMap()
-            // if (!this.isCenterDefault()) this.injectCustomZoomControl('leafletMap_' + this.reference)
         })
-        window.addEventListener('resize', this.centerMap)
-    },
-    beforeDestroy: function () {
-        window.removeEventListener('resize', this.centerMap)
     },
     watch: {
         data: function () {
+            console.log(this.data)
 
-            setTimeout(() => {
+            this.mapCentered = false
 
-                this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
-                this.centerMap()
-            }, 2000);
+            if (this.data !== []) {
+                setTimeout(() => {
+
+                    this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
+                    this.centerMap()
+                }, 1000);
+            }
+        },
+        tilesLoaded: function () {
+            if (this.tilesLoaded) this.exportToPng()
+        },
+        mapCentered: function () {
+            if (this.mapCentered) this.exportToPng()
         }
     }
 }
 </script>
 
-<style scoped>
+<style>
     .leaflet_wrapper {
-        height : 100%;
-        width  : 100%;
+        height : 300px;
+        width  : 349px;
+    }
+
+    .leaflet_pdf div.leaflet-control-attribution {
+        display : none !important;
     }
 </style>
