@@ -1,0 +1,44 @@
+// https://app.zenuml.com/
+User
+Kelrisks
+ApiAdresse
+Georisque
+GpU
+BRGM
+  @Starter(User)
+//L'utilisateur cherche sa parcelle
+if("adresse complète") {
+  "coordinates" = ApiAdresse."search/"
+  "Parcelle" = Kelrisks."cadastre/proximite/"
+} else if ("commune + code parcelle") {
+  "Parcelle(s)" = Kelrisks."cadastre/match/"
+}
+
+//L'utiliateur demande un avis
+Kelrisks.getAvis(Parcelles) {
+  rechercherUnionParcellesContigues()
+  rechercherExpendedParcelle("500 mètres")
+  rechercherCentroidParcelle()
+  rechercherSiteSolPolueContenantParcelle()
+  getAvisBasias()
+  getAvisBasol()
+  getAvisICPE()
+  Georisque.getAvisSis()
+  //Les géométries sont recherchées sur le GpU puis sur Géorisque.
+  "GeoJson + idGaspar"= Kelrisks.getAvisPPR() {
+    assiettes = GpU.rechercherAssiettesContenantPolygon(parcelle)
+    generateurs = GpU.rechercherGenerateur(assiette.partition)
+    filterParIdGenerateur()
+  }
+  "GeoJson + idGaspar"= Georisque.getAvisPPR()
+  //On récupère ensuite les informations Gaspar
+  pprGaspar = getGaspar(idGaspar)
+  Georisque.getAvisAZI()
+  Georisque.getAvisTRI()
+  Georisque.getAvisArgile()
+  Georisque.getAvisSismicite()
+  Georisque.getAvisRadon()
+  BRGM.getAvisCanalisations()
+  getAvisPlanExpositionBruit()
+  BRGM.getAvisInstallationsNucleaires()
+}

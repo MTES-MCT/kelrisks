@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.controller;
 
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
@@ -27,10 +28,18 @@ public class GeorisqueController {
     
     @GetMapping("/georisques/sismique/{insee}")
     public GeorisquePaginatedSismique sismique(@PathVariable("insee") String codeINSEE) {
-    
+        
         if (!codeINSEE.matches("^\\d{3,5}$")) { return null; }
-    
+        
         return georisquesFacade.rechercherSismiciteCommune(codeINSEE);
+    }
+    
+    @GetMapping("/georisques/catnat/{insee}")
+    public GeorisquePaginatedCatNat catnat(@PathVariable("insee") String codeINSEE) {
+        
+        if (!codeINSEE.matches("^\\d{3,5}$")) { return null; }
+        
+        return georisquesFacade.rechercherCatNatCommune(codeINSEE);
     }
     
     @GetMapping("/georisques/sis/{lon}/{lat}")

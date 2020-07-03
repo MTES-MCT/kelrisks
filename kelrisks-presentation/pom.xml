@@ -8,6 +8,7 @@
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>kelrisks-presentation</artifactId>
@@ -46,7 +47,7 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>html2pdf</artifactId>
-            <version>2.1.1</version>
+            <version>3.0.0</version>
         </dependency>
 
         <dependency>
@@ -121,35 +122,6 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
-            </plugin>
-
-            <!-- Swagger -->
-            <plugin>
-                <groupId>com.github.kongchen</groupId>
-                <artifactId>swagger-maven-plugin</artifactId>
-                <version>3.1.7</version>
-                <configuration>
-                    <apiSources>
-                        <apiSource>
-                            <springmvc>false</springmvc>
-                            <locations>fr.gouv.beta.fabnum.kelrisks.presentation.rest.ApiRestBasias</locations>
-                            <basePath>/api</basePath>
-                            <info>
-                                <title>API</title>
-                                <version>v1.0</version>
-                            </info>
-                            <swaggerDirectory>${project.build.directory}/${project.build.finalName}</swaggerDirectory>
-                        </apiSource>
-                    </apiSources>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>

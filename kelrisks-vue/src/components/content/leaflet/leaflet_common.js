@@ -13,7 +13,8 @@ export default {
         maxZoom: 18,
         minZoom: null,
         minZoomCenter: {x: null, y: null},
-        intermediateZoomLevels: []
+        intermediateZoomLevels: [],
+        mapCentered: false
     }),
     props: {
         maxZoomCenter: {
@@ -165,7 +166,9 @@ export default {
 
             this.initIntermediateZoomLevels();
         },
-        updateMapUntilFitsBounds (map, mapRef, bounds) {
+        updateMapUntilFitsBounds (map, mapRef, bounds, initZoom) {
+
+            this.mapCentered = false
 
             if (!this.interval) {
 
@@ -188,9 +191,10 @@ export default {
                         this.interval = null
 
                         setTimeout(() => {
-                            if (!this.isCenterDefault() && this.maxZoomCenter) {
+                            if (!this.isCenterDefault() && this.maxZoomCenter && initZoom) {
                                 this.initMapZoom(map, mapRef)
                             }
+                            this.mapCentered = true;
                         }, 2000);
                     }
                 }, 1000);

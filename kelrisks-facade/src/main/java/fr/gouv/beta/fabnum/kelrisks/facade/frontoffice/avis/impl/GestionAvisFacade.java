@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,6 +59,7 @@ import org.geolatte.geom.Geometry;
 import org.geolatte.geom.Point;
 import org.geolatte.geom.crs.CoordinateSystemAxis;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -91,6 +93,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionBRGMFacade                        gestionBRGMFacade;
     
     @Override
+    @Cacheable(value = "avis", keyGenerator = "customAvisKeyGenerator")
     public AvisDTO rendreAvis(List<ParcelleDTO> parcelleDTOs, CommuneDTO communeDTO, @NotNull String nomAdresse) {
         
         AvisDTO avisDTO = new AvisDTO();
@@ -124,7 +127,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
     private AvisDTO getAvisFromParcelle(AvisDTO avisDTO, List<ParcelleDTO> parcelleDTOs, CommuneDTO communeDTO) {
     
-        System.out.println("------------- " + parcelleDTOs.stream().map(parcelleDTO -> parcelleDTO.getSection() + parcelleDTO.getNumero()).collect(Collectors.joining(", ")) + " @ " + communeDTO.getNomCommune() + " - " + communeDTO.getCodePostal() + " (" + communeDTO.getCodeINSEE() + ") -------------");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.FRANCE);
+        System.out.println("------------- " + simpleDateFormat.format(new Date()) + " - " + parcelleDTOs.stream().map(parcelleDTO -> parcelleDTO.getSection() + parcelleDTO.getNumero()).collect(Collectors.joining(", ")) + " @ " + communeDTO.getNomCommune() + " - " + communeDTO.getCodePostal() + " (" + communeDTO.getCodeINSEE() + ") -------------");
         long startTime = System.currentTimeMillis();
         Geometry<?> parcellesUnion = gestionParcelleFacade.rechercherUnionParcelles(parcelleDTOs.stream()
                                                                                             .map(ParcelleDTO::getId)

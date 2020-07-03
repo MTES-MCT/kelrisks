@@ -4,6 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeorisquesService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
@@ -39,9 +40,14 @@ public class GestionGeorisquesFacade extends AbstractFacade implements IGestionG
         return georisquesService.rechercherSismiciteCommune(codeINSEE);
     }
     
+    public GeorisquePaginatedCatNat rechercherCatNatCommune(String codeINSEE) {
+        
+        return georisquesService.rechercherCatNatCommune(codeINSEE);
+    }
+    
     @Override
     public GeorisquePaginatedSIS rechercherSisCoordonnees(double lon, double lat) {
-    
+        
         return georisquesService.rechercherSisCoordonnees(String.valueOf(lon), String.valueOf(lat), 1);
     }
     

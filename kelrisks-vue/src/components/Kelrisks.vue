@@ -166,6 +166,7 @@
                                    v-show="flow.index === 4"/>
 
             <telecharger-e-r-r-i-a-l :avis="avis"
+                                     :form="form"
                                      @flow="updateflow"
                                      ref="download"
                                      v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0"

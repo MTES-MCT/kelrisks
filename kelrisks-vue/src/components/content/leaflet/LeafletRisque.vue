@@ -32,7 +32,7 @@ import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
 import mixinLeaflet from "./leaflet_common";
 
 export default {
-    name: "Leaflet",
+    name: "LeafletRisque",
     mixins: [mixinLeaflet],
     components: {
         LMap,
@@ -88,7 +88,7 @@ export default {
                     if (bounds._southWest.lng > this.maxZoomCenter[1]) bounds._southWest.lng = this.maxZoomCenter[1] - 0.0015
                 }
 
-                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds)
+                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds, true)
             }
         },
         getData (data) {

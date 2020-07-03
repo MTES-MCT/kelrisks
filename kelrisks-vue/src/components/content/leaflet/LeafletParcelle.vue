@@ -23,7 +23,7 @@ import {icon} from "leaflet";
 import mixinLeaflet from "./leaflet_common";
 
 export default {
-    name: "Leaflet",
+    name: "LeafletParcelle",
     mixins: [mixinLeaflet],
     components: {
         LMap,

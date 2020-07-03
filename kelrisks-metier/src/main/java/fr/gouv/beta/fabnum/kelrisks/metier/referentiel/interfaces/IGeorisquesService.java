@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces;
 
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
+import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedPPR;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedRadon;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedSIS;
@@ -14,6 +15,8 @@ public interface IGeorisquesService {
     GeorisquePaginatedAZI rechercherAZICommune(String codeINSEE);
     
     GeorisquePaginatedTRI rechercherTRICommune(String codeINSEE);
+    
+    public GeorisquePaginatedCatNat rechercherCatNatCommune(String codeINSEE);
     
     GeorisquePaginatedSismique rechercherSismiciteCommune(String codeINSEE);
     
