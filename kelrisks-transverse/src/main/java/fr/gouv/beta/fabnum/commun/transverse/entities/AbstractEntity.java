@@ -3,13 +3,10 @@ package fr.gouv.beta.fabnum.commun.transverse.entities;
 import fr.gouv.beta.fabnum.commun.transverse.exception.metier.LockOptimisteException;
 import fr.gouv.beta.fabnum.commun.utils.string.StringUtils;
 
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractEntity implements java.io.Serializable {
     
     private static final long serialVersionUID = 5816277318988689252L;
