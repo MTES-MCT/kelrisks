@@ -3,7 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionParcelleFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IParcelleMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.IParcelleMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ParcelleQO;
 

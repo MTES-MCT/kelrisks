@@ -1,4 +1,4 @@
-package fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel;
+package fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel;
 
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.ShortUrlDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.mapping.ICommonMapperConfig;

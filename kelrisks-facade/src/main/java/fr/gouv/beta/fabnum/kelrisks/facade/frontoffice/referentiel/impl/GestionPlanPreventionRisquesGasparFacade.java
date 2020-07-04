@@ -4,7 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.commun.transverse.qo.CritereTri;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisquesGasparDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanPreventionRisquesGasparFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IPlanPreventionRisquesGasparMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.IPlanPreventionRisquesGasparMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IPlanPreventionRisquesGasparService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.PlanPreventionRisquesGasparQO;
 

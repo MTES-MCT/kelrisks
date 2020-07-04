@@ -3,7 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ISiteSolPolueMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.ISiteSolPolueMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ISiteSolPolueService;
 
 import java.util.List;

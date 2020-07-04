@@ -3,7 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.ShortUrlDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionShortUrlFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IShortUrlMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.IShortUrlMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IShortUrlService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.ShortUrl;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.ShortUrlQO;
