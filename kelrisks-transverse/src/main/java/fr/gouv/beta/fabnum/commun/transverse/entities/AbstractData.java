@@ -51,12 +51,6 @@ public abstract class AbstractData implements java.io.Serializable {
         super();
     }
     
-    //@Override
-    //TODO : ToStringBuilder
-    //public String toString() { return ToStringBuilder.reflectionToString(this, ConstantesCommunes.STYLE_TOSTRING); }
-    
-    public abstract String getCleFonc();
-    
     /**
      * Méthode getId
      *

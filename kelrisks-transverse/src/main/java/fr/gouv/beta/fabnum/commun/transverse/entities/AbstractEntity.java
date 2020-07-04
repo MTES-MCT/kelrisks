@@ -27,14 +27,6 @@ public abstract class AbstractEntity implements java.io.Serializable {
     }
     
     /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    public int hashCode() {
-        
-        return this.getCleFonc().hashCode();
-    }
-    
-    /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object other) {
@@ -43,9 +35,6 @@ public abstract class AbstractEntity implements java.io.Serializable {
         if (!(other.getClass().equals(this.getClass()))) { return false; }
         AbstractEntity data = (AbstractEntity) other;
         
-        if (this.getCleFonc().equals(data.getCleFonc())) {
-            return true;
-        }
         return false;
     }
     
@@ -77,8 +66,6 @@ public abstract class AbstractEntity implements java.io.Serializable {
             throw new LockOptimisteException("Problème de version dans l'entité : " + this.getClass().getCanonicalName());
         }
     }
-    
-    public abstract String getCleFonc();
     
     public abstract Long getId();
     
