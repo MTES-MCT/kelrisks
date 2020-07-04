@@ -21,7 +21,12 @@ public class ResourcesController {
     
         File imageFile = null;
     
-        if (!imageName.endsWith(".jpg") && !imageName.endsWith(".png") && !imageName.endsWith(".svg")) { return null; }
+        if (!imageName.endsWith(".jpg") &&
+            !imageName.endsWith(".png") &&
+            !imageName.endsWith(".otf") &&
+            !imageName.endsWith(".svg")) {
+            return null;
+        }
     
         try { imageFile = ResourceUtils.getFile("classpath:" + imageName.replaceAll("&&", "/")); }
         catch (FileNotFoundException ignored) { }
