@@ -5,8 +5,20 @@
               http-equiv="Content-Type"/>
         <title>Avis Kelrisks</title>
         <style>
+            @font-face {
+                font-family : marianneFont;
+                src         : url(http://localhost:8080/api/image/fonts&&otf&&marianne-regular.otf);
+            }
+
+            @font-face {
+                font-family : marianneFont;
+                src         : url(http://localhost:8080/api/image/fonts&&otf&&marianne-bold.otf);
+                font-weight : bold;
+            }
+
             body {
-                font-size : 1em;
+                font-family : marianneFont sans-serif;
+                font-size   : 1em;
             }
 
             #marianne_wrapper {

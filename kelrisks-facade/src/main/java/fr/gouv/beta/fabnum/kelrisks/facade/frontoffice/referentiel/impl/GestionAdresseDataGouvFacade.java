@@ -3,7 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionAdresseDataGouvFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IAdresseDataGouvMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.IAdresseDataGouvMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IAdresseDataGouvService;
 
 import java.util.List;

@@ -3,7 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanExpositionBruitDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanExpositionBruitFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IPlanExpositionBruitMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.IPlanExpositionBruitMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IPlanExpositionBruitService;
 
 import java.util.List;

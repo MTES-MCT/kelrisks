@@ -3,7 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ArgileDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionArgileFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IArgileMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.IArgileMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IArgileService;
 
 import java.util.List;

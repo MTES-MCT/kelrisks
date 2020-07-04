@@ -4,7 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IInstallationClasseeMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.IInstallationClasseeMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IInstallationClasseeService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums.PrecisionEnum;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.InstallationClasseeQO;

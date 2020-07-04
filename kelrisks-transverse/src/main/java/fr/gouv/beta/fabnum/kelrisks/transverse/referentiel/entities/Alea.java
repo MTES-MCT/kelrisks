@@ -41,15 +41,6 @@ public class Alea extends AbstractEntity {
     @SequenceGenerator(name = "seq_ref_alea", sequenceName = "ref_alea_id_seq", allocationSize = 1)
     private Long id;
     
-    public String getCleFonc() {
-        
-        StringBuffer cleFonc = new StringBuffer();
-        
-        //TODO : Définir une clé fonctionnelle
-        
-        return cleFonc.toString().toUpperCase();
-    }
-    
     public Long getId() {
         
         if (this.id == null) { return 0L; }

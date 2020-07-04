@@ -3,7 +3,7 @@ package fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.impl;
 import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeoDataGouvFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.IGeoDataGouvMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.IGeoDataGouvMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IGeoDataGouvService;
 
 import org.springframework.beans.factory.annotation.Autowired;

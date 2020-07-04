@@ -4,7 +4,7 @@ import fr.gouv.beta.fabnum.commun.facade.AbstractFacade;
 import fr.gouv.beta.fabnum.commun.transverse.qo.CritereTri;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.mapping.refentiel.ICommuneMapper;
+import fr.gouv.beta.fabnum.kelrisks.facade.mapping.referentiel.ICommuneMapper;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.ICommuneService;
 import fr.gouv.beta.fabnum.kelrisks.metier.referentiel.interfaces.IParcelleService;
 import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.entities.QCommune;
