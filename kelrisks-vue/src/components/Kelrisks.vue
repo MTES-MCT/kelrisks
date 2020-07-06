@@ -114,7 +114,7 @@
                                                        class="beta"
                                                        src="/images/pointbetagouvfr.svg"/>
                 </a>
-                <p class="tagline">Évaluez simplement et rapidement le risque de pollution de votre terrain</p>
+                <p class="tagline">Évaluez simplement et rapidement les risques de votre terrain</p>
             </div>
 
             <nav>
@@ -130,7 +130,7 @@
         <!--                 v-bind:class="{'contracted':flow.index > 2}">-->
         <!--                <h1 class="hero__white-background">Kelrisks</h1>-->
         <!--                <p class="hero__white-background"-->
-        <!--                   v-bind:class="{'contracted':flow.index > 2}">Évaluez simplement et rapidement le risque de pollution de votre terrain</p>-->
+        <!--                   v-bind:class="{'contracted':flow.index > 2}">Évaluez simplement et rapidement les risques de votre terrain</p>-->
         <!--            </div>-->
         <!--        </div>-->
 
@@ -139,7 +139,7 @@
 
             <div id="bullet-progress-bar_wrapper">
                 <bullet-progress-bar :current-step="flow.index - 1"
-                                     :steps="['Rechercher une parcelle', 'Afficher le résultat', 'Compléter l\'état des risques et Pollutions', 'Télécharger']"/>
+                                     :steps="['Rechercher une parcelle', 'Afficher le résultat', 'Compléter l\'état des risques', 'Télécharger']"/>
             </div>
 
             <search-form-parcelle @avis="avis = $event"

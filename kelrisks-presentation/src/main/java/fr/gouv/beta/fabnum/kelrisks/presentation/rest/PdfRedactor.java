@@ -256,11 +256,11 @@ public class PdfRedactor {
     }
     
     private void redigerAnnexe1AutresRisques(Document htmlDocument, AvisDTO avisDTO) {
-        
+    
         Element page = addPage(htmlDocument);
     
-        page.append("<div><h2>ANNEXE 1 : AUTRES RISQUES NE FAISANT PAS L’OBJET D’UNE OBLIGATION D’INFORMATION</h2></div>");
-        
+        page.append("<div><h2>ANNEXE 1 : RISQUES NE FAISANT PAS L’OBJET D’UNE OBLIGATION D’INFORMATION</h2></div>");
+    
         if (hasRadonMoyen(avisDTO)) {
             addRisque(htmlDocument,
                       "RADON",
@@ -268,7 +268,7 @@ public class PdfRedactor {
                       "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, " +
                       "notamment dans les bâtiments.</p>");
         }
-        
+    
         if (hasPollutionNonReglementaire(avisDTO)) {
             addRisque(htmlDocument,
                       "POLLUTION DES SOLS",
@@ -303,18 +303,16 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "INONDATIONS",
                       "http://localhost:8080/api/image/pictogrammes_risque&&ic_inondation_bleu.png",
-                      "<p>Votre bien est concerné par le risque inondation puisqu’il est situé en territoire à risque important d’inondation (TRI). Il s’agit d’un territoire exposé" +
-                      " à un risque d’inondation sur lequel l’État et les EPCI (établissement publics de coopération intercommunale) qui disposent de la compétence GEMAPI " +
-                      "(gestion des milieux aquatiques et prévention des inondations) ont engagé une démarche d’identification et de gestion de ce risque pour anticiper et " +
-                      "réduire l’impact d’une inondation.</p>");
+                      "<p>Votre bien est situé dans un territoire exposé à un risque important d'inondation (TRI) sur lequel l'Etat et les collectivités territoriales ont engagé une démarche " +
+                      "d'identification et de gestion de ce risque pour anticiper et réduire l’impact d'une éventuelle inondation. Pour plus d'information, renseignez-vous auprès de la commune ou " +
+                      "consultez le Plan de Gestion des Risques d'Inondation (PGRI)</p>");
         }
         
         if (hasAZI(avisDTO) && !hasTRI(avisDTO) && !hasPPRi(avisDTO)) {
             addRisque(htmlDocument,
                       "INONDATIONS",
                       "http://localhost:8080/api/image/pictogrammes_risque&&ic_inondation_bleu.png",
-                      "<p>Votre bien est situé en dans un périmètre inondation figurant dans un atlas des zones inondables qui modélisent les potentiels risques à partir" +
-                      " des dernières inondations connues.</p>");
+                      "<p>Votre bien est situé sur une commune figurant dans un atlas des zones inondables qui modélisent les potentiels risques à partir des dernières inondations connues.</p>");
         }
         
         if (avisDTO.getInstallationNucleaireDTOS().size() > 0) {
@@ -333,15 +331,24 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "ARGILE",
                       "http://localhost:8080/api/image/pictogrammes_risque&&ic_terre_bleu.png",
-                      "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d’eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser " +
-                      "progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol. Le" +
-                      " zonage \"argile\" identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa afin de prévenir les sinistres.</p>" +
-                      (avisDTO.getNiveauArgile() == 3 ? "<p>Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte.</p>" : "") +
-                      (avisDTO.getNiveauArgile() == 2 ? "<p>Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.</p>" : "") +
-                      (avisDTO.getNiveauArgile() == 1 ? "<p>Aléa faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront " +
-                                                        "qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local" +
-                                                        " défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol).</p>" : "") +
-                      (avisDTO.getNiveauArgile() == 0 ? "<p>Aléa nul : Aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles.</p>" : ""));
+                      "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les " +
+                      "constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être " +
+                      "importants. Le zonage \"argile\" identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
+                      (avisDTO.getNiveauArgile() == 3 ? "<p>Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, " +
+                                                        "notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a " +
+                                                        "href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>"
+                                                      : "") +
+                      (avisDTO.getNiveauArgile() == 2 ? "<p>Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée.  Les constructions, notamment les" +
+                                                        " maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a " +
+                                                        "href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>"
+                                                      : "") +
+                      (avisDTO.getNiveauArgile() == 1 ? "<p>la survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des " +
+                                                        "bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches" +
+                                                        " ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d\'une maison individuelle, de réaliser une étude de " +
+                                                        "sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www" +
+                                                        ".cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>" : "") +
+                      (avisDTO.getNiveauArgile() == 0 ? "<p>Aléa nul : aucune présence de sols argileux n\'a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des " +
+                                                        "poches ponctuelles de sols argileux." : ""));
         }
         
         if (avisDTO.getGeogCanalisations().size() > 0) {
@@ -453,24 +460,36 @@ public class PdfRedactor {
         
         page.append("Pourquoi l’Etat des risques est important ?</p>");
         page.append("<p>A chaque vente ou location d’un bien, le propriétaire est tenu d’informer l’acquéreur ou le locataire de son bien immobilier (bâti et non bâti) de l’état des risques et " +
-                    "pollutions auxquelles le bien immobilier est exposé. Cette obligation d’information est prévue par la loi du 30 juillet 2003. L’état des risques et pollutions doit dater de " +
+                    "pollutions auxquelles le bien immobilier est exposé. Cette obligation d’information est prévue par la loi du 30 juillet 2003. L’état des risques doit dater de " +
                     "moins de six mois lors de la signature de l’acte de vente ou du bail.</p><br/>");
         page.append("<p>L’État des risques et pollution permet de faire un bilan des principaux risques pouvant affecter ce bien afin de bien informer les parties prenantes et de mettre en œuvre " +
                     "les mesures de protection éventuelles.</p>");
         
         if (hasPPR(avisDTO)) {
             page.append("<h4 id=\"recommendations_PPR\">Plans de Prévention des Risques</h4>");
-            page.append("<p>Certains risques peuvent nécessiter de réaliser des travaux de mise en conformité de votre habitation. Pour le savoir, vous devez prendre connaissance du plan de " +
-                        "prévention associé à des risques accessible sur le site internet de votre préfecture.</p>");
+            page.append("<p>Certains risques peuvent nécessiter de réaliser des travaux obligatoires de mise en conformité de votre habitation. Pour le savoir, vous devez prendre connaissance du " +
+                        "plan de prévention, consultable sur le site internet de votre préfecture.");
+            page.append("<p>Si votre bien est concerné par une obligation de travaux, vous pouvez bénéficier d'une aide de l'Etat, dans le cadre du Fonds de prévention des risques naturels majeurs " +
+                        "(FPRNM). Pour plus de renseignements, contacter la direction départementale des territoires (DDT) de votre département.</p>");
+            page.append("<p>Pour savoir ce qu'il faut faire en cas de survenance du risque, consulter le Dossier d'information communal sur les risques majeurs (DICRIM) auprès de votre commune.</p>");
         }
-        
-        if (hasSismicite(avisDTO)) {
+    
+        if (hasSismiciteHaute(avisDTO)) {
             page.append("<h4 id=\"recommendations_sismicite\">Sismicité</h4>");
-            page.append("<p>Pour le bâti neuf, en fonction de la zone de sismicité (zone 2 \"sismicité faible\" à zone 5 \"sismicité forte\") et du type de construction (habitation individuelle, " +
-                        "habitations collectives, ERP, ...) des dispositions spécifiques s’appliquent selon la réglementation (arrêté du 22 octobre 2010).</p><br/>");
-            page.append("<p>Pour le bâti existant ces dispositions ne s’appliquent que dans le cas de travaux lourds entrainant une augmentation de la surface habitable.</p>");
+            page.append("<p>Pour le bâti neuf et pour certains travaux lourds sur le bâti existant, en fonction de la zone de sismicité et du type de construction (habitation individuelle, " +
+                        "habitations collectives, établissement recevant du public) des dispositions spécifiques à mettre en oeuvre s'appliquent lors de la construction.</p>");
+            page.append("<p>Un guide interactif est proposé sur le site Plan Séisme pour identifier précisément les dispositions à prendre en compte selon votre localisation, type d'habitat et " +
+                        "projet. Il est consultable à l'adresse suivante : http://www.planseisme.fr/-Didacticiel-.html</p>");
+            page.append("<p>Pour connaitre les consignes à appliquer en cas de séisme , vous pouvez consulter le site : http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html</p>");
         }
-        
+    
+        if (hasSismiciteMoyenne(avisDTO)) {
+            page.append("<h4 id=\"recommendations_sismicite\">Sismicité</h4>");
+            page.append("<p>Pour certains bâtiments de taille importante ou sensibles des dispositions spécifiques s’appliquent selon la réglementation (arrêté du 22 octobre 2010).</p>");
+            page.append("<p>Un guide interactif est proposé sur le site Plan Séisme pour identifier précisément les dispositions à prendre en compte selon votre localisation, type d'habitat et " +
+                        "projet. Il est consultable à l'adresse suivante : http://www.planseisme.fr/-Didacticiel-.html</p>");
+        }
+    
         if (hasRadonHaut(avisDTO)) {
             page.append("<h4 id=\"recommendations_radon\">Radon</h4>");
             page.append("<p>Le bien est situé dans une zone à potentiel radon significatif. Il donc est fortement recommandé de procéder au mesurage du radon dans le bien afin de s’assurer que sa " +
@@ -515,6 +534,16 @@ public class PdfRedactor {
         return avisDTO.getSummary().getCommune().getCodeZoneSismicite() != null && !avisDTO.getSummary().getCommune().getCodeZoneSismicite().equals("1");
     }
     
+    private boolean hasSismiciteMoyenne(AvisDTO avisDTO) {
+        
+        return avisDTO.getSummary().getCommune().getCodeZoneSismicite() != null && avisDTO.getSummary().getCommune().getCodeZoneSismicite().equals("2");
+    }
+    
+    private boolean hasSismiciteHaute(AvisDTO avisDTO) {
+        
+        return hasSismicite(avisDTO) && !hasSismiciteMoyenne(avisDTO);
+    }
+    
     private boolean hasPPR(AvisDTO avisDTO) {
         
         return avisDTO.getPlanPreventionRisquesDTOs().size() > 0;
@@ -529,14 +558,19 @@ public class PdfRedactor {
         page.append("<div id=\"risque-principaux\"><h2>RISQUES PRINCIPAUX</h2></div>");
         
         for (PlanPreventionRisquesGasparDTO ppr : avisDTO.getPlanPreventionRisquesDTOs()) {
-            
+    
             addRisquePrincipal(htmlDocument,
                                ppr.getAlea().getFamilleAlea().getCode(),
                                ppr.getAlea().getFamilleAlea().getLibelle().toUpperCase(),
                                "http://localhost:8080/api/image/pictogrammes_risque&&" + getLogoRisque(ppr.getAlea().getFamilleAlea().getCode()) + ".png",
                                "<p>L’immeuble est situé dans le périmètre d’un " + ppr.getAlea().getFamilleAlea().getFamillePPR().getLibelle() + " de type " + ppr.getAlea().getFamilleAlea().getLibelle() + " - " + ppr.getAlea().getLibelle() +
-                               (ppr.getDateApprobation() != null ? ", approuvé le " + sdf.format(ppr.getDateApprobation()) : ", prescrit le " + sdf.format(ppr.getDatePrescription())) + ".<br/><br" +
-                               "/>Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.</p>");
+                               (ppr.getDateApprobation() != null ? ", approuvé le " + sdf.format(ppr.getDateApprobation()) : ", prescrit le " + sdf.format(ppr.getDatePrescription())) + "." + "<br/>" +
+                               (ppr.getDateApprobation() != null ? "Un PPR approuvé est un PPR définitivement adopté." :
+                                ppr.getDateApplicationAnticipee() != null ? "Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation." :
+                                "Un PPR prescrit est un PPR en cours d\'élaboration sur la commune dont le périmètre et les règles sont en cours d\'élaboration."
+                               ) +
+                               "<br/><br/>" +
+                               "Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.</p>");
         }
         
         if (hasSismicite(avisDTO)) {
@@ -544,9 +578,8 @@ public class PdfRedactor {
                                "SISMICITE",
                                "SISMICITÉ",
                                "http://localhost:8080/api/image/pictogrammes_risque&&ic_seisme_bleu.png",
-                               "<p>Le zonage sismique est une zone géographique dans laquelle la probabilité d’occurrence d’un séisme de " +
-                               "caractéristiques données (magnitude, profondeur focale) peut être " +
-                               "considérée homogène en tout point.</p>");
+                               "<p>Un tremblement de terre ou séisme, est un ensemble de secousses et de déformations brusques de l'écorce terrestre (surface de la Terre). Le zonage sismique " +
+                               "détermine l'importance de l'exposition au risque sismique..</p>");
         }
         
         if (hasRadonHaut(avisDTO) || hasRadonMoyen(avisDTO)) {
@@ -586,11 +619,15 @@ public class PdfRedactor {
                                "PEB",
                                "BRUIT",
                                "http://localhost:8080/api/image/pictogrammes_risque&&ic_bruit_bleu.png",
-                               "<p>La parcelle est concernée par un plan d’exposition au bruit car elle est exposée aux nuisances d’un aéroport.</p>" +
-                               (avisDTO.getZonePlanExpositionBruit().equals("A") ? "<p>Le niveau d’exposition au bruit de la parcelle est très fort (zone A en rouge).</p>" : "") +
-                               (avisDTO.getZonePlanExpositionBruit().equals("B") ? "<p>Le niveau d’exposition au bruit de la parcelle est fort (zone B en orange).</p>" : "") +
-                               (avisDTO.getZonePlanExpositionBruit().equals("C") ? "<p>Le niveau d’exposition au bruit de la parcelle est modéré (zone C en jaune).</p>" : "") +
-                               (avisDTO.getZonePlanExpositionBruit().equals("D") ? "<p>Le niveau d’exposition au bruit de la parcelle est faible (zone D en verte).</p>" : ""));
+                               "<p>La parcelle est concernée par un plan d’exposition au bruit car elle est exposée aux nuisances sonores d’un aéroport.</p>" +
+                               (avisDTO.getZonePlanExpositionBruit().equals("A") ? "<p>Le niveau d’exposition au bruit de la parcelle est très fort (zone A en rouge). La zone A est principalement " +
+                                                                                   "inconstructible.</p>" : "") +
+                               (avisDTO.getZonePlanExpositionBruit().equals("B") ? "<p>Le niveau d’exposition au bruit de la parcelle est fort (zone B en orange). La zone B est principalement " +
+                                                                                   "inconstructible.</p>" : "") +
+                               (avisDTO.getZonePlanExpositionBruit().equals("C") ? "<p>Le niveau d’exposition au bruit de la parcelle est modéré (zone C en jaune). Certaines constructions sont " +
+                                                                                   "autorisées sous conditions.</p>" : "") +
+                               (avisDTO.getZonePlanExpositionBruit().equals("D") ? "<p>Le niveau d’exposition au bruit de la parcelle est faible (zone D en verte). Dans la zone D, les nouveaux " +
+                                                                                   "logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.</p>" : ""));
         }
     }
     

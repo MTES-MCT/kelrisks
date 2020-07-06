@@ -11,9 +11,9 @@
 
 ## Qu'est-ce que c'est, à quoi ça sert ?
 
-Evaluez simplement et rapidement le risque de pollution votre terrain :
+Evaluez simplement et rapidement les risques de votre terrain :
 
-Kelrisks permet en quelques clics d’évaluer le risque de pollution d’un terrain et donne à l’utilisateur des conseils sur la suite dans le cas où il souhaiterait acheter, vendre ou louer un bien.
+Kelrisks permet en quelques clics d’évaluer les risques d’un terrain et donne à l’utilisateur des conseils sur la suite dans le cas où il souhaiterait acheter, vendre ou louer un bien.
 
 Comment ? Tout simplement en procédant à la place de l’utilisateur à une recherche longue et complexe de l’information dans les différentes bases.
 

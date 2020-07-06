@@ -1,13 +1,15 @@
 <template>
     <div class="risque_wrapper"
          v-if="hasTitle || hasDescription || hasLogo">
-        <div class="risque_summary">
+        <div class="risque_summary"
+             v-bind:class="{'no-logo':!hasLogo}">
             <div class="risque_summary__icon"
-                 v-if="hasLogo">
+                 v-if="hasTitle || hasLogo">
                 <!--suppress HtmlUnknownTarget -->
                 <img :alt="title"
                      :src="logoURL"
                      height="130"
+                     v-if="hasLogo"
                      width="130">
                 <span>{{title}}</span>
             </div>
@@ -169,6 +171,18 @@ export default {
         line-height    : 1;
         text-align     : center;
         width          : 100%;
+    }
+
+    .risque_summary.no-logo {
+        flex : unset;
+    }
+
+    .risque_summary.no-logo .risque_summary__icon {
+        width : 100%;
+    }
+
+    .risque_summary.no-logo .risque_summary__icon span {
+        text-align : left;
     }
 
     .risque_summary__legend {
