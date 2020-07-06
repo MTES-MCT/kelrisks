@@ -24,7 +24,7 @@
                 <img height="75"
                      src="/images/icons/kelrisks/howTo3.svg"
                      width="75">
-                <p>Votre ERP, État des Risques et Pollutions est prêt à être téléchargé.</p>
+                <p>Votre ERRIAL, État des Risques est prêt à être téléchargé.</p>
                 <p class="subtext"
                    style="color: #AAAAAA; font-size: 0.75em">* voir CGU pour les détails</p>
             </div>

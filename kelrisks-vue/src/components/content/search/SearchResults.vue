@@ -39,7 +39,7 @@
                    class="bouton success"
                    id="pdf"
                    target="_blank">
-                    Créer un état des risques et pollutions
+                    Créer un état des risques
                     <font-awesome-icon class="end"
                                        icon="chevron-right"/>
                 </a>
@@ -66,8 +66,11 @@
             <span class="title">Risques Principaux</span>
 
             <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle +
-                                  (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) + '.<br/><br/>' +
-                                  'Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.<br/>' +
+                                  (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) +'.<br/>' +
+                                   plan.dateApprobation ? 'Un PPR approuvé est un PPR définitivement adopté.' :
+                                   plan.dateApplicationAnticipee ? 'Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation.' :
+                                   'Un PPR prescrit est un PPR en cours d\'élaboration sur la commune dont le périmètre et les règles sont en cours d\'élaboration.' + '<br/><br/>' +
+                                  'Le plan de prévention des risques est un document réalisé par l’Etat qui interdit de construire dans les zones les plus exposées et encadre les constructions dans les autres zones exposées.<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
@@ -79,7 +82,7 @@
                     v-bind:key="'plan_' + index"
                     v-for="(plan, index) in avis.ppr"/>
 
-            <risque :description="'Le zonage sismique est une zone géographique dans laquelle la probabilité d’occurrence d’un séisme de caractéristiques données (magnitude, profondeur focale) peut être considérée homogène en tout point.<br/>'+
+            <risque :description="'Un tremblement de terre ou séisme, est un ensemble de secousses et de déformations brusques de l\'écorce terrestre (surface de la Terre). Le zonage sismique détermine l\'importance de l\'exposition au risque sismique.<br/>'+
                                   '<a href=\'#recommendations_sismicite\'>Lire les recommandations</a>'"
                     :leaflet-data="typeof avis.summary.commune.communesLimitrophes.map ===  'function' ?
                                    [{ data : avis.summary.commune.codeZoneSismicite === '1' ? [avis.summary.commune.multiPolygon] : [],
@@ -159,10 +162,10 @@
             <risque :description="'La parcelle est concernée par un plan d\'exposition au bruit car elle est exposée aux nuisances d\'un aéroport.'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
-                    :detail="(avis.zonePlanExpositionBruit === 'A' ? 'Le niveau d\'exposition au bruit de la parcelle est très fort (zone A en rouge).' : '') +
-                             (avis.zonePlanExpositionBruit === 'B' ? 'Le niveau d\'exposition au bruit de la parcelle est fort (zone B en orange).' : '') +
-                             (avis.zonePlanExpositionBruit === 'C' ? 'Le niveau d\'exposition au bruit de la parcelle est modéré (zone C en jaune).' : '') +
-                             (avis.zonePlanExpositionBruit === 'D' ? 'Le niveau d\'exposition au bruit de la parcelle est faible (zone D en verte).' : '')"
+                    :detail="(avis.zonePlanExpositionBruit === 'A' ? 'Le niveau d\'exposition au bruit de la parcelle est très fort (zone A en rouge). La zone A est principalement inconstructible.' : '') +
+                             (avis.zonePlanExpositionBruit === 'B' ? 'Le niveau d\'exposition au bruit de la parcelle est fort (zone B en orange). La zone B est principalement inconstructible.' : '') +
+                             (avis.zonePlanExpositionBruit === 'C' ? 'Le niveau d\'exposition au bruit de la parcelle est modéré (zone C en jaune). Certaines constructions sont autorisées sous conditions.' : '') +
+                             (avis.zonePlanExpositionBruit === 'D' ? 'Le niveau d\'exposition au bruit de la parcelle est faible (zone D en verte). Les nouveaux logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.' : '')"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_bruit_bleu.svg'"
                     :leaflet-data="typeof avis.plansExpositionBruit.map ===  'function' ?
                                    [{ data : avis.plansExpositionBruit.filter(x => x.zone === 'D').map(x => x.multiPolygon),
@@ -201,18 +204,29 @@
 
                 <template v-if="hasPPR">
                     <h4 id="recommendations_PPR">Plans de Prévention des Risques</h4>
-                    <p>Certains risques peuvent nécessiter de réaliser des travaux de mise en conformité de votre habitation. Pour le savoir, vous devez prendre connaissance du plan de prévention
-                       associé à des risques accessible sur le site internet de votre préfecture.</p>
+                    <p>Certains risques peuvent nécessiter de réaliser des travaux obligatoires de mise en conformité de votre habitation. Pour le savoir, vous devez prendre connaissance du plan de
+                       prévention, consultable sur le site internet de votre préfecture.</p>
+                    <p>Si votre bien est concerné par une obligation de travaux, vous pouvez bénéficier d'une aide de l'Etat, dans le cadre du Fonds de prévention des risques naturels majeurs (FPRNM).
+                       Pour plus de renseignements, contacter la direction départementale des territoires (DDT) de votre département.</p>
+                    <p>Pour savoir ce qu'il faut faire en cas de survenance du risque, consulter le Dossier d'information communal sur les risques majeurs (DICRIM) auprès de votre commune.</p>
                 </template>
 
                 <template v-if="hasSismicite">
                     <h4 id="recommendations_sismicite">Sismicité</h4>
-                    <p>Pour le bâti neuf, en fonction de la zone de sismicité (zone 2 "sismicité faible" à zone 5 "sismicité forte") et du type de construction (habitation individuelle, habitations
-                       collectives, ERP, ...) des dispositions spécifiques s'appliquent selon la réglementation (arrêté du 22 octobre 2010).</p><br/>
-                    <p>Un didactitiel est proposé sur le site du Plan Séisme pour connaître les dispositions à prendre en compte. Il est consultable à l'adresse suivante :</p>
-                    <p><a href="http://www.planseisme.fr/-Didacticiel-.html">Réglementation parasismique</a>.</p><br/>
-                    <p>Pour le bâti existant ces dispositions ne s'appliquent que dans le cas de travaux lourds entrainant une augmentation de la surface habitable (pour plus de précisions :</p>
-                    <p><a href="http://www.planseisme.fr/Regles-parasismiques-applicables-aux-batiments-a-risque.html#existant)">Règles parasismiques applicables aux bâtiments</a>.</p>
+                    <template v-if="hasSismiciteHaute">
+                        <p>Pour le bâti neuf et pour certains travaux lourds sur le bâti existant, en fonction de la zone de sismicité et du type de construction (habitation individuelle, habitations
+                           collectives, établissement recevant du public) des dispositions spécifiques à mettre en oeuvre s'appliquent lors de la construction. Un guide interactif est proposé pour
+                           identifier précisément les dispositions à prendre en compte selon votre localisation, type d'habitat et projet :<br/></p>
+                        <a href="http://www.planseisme.fr/-Didacticiel-.html">Didacticiel de la règlementation parasismique</a>
+                        <p>Pour connaitre les consignes à appliquer en cas de séisme , vous pouvez consulter le site :<br/></p>
+                        <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html">Que faire en cas de séisme ?</a>
+                    </template>
+                    <template v-if="hasSismiciteMoyenne">
+                        <p>Pour certains bâtiments de taille importante ou sensibles, des dispositions spécifiques à mettre en oeuvre s'appliquent lors de la construction (arrêté du 22 octobre 2010).
+                           Un guide interactif est proposé sur le site Plan Séisme pour identifier précisément les dispositions à prendre en compte selon votre localisation et projet. Il est
+                           consultable à l'adresse suivante :<br/></p>
+                        <a href="http://www.planseisme.fr/-Didacticiel-.html">Didacticiel de la règlementation parasismique</a>
+                    </template>
                 </template>
 
                 <template v-if="hasRadonHaut">
@@ -247,7 +261,7 @@
 
         <section class="section v-flex">
 
-            <span class="title">Autres risques ne faisant pas l'objet d'une obligation d'information</span>
+            <span class="title">risques ne faisant pas l'objet d'une obligation d'information</span>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
                     :level="avis.potentielRadon + ''"
@@ -295,12 +309,12 @@
                                       color : '#925600'}]"
                     v-if="hasPollutionNonReglementaire"/>
 
-            <risque :description="'Votre bien est concerné par le risque inondation puisqu’il est situé en territoire à risque important d’inondation (TRI). Il s’agit d’un territoire exposé à un risque d’inondation sur lequel l\'État et les EPCI (établissement publics de coopération intercommunale) qui disposent de la compétence GEMAPI (gestion des milieux aquatiques et prévention des inondations) ont engagé une démarche d’identification et de gestion de ce risque pour anticiper et réduire l’impact d’une inondation.'"
+            <risque :description="'Votre bien est situé dans un territoire exposé à un risque important d\'inondation (TRI) sur lequel l\'Etat et les collectivités territoriales ont engagé une démarche d\'identification et de gestion de ce risque pour anticiper et réduire l’impact d\'une éventuelle inondation. Pour plus d\'information, renseignez-vous auprès de la commune ou consultez le Plan de Gestion des Risques d\'Inondation (PGRI).'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_inondation_bleu.svg'"
                     :title="'Inondations'"
                     v-if="hasTRI && !hasPPRi"/>
 
-            <risque :description="'Votre bien est situé en dans un périmètre inondation figurant dans un atlas des zones inondables qui modélisent les potentiels risques à partir des dernières inondations connues.'"
+            <risque :description="'Votre bien est situé sur une commune figurant dans un atlas des zones inondables qui modélisent les potentiels risques à partir des dernières inondations connues.'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_inondation_bleu.svg'"
                     :title="'Inondations'"
                     v-if="hasAZI && !hasTRI && !hasPPRi"/>
@@ -314,11 +328,11 @@
 
             <risque :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
-                    :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d\'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa afin de prévenir les sinistres.'"
-                    :detail="(avis.niveauArgile === 3 ? 'Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Veuillez consulter les recommandations au lien suivant pour prévenir les risques : </br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 2 ? 'Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée' : '') +
-                             (avis.niveauArgile === 1 ? 'Aléa faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol)' : '') +
-                             (avis.niveauArgile === 0 ? 'Aléa nul : Aucune présence de sols argileux n\'a été identifiée selon les cartes géologiques actuelles.' : '') "
+                    :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d\'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être importants. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.'"
+                    :detail="(avis.niveauArgile === 3 ? 'Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 2 ? 'Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée.  Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 1 ? 'la survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d\'une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 0 ? 'Aléa nul : aucune présence de sols argileux n\'a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des poches ponctuelles de sols argileux.' : '') "
                     :leaflet-data="[{ data : avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon),
                                       color : '#FFD332'},
                                     { data : avis.lentillesArgile.filter(x => x.niveauAlea === 2).map(x => x.multiPolygon),
@@ -352,19 +366,16 @@
             <span class="title">Cette parcelle n'est pas concernée par :</span>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
                     :title="'Naturels'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRN"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques miniers.'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_cavite_bleu.svg'"
                     :title="'Miniers'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRM"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques technologiques.'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_industrie_bleu.svg'"
                     :title="'Technologiques'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRT"/>
@@ -373,12 +384,10 @@
                                       '<p>- des installations classées soumises à enregistrement ou à autorisation</br>' +
                                       '- des secteurs d’information sur les sols</br>' +
                                       '- des terrains pollués affectés d’une servitude d’utilité publique.</p>'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
                     v-if="!hasPollutionPrincipale"/>
 
             <risque :description="'La parcelle n\'est pas concernée par un plan d\'exposition au bruit.'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_bruit_bleu.svg'"
                     :title="'Bruit'"
                     v-if="!hasPEB"/>
 
@@ -389,7 +398,7 @@
                    class="bouton success"
                    target="_blank">
                     <!--                <font-awesome-icon icon="file-pdf"/>-->
-                    Créer un état des risques et pollutions
+                    Créer un état des risques
                     <font-awesome-icon class="end"
                                        icon="chevron-right"/>
                 </a><br/>

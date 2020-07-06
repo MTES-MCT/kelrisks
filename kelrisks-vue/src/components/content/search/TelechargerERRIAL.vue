@@ -33,7 +33,7 @@
 
             <div class="container bordered ppr">
                 <div>
-                    <div class="errial_title"><span class="title">Télécharger l'ERP « État des risques et pollution »</span></div>
+                    <div class="errial_title"><span class="title">Télécharger l'ERRIAL « État des Risques Réglementés - Information des Acquéreurs et des Locataires »</span></div>
                     <p>Le propriétaire du bien concerné par l’état des risques et pollution est tenu de relire et compléter si nécessaire ces informations afin de s’assurer qu’elles sont
                        exhaustives.</p>
 
