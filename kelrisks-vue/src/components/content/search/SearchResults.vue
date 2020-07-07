@@ -82,7 +82,7 @@
                     v-bind:key="'plan_' + index"
                     v-for="(plan, index) in avis.ppr"/>
 
-            <risque :description="'Un tremblement de terre ou séisme, est un ensemble de secousses et de déformations brusques de l\'écorce terrestre (surface de la Terre). Le zonage sismique détermine l\'importance de l\'exposition au risque sismique.<br/>'+
+            <risque :description="'Un tremblement de terre ou séisme, est un ensemble de secousses et de déformations brusques de l\'écorce terrestre (surface de la Terre). Le zonage sismique détermine l’importance de l’exposition au risque sismique.<br/>'+
                                   '<a href=\'#recommendations_sismicite\'>Lire les recommandations</a>'"
                     :leaflet-data="typeof avis.summary.commune.communesLimitrophes.map ===  'function' ?
                                    [{ data : avis.summary.commune.codeZoneSismicite === '1' ? [avis.summary.commune.multiPolygon] : [],
@@ -150,22 +150,22 @@
 
             <risque :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
-                    :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d\'usage des sols (travaux, aménagements changement d\'affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
-                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classées pour la protection de l\'environnement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires : '') +
-                             (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d\'information sur les sols.</br>' : '') +
-                             (false ? '- La parcelle est affectée d\'une servitude d\'utilité publique au titre des installations classées au titre du L 515-12 du code de l\'environnement.' : '') +
+                    :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
+                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classées pour la protection de l’environnement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires : '') +
+                             (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d’information sur les sols.</br>' : '') +
+                             (false ? '- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées au titre du L 515-12 du code de l’environnement.' : '') +
                              '<p><a href=\'#recommendations_pollution\'>Lire les recommandations</a></p>'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
                     v-if="hasPollutionPrincipale"/>
 
-            <risque :description="'La parcelle est concernée par un plan d\'exposition au bruit car elle est exposée aux nuisances d\'un aéroport.'"
+            <risque :description="'La parcelle est concernée par un plan d’exposition au bruit car elle est exposée aux nuisances d’un aéroport.'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
-                    :detail="(avis.zonePlanExpositionBruit === 'A' ? 'Le niveau d\'exposition au bruit de la parcelle est très fort (zone A en rouge). La zone A est principalement inconstructible.' : '') +
-                             (avis.zonePlanExpositionBruit === 'B' ? 'Le niveau d\'exposition au bruit de la parcelle est fort (zone B en orange). La zone B est principalement inconstructible.' : '') +
-                             (avis.zonePlanExpositionBruit === 'C' ? 'Le niveau d\'exposition au bruit de la parcelle est modéré (zone C en jaune). Certaines constructions sont autorisées sous conditions.' : '') +
-                             (avis.zonePlanExpositionBruit === 'D' ? 'Le niveau d\'exposition au bruit de la parcelle est faible (zone D en verte). Les nouveaux logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.' : '')"
+                    :detail="(avis.zonePlanExpositionBruit === 'A' ? 'Le niveau d’exposition au bruit de la parcelle est très fort (zone A en rouge). La zone A est principalement inconstructible.' : '') +
+                             (avis.zonePlanExpositionBruit === 'B' ? 'Le niveau d’exposition au bruit de la parcelle est fort (zone B en orange). La zone B est principalement inconstructible.' : '') +
+                             (avis.zonePlanExpositionBruit === 'C' ? 'Le niveau d’exposition au bruit de la parcelle est modéré (zone C en jaune). Certaines constructions sont autorisées sous conditions.' : '') +
+                             (avis.zonePlanExpositionBruit === 'D' ? 'Le niveau d’exposition au bruit de la parcelle est faible (zone D en verte). Les nouveaux logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.' : '')"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_bruit_bleu.svg'"
                     :leaflet-data="typeof avis.plansExpositionBruit.map ===  'function' ?
                                    [{ data : avis.plansExpositionBruit.filter(x => x.zone === 'D').map(x => x.multiPolygon),
@@ -292,11 +292,11 @@
 
             <risque :description="'Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.'"
                     :detail="'<p>Dans un rayon de 500 m autour de votre parcelle, sont identifiés :</br>'+
-                              (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites référencés dans l\'inventaire des installations classées pour la protection de l\'environnement (ICPE)</br>' : '') +
-                              (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites potentiellement pollués, référencés dans l\'inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS).</br>' : '') +
+                              (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites référencés dans l’inventaire des installations classées pour la protection de l’environnement (ICPE)</br>' : '') +
+                              (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites potentiellement pollués, référencés dans l’inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS).</br>' : '') +
                               (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
-                              (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n\'en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
+                              (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
                     :title="'Pollution des sols'"
                     :parcelle="leaflet.data.parcelles"
@@ -309,7 +309,7 @@
                                       color : '#925600'}]"
                     v-if="hasPollutionNonReglementaire"/>
 
-            <risque :description="'Votre bien est situé dans un territoire exposé à un risque important d\'inondation (TRI) sur lequel l\'Etat et les collectivités territoriales ont engagé une démarche d\'identification et de gestion de ce risque pour anticiper et réduire l’impact d\'une éventuelle inondation. Pour plus d\'information, renseignez-vous auprès de la commune ou consultez le Plan de Gestion des Risques d\'Inondation (PGRI).'"
+            <risque :description="'Votre bien est situé dans un territoire exposé à un risque important d’inondation (TRI) sur lequel l’Etat et les collectivités territoriales ont engagé une démarche d’identification et de gestion de ce risque pour anticiper et réduire l’impact d’une éventuelle inondation. Pour plus d’information, renseignez-vous auprès de la commune ou consultez le Plan de Gestion des Risques d’Inondation (PGRI).'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_inondation_bleu.svg'"
                     :title="'Inondations'"
                     v-if="hasTRI && !hasPPRi"/>
@@ -319,8 +319,8 @@
                     :title="'Inondations'"
                     v-if="hasAZI && !hasTRI && !hasPPRi"/>
 
-            <risque :description="'Votre bien est situé à moins de ' + (avis.hasCentraleNucleaire ? '20 km' :  '10 km') + ' d\'une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
-                    :detail="'<p>Ces installations sont contrôlées par l\'Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
+            <risque :description="'Votre bien est situé à moins de ' + (avis.hasCentraleNucleaire ? '20 km' :  '10 km') + ' d’une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
+                    :detail="'<p>Ces installations sont contrôlées par l’Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
                              '<p>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires + '</p>'"
                     :logo-u-r-l="'/images/pictogrammes_risque/ic_nucleaires_bleu.svg'"
                     :title="'Installations nucléaires de base'"
@@ -328,11 +328,11 @@
 
             <risque :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
-                    :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d\'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être importants. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.'"
+                    :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d’eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être importants. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.'"
                     :detail="(avis.niveauArgile === 3 ? 'Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 2 ? 'Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée.  Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 1 ? 'la survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d\'une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 0 ? 'Aléa nul : aucune présence de sols argileux n\'a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des poches ponctuelles de sols argileux.' : '') "
+                             (avis.niveauArgile === 2 ? 'Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 1 ? 'la survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 0 ? 'Aléa nul : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des poches ponctuelles de sols argileux.' : '') "
                     :leaflet-data="[{ data : avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon),
                                       color : '#FFD332'},
                                     { data : avis.lentillesArgile.filter(x => x.niveauAlea === 2).map(x => x.multiPolygon),
@@ -387,7 +387,7 @@
                     :title="'Pollution des sols'"
                     v-if="!hasPollutionPrincipale"/>
 
-            <risque :description="'La parcelle n\'est pas concernée par un plan d\'exposition au bruit.'"
+            <risque :description="'La parcelle n’est pas concernée par un plan d’exposition au bruit.'"
                     :title="'Bruit'"
                     v-if="!hasPEB"/>
 

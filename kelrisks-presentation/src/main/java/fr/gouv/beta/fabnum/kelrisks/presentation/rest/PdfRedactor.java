@@ -24,13 +24,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PdfRedactor {
     
     private static final int ROWS_PER_PAGE = 18;
-    
+    @Value("${kelrisks.app.back.path}")
+    String                   appPath;
     @Autowired
     IGestionCommuneFacade    gestionCommuneFacade;
     @Autowired
@@ -57,7 +59,7 @@ public class PdfRedactor {
         redigerAnnexe1AutresRisques(htmlDocument, avisDTO);
         redigerAnnexe2ArretesCatNat(htmlDocument, avisDTO);
         redigerAnnexe3PollutionRayon(htmlDocument, avisDTO);
-    
+        
         int pagesNumberOf = htmlDocument.select(".page").size() + 1; // La première page n’a pas de class .page
         htmlDocument.select(".number-of-pages").html(String.valueOf(pagesNumberOf));
     }
@@ -264,7 +266,7 @@ public class PdfRedactor {
         if (hasRadonMoyen(avisDTO)) {
             addRisque(htmlDocument,
                       "RADON",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_rn_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_rn_bleu.png",
                       "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, " +
                       "notamment dans les bâtiments.</p>");
         }
@@ -272,7 +274,7 @@ public class PdfRedactor {
         if (hasPollutionNonReglementaire(avisDTO)) {
             addRisque(htmlDocument,
                       "POLLUTION DES SOLS",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_basias_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_basias_bleu.png",
                       "<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement " +
                       "d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.<br/></p><p>Dans un rayon de 500 m autour de " +
                       "votre parcelle, sont identifiés :</p>" +
@@ -302,7 +304,7 @@ public class PdfRedactor {
         if (hasTRI(avisDTO) && !hasPPRi(avisDTO)) {
             addRisque(htmlDocument,
                       "INONDATIONS",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_inondation_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_inondation_bleu.png",
                       "<p>Votre bien est situé dans un territoire exposé à un risque important d'inondation (TRI) sur lequel l'Etat et les collectivités territoriales ont engagé une démarche " +
                       "d'identification et de gestion de ce risque pour anticiper et réduire l’impact d'une éventuelle inondation. Pour plus d'information, renseignez-vous auprès de la commune ou " +
                       "consultez le Plan de Gestion des Risques d'Inondation (PGRI)</p>");
@@ -311,14 +313,14 @@ public class PdfRedactor {
         if (hasAZI(avisDTO) && !hasTRI(avisDTO) && !hasPPRi(avisDTO)) {
             addRisque(htmlDocument,
                       "INONDATIONS",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_inondation_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_inondation_bleu.png",
                       "<p>Votre bien est situé sur une commune figurant dans un atlas des zones inondables qui modélisent les potentiels risques à partir des dernières inondations connues.</p>");
         }
         
         if (avisDTO.getInstallationNucleaireDTOS().size() > 0) {
             addRisque(htmlDocument,
                       "INSTALLATIONS NUCLÉAIRES DE BASE",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_nucleaires_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_nucleaires_bleu.png",
                       "<p>Votre bien est situé à moins de " + (avisDTO.isHasCentraleNucleaire() ? "20 km" : "10 km") + " d’une installation nucléaire" +
                       " de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. " +
                       "réacteurs nucléaires de production d’électricité (centrale nucléraire), installations de préparation, enrichissement, " +
@@ -330,31 +332,31 @@ public class PdfRedactor {
         if (hasArgile(avisDTO)) {
             addRisque(htmlDocument,
                       "ARGILE",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_terre_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_terre_bleu.png",
                       "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les " +
                       "constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être " +
                       "importants. Le zonage \"argile\" identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
                       (avisDTO.getNiveauArgile() == 3 ? "<p>Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, " +
-                                                        "notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a " +
-                                                        "href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>"
+                                                        "notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
+                                                        "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
                                                       : "") +
-                      (avisDTO.getNiveauArgile() == 2 ? "<p>Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l\'intensité attendue étant modérée.  Les constructions, notamment les" +
-                                                        " maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a " +
-                                                        "href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>"
+                      (avisDTO.getNiveauArgile() == 2 ? "<p>Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les" +
+                                                        " maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
+                                                        "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
                                                       : "") +
                       (avisDTO.getNiveauArgile() == 1 ? "<p>la survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des " +
                                                         "bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches" +
-                                                        " ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d\'une maison individuelle, de réaliser une étude de " +
-                                                        "sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www" +
-                                                        ".cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>" : "") +
-                      (avisDTO.getNiveauArgile() == 0 ? "<p>Aléa nul : aucune présence de sols argileux n\'a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des " +
+                                                        " ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de " +
+                                                        "sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br>" +
+                                                        "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3" : "") +
+                      (avisDTO.getNiveauArgile() == 0 ? "<p>Aléa nul : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des " +
                                                         "poches ponctuelles de sols argileux." : ""));
         }
         
         if (avisDTO.getGeogCanalisations().size() > 0) {
             addRisque(htmlDocument,
                       "CANALISATIONS TRANSPORT DE MATIÈRES DANGEREUSES",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_reseaux_canalisation_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_reseaux_canalisation_bleu.png",
                       "<p>Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de" +
                       " votre parcelle. La carte représente les implantations présentes autour de votre localisation.</p>");
         }
@@ -405,28 +407,28 @@ public class PdfRedactor {
         if (!hasTypePPR(avisDTO, "PPRN")) {
             addRisque(htmlDocument,
                       "NATURELS",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_seisme_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_seisme_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.</p>");
         }
         
         if (!hasTypePPR(avisDTO, "PPRM")) {
             addRisque(htmlDocument,
                       "MINIERS",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_cavite_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_cavite_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques miniers.</p>");
         }
         
         if (!hasTypePPR(avisDTO, "PPRT")) {
             addRisque(htmlDocument,
                       "TECHNOLOGIQUES",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_industrie_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_industrie_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques technologiques.</p>");
         }
         
         if (!hasPollutionPrincipale(avisDTO)) {
             addRisque(htmlDocument,
                       "POLLUTION DES SOLS",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_basias_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_basias_bleu.png",
                       "<p>Votre parcelle ne figure pas dans l’inventaire :</p><p>- des installations classées soumises à enregistrement ou à autorisation</br>- des secteurs d’information sur les " +
                       "sols</br>- des terrains pollués affectés d’une servitude d’utilité publique.</p>.");
         }
@@ -434,7 +436,7 @@ public class PdfRedactor {
         if (!hasPlanExpositionBruit(avisDTO)) {
             addRisque(htmlDocument,
                       "BRUIT",
-                      "http://localhost:8080/api/image/pictogrammes_risque&&ic_bruit_bleu.png",
+                      appPath + "/api/image/pictogrammes_risque&&ic_bruit_bleu.png",
                       "<p>La parcelle n’est pas concernée par un plan d’exposition au bruit.</p>");
         }
     }
@@ -504,7 +506,8 @@ public class PdfRedactor {
             page.append("<p>En cas de vente ou de location, le propriétaire est tenu de communiquer les informations relatives aux pollutions des sols, à l’acquéreur ou au locataire. (article L. " +
                         "514-20 du Code de l’Environnement et L 125-7 du Code de l’Environnement).</p>");
             page.append("<p>En cas de changement d’usage du terrain (travaux, constructions, changement d’affectation du bien), le maître d’ouvrage doit faire appel à un bureau d’étude qui devra " +
-                        "attester de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d’un dépôt de permis de contruire ou d’aménager (en aide contextuelle " +
+                        "attester de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d’un dépôt de permis de construire ou d’aménager (en aide contextuelle" +
+                        " " +
                         "article L.556-1 du Code de l’Environnement), l’attestation devra être délivrée par une bureau d’étude certifiée.</p>");
         }
     }
@@ -562,12 +565,12 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                ppr.getAlea().getFamilleAlea().getCode(),
                                ppr.getAlea().getFamilleAlea().getLibelle().toUpperCase(),
-                               "http://localhost:8080/api/image/pictogrammes_risque&&" + getLogoRisque(ppr.getAlea().getFamilleAlea().getCode()) + ".png",
+                               appPath + "/api/image/pictogrammes_risque&&" + getLogoRisque(ppr.getAlea().getFamilleAlea().getCode()) + ".png",
                                "<p>L’immeuble est situé dans le périmètre d’un " + ppr.getAlea().getFamilleAlea().getFamillePPR().getLibelle() + " de type " + ppr.getAlea().getFamilleAlea().getLibelle() + " - " + ppr.getAlea().getLibelle() +
                                (ppr.getDateApprobation() != null ? ", approuvé le " + sdf.format(ppr.getDateApprobation()) : ", prescrit le " + sdf.format(ppr.getDatePrescription())) + "." + "<br/>" +
                                (ppr.getDateApprobation() != null ? "Un PPR approuvé est un PPR définitivement adopté." :
                                 ppr.getDateApplicationAnticipee() != null ? "Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation." :
-                                "Un PPR prescrit est un PPR en cours d\'élaboration sur la commune dont le périmètre et les règles sont en cours d\'élaboration."
+                                "Un PPR prescrit est un PPR en cours d’élaboration sur la commune dont le périmètre et les règles sont en cours d’élaboration."
                                ) +
                                "<br/><br/>" +
                                "Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.</p>");
@@ -577,7 +580,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                "SISMICITE",
                                "SISMICITÉ",
-                               "http://localhost:8080/api/image/pictogrammes_risque&&ic_seisme_bleu.png",
+                               appPath + "/api/image/pictogrammes_risque&&ic_seisme_bleu.png",
                                "<p>Un tremblement de terre ou séisme, est un ensemble de secousses et de déformations brusques de l'écorce terrestre (surface de la Terre). Le zonage sismique " +
                                "détermine l'importance de l'exposition au risque sismique..</p>");
         }
@@ -586,7 +589,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                "RADON",
                                "RADON",
-                               "http://localhost:8080/api/image/pictogrammes_risque&&ic_rn_bleu.png",
+                               appPath + "/api/image/pictogrammes_risque&&ic_rn_bleu.png",
                                "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et " +
                                "il s’accumule dans les espaces clos, notamment dans " +
                                "les " +
@@ -597,7 +600,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                "POLLUTIONS",
                                "POLLUTIONS DES SOLS",
-                               "http://localhost:8080/api/image/pictogrammes_risque&&ic_basias_bleu.png",
+                               appPath + "/api/image/pictogrammes_risque&&ic_basias_bleu.png",
                                "<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements " +
                                "changement d’affectation des terrains) si " +
                                "elles ne sont pas prises en compte dans le cadre du projet.</p>" +
@@ -618,7 +621,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                "PEB",
                                "BRUIT",
-                               "http://localhost:8080/api/image/pictogrammes_risque&&ic_bruit_bleu.png",
+                               appPath + "/api/image/pictogrammes_risque&&ic_bruit_bleu.png",
                                "<p>La parcelle est concernée par un plan d’exposition au bruit car elle est exposée aux nuisances sonores d’un aéroport.</p>" +
                                (avisDTO.getZonePlanExpositionBruit().equals("A") ? "<p>Le niveau d’exposition au bruit de la parcelle est très fort (zone A en rouge). La zone A est principalement " +
                                                                                    "inconstructible.</p>" : "") +
@@ -704,7 +707,7 @@ public class PdfRedactor {
         // @formatter:off
         body.append("<div class=\"page\">\n" +
                     "    <div class=\"header\"><img height=\"80px\"\n" +
-                    "                               src=\"http://localhost:8080/api/image/mtes.png\"\n" +
+                    "                               src=" + appPath + "/api/image/mtes.png\"\n" +
                     "                               style=\"margin : 0;\"/></div>\n" +
                     "    <div class=\"content\"></div>\n" +
                     "    <div class=\"footer\">\n" +
