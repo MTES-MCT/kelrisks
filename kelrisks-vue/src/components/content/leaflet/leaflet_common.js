@@ -195,7 +195,7 @@ export default {
                                 this.initMapZoom(map, mapRef)
                             }
                             this.mapCentered = true;
-                        }, 2000);
+                        }, 1000);
                     }
                 }, 1000);
             }

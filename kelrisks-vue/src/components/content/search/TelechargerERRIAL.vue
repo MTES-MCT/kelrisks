@@ -72,6 +72,11 @@ export default {
         Errors
     },
     props: {
+        leaflet: {
+            type: Object,
+            default: () => {
+            }
+        },
         form: {
             type: Object,
             default: () => {
@@ -94,6 +99,13 @@ export default {
             console.log('generatePngs')
 
             this.dataList = []
+
+            this.dataList.push([
+                [{
+                    data: this.leaflet.data.parcelles,
+                    color: '#455674'
+                }],
+                'carte-parcelle'])
 
             for (let plan in this.avis.ppr) {
                 plan = this.avis.ppr[plan]

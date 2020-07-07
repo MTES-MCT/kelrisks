@@ -133,7 +133,7 @@ export default {
                         .catch(function (error) {
                             console.error('oops, something went wrong!', error);
                         })
-                }, 500)
+                }, 250)
             }
         }
     },
@@ -179,7 +179,7 @@ export default {
 
                     this.$refs['leafletMap_' + this.reference].mapObject.invalidateSize()
                     this.centerMap()
-                }, 1000);
+                }, 250);
             }
         },
         tilesLoaded: function () {

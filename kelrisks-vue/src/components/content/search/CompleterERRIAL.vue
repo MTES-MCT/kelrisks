@@ -38,9 +38,10 @@
                  v-if="avis.ppr && avis.ppr.length > 0">
                 <div>
                     <div style="margin-bottom: 20px"><span class="title">Aide</span></div>
-                    <p>Le bien est sur une parcelle concernée par un ou plusieurs Plans de Prévention des Risques. Il peut être concerné par l’obligation de réaliser certains travaux. Vous devez
-                       consulter le Plan de Prévention des Risques Naturels sur le site de la préfecture afin de vous assurer de cela. S’il existe des prescriptions de travaux, il est nécessaire de
-                       préciser si les travaux ont été réalisés ou non.</p>
+                    <p>Le bien est sur une parcelle concernée par un ou plusieurs Plans de Prévention des Risques (PPR). Il peut être concerné par l’obligation de réaliser certains travaux. Vous devez
+                       consulter le PPR sur le site de la préfecture afin de vous assurer de cela. S’il existe des prescriptions de travaux, il est nécessaire de préciser si les travaux ont été
+                       réalisés ou non. Si le bien a fait l'objet d'un ou plusieurs sinistres indemnisés au titre des catastrophes naturelles ou des catastrophes technologiques, les sinistres survenus
+                       doivent être indiqués.</p>
                     <p>Si vous ne connaissez pas ces informations, choisissez « À préciser plus tard », vous pourrez les remplir sur le document final.</p>
                     <p>Si les informations saisies ne sont pas sincères, cela peut entraîner des risques juridiques par la suite.</p><br>
                 </div>
