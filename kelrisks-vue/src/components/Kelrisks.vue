@@ -167,6 +167,7 @@
 
             <telecharger-e-r-r-i-a-l :avis="avis"
                                      :form="form"
+                                     :leaflet="leaflet"
                                      @flow="updateflow"
                                      ref="download"
                                      v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0"

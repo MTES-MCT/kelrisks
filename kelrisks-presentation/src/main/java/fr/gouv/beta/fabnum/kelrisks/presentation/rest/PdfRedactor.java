@@ -391,7 +391,11 @@ public class PdfRedactor {
                     "<div class=\"input_wrapper\">\n" +
                     "   <label><input type=\"checkbox\">Oui</label>\n" +
                     "   <label><input type=\"checkbox\">Non</label>\n" +
-                    "</div>\n");
+                    "</div><br/>\n");
+    
+        page.append("<p>Les parties signataires à l'acte certifient avoir pris connaissance des informations restituées dans ce document et certifient avoir été en mesure de les corriger et le cas " +
+                    "échéant de les compléter à partir des informations disponibles sur le site internet de la Préfecture ou d'informations concernant le bien, notamment les sinistres que le bien a" +
+                    " subis.</p>");
     
         page.append("<h4 id=\"signatures_title\">SIGNATURES</h4>");
     
@@ -506,9 +510,8 @@ public class PdfRedactor {
             page.append("<p>En cas de vente ou de location, le propriétaire est tenu de communiquer les informations relatives aux pollutions des sols, à l’acquéreur ou au locataire. (article L. " +
                         "514-20 du Code de l’Environnement et L 125-7 du Code de l’Environnement).</p>");
             page.append("<p>En cas de changement d’usage du terrain (travaux, constructions, changement d’affectation du bien), le maître d’ouvrage doit faire appel à un bureau d’étude qui devra " +
-                        "attester de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d’un dépôt de permis de construire ou d’aménager (en aide contextuelle" +
-                        " " +
-                        "article L.556-1 du Code de l’Environnement), l’attestation devra être délivrée par une bureau d’étude certifiée.</p>");
+                        "attester de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d’un dépôt de permis de construire ou d’aménager " +
+                        "(Article L.556-1 du Code de l’Environnement), l’attestation devra être délivrée par une bureau d’étude certifiée.</p>");
         }
     }
     

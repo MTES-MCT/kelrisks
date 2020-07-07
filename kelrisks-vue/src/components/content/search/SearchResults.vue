@@ -61,15 +61,16 @@
 
         </section>
 
-        <section class="section section-grey v-flex">
+        <section class="section section-grey v-flex"
+                 v-if="avis.ppr.length > 0 || hasSismiciteHaute || hasSismiciteMoyenne || hasPEB || hasPollutionPrincipale || hasRadonHaut">
 
             <span class="title">Risques Principaux</span>
 
             <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle +
                                   (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) +'.<br/>' +
-                                   plan.dateApprobation ? 'Un PPR approuvé est un PPR définitivement adopté.' :
+                                   (plan.dateApprobation ? 'Un PPR approuvé est un PPR définitivement adopté.' :
                                    plan.dateApplicationAnticipee ? 'Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation.' :
-                                   'Un PPR prescrit est un PPR en cours d\'élaboration sur la commune dont le périmètre et les règles sont en cours d\'élaboration.' + '<br/><br/>' +
+                                   'Un PPR prescrit est un PPR en cours d\'élaboration sur la commune dont le périmètre et les règles sont en cours d\'élaboration.') + '<br/><br/>' +
                                   'Le plan de prévention des risques est un document réalisé par l’Etat qui interdit de construire dans les zones les plus exposées et encadre les constructions dans les autres zones exposées.<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
                     :parcelle="leaflet.data.parcelles"
@@ -196,11 +197,11 @@
             <div class="recommandations_wrapper">
 
                 <p>Pourquoi l'Etat des risques est important ?</p>
-                <p>A chaque vente ou location d'un bien, le propriétaire est tenu d'informer l’acquéreur ou le locataire de son bien immobilier (bâti et non bâti) de l'état des risques et pollutions
-                   auxquelles le bien immobilier est exposé. Cette obligation d'information est prévue par la loi du 30 juillet 2003. L'état des risques et pollutions doit dater de moins de six mois
-                   lors de la signature de l'acte de vente ou du bail.</p><br/>
-                <p>L'État des risques et pollution permet de faire un bilan des principaux risques pouvant affecter ce bien afin de bien informer les parties prenantes et de mettre en œuvre les
-                   mesures de protection éventuelles.</p>
+                <p>À chaque vente ou location d'un bien, le propriétaire est tenu d'informer l’acquéreur ou le locataire de son bien immobilier (bâti et non bâti) certains risques auxquels le bien
+                   immobilier est exposé. Cette obligation d'information a été créée par la loi du 30 juillet 2003.</p><br/>
+                <p>L'État des risques permet de faire un bilan des principaux risques pouvant affecter ce bien, afin de bien informer les parties prenantes et de mettre en œuvre les mesures de
+                   protection éventuelles.</p><br/>
+                <p>Attention ! Le non respect de ces obligations peut entrainer une annulation du contrat ou une diminution du prix (réfaction).</p>
 
                 <template v-if="hasPPR">
                     <h4 id="recommendations_PPR">Plans de Prévention des Risques</h4>
@@ -244,11 +245,11 @@
 
                 <template v-if="hasPollutionPrincipale">
                     <h4 id="recommendations_pollution">Pollution des sols</h4>
-                    <p>En cas de vente ou de location, le propriétaire est tenu de communiquer les informations relatives aux pollutions des sols, à l'acquéreur ou au locataire. (en aide contextuelle
-                       : article L. 514-20 du Code de l’Environnement et L 125-7 du Code de l’Environnement).</p>
+                    <p>En cas de vente ou de location, le propriétaire est tenu de communiquer les informations relatives aux pollutions des sols, à l'acquéreur ou au locataire. (Article L. 514-20 du
+                       Code de l’Environnement et L 125-7 du Code de l’Environnement).</p>
                     <p>En cas de changement d'usage du terrain (travaux, constructions, changement d'affectation du bien), le maître d'ouvrage doit faire appel à un bureau d'étude qui devra attester
-                       de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d'un dépôt de permis de contruire ou d'aménager (en aide contextuelle article
-                       L.556-1 du Code de l'Environnement), l'attestation devra être délivrée par une bureau d'étude certifiée. Pour vous accompagner dans vos démarches, une liste de bureaux d’études
+                       de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d'un dépôt de permis de construire ou d'aménager (Article L.556-1 du Code de
+                       l'Environnement), l'attestation devra être délivrée par une bureau d'étude certifiée. Pour vous accompagner dans vos démarches, une liste de bureaux d’études
                        certifiés dans le domaine des sols pollués est consultable à l'aide de ce lien :</p>
                     <p><a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                           href='https://www.lne.fr/recherche-certificats/search/222'
@@ -259,9 +260,10 @@
             <div class="clearfix"/>
         </section>
 
-        <section class="section v-flex">
+        <section class="section v-flex"
+                 v-if="avis.canalisations.length > 0 || hasArgile || avis.nucleaires.installations.length > 0 || hasAZI || hasTRI || hasPollutionNonReglementaire || hasRadonMoyen">
 
-            <span class="title">risques ne faisant pas l'objet d'une obligation d'information</span>
+            <span class="title">Risques ne faisant pas l'objet d'une obligation d'information</span>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
                     :level="avis.potentielRadon + ''"
@@ -396,13 +398,13 @@
             <div id="bottomButtonsWrapper">
                 <a @click="$emit('flow', 1)"
                    class="bouton success"
-                   target="_blank">
+                   href='#bullet-progress-bar_wrapper'>
                     <!--                <font-awesome-icon icon="file-pdf"/>-->
                     Créer un état des risques
                     <font-awesome-icon class="end"
                                        icon="chevron-right"/>
                 </a><br/>
-                <span>Certains risques nécessitent de faire des travaux. Il est nécessaire de compléter ces informations pour finaliser l'état des risques et pollutions</span>
+                <span>Certains risques nécessitent de faire des travaux obligatoires. Il est nécessaire de compléter ces informations pour finaliser l'état des risques et pollutions</span>
             </div>
         </section>
     </div>
