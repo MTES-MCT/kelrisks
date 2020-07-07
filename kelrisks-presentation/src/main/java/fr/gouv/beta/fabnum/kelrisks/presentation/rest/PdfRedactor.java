@@ -688,9 +688,9 @@ public class PdfRedactor {
         // @formatter:off
         page.append("<div class=\"risque\">\n" +
                     "    <div><b><h3 class=\"libelle\"></h3></b></div>\n" +
-                    "    <div class=\"icon\"><img height=\"80px\"\n" +
-                    "                             src=\"\"\n" +
-                    "                             style=\"margin : 0;\"/></div>\n" +
+//                    "    <div class=\"icon\"><img height=\"80px\"\n" +
+//                    "                             src=\"\"\n" +
+//                    "                             style=\"margin : 0;\"/></div>\n" +
                     "    <div class=\"text\"></div>\n" +
                     "</div>");
         // @formatter:on
@@ -707,7 +707,7 @@ public class PdfRedactor {
         // @formatter:off
         body.append("<div class=\"page\">\n" +
                     "    <div class=\"header\"><img height=\"80px\"\n" +
-                    "                               src=" + appPath + "/api/image/mtes.png\"\n" +
+                    "                               src=\"" + appPath + "/api/image/mtes.png\"\n" +
                     "                               style=\"margin : 0;\"/></div>\n" +
                     "    <div class=\"content\"></div>\n" +
                     "    <div class=\"footer\">\n" +
