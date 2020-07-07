@@ -266,7 +266,7 @@ public class PdfRedactor {
         if (hasRadonMoyen(avisDTO)) {
             addRisque(htmlDocument,
                       "RADON",
-                      appPath + "/api/image/pictogrammes_risque&&ic_rn_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_rn_bleu.png",
                       "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, " +
                       "notamment dans les bâtiments.</p>");
         }
@@ -274,7 +274,7 @@ public class PdfRedactor {
         if (hasPollutionNonReglementaire(avisDTO)) {
             addRisque(htmlDocument,
                       "POLLUTION DES SOLS",
-                      appPath + "/api/image/pictogrammes_risque&&ic_basias_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_basias_bleu.png",
                       "<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement " +
                       "d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.<br/></p><p>Dans un rayon de 500 m autour de " +
                       "votre parcelle, sont identifiés :</p>" +
@@ -304,7 +304,7 @@ public class PdfRedactor {
         if (hasTRI(avisDTO) && !hasPPRi(avisDTO)) {
             addRisque(htmlDocument,
                       "INONDATIONS",
-                      appPath + "/api/image/pictogrammes_risque&&ic_inondation_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_inondation_bleu.png",
                       "<p>Votre bien est situé dans un territoire exposé à un risque important d'inondation (TRI) sur lequel l'Etat et les collectivités territoriales ont engagé une démarche " +
                       "d'identification et de gestion de ce risque pour anticiper et réduire l’impact d'une éventuelle inondation. Pour plus d'information, renseignez-vous auprès de la commune ou " +
                       "consultez le Plan de Gestion des Risques d'Inondation (PGRI)</p>");
@@ -313,14 +313,14 @@ public class PdfRedactor {
         if (hasAZI(avisDTO) && !hasTRI(avisDTO) && !hasPPRi(avisDTO)) {
             addRisque(htmlDocument,
                       "INONDATIONS",
-                      appPath + "/api/image/pictogrammes_risque&&ic_inondation_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_inondation_bleu.png",
                       "<p>Votre bien est situé sur une commune figurant dans un atlas des zones inondables qui modélisent les potentiels risques à partir des dernières inondations connues.</p>");
         }
         
         if (avisDTO.getInstallationNucleaireDTOS().size() > 0) {
             addRisque(htmlDocument,
                       "INSTALLATIONS NUCLÉAIRES DE BASE",
-                      appPath + "/api/image/pictogrammes_risque&&ic_nucleaires_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_nucleaires_bleu.png",
                       "<p>Votre bien est situé à moins de " + (avisDTO.isHasCentraleNucleaire() ? "20 km" : "10 km") + " d’une installation nucléaire" +
                       " de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. " +
                       "réacteurs nucléaires de production d’électricité (centrale nucléraire), installations de préparation, enrichissement, " +
@@ -332,7 +332,7 @@ public class PdfRedactor {
         if (hasArgile(avisDTO)) {
             addRisque(htmlDocument,
                       "ARGILE",
-                      appPath + "/api/image/pictogrammes_risque&&ic_terre_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_terre_bleu.png",
                       "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les " +
                       "constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être " +
                       "importants. Le zonage \"argile\" identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
@@ -356,7 +356,7 @@ public class PdfRedactor {
         if (avisDTO.getGeogCanalisations().size() > 0) {
             addRisque(htmlDocument,
                       "CANALISATIONS TRANSPORT DE MATIÈRES DANGEREUSES",
-                      appPath + "/api/image/pictogrammes_risque&&ic_reseaux_canalisation_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_reseaux_canalisation_bleu.png",
                       "<p>Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de" +
                       " votre parcelle. La carte représente les implantations présentes autour de votre localisation.</p>");
         }
@@ -391,9 +391,10 @@ public class PdfRedactor {
                     "<div class=\"input_wrapper\">\n" +
                     "   <label><input type=\"checkbox\">Oui</label>\n" +
                     "   <label><input type=\"checkbox\">Non</label>\n" +
-                    "</div><br/>\n");
+                    "</div>\n");
     
-        page.append("<p>Les parties signataires à l'acte certifient avoir pris connaissance des informations restituées dans ce document et certifient avoir été en mesure de les corriger et le cas " +
+        page.append("<p style=\"padding-top : 30px;\">Les parties signataires à l'acte certifient avoir pris connaissance des informations restituées dans ce document et certifient avoir été en " +
+                    "mesure de les corriger et le cas " +
                     "échéant de les compléter à partir des informations disponibles sur le site internet de la Préfecture ou d'informations concernant le bien, notamment les sinistres que le bien a" +
                     " subis.</p>");
     
@@ -411,28 +412,28 @@ public class PdfRedactor {
         if (!hasTypePPR(avisDTO, "PPRN")) {
             addRisque(htmlDocument,
                       "NATURELS",
-                      appPath + "/api/image/pictogrammes_risque&&ic_seisme_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_seisme_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.</p>");
         }
         
         if (!hasTypePPR(avisDTO, "PPRM")) {
             addRisque(htmlDocument,
                       "MINIERS",
-                      appPath + "/api/image/pictogrammes_risque&&ic_cavite_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_cavite_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques miniers.</p>");
         }
         
         if (!hasTypePPR(avisDTO, "PPRT")) {
             addRisque(htmlDocument,
                       "TECHNOLOGIQUES",
-                      appPath + "/api/image/pictogrammes_risque&&ic_industrie_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_industrie_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques technologiques.</p>");
         }
         
         if (!hasPollutionPrincipale(avisDTO)) {
             addRisque(htmlDocument,
                       "POLLUTION DES SOLS",
-                      appPath + "/api/image/pictogrammes_risque&&ic_basias_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_basias_bleu.png",
                       "<p>Votre parcelle ne figure pas dans l’inventaire :</p><p>- des installations classées soumises à enregistrement ou à autorisation</br>- des secteurs d’information sur les " +
                       "sols</br>- des terrains pollués affectés d’une servitude d’utilité publique.</p>.");
         }
@@ -440,7 +441,7 @@ public class PdfRedactor {
         if (!hasPlanExpositionBruit(avisDTO)) {
             addRisque(htmlDocument,
                       "BRUIT",
-                      appPath + "/api/image/pictogrammes_risque&&ic_bruit_bleu.png",
+                      appPath + "/pictogrammes_risque/ic_bruit_bleu.png",
                       "<p>La parcelle n’est pas concernée par un plan d’exposition au bruit.</p>");
         }
     }
@@ -568,7 +569,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                ppr.getAlea().getFamilleAlea().getCode(),
                                ppr.getAlea().getFamilleAlea().getLibelle().toUpperCase(),
-                               appPath + "/api/image/pictogrammes_risque&&" + getLogoRisque(ppr.getAlea().getFamilleAlea().getCode()) + ".png",
+                               appPath + "/pictogrammes_risque/" + getLogoRisque(ppr.getAlea().getFamilleAlea().getCode()) + ".png",
                                "<p>L’immeuble est situé dans le périmètre d’un " + ppr.getAlea().getFamilleAlea().getFamillePPR().getLibelle() + " de type " + ppr.getAlea().getFamilleAlea().getLibelle() + " - " + ppr.getAlea().getLibelle() +
                                (ppr.getDateApprobation() != null ? ", approuvé le " + sdf.format(ppr.getDateApprobation()) : ", prescrit le " + sdf.format(ppr.getDatePrescription())) + "." + "<br/>" +
                                (ppr.getDateApprobation() != null ? "Un PPR approuvé est un PPR définitivement adopté." :
@@ -583,7 +584,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                "SISMICITE",
                                "SISMICITÉ",
-                               appPath + "/api/image/pictogrammes_risque&&ic_seisme_bleu.png",
+                               appPath + "/pictogrammes_risque/ic_seisme_bleu.png",
                                "<p>Un tremblement de terre ou séisme, est un ensemble de secousses et de déformations brusques de l'écorce terrestre (surface de la Terre). Le zonage sismique " +
                                "détermine l'importance de l'exposition au risque sismique..</p>");
         }
@@ -592,7 +593,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                "RADON",
                                "RADON",
-                               appPath + "/api/image/pictogrammes_risque&&ic_rn_bleu.png",
+                               appPath + "/pictogrammes_risque/ic_rn_bleu.png",
                                "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et " +
                                "il s’accumule dans les espaces clos, notamment dans " +
                                "les " +
@@ -603,7 +604,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                "POLLUTIONS",
                                "POLLUTIONS DES SOLS",
-                               appPath + "/api/image/pictogrammes_risque&&ic_basias_bleu.png",
+                               appPath + "/pictogrammes_risque/ic_basias_bleu.png",
                                "<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements " +
                                "changement d’affectation des terrains) si " +
                                "elles ne sont pas prises en compte dans le cadre du projet.</p>" +
@@ -624,7 +625,7 @@ public class PdfRedactor {
             addRisquePrincipal(htmlDocument,
                                "PEB",
                                "BRUIT",
-                               appPath + "/api/image/pictogrammes_risque&&ic_bruit_bleu.png",
+                               appPath + "/pictogrammes_risque/ic_bruit_bleu.png",
                                "<p>La parcelle est concernée par un plan d’exposition au bruit car elle est exposée aux nuisances sonores d’un aéroport.</p>" +
                                (avisDTO.getZonePlanExpositionBruit().equals("A") ? "<p>Le niveau d’exposition au bruit de la parcelle est très fort (zone A en rouge). La zone A est principalement " +
                                                                                    "inconstructible.</p>" : "") +
@@ -710,7 +711,7 @@ public class PdfRedactor {
         // @formatter:off
         body.append("<div class=\"page\">\n" +
                     "    <div class=\"header\"><img height=\"80px\"\n" +
-                    "                               src=\"" + appPath + "/api/image/mtes.png\"\n" +
+                    "                               src=\"" + appPath + "/mtes.png\"\n" +
                     "                               style=\"margin : 0;\"/></div>\n" +
                     "    <div class=\"content\"></div>\n" +
                     "    <div class=\"footer\">\n" +
