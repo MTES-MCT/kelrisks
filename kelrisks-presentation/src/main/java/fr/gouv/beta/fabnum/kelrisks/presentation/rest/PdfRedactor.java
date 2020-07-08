@@ -1,6 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.commun.metier.util.QRCodeUtils;
+import fr.gouv.beta.fabnum.commun.metier.util.SecurityHelper;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
@@ -38,6 +39,8 @@ public class PdfRedactor {
     IGestionCommuneFacade    gestionCommuneFacade;
     @Autowired
     IGestionGeorisquesFacade gestionGeorisquesFacade;
+    @Autowired
+    SecurityHelper           securityHelper;
     
     public void redigerAnalyse(Document htmlDocument, AvisDTO avisDTO, String codeINSEE) {
         
@@ -75,9 +78,11 @@ public class PdfRedactor {
     }
     
     public void ajouterQRCode(Document htmlDocument, AvisDTO avisDTO) throws Exception {
-        
-        String base64png = QRCodeUtils.generateQRCodePng(avisDTO.toString());
-        
+    
+        String encodedText = securityHelper.encodeAndPrependIVSalt(avisDTO.toString());
+    
+        String base64png = QRCodeUtils.generateQRCodePng(encodedText);
+    
         Elements img = htmlDocument.select("#qrcode_wrapper img");
         img.attr("src", base64png);
     }
