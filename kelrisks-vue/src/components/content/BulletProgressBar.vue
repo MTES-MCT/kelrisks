@@ -6,6 +6,7 @@
                  v-bind:key="'sep_' + index"
                  v-if="index > 0"></div>
             <div class="brp_bullet_wrapper"
+                 @click="$emit('bulletclick', index + 1)"
                  v-bind:key="'num_' + index">
                 <div class="brp_bullet_number"
                      v-bind:class="{'brp_step_done':currentStep > index + 1, 'brp_step_current':currentStep === index + 1}">{{ index + 1 }}

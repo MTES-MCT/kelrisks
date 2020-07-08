@@ -103,8 +103,8 @@
 
             <a class="marianne"
                href="index.html">
-                <img alt="template.data.gouv.fr"
-                     src="/images/MTES - Bloc marque/png/MIN_Transition_Ecologique_RVB.png"/>
+                <img :src="env.backPath + '/mte.png'"
+                     alt="Ministère de la Transition Écologique"/>
             </a>
 
             <div class="product_wrapper">
@@ -122,24 +122,13 @@
             </nav>
         </header>
 
-        <!--suppress CssUnknownTarget -->
-        <!--        <div class="hero"-->
-        <!--             role="banner"-->
-        <!--             style="background-image: url('/images/banner-min.png'); background-size: auto; background-position-y: -30px">-->
-        <!--            <div class="hero__container"-->
-        <!--                 v-bind:class="{'contracted':flow.index > 2}">-->
-        <!--                <h1 class="hero__white-background">Kelrisks</h1>-->
-        <!--                <p class="hero__white-background"-->
-        <!--                   v-bind:class="{'contracted':flow.index > 2}">Évaluez simplement et rapidement les risques de votre terrain</p>-->
-        <!--            </div>-->
-        <!--        </div>-->
-
         <main id="main"
               role="main">
 
             <div id="bullet-progress-bar_wrapper">
-                <bullet-progress-bar :current-step="flow.index - 1"
-                                     :steps="['Rechercher une parcelle', 'Afficher le résultat', 'Compléter l\'état des risques', 'Télécharger']"/>
+                <bullet-progress-bar :current-step="flow.index"
+                                     :steps="['Rechercher une parcelle', 'Afficher le résultat', 'Compléter l\'état des risques', 'Télécharger']"
+                                     @bulletclick="changeStep"/>
             </div>
 
             <search-form-parcelle @avis="avis = $event"
@@ -149,7 +138,7 @@
                                   @leaflet="leaflet = $event"
                                   @tinyUrl="tinyUrl = $event"
                                   ref="searchForm"
-                                  v-show="flow.index === 2"/>
+                                  v-show="flow.index === 1"/>
 
             <search-results :avis="avis"
                             :leaflet="leaflet"
@@ -157,13 +146,13 @@
                             @flow="updateflow"
                             ref="results"
                             v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0 && Object.entries(leaflet).length > 0 && Object.entries(tinyUrl).length > 0 "
-                            v-show="flow.index === 3"/>
+                            v-show="flow.index === 2"/>
 
             <completer-e-r-r-i-a-l :avis="avis"
                                    @flow="updateflow"
                                    ref="errial"
                                    v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0"
-                                   v-show="flow.index === 4"/>
+                                   v-show="flow.index === 3"/>
 
             <telecharger-e-r-r-i-a-l :avis="avis"
                                      :form="form"
@@ -171,24 +160,24 @@
                                      @flow="updateflow"
                                      ref="download"
                                      v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0"
-                                     v-show="flow.index === 5"/>
+                                     v-show="flow.index === 4"/>
 
             <stats v-show="flow.index === 666"/>
 
         </main>
 
         <how-to class="clearfix"
-                v-show="flow.index <= 2"/>
+                v-show="flow.index <= 1"/>
 
         <e-r-p class="clearfix"
-               v-show="flow.index <= 2"/>
+               v-show="flow.index <= 1"/>
 
         <footer>
 
             <a class="marianne"
                href="index.html">
-                <img alt="template.data.gouv.fr"
-                     src="/images/MTES - Bloc marque/png/MIN_Transition_Ecologique_RVB.png"/>
+                <img :src="env.backPath + '/mte.png'"
+                     alt="Ministère de la Transition Écologique"/>
             </a>
 
             <div class="partenaire">
@@ -247,7 +236,7 @@ export default {
     name: 'Kelrisks',
     data: () => ({
         flow: {
-            index: 2,
+            index: 1,
             querying: false,
             loading: false
         },
@@ -265,7 +254,9 @@ export default {
         env: {
             presentationVersion: process.env.VUE_APP_VERSION,
             version: '',
-            apiPath: process.env.VUE_APP_API_PATH
+            frontPath: process.env.VUE_APP_FRONT_PATH,
+            backPath: process.env.VUE_APP_BACK_STATIC_PATH,
+            apiPath: process.env.VUE_APP_BACK_API_PATH
         }
     }),
     components: {
@@ -301,6 +292,11 @@ export default {
         },
         showStats () {
             this.flow.index = 666
+        },
+        changeStep (index) {
+            if (index === 1) {
+                window.location.href = this.env.frontPath;
+            }
         }
     },
     computed: {
@@ -337,9 +333,9 @@ export default {
 </script>
 
 <style>
+
     html, body {
         background-color : #FFFFFF;
-        font-family      : 'Nunito Sans', sans-serif;
         height           : 100%;
     }
 
