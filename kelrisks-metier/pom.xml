@@ -10,6 +10,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>kelrisks-metier</artifactId>
@@ -20,6 +27,13 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>kelrisks-persistance</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- Génération de QR Code -->
+        <dependency>
+            <groupId>com.github.kenglxn.qrgen</groupId>
+            <artifactId>javase</artifactId>
+            <version>2.6.0</version>
         </dependency>
 
     </dependencies>

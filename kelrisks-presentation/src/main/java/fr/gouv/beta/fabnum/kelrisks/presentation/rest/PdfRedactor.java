@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
+import fr.gouv.beta.fabnum.commun.metier.util.QRCodeUtils;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
@@ -73,12 +74,20 @@ public class PdfRedactor {
         }
     }
     
+    public void ajouterQRCode(Document htmlDocument, AvisDTO avisDTO) throws Exception {
+        
+        String base64png = QRCodeUtils.generateQRCodePng(avisDTO.toString());
+        
+        Elements img = htmlDocument.select("#qrcode_wrapper img");
+        img.attr("src", base64png);
+    }
+    
     private void redigerAnnexe3PollutionRayon(Document htmlDocument, AvisDTO avisDTO) {
         
         Element page  = addPage(htmlDocument);
         Element tbody;
         int     lines = 0;
-    
+        
         page.append("<div><h2>ANNEXE 3 : SITUATION DU RISQUE DE POLLUTION DES SOLS DANS UN RAYON DE 500M AUTOUR DE VOTRE BIEN</h2></div>");
         
         if (avisDTO.getInstallationClasseeRayonParcelleDTOs().size() > 0) {

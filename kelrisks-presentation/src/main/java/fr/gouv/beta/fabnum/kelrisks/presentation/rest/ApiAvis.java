@@ -180,6 +180,7 @@ public class ApiAvis extends AbstractBasicApi {
     
             pdfRedactor.redigerAnalyse(htmlDocument, avisDTO, codeINSEE);
             pdfRedactor.ajouterImages(htmlDocument, pngs);
+            pdfRedactor.ajouterQRCode(htmlDocument, avisDTO);
             
             String html = htmlDocument.outerHtml();
             
