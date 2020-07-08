@@ -46,7 +46,7 @@ export default {
         data: null,
         selectedList: [],
         env: {
-            apiPath: process.env.VUE_APP_API_PATH
+            apiPath: process.env.VUE_APP_BACK_API_PATH
         }
     }),
     methods: {

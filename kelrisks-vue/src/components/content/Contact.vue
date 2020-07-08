@@ -44,7 +44,7 @@ export default {
     timesUp: false,
     countDownInstance: null,
     env: {
-      basePath: process.env.VUE_APP_PATH,
+      basePath: process.env.VUE_APP_FRONT_PATH,
       startTime: (new Date()).getTime()
     }
   }),

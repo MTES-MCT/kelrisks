@@ -16,7 +16,7 @@
                     Modifier
                 </a>
 
-                <a :href="env.basePath"
+                <a :href="env.frontPath"
                    @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Nouvel'])"
                    class="bouton">
                     <font-awesome-icon icon="search"/>
@@ -25,7 +25,7 @@
             </div>
 
             <div id="actionButtonsWrapper">
-                <input :value="env.basePath + '#/' + avis.summary.codeUrl"
+                <input :value="env.frontPath + '#/' + avis.summary.codeUrl"
                        id="copyInput"
                        style="position: absolute; left: -1000px; top: -1000px;"/>
 
@@ -77,7 +77,7 @@
                     :max-zoom-center="leaflet.center"
                     :leaflet-data="[{ data : plan.assiettes,
                                       color : '#840505'}]"
-                    :logo-u-r-l="'/images/pictogrammes_risque/'+ getLogoRisque(plan.alea.familleAlea.code) +'.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/'+ getLogoRisque(plan.alea.familleAlea.code) +'.png'"
                     :title="plan.alea.familleAlea.libelle"
                     style="font-size: 20px; color: #2C3E50;"
                     v-bind:key="'plan_' + index"
@@ -115,7 +115,7 @@
                         ['#840505', '5 - fort']]"
                     :level="avis.summary.commune.codeZoneSismicite + ''"
                     :level-max="'5'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_seisme_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_seisme_bleu.png'"
                     :title="'Sismicité'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
@@ -143,7 +143,7 @@
                         ['#840505', '3 : zones à potentiel radon significatif']]"
                     :level="avis.summary.commune.classePotentielRadon + ''"
                     :level-max="'3'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_rn_bleu.png'"
                     :title="'Radon'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
@@ -156,7 +156,7 @@
                              (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d’information sur les sols.</br>' : '') +
                              (false ? '- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées au titre du L 515-12 du code de l’environnement.' : '') +
                              '<p><a href=\'#recommendations_pollution\'>Lire les recommandations</a></p>'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
                     :title="'Pollution des sols'"
                     v-if="hasPollutionPrincipale"/>
 
@@ -167,7 +167,7 @@
                              (avis.zonePlanExpositionBruit === 'B' ? 'Le niveau d’exposition au bruit de la parcelle est fort (zone B en orange). La zone B est principalement inconstructible.' : '') +
                              (avis.zonePlanExpositionBruit === 'C' ? 'Le niveau d’exposition au bruit de la parcelle est modéré (zone C en jaune). Certaines constructions sont autorisées sous conditions.' : '') +
                              (avis.zonePlanExpositionBruit === 'D' ? 'Le niveau d’exposition au bruit de la parcelle est faible (zone D en verte). Les nouveaux logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.' : '')"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_bruit_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_bruit_bleu.png'"
                     :leaflet-data="typeof avis.plansExpositionBruit.map ===  'function' ?
                                    [{ data : avis.plansExpositionBruit.filter(x => x.zone === 'D').map(x => x.multiPolygon),
                                       color : '#058E0C'},
@@ -268,7 +268,7 @@
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
                     :level="avis.potentielRadon + ''"
                     :level-max="'3'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_rn_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_rn_bleu.png'"
                     :title="'Radon'"
                     :leaflet-data="typeof avis.summary.commune.communesLimitrophes.map ===  'function' ?
                                    [{ data : avis.summary.commune.classePotentielRadon === '1' ? [avis.summary.commune.multiPolygon] : [],
@@ -299,7 +299,7 @@
                               (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
                               (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_basias_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
                     :title="'Pollution des sols'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
@@ -312,19 +312,19 @@
                     v-if="hasPollutionNonReglementaire"/>
 
             <risque :description="'Votre bien est situé dans un territoire exposé à un risque important d’inondation (TRI) sur lequel l’Etat et les collectivités territoriales ont engagé une démarche d’identification et de gestion de ce risque pour anticiper et réduire l’impact d’une éventuelle inondation. Pour plus d’information, renseignez-vous auprès de la commune ou consultez le Plan de Gestion des Risques d’Inondation (PGRI).'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_inondation_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_inondation_bleu.png'"
                     :title="'Inondations'"
                     v-if="hasTRI && !hasPPRi"/>
 
             <risque :description="'Votre bien est situé sur une commune figurant dans un atlas des zones inondables qui modélisent les potentiels risques à partir des dernières inondations connues.'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_inondation_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_inondation_bleu.png'"
                     :title="'Inondations'"
                     v-if="hasAZI && !hasTRI && !hasPPRi"/>
 
             <risque :description="'Votre bien est situé à moins de ' + (avis.hasCentraleNucleaire ? '20 km' :  '10 km') + ' d’une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
                     :detail="'<p>Ces installations sont contrôlées par l’Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
                              '<p>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires + '</p>'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_nucleaires_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_nucleaires_bleu.png'"
                     :title="'Installations nucléaires de base'"
                     v-if="avis.nucleaires.installations.length > 0"/>
 
@@ -347,7 +347,7 @@
                         ['#840505', 'Aléa fort']]"
                     :level="avis.niveauArgile + ''"
                     :level-max="'3'"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_terre_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_terre_bleu.png'"
                     :title="'Argile'"
                     v-if="hasArgile"/>
 
@@ -356,7 +356,7 @@
                     :description="'Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de votre parcelle. La carte représente les implantations présentes autour de votre localisation.'"
                     :leaflet-data="[{ data : avis.canalisations,
                                       color : '#2A4999'}]"
-                    :logo-u-r-l="'/images/pictogrammes_risque/ic_reseaux_canalisation_bleu.svg'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_reseaux_canalisation_bleu.png'"
                     :title="'Canalisations transport de matières dangereuses'"
                     v-if="avis.canalisations.length > 0"/>
 
@@ -446,8 +446,9 @@ export default {
             modifier: true
         },
         env: {
-            basePath: process.env.VUE_APP_PATH,
-            apiPath: process.env.VUE_APP_API_PATH
+            frontPath: process.env.VUE_APP_FRONT_PATH,
+            backPath: process.env.VUE_APP_BACK_STATIC_PATH,
+            apiPath: process.env.VUE_APP_BACK_API_PATH
         },
         tab: {
             concordances: {

@@ -139,8 +139,8 @@ export default {
             }
         },
         env: {
-            basePath: process.env.VUE_APP_PATH,
-            apiPath: process.env.VUE_APP_API_PATH
+            basePath: process.env.VUE_APP_FRONT_PATH,
+            apiPath: process.env.VUE_APP_BACK_API_PATH
         }
     }),
     methods: {
@@ -204,7 +204,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.$refs.searchErrors.sendError('Une erreur est survenue.')
+                        // this.$refs.searchErrors.sendError('Une erreur est survenue.')
                     })
             }
             if (!this.form.codeParcelle) {

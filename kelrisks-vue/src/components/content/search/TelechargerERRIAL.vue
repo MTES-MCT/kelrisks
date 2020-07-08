@@ -43,8 +43,7 @@
                                  v-show="currentPng !== undefined"/>
                     </div>
                     <div id="pdf"
-                         @click="() => {  getPdf()
-                                          _paq.push(['trackEvent', 'Flow', 'Pdf'])}">
+                         @click="debounceGetPdf">
                         <a><span style="font-size: 5em;"><font-awesome-icon icon="file-pdf"/></span></a><br/>
                         <a>État des risques et pollution au format PDF</a>
                     </div>
@@ -85,8 +84,8 @@ export default {
     },
     data: () => ({
         env: {
-            basePath: process.env.VUE_APP_PATH,
-            apiPath: process.env.VUE_APP_API_PATH
+            basePath: process.env.VUE_APP_FRONT_PATH,
+            apiPath: process.env.VUE_APP_BACK_API_PATH
         },
         dataList: [],
         currentData: '',
@@ -158,6 +157,14 @@ export default {
             console.log('pngGenerated')
 
             this.currentPng = png
+        },
+        debounceGetPdf () {
+            if (this.debounce) clearTimeout(this.debounce);
+            this.debounce = setTimeout(() => {
+                // do the work here
+                this.getPdf()
+                this._paq.push(['trackEvent', 'Flow', 'Pdf'])
+            }, 100);
         },
         getPdf () {
             console.log('getPdf')
