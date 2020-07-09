@@ -111,6 +111,18 @@
                 line-height    : normal;
                 text-align     : left;
             }
+
+            li {
+                list-style : none;
+            }
+
+            li::before {
+                content     : "\2192";
+                display     : inline-block;
+                font-weight : bold;
+                margin-left : -1em;
+                width       : 25px;
+            }
         </style>
     </head>
     <body>
