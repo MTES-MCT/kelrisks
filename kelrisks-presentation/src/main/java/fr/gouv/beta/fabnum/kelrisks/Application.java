@@ -1,5 +1,6 @@
 package fr.gouv.beta.fabnum.kelrisks;
 
+import fr.gouv.beta.fabnum.commun.metier.util.SecurityHelper;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -86,11 +87,17 @@ public class Application extends SpringBootServletInitializer {
     public ClientHttpConnector clientHttpConnector(@Value("${webclient.enable-keep-alive}") final boolean keepAlive,
                                                    @Value("${webclient.read-timeout-in-seconds}") final int readTimeout,
                                                    @Value("${webclient.write-timeout-in-seconds}") final int writeTimeout) {
-        
+    
         return new ReactorClientHttpConnector(HttpClient.from(TcpClient.create()
                                                                       .option(ChannelOption.SO_KEEPALIVE, keepAlive)
                                                                       .doOnConnected(connection -> connection
                                                                                                            .addHandlerLast(new ReadTimeoutHandler(readTimeout))
                                                                                                            .addHandlerLast(new WriteTimeoutHandler(writeTimeout)))));
+    }
+    
+    @Bean(name = "securityHelperEncoder")
+    public SecurityHelper securityHelperEncoder(@Value("${kelrisks.app.security.passphrase}") final String passphrase) {
+        
+        return new SecurityHelper(passphrase);
     }
 }

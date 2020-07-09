@@ -16,6 +16,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.geolatte.geom.Geometry;
 
@@ -59,6 +60,55 @@ public class AvisDTO extends JsonInfoDTO {
     private boolean                        hasCentraleNucleaire      = false;
     private String                         zonePlanExpositionBruit;
     private List<PlanExpositionBruitDTO>   plansExpositionBruit;
+    
+    public String toString() {
+        
+        String out = "";
+        
+        out += siteIndustrielBasiasSurParcelleDTOs.size();
+        out += "==" + siteIndustrielBasiasSurParcelleDTOs.stream().map(SiteIndustrielBasiasDTO::getIdentifiant).collect(Collectors.joining(","));
+        out += "||" + siteIndustrielBasiasRayonParcelleDTOs.size();
+        out += "==" + siteIndustrielBasiasRayonParcelleDTOs.stream().map(SiteIndustrielBasiasDTO::getIdentifiant).collect(Collectors.joining(","));
+        out += "||" + siteIndustrielBasiasProximiteParcelleDTOs.size();
+        out += "==" + siteIndustrielBasiasProximiteParcelleDTOs.stream().map(SiteIndustrielBasiasDTO::getIdentifiant).collect(Collectors.joining(","));
+        out += "||" + siteIndustrielBasiasNonGeorerenceesDTOs.size();
+        out += "==" + siteIndustrielBasiasNonGeorerenceesDTOs.stream().map(SiteIndustrielBasiasDTO::getIdentifiant).collect(Collectors.joining(","));
+        out += "||" + siteIndustrielBasolSurParcelleDTOs.size();
+        out += "==" + siteIndustrielBasolSurParcelleDTOs.stream().map(SiteIndustrielBasolDTO::getNumerobasol).collect(Collectors.joining(","));
+        out += "||" + siteIndustrielBasolRayonParcelleDTOs.size();
+        out += "==" + siteIndustrielBasolRayonParcelleDTOs.stream().map(SiteIndustrielBasolDTO::getNumerobasol).collect(Collectors.joining(","));
+        out += "||" + siteIndustrielBasolProximiteParcelleDTOs.size();
+        out += "==" + siteIndustrielBasolProximiteParcelleDTOs.stream().map(SiteIndustrielBasolDTO::getNumerobasol).collect(Collectors.joining(","));
+        out += "||" + siteIndustrielBasolNonGeorerenceesDTOs.size();
+        out += "==" + siteIndustrielBasolNonGeorerenceesDTOs.stream().map(SiteIndustrielBasolDTO::getNumerobasol).collect(Collectors.joining(","));
+        out += "||" + secteurInformationSolSurParcelleDTOs.size();
+        out += "==" + secteurInformationSolSurParcelleDTOs.stream().map(SecteurInformationSolDTO::getNom).collect(Collectors.joining(","));
+        out += "||" + secteurInformationSolRayonParcelleDTOs.size();
+        out += "==" + secteurInformationSolRayonParcelleDTOs.stream().map(SecteurInformationSolDTO::getNom).collect(Collectors.joining(","));
+        out += "||" + secteurInformationSolProximiteParcelleDTOs.size();
+        out += "==" + secteurInformationSolProximiteParcelleDTOs.stream().map(SecteurInformationSolDTO::getNom).collect(Collectors.joining(","));
+        out += "||" + secteurInformationSolNonGeorerenceesDTOs.size();
+        out += "==" + secteurInformationSolNonGeorerenceesDTOs.stream().map(SecteurInformationSolDTO::getNom).collect(Collectors.joining(","));
+        out += "||" + installationClasseeSurParcelleDTOs.size();
+        out += "==" + installationClasseeSurParcelleDTOs.stream().map(InstallationClasseeDTO::getNom).collect(Collectors.joining(","));
+        out += "||" + installationClasseeRayonParcelleDTOs.size();
+        out += "==" + installationClasseeRayonParcelleDTOs.stream().map(InstallationClasseeDTO::getNom).collect(Collectors.joining(","));
+        out += "||" + installationClasseeProximiteParcelleDTOs.size();
+        out += "==" + installationClasseeProximiteParcelleDTOs.stream().map(InstallationClasseeDTO::getNom).collect(Collectors.joining(","));
+        out += "||" + installationClasseeNonGeorerenceesDTOs.size();
+        out += "==" + installationClasseeNonGeorerenceesDTOs.stream().map(InstallationClasseeDTO::getNom).collect(Collectors.joining(","));
+        out += "||" + niveauArgile;
+        out += "||" + planPreventionRisquesDTOs.size();
+        out += "==" + planPreventionRisquesDTOs.stream().map(PlanPreventionRisquesGasparDTO::getIdGaspar).collect(Collectors.joining(","));
+        out += "||" + TRIs.size();
+        out += "||" + AZIs.size();
+        out += "||" + geogCanalisations.size();
+        out += "||" + installationNucleaireDTOS.size();
+        out += "==" + installationNucleaireDTOS.stream().map(InstallationNucleaireDTO::getNomInstallation).collect(Collectors.joining(","));
+        out += "||" + zonePlanExpositionBruit;
+        
+        return out;
+    }
     
     @Data
     public static class Summary {

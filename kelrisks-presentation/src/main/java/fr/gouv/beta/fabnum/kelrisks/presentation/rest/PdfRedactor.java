@@ -1,5 +1,7 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
+import fr.gouv.beta.fabnum.commun.metier.util.QRCodeUtils;
+import fr.gouv.beta.fabnum.commun.metier.util.SecurityHelper;
 import fr.gouv.beta.fabnum.kelrisks.facade.avis.AvisDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.CommuneDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.InstallationClasseeDTO;
@@ -13,6 +15,8 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeori
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
 import lombok.Data;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +41,8 @@ public class PdfRedactor {
     IGestionCommuneFacade    gestionCommuneFacade;
     @Autowired
     IGestionGeorisquesFacade gestionGeorisquesFacade;
+    @Autowired
+    SecurityHelper           securityHelper;
     
     public void redigerAnalyse(Document htmlDocument, AvisDTO avisDTO, String codeINSEE) {
         
@@ -73,12 +79,24 @@ public class PdfRedactor {
         }
     }
     
+    public void ajouterQRCode(Document htmlDocument, AvisDTO avisDTO) throws Exception {
+    
+        String encodedText = securityHelper.encodeAndPrependIVSalt(avisDTO.toString());
+    
+        String escapedEncodedText = URLEncoder.encode(encodedText, StandardCharsets.UTF_8.name());
+    
+        String base64png = QRCodeUtils.generateQRCodePng("http://localhost:8080/api/qrcode/check?hash=" + escapedEncodedText);
+    
+        Elements img = htmlDocument.select("#qrcode_wrapper img");
+        img.attr("src", base64png);
+    }
+    
     private void redigerAnnexe3PollutionRayon(Document htmlDocument, AvisDTO avisDTO) {
         
         Element page  = addPage(htmlDocument);
         Element tbody;
         int     lines = 0;
-    
+        
         page.append("<div><h2>ANNEXE 3 : SITUATION DU RISQUE DE POLLUTION DES SOLS DANS UN RAYON DE 500M AUTOUR DE VOTRE BIEN</h2></div>");
         
         if (avisDTO.getInstallationClasseeRayonParcelleDTOs().size() > 0) {
