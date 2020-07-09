@@ -15,6 +15,8 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeori
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
 import lombok.Data;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,7 +83,9 @@ public class PdfRedactor {
     
         String encodedText = securityHelper.encodeAndPrependIVSalt(avisDTO.toString());
     
-        String base64png = QRCodeUtils.generateQRCodePng(encodedText);
+        String escapedEncodedText = URLEncoder.encode(encodedText, StandardCharsets.UTF_8.name());
+    
+        String base64png = QRCodeUtils.generateQRCodePng("http://localhost:8080/api/qrcode/check?hash=" + escapedEncodedText);
     
         Elements img = htmlDocument.select("#qrcode_wrapper img");
         img.attr("src", base64png);

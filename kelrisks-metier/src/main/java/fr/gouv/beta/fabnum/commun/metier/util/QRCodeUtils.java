@@ -13,7 +13,7 @@ public class QRCodeUtils {
         if (barcodeText.length() > 2950) { throw new Exception("Texte trop long pour la génération d'un QR Code optimal."); }
         
         ByteArrayOutputStream stream = QRCode.from(barcodeText)
-                                               .withSize(300, 300)
+                                               .withSize(20, 20)
                                                .to(ImageType.PNG)
                                                .stream();
         

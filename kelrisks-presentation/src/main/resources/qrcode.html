@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta content="text/html; charset=utf-8"
+              http-equiv="Content-Type"/>
+        <title>QrCode Kelrisks</title>
+        <style>
+            html, body {
+                background-color : #FFFFFF;
+                height           : 100%;
+            }
+
+            body {
+                overflow-y : scroll;
+            }
+
+            header, footer {
+                background-color : transparent;
+                border-bottom    : solid 2px #CCCCCC;
+                display          : -webkit-box;
+                display          : -ms-flexbox;
+                display          : flex;
+                flex-wrap        : wrap;
+                padding          : 0 100px;
+            }
+
+            header a,
+            header a:hover,
+            header a:visited {
+                background-color : transparent;
+                color            : #373C42 !important;
+                text-decoration  : none !important;
+            }
+
+            a.marianne {
+                flex : 0 0 300px;
+            }
+
+            a.marianne img {
+                height : 208px;
+            }
+
+            header div.product_wrapper {
+                flex         : 1 0 auto;
+                padding-left : 50px;
+            }
+
+            header div.product_wrapper a.product {
+                align-content : center;
+                display       : flex;
+                font-size     : 1.7em;
+                font-weight   : bold;
+                line-height   : 62px;
+                margin-top    : 60px;
+            }
+
+            header div.product_wrapper p.tagline {
+                color     : #B0B0AF;
+                font-size : 1.2em;
+                margin    : -10px 0 0 0;
+            }
+
+            .title,
+            .subtitle {
+                color         : #26353F;
+                font-size     : 1.7em;
+                font-weight   : 900;
+                margin-bottom : 0;
+            }
+
+            .subtitle {
+                font-size     : 1.5em;
+                font-weight   : normal;
+                margin-bottom : 50px;
+            }
+
+            p {
+                color       : #222933;
+                font-family : 'Nunito Sans', sans-serif;
+                font-size   : 16px;
+                font-weight : normal;
+            }
+
+            .container.bordered {
+                background-color : #FFFFFF;
+                border           : 1px solid #CCCCCC;
+                border-radius    : 2px;
+                margin-bottom    : 20px;
+                margin-top       : 50px;
+                padding          : 20px 50px;
+                text-align       : left;
+                width            : 80%;
+            }
+
+            .container {
+                margin   : 0 auto;
+                position : relative;
+            }
+
+            * {
+                box-sizing : border-box;
+            }
+
+            .section {
+                font-family    : 'Nunito Sans', sans-serif;
+                font-size      : 16px;
+                font-stretch   : normal;
+                font-style     : normal;
+                font-weight    : normal;
+                letter-spacing : normal;
+                line-height    : normal;
+                text-align     : left;
+            }
+        </style>
+    </head>
+    <body>
+        <header><a class="marianne"><img alt="Ministère de la Transition Écologique"
+                                         src="http://localhost:8080/mte.png"></a>
+            <div class="product_wrapper"><a class="product"><span>kelrisks.data.gouv.fr</span></a>
+                <p class="tagline">Évaluez simplement et rapidement les risques de votre terrain</p></div>
+            <nav>
+                <ul></ul>
+            </nav>
+        </header>
+        <section class="section">
+            <div class="container bordered"
+                 id="qrcode_content">
+                <p class="title">Vérification de l'intégrité du pdf</p>
+                <p class="subtitle">Données contenues dans le Code QR :</p>
+            </div>
+        </section>
+    </body>
+</html>

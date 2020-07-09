@@ -18,7 +18,6 @@ public class SecurityHelper {
     private static final int         KEY_LENGTH          = 128;
     private static final int         PASSWORD_ITERATIONS = 1000; // vs brute force
     public               CipherSpecs cipherSpecs         = new CipherSpecs();
-    //    private              String      passPhrase;
     private              Cipher      cipher;
     private              char[]      pass;
     
@@ -61,22 +60,23 @@ public class SecurityHelper {
         cipherSpecsDecode.IV = Base64.getDecoder().decode(hash.split("###")[0]);
         cipherSpecsDecode.salt = Base64.getDecoder().decode(hash.split("###")[1]);
         String encodedText = hash.split("###")[2];
-        
+    
         SecurityHelper decoder     = new SecurityHelper(cipherSpecsDecode, "***securitypassphrase***", false);
         String         decodedText = decoder.decode(encodedText);
-        
+    
         System.out.println(decodedText);
-        
+    
         // Decode
-        hash = "VfRFWdHquIPU+4XmI27IUQ==###nPWfc6u25YLko1FtYEVLpA==###XXLBul+85gc9YUJnpESTlCBDiulqY6z5f6uYbsGTkmYAHOCbs2gV8M4BKNT23k0rQXzn1AZb59uw9IMxBQQrDtolYl76IsJQLs4CZaB7isaXMDHCrGcJEWdXdl" +
-               "+NdHWsJEaDlexFoMvgFcYfJkQSFtx/ol7tDGp09CeipwEACQhf0dfuQbMgBSHQE3J32CMvte308H5hdilwelvanHkSA94G/FnT8Qx0W6vQJPtZtKo=";
+        // @formatter:off
+        hash = "VfRFWdHquIPU+4XmI27IUQ==###nPWfc6u25YLko1FtYEVLpA==###XXLBul+85gc9YUJnpESTlCBDiulqY6z5f6uYbsGTkmYAHOCbs2gV8M4BKNT23k0rQXzn1AZb59uw9IMxBQQrDtolYl76IsJQLs4CZaB7isaXMDHCrGcJEWdXdl+NdHWsJEaDlexFoMvgFcYfJkQSFtx/ol7tDGp09CeipwEACQhf0dfuQbMgBSHQE3J32CMvte308H5hdilwelvanHkSA94G/FnT8Qx0W6vQJPtZtKo=";
+        // @formatter:on
         cipherSpecsDecode.IV = Base64.getDecoder().decode(hash.split("###")[0]);
         cipherSpecsDecode.salt = Base64.getDecoder().decode(hash.split("###")[1]);
         encodedText = hash.split("###")[2];
-        
+    
         decoder = new SecurityHelper(cipherSpecsDecode, "***securitypassphrase***", false);
         decodedText = decoder.decode(encodedText);
-        
+    
         System.out.println(decodedText);
     }
     

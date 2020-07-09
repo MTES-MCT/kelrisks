@@ -71,8 +71,6 @@ public class AvisDTO extends JsonInfoDTO {
         out += "==" + siteIndustrielBasiasRayonParcelleDTOs.stream().map(SiteIndustrielBasiasDTO::getIdentifiant).collect(Collectors.joining(","));
         out += "||" + siteIndustrielBasiasProximiteParcelleDTOs.size();
         out += "==" + siteIndustrielBasiasProximiteParcelleDTOs.stream().map(SiteIndustrielBasiasDTO::getIdentifiant).collect(Collectors.joining(","));
-        out += "||" + siteIndustrielBasiasParRaisonSocialeDTOs.size();
-        out += "==" + siteIndustrielBasiasParRaisonSocialeDTOs.stream().map(SiteIndustrielBasiasDTO::getIdentifiant).collect(Collectors.joining(","));
         out += "||" + siteIndustrielBasiasNonGeorerenceesDTOs.size();
         out += "==" + siteIndustrielBasiasNonGeorerenceesDTOs.stream().map(SiteIndustrielBasiasDTO::getIdentifiant).collect(Collectors.joining(","));
         out += "||" + siteIndustrielBasolSurParcelleDTOs.size();

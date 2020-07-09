@@ -3,10 +3,10 @@ package fr.gouv.beta.fabnum.commun.utils.string;
 import fr.gouv.beta.fabnum.commun.transverse.entities.AbstractEntity;
 import fr.gouv.beta.fabnum.commun.transverse.exception.technique.TechniqueException;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -118,13 +118,10 @@ public final class StringUtils {
         MessageDigest messageDigest;
         try {
             messageDigest = MessageDigest.getInstance("SHA-1");
-            messageDigest.update(toEncode.getBytes("UTF-8"));
+            messageDigest.update(toEncode.getBytes(StandardCharsets.UTF_8));
         }
         catch (NoSuchAlgorithmException e) {
             throw new TechniqueException("StringUtils.shaEncode : alogorithme SHA-1 inexistant", e);
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new TechniqueException("StringUtils.shaEncode : encodage UTF-8 non supporté, e");
         }
         return toHexString(messageDigest.digest());
     }
