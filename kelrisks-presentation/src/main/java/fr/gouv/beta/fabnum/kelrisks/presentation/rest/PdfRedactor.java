@@ -87,7 +87,7 @@ public class PdfRedactor {
     
         String escapedEncodedText = URLEncoder.encode(encodedText, StandardCharsets.UTF_8.name());
     
-        String base64png = QRCodeUtils.generateQRCodePng(localAppPath + "/api/qrcode/check?hash=" + escapedEncodedText);
+        String base64png = QRCodeUtils.generateQRCodePng(appPath + "/api/qrcode/check?hash=" + escapedEncodedText);
     
         Elements img = htmlDocument.select("#qrcode_wrapper img");
         img.attr("src", base64png);
@@ -731,7 +731,7 @@ public class PdfRedactor {
         // @formatter:off
         body.append("<div class=\"page\">\n" +
                     "    <div class=\"header\"><img height=\"80px\"\n" +
-                    "                               src=\"" + appPath + "/mte.png\"\n" +
+                    "                               src=\"" + localAppPath + "/mte.png\"\n" +
                     "                               style=\"margin : 0;\"/></div>\n" +
                     "    <div class=\"content\"></div>\n" +
                     "    <div class=\"footer\">\n" +
