@@ -43,7 +43,7 @@
                                  v-show="currentPng !== undefined"/>
                     </div>
                     <div id="pdf"
-                         @click="debounceGetPdf">
+                         @click="getPdf">
                         <a><span style="font-size: 5em;"><font-awesome-icon icon="file-pdf"/></span></a><br/>
                         <a>État des risques et pollution au format PDF</a>
                     </div>
@@ -95,7 +95,7 @@ export default {
     }),
     methods: {
         generatePngs () {
-            console.log('generatePngs')
+            // console.log('generatePngs')
 
             this.dataList = []
 
@@ -154,33 +154,33 @@ export default {
             this.currentPng = '';
         },
         pngGenerated (png) {
-            console.log('pngGenerated')
+            // console.log('pngGenerated')
 
             this.currentPng = png
         },
-        debounceGetPdf () {
+        debounceFetchPdf () {
             if (this.debounce) clearTimeout(this.debounce);
             this.debounce = setTimeout(() => {
                 // do the work here
-                this.getPdf()
+                this.fetchPdf()
                 this._paq.push(['trackEvent', 'Flow', 'Pdf'])
             }, 100);
         },
         getPdf () {
-            console.log('getPdf')
+            // console.log('getPdf')
 
             this.generatePngs()
         },
         feedLeaflet () {
-            console.log("feedLeaflet")
+            // console.log("feedLeaflet")
 
-            console.log(this.dataList)
+            // console.log(this.dataList)
 
             while (this.dataList.length !== 0) {
 
                 let data = this.dataList.shift()
 
-                console.log(data)
+                // console.log(data)
 
                 if (data && data.length > 0) {
                     this.currentPngName = data[1]
@@ -190,10 +190,10 @@ export default {
             }
 
             this.currentPng = undefined
-            this.fetchPdf()
+            this.debounceFetchPdf()
         },
         fetchPdf () {
-            console.log('fetchPdf')
+            // console.log('fetchPdf')
 
             fetchWithError(this.env.apiPath + 'avis/pdf?' +
                 'codeINSEE=' + this.form.codeInsee + '&' +
@@ -223,7 +223,7 @@ export default {
     },
     watch: {
         currentPng: function () {
-            console.log('watch : currentPng')
+            // console.log('watch : currentPng')
 
             if (this.currentPng) this.pngList.push({name: this.currentPngName, png: this.currentPng})
             this.feedLeaflet()
