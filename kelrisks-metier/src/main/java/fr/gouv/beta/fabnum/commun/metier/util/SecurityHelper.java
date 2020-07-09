@@ -111,16 +111,12 @@ public class SecurityHelper {
     }
     
     public String encodeAndPrependIVSalt(String plainText) {
-        
+    
         String encodedText = encode(plainText);
-        
-        String encoded = Base64.getEncoder().encodeToString(cipherSpecs.IV) + "###" +
-                         Base64.getEncoder().encodeToString(cipherSpecs.salt) + "###" +
-                         encodedText;
-        
-        System.out.println(encoded);
-        
-        return encoded;
+    
+        return Base64.getEncoder().encodeToString(cipherSpecs.IV) + "###" +
+               Base64.getEncoder().encodeToString(cipherSpecs.salt) + "###" +
+               encodedText;
     }
     
     private Cipher createCipher(CipherSpecs cipherSpecs, boolean encryptMode) throws GeneralSecurityException {
