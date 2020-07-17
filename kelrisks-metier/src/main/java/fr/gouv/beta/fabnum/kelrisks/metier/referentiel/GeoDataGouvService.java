@@ -5,6 +5,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeoDataGouvCommune;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,11 +16,12 @@ public class GeoDataGouvService implements IGeoDataGouvService {
     private static final String ADRESSE_BASE_URL = "https://geo.api.gouv.fr";
     private static final String COMMUNE_URL      = ADRESSE_BASE_URL + "/communes?lat=PARAM_LAT&lon=PARAM_LON&fields=code&format=json&geometry=centre";
     
+    @Autowired
+    WebClient webClient;
+    
     public GeoDataGouvCommune rechercherCommune(String latitude, String longitude) {
         
         String uri = COMMUNE_URL.replace("PARAM_LAT", latitude).replace("PARAM_LON", longitude);
-        
-        WebClient webClient = WebClient.create();
         
         GeoDataGouvCommune[] block = webClient.get()
                                              .uri(uri)
