@@ -23,7 +23,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service("georisquesService")
 public class GeorisquesService implements IGeorisquesService {
     
-    private static final String GEORISQUE_BASE_URL = "http://www.georisques.gouv.fr/api/v1";
+    private static final String GEORISQUE_BASE_URL = "https://www.georisques.gouv.fr/api/v1";
     private static final String RADON_URL          = GEORISQUE_BASE_URL + "/radon?code_insee=PARAM_INSEE&page=1&page_size=20";
     private static final String TRI_URL            = GEORISQUE_BASE_URL + "/gaspar/tri?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=20";
     private static final String AZI_URL            = GEORISQUE_BASE_URL + "/gaspar/azi?rayon=1000&code_insee=PARAM_INSEE&page=1&page_size=20";
