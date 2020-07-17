@@ -1,18 +1,18 @@
-@font-face {
-  font-family : Evolventa;
-  src         : url("../fonts/Evolventa/otf/Evolventa-Regular.otf");
-  src         : url("../fonts/Evolventa/ttf/Evolventa-Regular.ttf");
-  src         : url("../fonts/Evolventa/woff/Evolventa-Regular.woff");
-  font-weight : 400
-}
+/*@font-face {*/
+/*  font-family : Evolventa;*/
+/*  src         : url("../fonts/Evolventa/otf/Evolventa-Regular.otf");*/
+/*  src         : url("../fonts/Evolventa/ttf/Evolventa-Regular.ttf");*/
+/*  src         : url("../fonts/Evolventa/woff/Evolventa-Regular.woff");*/
+/*  font-weight : 400*/
+/*}*/
 
-@font-face {
-  font-family : Evolventa;
-  src         : url("../fonts/Evolventa/otf/Evolventa-Bold.otf");
-  src         : url("../fonts/Evolventa/ttf/Evolventa-Bold.ttf");
-  src         : url("../fonts/Evolventa/woff/Evolventa-Bold.woff");
-  font-weight : 800
-}
+/*@font-face {*/
+/*  font-family : Evolventa;*/
+/*  src         : url("../fonts/Evolventa/otf/Evolventa-Bold.otf");*/
+/*  src         : url("../fonts/Evolventa/ttf/Evolventa-Bold.ttf");*/
+/*  src         : url("../fonts/Evolventa/woff/Evolventa-Bold.woff");*/
+/*  font-weight : 800*/
+/*}*/
 
 :root {--blue : #0053B3;--light-blue : #006BE6;--dark-blue : #003B80;--lighter-blue : #B4E1FA;--white : #FFFFFF;--lightest-grey : #FAFBFC;--lighter-grey : #EBEFF3;--light-grey : #C9D3DF;--grey : #ADB9C9;--dark-grey : #8393A7;--darker-grey : #53657D;--darkest-grey : #26353F;--black : #1C1C1C;--green : #03BD5B;--light-green : #DAF5E7;--orange : #FF9947;--light-orange : #FFF0E4;--red : #D63626;--dark-red : #AB2B1E;--light-red : #EFACA6;--mobile-min : 400px;--mobile-max : 549px;--phablet-min : 550px;--phablet-max : 749px;--tablet-min : 750px;--tablet-max : 999px;--desktop-min : 1000px;--space-xs : 0.5em;--space-s : 1em;--space-m : 1.5em;--space-l : 2em;--space-xl : 3em;--theme-primary : var(--blue);--theme-primary-light : var(--light-blue);--theme-primary-dark : var(--dark-blue);--theme-secondary : var(--blue);--theme-secondary-darken : var(--dark-blue);--theme-border : var(--grey);--theme-border-lighter : var(--light-grey);--theme-border-active : var(--light-blue);--theme-border-radius : 3px;--theme-background-white : var(--white);--theme-background-grey : var(--lighter-grey);--theme-background-color : var(--dark-blue);--theme-background-dark : var(--black);--theme-box-shadow : 0 1px 2px rgba(201, 211, 223, .2);--theme-label-text : var(--darker-grey);--theme-light-text : var(--white);--theme-dark-text : var(--darkest-grey);--theme-success-border : var(--green);--theme-success-bg : var(--light-green);--theme-warning-border : var(--orange);--theme-warning-bg : var(--light-orange);--theme-error-border : var(--red);--theme-error-bg : var(--light-red);--theme-info-border : var(--light-blue);--theme-info-bg : var(--lighter-blue)}
 
