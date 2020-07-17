@@ -51,9 +51,6 @@ export default {
             default: () => []
         }
     },
-    data: () => ({
-        tilesLoaded: false
-    }),
     methods: {
         centerMap () {
             console.log('centerMap')
@@ -119,7 +116,7 @@ export default {
         exportToPng () {
             console.log('exportToPng')
 
-            if (this.tilesLoaded && this.mapCentered) {
+            if (this.mapCentered) {
                 console.log('export !')
 
                 setTimeout(() => {
@@ -181,9 +178,6 @@ export default {
                     this.centerMap()
                 }, 250);
             }
-        },
-        tilesLoaded: function () {
-            if (this.tilesLoaded) this.exportToPng()
         },
         mapCentered: function () {
             if (this.mapCentered) this.exportToPng()

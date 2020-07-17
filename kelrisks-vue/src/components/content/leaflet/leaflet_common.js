@@ -14,7 +14,8 @@ export default {
         minZoom: null,
         minZoomCenter: {x: null, y: null},
         intermediateZoomLevels: [],
-        mapCentered: false
+        mapCentered: false,
+        tilesLoaded: true
     }),
     props: {
         maxZoomCenter: {
@@ -185,7 +186,7 @@ export default {
                     let boundHeight = bounds._northEast.lat - bounds._southWest.lat
                     let heightFillPercent = boundHeight / mapHeight
 
-                    if (widthFillPercent > 0.25 || heightFillPercent > 0.25) {
+                    if (widthFillPercent > 0.25 || heightFillPercent > 0.25 || this.tilesLoaded) {
 
                         clearInterval(this.interval)
                         this.interval = null
