@@ -311,7 +311,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
                         PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
                         if (gaspar == null) { System.out.println(" V " + "!!!! Id Gaspar : " + ppr.getId_gaspar() + "(" + codeINSEE + ") NOT found !!!!"); }
-                        updatePprList(planPreventionRisquesList, gaspar);
+                        else if (!gaspar.isExistsInGpu()) { updatePprList(planPreventionRisquesList, gaspar); }
                     });
         }
     
