@@ -10,18 +10,20 @@ export default {
         reference: null,
         interval: null,
         currentZoom: null,
-        maxZoom: 18,
-        minZoom: null,
         minZoomCenter: {x: null, y: null},
         intermediateZoomLevels: [],
         mapCentered: false,
-        tilesLoaded: true
+        tilesLoaded: true,
+        currentMaxZoom: 18,
+        currentMinZoom: null
     }),
     props: {
         maxZoomCenter: {
             type: Array,
             default: () => [0, 0]
         },
+        maxZoom: {default: () => null},
+        minZoom: {default: () => null}
     },
     methods: {
         crippleMap (ref) {
@@ -38,33 +40,45 @@ export default {
 
             map.dragging.disable()
         },
-        zoomIn (zoomInControl, zoomOutControl, map) {
+        zoomIn (map, zoom) {
 
-            if (this.currentZoom >= this.maxZoom) return
+            console.log("zooming in")
+
+            let zoomInControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-in")
+            let zoomOutControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-out");
+
+            if (this.currentZoom >= this.currentMaxZoom) return
 
             if (zoomOutControl.hasClass('leaflet-disabled')) {
 
                 zoomOutControl.removeClass('leaflet-disabled')
             }
 
-            ++this.currentZoom
+            if (zoom) this.currentZoom = zoom
+            else ++this.currentZoom
 
-            if (this.currentZoom === this.maxZoom) zoomInControl.addClass('leaflet-disabled')
+            if (this.currentZoom === this.currentMaxZoom) zoomInControl.addClass('leaflet-disabled')
+            if (this.currentZoom === this.currentMinZoom) zoomOutControl.addClass('leaflet-disabled')
 
             map.setView({lat: this.intermediateZoomLevels[this.currentZoom].y, lng: this.intermediateZoomLevels[this.currentZoom].x}, this.currentZoom, {animation: true});
         },
-        zoomOut (zoomInControl, zoomOutControl, map) {
+        zoomOut (map, zoom) {
 
-            if (this.currentZoom <= this.minZoom) return
+            let zoomInControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-in")
+            let zoomOutControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-out");
+
+            if (this.currentZoom <= this.currentMinZoom) return
 
             if (zoomInControl.hasClass('leaflet-disabled')) {
 
                 zoomInControl.removeClass('leaflet-disabled')
             }
 
-            --this.currentZoom
+            if (zoom) this.currentZoom = zoom
+            else --this.currentZoom
 
-            if (this.currentZoom === this.minZoom) zoomOutControl.addClass('leaflet-disabled')
+            if (this.currentZoom === this.currentMaxZoom) zoomInControl.addClass('leaflet-disabled')
+            if (this.currentZoom === this.currentMinZoom) zoomOutControl.addClass('leaflet-disabled')
 
             map.setView({lat: this.intermediateZoomLevels[this.currentZoom].y, lng: this.intermediateZoomLevels[this.currentZoom].x}, this.currentZoom, {animation: true});
         },
@@ -82,19 +96,19 @@ export default {
             let zoomInControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-in")
             let zoomOutControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-out");
 
-            if (this.maxZoom > this.currentZoom) zoomInControl.removeClass('leaflet-disabled')
-            if (this.minZoom < this.currentZoom) zoomOutControl.removeClass('leaflet-disabled')
+            if (this.currentMaxZoom > this.currentZoom) zoomInControl.removeClass('leaflet-disabled')
+            if (this.currentMinZoom < this.currentZoom) zoomOutControl.removeClass('leaflet-disabled')
 
             zoomInControl.click((e) => {
 
                 e.stopPropagation()
-                this.zoomIn(zoomInControl, zoomOutControl, map);
+                this.zoomIn(map);
             });
 
             zoomOutControl.click((e) => {
 
                 e.stopPropagation()
-                this.zoomOut(zoomInControl, zoomOutControl, map);
+                this.zoomOut(map);
             });
         },
         parseJSON (json) {
@@ -125,7 +139,7 @@ export default {
         },
         initIntermediateZoomLevels () {
 
-            this.intermediateZoomLevels[this.maxZoom] = {x: this.maxZoomCenter[1], y: this.maxZoomCenter[0]}
+            this.intermediateZoomLevels[this.currentMaxZoom] = {x: this.maxZoomCenter[1], y: this.maxZoomCenter[0]}
 
             let deltaX = Math.abs(this.minZoomCenter.x - this.maxZoomCenter[1])
             let deltaY = Math.abs(this.minZoomCenter.y - this.maxZoomCenter[0])
@@ -136,7 +150,7 @@ export default {
 
             const increaseRatio = 3 / 4
 
-            for (let zoomLevel = this.minZoom + 1; zoomLevel < this.maxZoom; zoomLevel++) {
+            for (let zoomLevel = this.currentMinZoom + 1; zoomLevel < this.currentMaxZoom; zoomLevel++) {
 
                 let currentCenter = {x: null, y: null}
 
@@ -154,18 +168,29 @@ export default {
         },
         initMapZoom (map, mapRef) {
 
-            if (!this.minZoom) {
+            if (!this.currentMinZoom) {
 
-                this.minZoom = map.getZoom()
+                this.currentMinZoom = map.getZoom()
+
                 this.minZoomCenter = this.getBoundsCenter(map.getBounds())
-                this.intermediateZoomLevels[this.minZoom] = this.minZoomCenter
+                this.intermediateZoomLevels[this.currentMinZoom] = this.minZoomCenter
 
-                this.currentZoom = this.minZoom
+                this.currentZoom = this.currentMinZoom
 
                 this.injectCustomZoomControl(mapRef)
             }
 
             this.initIntermediateZoomLevels();
+
+            if (this.minZoom) {
+                console.log("there")
+                this.currentMinZoom = this.minZoom
+                if (this.currentZoom < this.currentMinZoom) this.zoomIn(map, this.currentMinZoom);
+            }
+            if (this.maxZoom) {
+                this.currentMaxZoom = this.maxZoom
+                if (this.currentZoom > this.currentMaxZoom) this.zoomOut(map, this.currentMaxZoom);
+            }
         },
         updateMapUntilFitsBounds (map, mapRef, bounds, initZoom) {
 

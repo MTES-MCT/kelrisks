@@ -107,6 +107,7 @@
                                     { data : avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '5').map(x => x.multiPolygon),
                                       color : '#840505'}] :
                                     undefined"
+                    :leaflet-min-zoom="14"
                     :legend-blocks="[
                         ['#D8D8D8', '1 - très faible'],
                         ['#FFD332', '2 - faible'],
@@ -137,6 +138,7 @@
                                     { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon),
                                       color : '#840505'}] :
                                     undefined"
+                    :leaflet-min-zoom="14"
                     :legend-blocks="[
                         ['#FFD332', '1 : zones à potentiel radon faible'],
                         ['#FF8000', '2 : zones à potentiel radon moyen'],
@@ -284,6 +286,7 @@
                                     { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon),
                                       color : '#840505'}] :
                                     undefined"
+                    :leaflet-min-zoom="14"
                     :legend-blocks="[
                         ['#FFD332', 'Zone 1 : zones à potentiel radon faible'],
                         ['#FF8000', 'Zone 2 : zones à potentiel radon faible mais sur lesquelles des facteurs géologiques particuliers peuvent faciliter le transfert du radon vers les bâtiments'],
@@ -343,6 +346,7 @@
                                       color : '#FF8000'},
                                     { data : avis.lentillesArgile.filter(x => x.niveauAlea === 3).map(x => x.multiPolygon),
                                       color : '#840505'}]"
+                    :leaflet-min-zoom="14"
                     :legend-blocks="[
                         ['#FFD332', 'Aléa faible'],
                         ['#FF8000', 'Aléa moyen'],
