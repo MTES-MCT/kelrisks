@@ -64,7 +64,7 @@
         <section class="section section-grey v-flex"
                  v-if="avis.ppr.length > 0 || hasSismiciteHaute || hasSismiciteMoyenne || hasPEB || hasPollutionPrincipale || hasRadonHaut">
 
-            <span class="title">Risques Principaux</span>
+            <span class="title">Risques faisant l'objet d'une obligation d'information au titre de l'IAL</span>
 
             <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle +
                                   (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) +'.<br/>' +
@@ -263,7 +263,7 @@
         <section class="section v-flex"
                  v-if="avis.canalisations.length > 0 || hasArgile || avis.nucleaires.installations.length > 0 || hasAZI || hasTRI || hasPollutionNonReglementaire || hasRadonMoyen">
 
-            <span class="title">Risques ne faisant pas l'objet d'une obligation d'information</span>
+          <span class="title">Risques ne faisant pas l'objet d'une obligation d'information au titre de l'IAL</span>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
                     :level="avis.potentielRadon + ''"
@@ -292,13 +292,15 @@
                     :max-zoom-center="leaflet.center"
                     v-if="hasRadonMoyen"/>
 
-            <risque :description="'Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.'"
+          <!-- TODO :  Le détail de ces données est consultable ici.-->
+
+          <risque :description="'Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.'"
                     :detail="'<p>Dans un rayon de 500 m autour de votre parcelle, sont identifiés :</br>'+
                               (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites référencés dans l’inventaire des installations classées pour la protection de l’environnement (ICPE)</br>' : '') +
                               (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites potentiellement pollués, référencés dans l’inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS).</br>' : '') +
                               (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
-                              (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
+                              (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas compte.</p>' : '')"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
                     :title="'Pollution des sols'"
                     :parcelle="leaflet.data.parcelles"
@@ -365,7 +367,7 @@
 
         <section class="section v-flex">
 
-            <span class="title">Cette parcelle n'est pas concernée par :</span>
+          <span class="title">Autres informations :</span>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.'"
                     :title="'Naturels'"

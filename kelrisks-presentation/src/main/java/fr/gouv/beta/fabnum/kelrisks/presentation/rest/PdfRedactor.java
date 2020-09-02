@@ -102,7 +102,7 @@ public class PdfRedactor {
         page.append("<div><h2>ANNEXE 3 : SITUATION DU RISQUE DE POLLUTION DES SOLS DANS UN RAYON DE 500M AUTOUR DE VOTRE BIEN</h2></div>");
         
         if (avisDTO.getInstallationClasseeRayonParcelleDTOs().size() > 0) {
-            page.append("<p>Inventaire des installations classées soumises à autorisation ou à enregistement</p>");
+            page.append("<p>Inventaire des installations classées soumises à autorisation ou à enregistrement</p>");
             
             tbody = addTableHtml(page);
             
@@ -281,7 +281,7 @@ public class PdfRedactor {
     
         Element page = addPage(htmlDocument);
     
-        page.append("<div><h2>ANNEXE 1 : RISQUES NE FAISANT PAS L’OBJET D’UNE OBLIGATION D’INFORMATION</h2></div>");
+        page.append("<div><h2>ANNEXE 1 : RISQUES NE FAISANT PAS L’OBJET D’UNE OBLIGATION D’INFORMATION AU TITRE DE L'IAL</h2></div>");
     
         if (hasRadonMoyen(avisDTO)) {
             addRisque(htmlDocument,
@@ -343,7 +343,7 @@ public class PdfRedactor {
                       localAppPath + "/pictogrammes_risque/ic_nucleaires_bleu.png",
                       "<p>Votre bien est situé à moins de " + (avisDTO.isHasCentraleNucleaire() ? "20 km" : "10 km") + " d’une installation nucléaire" +
                       " de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. " +
-                      "réacteurs nucléaires de production d’électricité (centrale nucléraire), installations de préparation, enrichissement, " +
+                      "réacteurs nucléaires de production d’électricité (centrale nucléaire), installations de préparation, enrichissement, " +
                       "fabrication, traitement ou entreposage de combustibles nucléaires ; etc.).<p>Ces installations sont contrôlées par " +
                       "l’Autorité de Sureté Nucléaire.</p>" +
                       "<p>Installation(s) concerné(e) : <br/>" + getLibelleInstallationsNucleaires(avisDTO) + "</p>");
@@ -427,7 +427,7 @@ public class PdfRedactor {
         
         Element page = addPage(htmlDocument);
     
-        page.append("<div><h2>CETTE PARCELLE N’EST PAS CONCERNÉE PAR :</h2></div>");
+        page.append("<div><h2>AUTRES INFORMATIONS :</h2></div>");
         
         if (!hasTypePPR(avisDTO, "PPRN")) {
             addRisque(htmlDocument,
@@ -581,8 +581,8 @@ public class PdfRedactor {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
         
         Element page = addPage(htmlDocument);
-        
-        page.append("<div id=\"risque-principaux\"><h2>RISQUES PRINCIPAUX</h2></div>");
+    
+        page.append("<div id=\"risque-principaux\"><h2>RISQUES FAISANT L'OBJET D'UNE OBLIGATION D'INFORMATION AU TITRE DE L'IAL</h2></div>");
         
         for (PlanPreventionRisquesGasparDTO ppr : avisDTO.getPlanPreventionRisquesDTOs()) {
     

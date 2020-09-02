@@ -114,7 +114,7 @@
                                                        class="beta"
                                                        src="/images/pointbetagouvfr.svg"/>
                 </a>
-                <p class="tagline">Évaluez simplement et rapidement les risques de votre terrain</p>
+                <p class="tagline">Évaluez simplement et rapidement les risques de votre bien</p>
             </div>
 
             <nav>

@@ -80,7 +80,7 @@
             <div class="container bordered ppr">
                 <div>
                     <div class="errial_title"><span class="title">Information relative aux sinistres indemnisés par l'assurance suite à une catastrophe naturelle, minière ou technologique</span></div>
-                    <p>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des défâtes liés à une catastrophe ? <br/> Pour consulter la liste des arrêtés de catastrophes naturelles
+                    <p>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ? <br/> Pour consulter la liste des arrêtés de catastrophes naturelles
                        (Cat-Nat) sur votre commune : URL</p>
                     <div class="text_wrapper"><b>L'information est mentionnée dans l'acte de vente</b></div>
                     <div class="input_wrapper">
