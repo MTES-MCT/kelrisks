@@ -18,7 +18,7 @@ export default {
     components: {KrInput},
     data: () => ({
         PASSWORD_HASH: -1403490666,
-        loggedIn: "false"
+        loggedIn: false
     }),
     methods: {
         hash (string) {
@@ -39,8 +39,9 @@ export default {
         }
     },
     mounted () {
+        console.log(sessionStorage.getItem('ERRIAL_loggedIn'))
         let ERRIAL_loggedIn = sessionStorage.getItem('ERRIAL_loggedIn')
-        if (ERRIAL_loggedIn !== 'undefined') {
+        if (ERRIAL_loggedIn && ERRIAL_loggedIn !== 'undefined') {
             this.checkPassword(ERRIAL_loggedIn)
         }
     }

@@ -97,7 +97,7 @@
 
                 <div id="sfp_form_leaflet_wrapper"
                      v-bind:class="{'has-geoloc':leaflet.hasGeoloc}">
-                    <p>Vous pouvez modifier, ajouter, enlever une ou des parcelles en cliquant dessus</p>
+                    <p>Vous pouvez ajouter ou enlever une ou des parcelles en cliquant dessus</p>
                     <Leaflet id="sfp_form_leaflet"
                              ref="sfp_form_leaflet"
                              :center="leaflet.center"
