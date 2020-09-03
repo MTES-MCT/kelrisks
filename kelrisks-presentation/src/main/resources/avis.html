@@ -5,221 +5,209 @@
               http-equiv="Content-Type"/>
         <title>Avis Kelrisks</title>
         <style>
-            /*@font-face {*/
-            /*    font-family : marianneFont;*/
-            /*    src         : url(http://localhost:8080/fonts/otf/marianne-regular.otf);*/
-            /*}*/
+	        body {
+		        font-family : Helvetica, Arial, sans-serif;
+		        font-size   : 1em;
+	        }
 
-            /*@font-face {*/
-            /*    font-family : marianneFont;*/
-            /*    src         : url(http://localhost:8080/fonts/otf/marianne-bold.otf);*/
-            /*    font-weight : bold;*/
-            /*}*/
+	        #marianne_wrapper,
+	        #qrcode_wrapper {
+		        align-content : center;
+		        height        : 280px;
+		        width         : 50%;
+	        }
 
-            body {
-                font-family : Helvetica, Arial, sans-serif;
-                /*font-family : marianneFont sans-serif;*/
-                font-size   : 1em;
-            }
+	        div {
+		        float : left;
+		        width : 100%;
+	        }
 
-            #marianne_wrapper,
-            #qrcode_wrapper {
-                align-content : center;
-                height        : 280px;
-                width         : 50%;
-            }
+	        img {
+		        display      : block;
+		        margin-left  : auto;
+		        margin-right : auto;
+	        }
 
-            div {
-                float : left;
-                width : 100%;
-            }
+	        h1 {
+		        color       : #000000;
+		        font-size   : 25px;
+		        line-height : 30px;
+		        margin      : 0 15px;
+	        }
 
-            img {
-                margin-left  : auto;
-                margin-right : auto;
-                display      : block;
-            }
+	        h2 {
+		        color       : #000000;
+		        font-size   : 22px;
+		        line-height : 25px;
+	        }
 
-            h1 {
-                color       : #000000;
-                font-size   : 30px;
-                line-height : 32px;
-                margin      : 0 15px;
-            }
+	        h3 {
+		        color       : #000000;
+		        font-size   : 20px;
+		        line-height : 22px;
+	        }
 
-            h2 {
-                color       : #000000;
-                font-size   : 25px;
-                line-height : 27px;
-            }
+	        p {
+		        font-size   : 15px;
+		        line-height : 18px;
+		        margin      : 5px 0;
+		        padding     : 0;
+	        }
 
-            h3 {
-                color       : #000000;
-                font-size   : 20px;
-                line-height : 22px;
-            }
+	        p.indent {
+		        text-indent : 25px;
+	        }
 
-            p {
-                font-size   : 17px;
-                line-height : 20px;
-                margin      : 5px 0;
-                padding     : 0;
-            }
+	        p.separate {
+		        margin-bottom : 15px;
+	        }
 
-            p.indent {
-                text-indent : 25px;
-            }
+	        ul {
+		        list-style : none;
+		        margin     : 5px 35px;
+		        padding    : 0;
+		        text-align : left;
+	        }
 
-            p.separate {
-                margin-bottom : 15px;
-            }
+	        a {
+		        color : #000000;
+	        }
 
-            ul {
-                list-style : none;
-                padding    : 0;
-                margin     : 5px 35px;
-                text-align : left;
-            }
+	        .page {
+		        clear  : both;
+		        height : 1005px;
+	        }
 
-            a {
-                color : #000000;
-            }
+	        .header {
+		        height : 80px;
+	        }
 
-            .page {
-                clear  : both;
-                height : 1005px;
-            }
+	        .content {
+		        height : 905px;
+	        }
 
-            .header {
-                height : 80px;
-            }
+	        .risque-principal {
+		        margin-bottom : 40px;
+	        }
 
-            .content {
-                height : 905px;
-            }
+	        .risque-principal .description {
+		        float        : left;
+		        margin-right : 10px;
+		        width        : 48%;
+	        }
 
-            .risque-principal {
-                margin-bottom : 40px;
-            }
+	        .risque-principal .carte {
+		        /*background-color : #CCCCCC;*/
+		        float      : left;
+		        height     : 300px;
+		        margin-top : 30px;
+		        width      : 50%; /* 300px/.86 = 349px */
+	        }
 
-            .risque-principal .description {
-                float        : left;
-                margin-right : 10px;
-                width        : 48%;
-            }
+	        .risque {
+		        float        : left;
+		        margin-right : 10px;
+		        width        : 48%;
+	        }
 
-            .risque-principal .carte {
-                /*background-color : #CCCCCC;*/
-                float      : left;
-                height     : 300px;
-                margin-top : 30px;
-                width      : 50%; /* 300px/.86 = 349px */
-            }
+	        .icon {
+		        margin-bottom : 10px;
+	        }
 
-            .risque {
-                float        : left;
-                margin-right : 10px;
-                width        : 48%;
-            }
+	        .footer {
+		        height : 20px;
+	        }
 
-            .icon {
-                margin-bottom : 10px;
-            }
+	        table {
+		        background-color : #FFFFFF;
+		        border           : solid 1px #000000;
+		        border-collapse  : collapse;
+		        margin-bottom    : 20px;
+		        margin-top       : 10px;
+		        width            : 100%;
+	        }
 
-            .footer {
-                height : 20px;
-            }
+	        table thead tr {
+		        background-color : #D7D7D7;
+	        }
 
-            table {
-                background-color : #FFFFFF;
-                border           : solid 1px #000000;
-                border-collapse  : collapse;
-                margin-bottom    : 20px;
-                margin-top       : 10px;
-                width            : 100%;
-            }
+	        table tbody tr:nth-child(even) {
+		        background-color : #E6E6E6;
+	        }
 
-            table thead tr {
-                background-color : #D7D7D7;
-            }
+	        table td {
+		        padding : 5px;
+	        }
 
-            table tbody tr:nth-child(even) {
-                background-color : #E6E6E6;
-            }
+	        table tr td {
+		        border-bottom : solid 2px #CECECE;
+	        }
 
-            table td {
-                padding : 5px;
-            }
+	        table tr:last-child td {
+		        border-bottom : none;
+	        }
 
-            table tr td {
-                border-bottom : solid 2px #CECECE;
-            }
+	        table tr td:nth-child(n+2) {
+		        border-left : solid 1px #000000;
+	        }
 
-            table tr:last-child td {
-                border-bottom : none;
-            }
+	        #signatures_title {
+		        margin      : 0;
+		        padding-top : 30px;
+	        }
 
-            table tr td:nth-child(n+2) {
-                border-left : solid 1px #000000;
-            }
+	        #signatures {
+		        margin-top : 10px;
+		        width      : 100%;
+	        }
 
-            #signatures_title {
-                margin      : 0;
-                padding-top : 30px;
-            }
+	        .text_wrapper {
+		        margin-bottom : 10px;
+		        margin-top    : 10px;
+		        padding-right : 20px;
+		        text-align    : right;
+		        width         : 60%;
+	        }
 
-            #signatures {
-                margin-top : 10px;
-                width      : 100%;
-            }
+	        .input_wrapper {
+		        margin-top : 10px;
+		        width      : 33%;
+	        }
 
-            .text_wrapper {
-                margin-bottom : 10px;
-                margin-top    : 10px;
-                padding-right : 20px;
-                text-align    : right;
-                width         : 60%;
-            }
+	        #signatures p {
+		        display    : inline-block;
+		        float      : left;
+		        text-align : center;
+		        width      : 33%;
+	        }
 
-            .input_wrapper {
-                margin-top : 10px;
-                width      : 33%;
-            }
+	        .content > p, h1, h2, h3, h4 {
+		        clear : both;
+	        }
 
-            #signatures p {
-                display    : inline-block;
-                float      : left;
-                text-align : center;
-                width      : 33%;
-            }
+	        #carte-parcelle {
+		        float      : left;
+		        margin-top : 50px;
+		        width      : 100%;
+	        }
 
-            .content > p, h1, h2, h3, h4 {
-                clear : both;
-            }
+	        #carte-parcelle > div {
+		        float  : none;
+		        margin : 0 auto;
+		        width  : 400px;
+	        }
 
-            #carte-parcelle {
-                float      : left;
-                margin-top : 50px;
-                width      : 100%;
-            }
-
-            #carte-parcelle > div {
-                float  : none;
-                margin : 0 auto;
-                width  : 400px;
-            }
-
-            #carte-parcelle img {
-                height : 400px;
-                margin : 0;
-            }
+	        #carte-parcelle img {
+		        height : 400px;
+		        margin : 0;
+	        }
 
         </style>
     </head>
     <body>
         <div id="marianne_wrapper">
             <img height="160px"
-                 src="http://localhost:8080/mte.png"
+                 src="http://localhost:8080/rf.png"
                  style="margin : 0;"/>
         </div>
         <div id="qrcode_wrapper">
@@ -245,11 +233,15 @@
             Cet Etat des risques réglementés pour l'information des acquéreurs et des locataires (ERRIAL) est établi pour les parcelles mentionnées ci-dessus.<br/>
             En complément des informations réglementaires, il aborde les autres risques référencés auxquels la parcelle est exposée.</p>
 
-        <div><p style="width: 100%; text-align: center; font-size: 15px"><span>1</span> / <span class="number-of-pages">8</span> pages</p></div>
+        <div>
+            <p class="footer_parcelle"
+               style="width: 100%; text-align: center; font-size: 12px"><i>Parcelle(s) : AH-130, INSEE : 42000</i></p>
+            <p style="width: 100%; text-align: center; font-size: 15px"><span>1</span> / <span class="number-of-pages">8</span> pages</p>
+        </div>
 
         <div class="page">
             <div class="header"><img height="80px"
-                                     src="http://localhost:8080/mte.png"
+                                     src="http://localhost:8080/rf.png"
                                      style="margin : 0;"/></div>
             <div class="content">
                 <div style="width: 100%; float: left; margin-left: 15px;">
@@ -267,6 +259,8 @@
                 </div>
             </div>
             <div class="footer">
+                <p class="footer_parcelle"
+                   style="width: 100%; text-align: center; font-size: 12px"></p>
                 <p style="width: 100%; text-align: center; font-size: 15px"><span class="page-number">2</span> / <span class="number-of-pages">8</span> pages</p>
             </div>
         </div>

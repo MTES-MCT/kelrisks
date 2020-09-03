@@ -49,8 +49,14 @@
                  id="summary_leaflet_wrapper">
                 <div id="summary">
                     <div style="margin-bottom: 20px"><span class="title">Parcelle(s) </span></div>
-                    <span class="rightAlign">Adresse&nbsp;: </span><b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, <br/><span class="rightAlign"/>{{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span></b><br/>
-                    <span class="rightAlign">Code parcelle&nbsp;: </span><b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span></b><br/>
+                    <span class="rightAlign">Adresse&nbsp;: </span><b><span v-if="avis.summary.adresse">{{ avis.summary.adresse }}, <br/><span class="rightAlign"/>{{ avis.summary.commune.codePostal }} {{
+                        avis.summary.commune.nomCommune
+                                                                                                        }}</span><span v-else-if="avis.summary.commune">{{
+                        avis.summary.commune.codePostal
+                                                                                                                                                        }}, {{ avis.summary.commune.nomCommune }}</span><span v-else><i>n/a</i></span></b><br/>
+                    <span class="rightAlign">Code parcelle&nbsp;: </span><b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{
+                        avis.summary.codeParcelle
+                                                                                                                                                       }}</span><span v-else><i>n/a</i></span></b><br/>
                     <br>
                 </div>
                 <div id="leaflet">
@@ -64,7 +70,7 @@
         <section class="section section-grey v-flex"
                  v-if="avis.ppr.length > 0 || hasSismiciteHaute || hasSismiciteMoyenne || hasPEB || hasPollutionPrincipale || hasRadonHaut">
 
-            <span class="title">Risques Principaux</span>
+            <span class="title">Risques faisant l'objet d'une obligation d'information au titre de l'IAL</span>
 
             <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle +
                                   (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) +'.<br/>' +
@@ -107,6 +113,7 @@
                                     { data : avis.summary.commune.communesLimitrophes.filter(x => x.codeZoneSismicite === '5').map(x => x.multiPolygon),
                                       color : '#840505'}] :
                                     undefined"
+                    :leaflet-min-zoom="14"
                     :legend-blocks="[
                         ['#D8D8D8', '1 - très faible'],
                         ['#FFD332', '2 - faible'],
@@ -137,10 +144,11 @@
                                     { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon),
                                       color : '#840505'}] :
                                     undefined"
+                    :leaflet-min-zoom="14"
                     :legend-blocks="[
-                        ['#FFD332', '1 : zones à potentiel radon faible'],
-                        ['#FF8000', '2 : zones à potentiel radon moyen'],
-                        ['#840505', '3 : zones à potentiel radon significatif']]"
+                        ['#FFD332', '1 : potentiel radon faible'],
+                        ['#FF8000', '2 : potentiel radon moyen'],
+                        ['#840505', '3 : potentiel radon significatif']]"
                     :level="avis.summary.commune.classePotentielRadon + ''"
                     :level-max="'3'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_rn_bleu.png'"
@@ -263,7 +271,7 @@
         <section class="section v-flex"
                  v-if="avis.canalisations.length > 0 || hasArgile || avis.nucleaires.installations.length > 0 || hasAZI || hasTRI || hasPollutionNonReglementaire || hasRadonMoyen">
 
-            <span class="title">Risques ne faisant pas l'objet d'une obligation d'information</span>
+            <span class="title">Risques ne faisant pas l'objet d'une obligation d'information au titre de l'IAL</span>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.'"
                     :level="avis.potentielRadon + ''"
@@ -284,13 +292,16 @@
                                     { data : avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon),
                                       color : '#840505'}] :
                                     undefined"
+                    :leaflet-min-zoom="14"
                     :legend-blocks="[
-                        ['#FFD332', 'Zone 1 : zones à potentiel radon faible'],
-                        ['#FF8000', 'Zone 2 : zones à potentiel radon faible mais sur lesquelles des facteurs géologiques particuliers peuvent faciliter le transfert du radon vers les bâtiments'],
-                        ['#840505', 'Zone 3 : zones à potentiel radon significatif']]"
+                        ['#FFD332', '1 : potentiel radon faible'],
+                        ['#FF8000', '2 : potentiel radon moyen'],
+                        ['#840505', '3 : potentiel radon significatif']]"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
                     v-if="hasRadonMoyen"/>
+
+            <!-- TODO :  Le détail de ces données est consultable ici.-->
 
             <risque :description="'Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.'"
                     :detail="'<p>Dans un rayon de 500 m autour de votre parcelle, sont identifiés :</br>'+
@@ -298,7 +309,7 @@
                               (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites potentiellement pollués, référencés dans l’inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS).</br>' : '') +
                               (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
-                              (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas compte. Le détail de ces données est consultable ici.</p>' : '')"
+                              (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas compte.</p>' : '')"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
                     :title="'Pollution des sols'"
                     :parcelle="leaflet.data.parcelles"
@@ -333,7 +344,7 @@
                     :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d’eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être importants. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.'"
                     :detail="(avis.niveauArgile === 3 ? 'Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
                              (avis.niveauArgile === 2 ? 'Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 1 ? 'la survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 1 ? 'La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
                              (avis.niveauArgile === 0 ? 'Aléa nul : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des poches ponctuelles de sols argileux.' : '') "
                     :leaflet-data="[{ data : avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon),
                                       color : '#FFD332'},
@@ -341,6 +352,7 @@
                                       color : '#FF8000'},
                                     { data : avis.lentillesArgile.filter(x => x.niveauAlea === 3).map(x => x.multiPolygon),
                                       color : '#840505'}]"
+                    :leaflet-min-zoom="14"
                     :legend-blocks="[
                         ['#FFD332', 'Aléa faible'],
                         ['#FF8000', 'Aléa moyen'],
@@ -365,7 +377,7 @@
 
         <section class="section v-flex">
 
-            <span class="title">Cette parcelle n'est pas concernée par :</span>
+            <span class="title">Autres informations :</span>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.'"
                     :title="'Naturels'"
@@ -551,168 +563,168 @@ export default {
 </script>
 
 <style scoped>
-    @import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
 
-    #searchButtonsWrapper {
-        float : left;
-    }
+#searchButtonsWrapper {
+	float : left;
+}
 
-    #searchButtonsWrapper a,
-    #actionButtonsWrapper a,
-    #bottomButtonsWrapper a {
-        display : inline-block;
-        float   : none;
-    }
+#searchButtonsWrapper a,
+#actionButtonsWrapper a,
+#bottomButtonsWrapper a {
+	display : inline-block;
+	float   : none;
+}
 
-    #bottomButtonsWrapper {
-        flex       : 0 0 100%;
-        margin-top : 25px;
-        text-align : center;
-    }
+#bottomButtonsWrapper {
+	flex       : 0 0 100%;
+	margin-top : 25px;
+	text-align : center;
+}
 
-    #actionButtonsWrapper {
-        float : right;
-    }
+#actionButtonsWrapper {
+	float : right;
+}
 
-    @media (min-width : 630px) {
-        #searchButtonsWrapper a:last-of-type,
-        #actionButtonsWrapper a:last-of-type {
-            margin-right : 0;
-        }
-    }
+@media (min-width : 630px) {
+	#searchButtonsWrapper a:last-of-type,
+	#actionButtonsWrapper a:last-of-type {
+		margin-right : 0;
+	}
+}
 
-    @media (max-width : 1350px) {
+@media (max-width : 1350px) {
 
-        #searchButtonsWrapper {
-            text-align : center;
-            width      : 100%;
-        }
+	#searchButtonsWrapper {
+		text-align : center;
+		width      : 100%;
+	}
 
-        #actionButtonsWrapper {
-            text-align : center;
-            width      : 100%;
-        }
-    }
+	#actionButtonsWrapper {
+		text-align : center;
+		width      : 100%;
+	}
+}
 
-    @media (max-width : 630px) {
-        #searchButtonsWrapper a,
-        #actionButtonsWrapper a {
-            margin-left  : 10px;
-            margin-right : 10px;
-        }
-    }
+@media (max-width : 630px) {
+	#searchButtonsWrapper a,
+	#actionButtonsWrapper a {
+		margin-left  : 10px;
+		margin-right : 10px;
+	}
+}
 
-    .container {
-        max-width : unset;
-    }
+.container {
+	max-width : unset;
+}
 
-    #summary_leaflet_wrapper {
-        display : flex;
-        padding : 0;
-        width   : 100%;
-    }
+#summary_leaflet_wrapper {
+	display : flex;
+	padding : 0;
+	width   : 100%;
+}
 
-    #summary {
-        float      : left;
-        padding    : 20px;
-        text-align : left;
-        width      : calc(50%);
-    }
+#summary {
+	float      : left;
+	padding    : 20px;
+	text-align : left;
+	width      : calc(50%);
+}
 
-    #summary span {
-        line-height : 25px;
-    }
+#summary span {
+	line-height : 25px;
+}
 
-    #summary span.rightAlign {
-        display       : inline-block;
-        padding-right : 5px;
-        text-align    : right;
-        width         : 150px;
-    }
+#summary span.rightAlign {
+	display       : inline-block;
+	padding-right : 5px;
+	text-align    : right;
+	width         : 150px;
+}
 
-    #leaflet {
-        float   : left;
-        height  : 400px;
-        padding : 0 !important;
-        width   : calc(50%);
-    }
+#leaflet {
+	float   : left;
+	height  : 400px;
+	padding : 0 !important;
+	width   : calc(50%);
+}
 
-    @media (max-width : 1000px) {
+@media (max-width : 1000px) {
 
-        #summary_leaflet_wrapper {
-            display : block;
-        }
+	#summary_leaflet_wrapper {
+		display : block;
+	}
 
-        #summary {
-            clear : both;
-            float : left;
-            width : 100%;
-        }
+	#summary {
+		clear : both;
+		float : left;
+		width : 100%;
+	}
 
-        #leaflet {
-            clear       : both;
-            float       : left;
-            height      : 210px;
-            margin-left : 0;
-            margin-top  : 20px;
-            width       : 100%;
-        }
-    }
+	#leaflet {
+		clear       : both;
+		float       : left;
+		height      : 210px;
+		margin-left : 0;
+		margin-top  : 20px;
+		width       : 100%;
+	}
+}
 
-    section.v-flex {
-        display   : flex;
-        flex-wrap : wrap;
-    }
+section.v-flex {
+	display   : flex;
+	flex-wrap : wrap;
+}
 
-    section.v-flex > span {
-        flex       : 0 0 100%;
-        text-align : left;
-    }
+section.v-flex > span {
+	flex       : 0 0 100%;
+	text-align : left;
+}
 
-    .recommandations_wrapper {
-        margin : auto;
-        width  : 60%;
-    }
+.recommandations_wrapper {
+	margin : auto;
+	width  : 60%;
+}
 
-    .recommandations_wrapper h4 {
-        margin-bottom : 0;
-        margin-top    : 20px;
-    }
+.recommandations_wrapper h4 {
+	margin-bottom : 0;
+	margin-top    : 20px;
+}
 
-    .recommandations_wrapper p {
-        margin-bottom : 0;
-        margin-top    : 0;
-    }
+.recommandations_wrapper p {
+	margin-bottom : 0;
+	margin-top    : 0;
+}
 
-    .container.bordered {
-        background-color : #FFFFFF;
-        border           : 1px solid #CCCCCC;
-        border-radius    : 2px;
-        /*float            : left;*/
-        padding          : 20px;
-    }
+.container.bordered {
+	background-color : #FFFFFF;
+	border           : 1px solid #CCCCCC;
+	border-radius    : 2px;
+	/*float            : left;*/
+	padding          : 20px;
+}
 
-    sup {
-        font-size : 0.6em;
-    }
+sup {
+	font-size : 0.6em;
+}
 
-    .infobulle {
-        position         : absolute;
-        width            : calc(25% - 10px);
-        display          : none;
-        background-color : #FFFFFF;
-        border           : 1px solid #CCCCCC;
-        border-radius    : 2px;
-        text-align       : justify;
-        z-index          : 1;
-        /*position: sticky;*/
-        padding          : 5px;
-        margin           : 5px;
-    }
+.infobulle {
+	background-color : #FFFFFF;
+	border           : 1px solid #CCCCCC;
+	border-radius    : 2px;
+	display          : none;
+	margin           : 5px;
+	padding          : 5px;
+	position         : absolute;
+	text-align       : justify;
+	/*position: sticky;*/
+	width            : calc(25% - 10px);
+	z-index          : 1;
+}
 
-    .infobulle:hover {
+.infobulle:hover {
 
-        display : block;
-    }
+	display : block;
+}
 
 </style>

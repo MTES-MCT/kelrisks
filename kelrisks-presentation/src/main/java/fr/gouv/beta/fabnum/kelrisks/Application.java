@@ -6,6 +6,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.TcpClient;
+import reactor.util.annotation.NonNull;
 
 import org.geolatte.geom.json.GeolatteGeomModule;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,10 +47,10 @@ public class Application extends SpringBootServletInitializer {
     public WebMvcConfigurer corsConfigurer() {
         
         return new WebMvcConfigurer() {
-            
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
     
+            @Override
+            public void addCorsMappings(@NonNull CorsRegistry registry) {
+        
                 registry.addMapping("/**/api/**");
                 registry.addMapping("/api/**");
                 // TODO : enlever en prod !!!

@@ -103,8 +103,8 @@
 
             <a class="marianne"
                href="index.html">
-                <img :src="env.backPath + '/mte.png'"
-                     alt="Ministère de la Transition Écologique"/>
+                <img :src="env.backPath + '/rf.png'"
+                     alt="République Française"/>
             </a>
 
             <div class="product_wrapper">
@@ -114,7 +114,7 @@
                                                        class="beta"
                                                        src="/images/pointbetagouvfr.svg"/>
                 </a>
-                <p class="tagline">Évaluez simplement et rapidement les risques de votre terrain</p>
+                <p class="tagline">Évaluez simplement et rapidement les risques de votre bien</p>
             </div>
 
             <nav>
@@ -130,6 +130,8 @@
                                      :steps="['Rechercher une parcelle', 'Afficher le résultat', 'Compléter l\'état des risques', 'Télécharger']"
                                      @bulletclick="changeStep"/>
             </div>
+
+            <unsafe-login v-if="env.backPath.includes('preprod') || env.backPath.includes('localhost')"/>
 
             <search-form-parcelle @avis="avis = $event"
                                   @cgu="$refs.cgu.open()"
@@ -176,8 +178,8 @@
 
             <a class="marianne"
                href="index.html">
-                <img :src="env.backPath + '/mte.png'"
-                     alt="Ministère de la Transition Écologique"/>
+                <img :src="env.backPath + '/rf.png'"
+                     alt="République Française"/>
             </a>
 
             <div class="partenaire">
@@ -194,7 +196,7 @@
                 <a href="/swagger-ui.html">API</a>
             </div>
 
-            <div class="version">{{env.presentationVersion}}</div>
+            <div class="version">{{ env.presentationVersion }}</div>
 
             <c-g-u ref="cgu"/>
             <who-are-we ref="haw"/>
@@ -231,6 +233,7 @@ import BulletProgressBar from "./content/BulletProgressBar";
 import ERP from "./content/ERP";
 import CompleterERRIAL from "./content/search/CompleterERRIAL";
 import TelechargerERRIAL from "./content/search/TelechargerERRIAL";
+import UnsafeLogin from "@/components/content/base/UnsafeLogin";
 
 export default {
     name: 'Kelrisks',
@@ -260,6 +263,7 @@ export default {
         }
     }),
     components: {
+        UnsafeLogin,
         CompleterERRIAL,
         TelechargerERRIAL,
         ERP,
@@ -334,309 +338,309 @@ export default {
 
 <style>
 
-    html, body {
-        background-color : #FFFFFF;
-        height           : 100%;
-    }
+html, body {
+	background-color : #FFFFFF;
+	height           : 100%;
+}
 
-    body {
-        overflow-y : scroll;
-    }
+body {
+	overflow-y : scroll;
+}
 
-    header, footer {
-        background-color : transparent;
-        border-bottom    : solid 2px #CCCCCC;
-        display          : flex;
-        flex-wrap        : wrap;
-        padding          : 0 100px;
-    }
+header, footer {
+	background-color : transparent;
+	border-bottom    : solid 2px #CCCCCC;
+	display          : flex;
+	flex-wrap        : wrap;
+	padding          : 0 100px;
+}
 
-    header a,
-    header a:hover,
-    header a:visited,
-    footer a,
-    footer a:hover,
-    footer a:visited {
-        background-color : transparent;
-        color            : #373C42 !important;
-        text-decoration  : none !important;
-    }
+header a,
+header a:hover,
+header a:visited,
+footer a,
+footer a:hover,
+footer a:visited {
+	background-color : transparent;
+	color            : #373C42 !important;
+	text-decoration  : none !important;
+}
 
-    a.marianne {
-        flex : 0 0 300px;
-    }
+a.marianne {
+	flex : 0 0 300px;
+}
 
-    a.marianne img {
-        height : 208px;
-    }
+a.marianne img {
+	height : 208px;
+}
 
-    header div.product_wrapper {
-        flex         : 1 0 auto;
-        padding-left : 50px;
-    }
+header div.product_wrapper {
+	flex         : 1 0 auto;
+	padding-left : 50px;
+}
 
-    header div.product_wrapper a.product {
-        align-content : center;
-        display       : flex;
-        font-size     : 1.7em;
-        font-weight   : bold;
-        line-height   : 62px;
-        margin-top    : 60px;
-    }
+header div.product_wrapper a.product {
+	align-content : center;
+	display       : flex;
+	font-size     : 1.7em;
+	font-weight   : bold;
+	line-height   : 62px;
+	margin-top    : 60px;
+}
 
-    header div.product_wrapper p.tagline {
-        color     : #B0B0AF;
-        font-size : 1.2em;
-        margin    : -10px 0 0 0;
-    }
+header div.product_wrapper p.tagline {
+	color     : #B0B0AF;
+	font-size : 1.2em;
+	margin    : -10px 0 0 0;
+}
 
-    header img.beta {
-        height      : 64px;
-        margin-left : 2px;
-    }
+header img.beta {
+	height      : 64px;
+	margin-left : 2px;
+}
 
-    .title {
-        color       : #26353F;
-        font-size   : 1.7em;
-        font-weight : 900;
-        margin-left : 20px;
-        text-align  : center;
-    }
+.title {
+	color       : #26353F;
+	font-size   : 1.7em;
+	font-weight : 900;
+	margin-left : 20px;
+	text-align  : center;
+}
 
-    .subtitle {
-        margin-top    : 0;
-        font-size     : 1.3em;
-        font-weight   : normal;
-        color         : #8A8F96;
-        margin-bottom : 20px;
-        text-align    : center;
-    }
+.subtitle {
+	color         : #8A8F96;
+	font-size     : 1.3em;
+	font-weight   : normal;
+	margin-bottom : 20px;
+	margin-top    : 0;
+	text-align    : center;
+}
 
-    p {
-        font-size   : 16px;
-        font-weight : normal;
-        color       : #222933;
-        font-family : 'Nunito Sans', sans-serif;
+p {
+	color       : #222933;
+	font-family : 'Nunito Sans', sans-serif;
+	font-size   : 16px;
+	font-weight : normal;
 
-    }
+}
 
-    .hero__container p {
-        transition : all 0.5s;
-    }
+.hero__container p {
+	transition : all 0.5s;
+}
 
-    .hero__container p.contracted {
-        visibility       : collapse;
-        margin           : -0.7em;
-        padding          : 0;
-        background-color : transparent;
-        color            : transparent;
-    }
+.hero__container p.contracted {
+	background-color : transparent;
+	color            : transparent;
+	margin           : -0.7em;
+	padding          : 0;
+	visibility       : collapse;
+}
 
-    .hero__container {
-        transition : height 0.66s;
-        height     : 38vh;
-        min-height : 12vh;
-    }
+.hero__container {
+	height     : 38vh;
+	min-height : 12vh;
+	transition : height 0.66s;
+}
 
-    .hero__container.contracted {
-        height : 12vh;
-    }
+.hero__container.contracted {
+	height : 12vh;
+}
 
-    #bullet-progress-bar_wrapper {
-        background-color : white;
-        padding          : 100px 12.5% 0;
-        width            : 100%;
-    }
+#bullet-progress-bar_wrapper {
+	background-color : white;
+	padding          : 100px 12.5% 0;
+	width            : 100%;
+}
 
-    p.note {
-        font-size : 1em; color : #555555;
-    }
+p.note {
+	color : #555555; font-size : 1em;
+}
 
-    .panel {
-        overflow : visible;
-        position : relative;
-    }
+.panel {
+	overflow : visible;
+	position : relative;
+}
 
-    i {
-        color : #777777;
-    }
+i {
+	color : #777777;
+}
 
-    .container-grey {
-        background-color : #EBEFF3;
-        width            : 100%;
-    }
+.container-grey {
+	background-color : #EBEFF3;
+	width            : 100%;
+}
 
-    .section {;
-        font-family    : 'Nunito Sans', sans-serif;
-        font-size      : 16px;
-        font-stretch   : normal;
-        font-style     : normal;
-        font-weight    : normal;
-        letter-spacing : normal;
-        line-height    : normal;
-        padding        : 30px 40px 0;
-        text-align     : left;
-    }
+.section {;
+	font-family    : 'Nunito Sans', sans-serif;
+	font-size      : 16px;
+	font-stretch   : normal;
+	font-style     : normal;
+	font-weight    : normal;
+	letter-spacing : normal;
+	line-height    : normal;
+	padding        : 30px 40px 0;
+	text-align     : left;
+}
 
-    @media (min-width : 1000px) {
-        .section {
-            padding : 30px 140px 0;
-        }
-    }
+@media (min-width : 1000px) {
+	.section {
+		padding : 30px 140px 0;
+	}
+}
 
-    .section__subtitle {
-        margin-bottom : 40px;
-    }
+.section__subtitle {
+	margin-bottom : 40px;
+}
 
-    #section0 {
-        min-height : 100px;
-    }
+#section0 {
+	min-height : 100px;
+}
 
-    p {
-        /*text-indent : 12px;*/
-        text-align : justify;
-    }
+p {
+	/*text-indent : 12px;*/
+	text-align : justify;
+}
 
-    .clearfix:after {
-        content    : '';
-        display    : block;
-        height     : 0;
-        clear      : both;
-        visibility : hidden;
-    }
+.clearfix:after {
+	clear      : both;
+	content    : '';
+	display    : block;
+	height     : 0;
+	visibility : hidden;
+}
 
-    .note_pied_page {
-        /*width  : 53%;*/
-        margin : 0 auto;
-    }
+.note_pied_page {
+	/*width  : 53%;*/
+	margin : 0 auto;
+}
 
-    .note_pied_page p {
-        font-size : 0.8em;
-        color     : #999999;
-    }
+.note_pied_page p {
+	color     : #999999;
+	font-size : 0.8em;
+}
 
-    #loading {
-        position         : fixed;
-        width            : 100%;
-        height           : 100%;
-        background-color : rgba(0, 0, 0, 0.73);
-        top              : 0;
-        left             : 0;
-    }
+#loading {
+	background-color : rgba(0, 0, 0, 0.73);
+	height           : 100%;
+	left             : 0;
+	position         : fixed;
+	top              : 0;
+	width            : 100%;
+}
 
-    #loading p {
-        color      : white;
-        text-align : center;
-        font-size  : 2em;
-        margin-top : 25.5%;
-    }
+#loading p {
+	color      : white;
+	font-size  : 2em;
+	margin-top : 25.5%;
+	text-align : center;
+}
 
-    footer {
-        border-bottom  : none;
-        border-top     : solid 3px #CCCCCC;
-        padding-bottom : 25px;
-        padding-top    : 25px;
-    }
+footer {
+	border-bottom  : none;
+	border-top     : solid 3px #CCCCCC;
+	padding-bottom : 25px;
+	padding-top    : 25px;
+}
 
-    footer div.partenaire {
-        display    : flex;
-        flex       : 1 0 auto;
-        margin-top : 25px;
-    }
+footer div.partenaire {
+	display    : flex;
+	flex       : 1 0 auto;
+	margin-top : 25px;
+}
 
-    footer .column {
-        border-left    : #222933 solid 1px;
-        display        : flex;
-        flex           : 0 0 350px;
-        flex-direction : column;
-        font-weight    : bold;
-        margin-top     : 25px;
-        padding-left   : 25px;
-        text-align     : left;
-    }
+footer .column {
+	border-left    : #222933 solid 1px;
+	display        : flex;
+	flex           : 0 0 350px;
+	flex-direction : column;
+	font-weight    : bold;
+	margin-top     : 25px;
+	padding-left   : 25px;
+	text-align     : left;
+}
 
-    footer div.version {
-        flex        : 1 0 100%;
-        font-family : "Bradley Hand ITC", Arial, sans-serif;
-    }
+footer div.version {
+	flex        : 1 0 100%;
+	font-family : "Bradley Hand ITC", Arial, sans-serif;
+}
 
-    .bouton,
-    .bouton:active,
-    .bouton:focus,
-    .bouton:visited {
-        background-color : #0053B3;
-        border           : 0;
-        /*border-bottom    : solid 3px #003B80;*/
-        border-radius    : 4px;
-        color            : #FFFFFF;
-        display          : block;
-        float            : left;
-        font-size        : var(--space-s);
-        margin-bottom    : 20px;
-        margin-right     : 20px;
-        min-width        : 250px;
-        padding          : 0.35em 1.75em;
-        text-align       : center;
-        text-decoration  : none;
-        transition       : background-color .25s ease;
-    }
+.bouton,
+.bouton:active,
+.bouton:focus,
+.bouton:visited {
+	background-color : #0053B3;
+	border           : 0;
+	/*border-bottom    : solid 3px #003B80;*/
+	border-radius    : 4px;
+	color            : #FFFFFF;
+	display          : block;
+	float            : left;
+	font-size        : var(--space-s);
+	margin-bottom    : 20px;
+	margin-right     : 20px;
+	min-width        : 250px;
+	padding          : 0.35em 1.75em;
+	text-align       : center;
+	text-decoration  : none;
+	transition       : background-color .25s ease;
+}
 
-    .bouton.success,
-    .bouton.success:active,
-    .bouton.success:focus,
-    .bouton.success:visited {
-        background-color : #03BD5B;
-        border-color     : #039347;
-    }
+.bouton.success,
+.bouton.success:active,
+.bouton.success:focus,
+.bouton.success:visited {
+	background-color : #03BD5B;
+	border-color     : #039347;
+}
 
-    .bouton:hover {
-        background-color : #003B80;
-        /*border-bottom    : solid 3px #003B80;*/
-        color            : #FFFFFF;
-    }
+.bouton:hover {
+	background-color : #003B80;
+	/*border-bottom    : solid 3px #003B80;*/
+	color            : #FFFFFF;
+}
 
-    .bouton.success:hover {
-        background-color : #039347;
-    }
+.bouton.success:hover {
+	background-color : #039347;
+}
 
-    .bouton:disabled {
-        background-color : #8393A7;
-        border           : 0;
-        /*border-bottom    : solid 3px #4A535E;*/
-        cursor           : not-allowed;
-    }
+.bouton:disabled {
+	background-color : #8393A7;
+	border           : 0;
+	/*border-bottom    : solid 3px #4A535E;*/
+	cursor           : not-allowed;
+}
 
-    .lien {
-        background      : none;
-        color           : #0053B3;
-        cursor          : pointer;
-        padding         : 9px 0;
-        text-decoration : none;
-    }
+.lien {
+	background      : none;
+	color           : #0053B3;
+	cursor          : pointer;
+	padding         : 9px 0;
+	text-decoration : none;
+}
 
-    .lien.big {
-        font-size : 1.3em;
-        z-index   : 10;
-    }
+.lien.big {
+	font-size : 1.3em;
+	z-index   : 10;
+}
 
-    .lien:hover {
-        background : none;
-        color      : #003B80;
-    }
+.lien:hover {
+	background : none;
+	color      : #003B80;
+}
 
-    svg {
-        margin : 0 10px;
-    }
+svg {
+	margin : 0 10px;
+}
 
-    .button svg,
-    .bouton svg {
-        color  : #FFFFFF;
-        margin : 0 10px 0 0;
-    }
+.button svg,
+.bouton svg {
+	color  : #FFFFFF;
+	margin : 0 10px 0 0;
+}
 
-    .button svg.end,
-    .bouton svg.end {
-        color  : #FFFFFF;
-        margin : 0 0 0 10px;
-    }
+.button svg.end,
+.bouton svg.end {
+	color  : #FFFFFF;
+	margin : 0 0 0 10px;
+}
 </style>

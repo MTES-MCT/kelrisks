@@ -18,6 +18,8 @@ public class PlanPreventionRisquesGasparDTO {
     private Date         dateApprobation;
     private Date         dateAbrogation;
     private Long         id;
+    private boolean      existsInGeorisque;
+    private boolean      existsInGpu;
     private List<String> assiettes = new ArrayList<>();
 }
   

@@ -19,7 +19,7 @@ L’intérêt pour ces bases de données est bien réel : 2 millions de consulta
 
 Au final, dans un département comme l’Essonne, la DRIEE reçoit chaque année environ 300 courriers de notaires souhaitant obtenir des informations alors même que cette information est publique. Cela signifie bien qu’en dépit des heures passés sur les bases, l’utilisateur peine à répondre à la question que tout investisseur se pose : quel risque je prends en achetant ce terrain ou cette maison ?
 
-## Kelrisks: Evaluez simplement et rapidement les risques votre terrain
+## Kelrisks: Evaluez simplement et rapidement les risques votre bien
 
 Kelrisks permet en quelques clics d’évaluer les risques d’un terrain et donne à l’utilisateur des conseils sur la suite dans le cas où il souhaiterait acheter, vendre ou louer un bien.
 

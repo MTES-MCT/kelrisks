@@ -50,6 +50,12 @@ public class PlanPreventionRisquesGaspar extends AbstractEntity {
     @Column(name = "date_abrogation", columnDefinition = "DATE")
     Date dateAbrogation;
     
+    @Column(name = "is_georisque")
+    boolean existsInGeorisque = false;
+    
+    @Column(name = "is_gpu")
+    boolean existsInGpu = false;
+    
     @Id
     @Column(name = "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_gaspar")

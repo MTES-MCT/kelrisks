@@ -48,7 +48,9 @@
              v-if="leafletData">
             <leaflet :max-zoom-center="maxZoomCenter"
                      :parcelle="parcelle"
-                     :data="leafletData"/>
+                     :data="leafletData"
+                     :max-zoom="leafletMaxZoom"
+                     :min-zoom="leafletMinZoom"/>
         </div>
     </div>
 </template>
@@ -69,37 +71,47 @@ export default {
             default: () => []
         },
         logoURL: {
+          type: String,
+          default: ''
+        },
+      title: {
+        type: String,
+        default: ''
+      },
+      level: {
+        type: String,
+        default: ''
+      },
+      levelMax: {
+        type: String,
+        default: ''
+      },
+      levelMin: {
+        type: String,
+        default: ''
+      },
+      legendBlocks: {
+        type: Array,
+        default: () => []
+      },
+      description: {
             type: String,
-            default: ''
-        },
-        title: {
-            type: String,
-            default: ''
-        },
-        level: {
-            type: String,
-            default: ''
-        },
-        levelMax: {
-            type: String,
-            default: ''
-        },
-        legendBlocks: {
-            type: Array,
-            default: () => []
-        },
-        description: {
-            type: String,
-            default: ''
-        },
-        detail: {
-            type: String,
-            default: ''
-        },
-        leafletData: {
-            type: [String, Array],
-            default: undefined
-        },
+        default: ''
+      },
+      detail: {
+        type: String,
+        default: ''
+      },
+      leafletData: {
+        type: [String, Array],
+        default: undefined
+      },
+      leafletMaxZoom: {
+        default: () => 18
+      },
+      leafletMinZoom: {
+        default: () => null
+      }
     },
     methods: {},
     computed: {

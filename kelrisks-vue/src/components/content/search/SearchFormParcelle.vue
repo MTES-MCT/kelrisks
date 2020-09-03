@@ -44,7 +44,7 @@
                         <!--suppress JSUnresolvedVariable -->
                         <template slot="kr-option-label"
                                   slot-scope="slotProps">
-                            {{ slotProps.option.properties.postcode + ' - ' + slotProps.option.properties.city}}
+                            {{ slotProps.option.properties.postcode + ' - ' + slotProps.option.properties.city }}
                         </template>
                         <!--suppress JSUnresolvedVariable -->
                         <template slot="kr-helper"
@@ -95,13 +95,15 @@
                     </div>
                 </div>
 
-                <Leaflet :center="leaflet.center"
-                         :parcelle-found="this.leaflet.parcelleFound"
-                         @parcelleselected="onSelectedParcellesChanged"
-                         id="sfp_form_leaflet"
-                         ref="sfp_form_leaflet"
-                         v-bind:class="{'has-geoloc':leaflet.hasGeoloc}"
-                         v-if="true"/>
+                <div id="sfp_form_leaflet_wrapper"
+                     v-bind:class="{'has-geoloc':leaflet.hasGeoloc}">
+                    <p>Vous pouvez modifier, ajouter, enlever une ou des parcelles en cliquant dessus</p>
+                    <Leaflet id="sfp_form_leaflet"
+                             ref="sfp_form_leaflet"
+                             :center="leaflet.center"
+                             :parcelle-found="this.leaflet.parcelleFound"
+                             @parcelleselected="onSelectedParcellesChanged"/>
+                </div>
             </div>
 
             <div class="clearfix"></div>
@@ -228,86 +230,103 @@ export default {
 
 <style scoped>
 
-    h3 {
-        text-align : center;
-    }
+h3 {
+	text-align : center;
+}
 
-    #or {
-        color    : #222933;
-        margin   : 30px 0 15px 0;
-        position : relative;
-    }
+#or {
+	color    : #222933;
+	margin   : 30px 0 15px 0;
+	position : relative;
+}
 
-    #or span:before,
-    #or span:after {
-        border-bottom : 2px solid #0053B3;
-        content       : '';
-        overflow      : hidden;
-        position      : absolute;
-        top           : 50%;
-        width         : 45%;
-    }
+#or span:before,
+#or span:after {
+	border-bottom : 2px solid #0053B3;
+	content       : '';
+	overflow      : hidden;
+	position      : absolute;
+	top           : 50%;
+	width         : 45%;
+}
 
-    #or span:before {
-        right : 55%;
-    }
+#or span:before {
+	right : 55%;
+}
 
-    #or span:after {
-        left : 55%;
-    }
+#or span:after {
+	left : 55%;
+}
 
-    .container {
-        max-width : unset;
-    }
+.container {
+	max-width : unset;
+}
 
-    #sfp_form_wrapper {
-        float      : left;
-        margin     : 80px calc(50% - 450px / 2) 0;
-        transition : all 0.5s;
-        width      : 450px;
-    }
+#sfp_form_wrapper {
+	float      : left;
+	margin     : 80px calc(50% - 450px / 2) 0;
+	transition : all 0.5s;
+	width      : 450px;
+}
 
-    #sfp_form_wrapper.has-geoloc {
-        float  : left;
-        margin : 80px 50px 0 0;
-    }
+#sfp_form_wrapper.has-geoloc {
+	float  : left;
+	margin : 80px 50px 0 0;
+}
 
-    #sfp_form_leaflet {
-        float      : left;
-        height     : 600px;
-        transition : all 0.5s;
-        width      : 0;
-    }
+#sfp_form_leaflet_wrapper {
+	float      : left;
+	height     : 632px;
+	transition : all 0.5s;
+	visibility : hidden;
+	width      : 0;
+}
 
-    #sfp_form_leaflet.has-geoloc {
-        float  : left;
-        height : 600px;
-        width  : calc(100% - 500px)
-    }
+#sfp_form_leaflet {
+	float  : left;
+	height : 600px;
+}
 
-    .panel.noborder {
-        border     : none;
-        box-shadow : unset;
-    }
+#sfp_form_leaflet_wrapper p {
+	color      : white;
+	margin     : 5px;
+	text-align : center;
+	transition : all 0.5s;
+	width      : 100%;
+}
 
-    #cgu {
-        /*margin : 0px 5% 0;*/
-    }
+#sfp_form_leaflet_wrapper.has-geoloc p {
+	color : black;
+}
 
-    #cgu p {
-        color      : rgb(50, 50, 50);
-        font-size  : 0.85em;
-        margin     : 0;
-        text-align : center;
-    }
+#sfp_form_leaflet_wrapper.has-geoloc {
+	visibility : visible;
+	width      : calc(100% - 500px)
+}
 
-    #cgu p a {
-        color           : rgb(50, 50, 50);
-        text-decoration : underline;
-    }
+.panel.noborder {
+	border     : none;
+	box-shadow : unset;
+}
 
-    #cgu p a:visited {
-        color           : rgb(50, 50, 50);
-        text-decoration : underline;
-    }
+#cgu {
+	/*margin : 0px 5% 0;*/
+}
+
+#cgu p {
+	color      : rgb(50, 50, 50);
+	font-size  : 0.85em;
+	margin     : 0;
+	text-align : center;
+}
+
+#cgu p a {
+	color           : rgb(50, 50, 50);
+	text-decoration : underline;
+}
+
+#cgu p a:visited {
+	color           : rgb(50, 50, 50);
+	text-decoration : underline;
+}
 </style>
