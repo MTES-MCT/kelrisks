@@ -133,6 +133,8 @@
 
             <unsafe-login v-if="env.backPath.includes('preprod') || env.backPath.includes('localhost')"/>
 
+            {{ env.backPath }}
+
             <search-form-parcelle @avis="avis = $event"
                                   @cgu="$refs.cgu.open()"
                                   @flow="updateflow"
