@@ -381,16 +381,19 @@
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.'"
                     :title="'Naturels'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_inondation_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRN"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques miniers.'"
                     :title="'Miniers'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_terre_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRM"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques technologiques.'"
                     :title="'Technologiques'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_industrie_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRT"/>
 
@@ -399,10 +402,12 @@
                                       '- des secteurs d’information sur les sols</br>' +
                                       '- des terrains pollués affectés d’une servitude d’utilité publique.</p>'"
                     :title="'Pollution des sols'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
                     v-if="!hasPollutionPrincipale"/>
 
             <risque :description="'La parcelle n’est pas concernée par un plan d’exposition au bruit.'"
                     :title="'Bruit'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_bruit_bleu.png'"
                     v-if="!hasPEB"/>
 
             <div class="clearfix"/>
