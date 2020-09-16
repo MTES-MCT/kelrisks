@@ -10,18 +10,11 @@
                 <a @click="$emit('flow', -1)"
                    class="bouton">
                     <font-awesome-icon icon="chevron-left"/>
-                    Résultat
+                    Revenir au résultat
                 </a>
             </div>
 
             <div id="actionButtonsWrapper">
-                <a @click="$emit('flow', 1)"
-                   class="bouton success"
-                   target="_blank">
-                    Télécharger l'État des risques
-                    <font-awesome-icon class="end"
-                                       icon="chevron-right"/>
-                </a>
             </div>
 
             <div class="container bordered">
@@ -80,9 +73,7 @@
             <div class="container bordered ppr">
                 <div>
                     <div class="errial_title"><span class="title">Information relative aux sinistres indemnisés par l'assurance suite à une catastrophe naturelle, minière ou technologique</span></div>
-                    <p>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ? <br/> Pour consulter la liste des arrêtés de catastrophes naturelles
-                       (Cat-Nat) sur votre commune : URL</p>
-                    <div class="text_wrapper"><b>L'information est mentionnée dans l'acte de vente</b></div>
+                    <p>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ?</p>
                     <div class="input_wrapper">
                         <label><input name="'cat_nat'"
                                       type="radio">Oui</label>

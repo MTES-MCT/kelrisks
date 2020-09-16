@@ -133,8 +133,6 @@
 
             <unsafe-login v-if="env.backPath.includes('preprod') || env.backPath.includes('localhost')"/>
 
-            {{ env.backPath }}
-
             <search-form-parcelle @avis="avis = $event"
                                   @cgu="$refs.cgu.open()"
                                   @flow="updateflow"
@@ -205,8 +203,6 @@
 
         </footer>
 
-        <contact :timeout="45"/>
-
         <konami/>
 
         <div id="loading"
@@ -222,7 +218,6 @@
 </template>
 
 <script>
-import Contact from '../components/content/Contact'
 import CGU from '../components/content/CGU'
 import HowTo from '../components/content/HowTo'
 import WhoAreWe from '../components/content/WhoAreWe'
@@ -273,7 +268,6 @@ export default {
         Stats,
         SearchResults,
         SearchFormParcelle,
-        Contact,
         CGU,
         HowTo,
         WhoAreWe,

@@ -6,7 +6,7 @@
                 <img height="75"
                      src="/images/icons/kelrisks/howTo1.svg"
                      width="75">
-                <p>Vous trouvez le terrain concerné à l'aide de son adresse ou sa référence cadastrale.</p>
+                <p>Vous trouvez le bien concerné à l'aide de son adresse ou sa référence cadastrale.</p>
             </div>
         </div>
         <hr>
@@ -15,7 +15,7 @@
                 <img height="75"
                      src="/images/icons/kelrisks/howTo2.svg"
                      width="75">
-                <p>Kelrisks affiche le résultat de la recherche et les principaux risques et pollutions.</p>
+                <p>Vous consultez le résultat de la recherche.</p>
             </div>
         </div>
         <hr>
@@ -24,9 +24,7 @@
                 <img height="75"
                      src="/images/icons/kelrisks/howTo3.svg"
                      width="75">
-                <p>Votre ERRIAL, État des Risques est prêt à être téléchargé.</p>
-                <p class="subtext"
-                   style="color: #AAAAAA; font-size: 0.75em">* voir CGU pour les détails</p>
+                <p>Vous complétez l'état des risques (ERRIAL)</p>
             </div>
         </div>
         <hr>
@@ -35,9 +33,7 @@
                 <img height="75"
                      src="/images/icons/kelrisks/howTo4.svg"
                      width="75">
-                <p>Les résultats sont téléchargeables et partageables</p>
-                <p class="subtext"
-                   style="color: #AAAAAA; font-size: 0.75em">* voir CGU pour les détails</p>
+                <p>Votre ERRIAL est prêt à être téléchargé et partagé.</p>
             </div>
         </div>
     </div>

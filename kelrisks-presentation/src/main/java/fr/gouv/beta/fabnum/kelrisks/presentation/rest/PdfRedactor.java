@@ -52,7 +52,7 @@ public class PdfRedactor {
         Element element = htmlDocument.select("#date").first();
         
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.FRANCE);
-        element.text("Établi le " + simpleDateFormat.format(new Date()));
+        element.text("Établi le " + simpleDateFormat.format(new Date()) + " (valable 6 mois)");
         
         element = htmlDocument.select("#commune").first();
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
@@ -246,11 +246,11 @@ public class PdfRedactor {
         int     rowNumbers   = 0;
         int     blockNumbers = 0;
     
-        page.append("<div><h2>ANNEXE 2 : LISTE DES ARRÊTÉS PRIS SUR LA COMMUNE</h2></div>");
+        page.append("<div><h2>ANNEXE 2 : LISTE DES ARRÊTÉS CAT-NAT PRIS SUR LA COMMUNE</h2></div>");
     
         if (!georisquePaginatedCatNat.getData().isEmpty()) {
-        
-            page.append("<p>" + "Nombre d'arrêtés de catastrophes naturelles : " + georisquePaginatedCatNat.getData().size() + "</p>");
+    
+            page.append("<p>" + "Nombre d'arrêtés de catastrophes naturelles (CAT-NAT) : " + georisquePaginatedCatNat.getData().size() + "</p>");
             
             List<TypeCatNat> typeCatNatList = groupCatNatByType(georisquePaginatedCatNat.getData());
             
@@ -475,7 +475,7 @@ public class PdfRedactor {
     
         Element page = addPage(htmlDocument);
     
-        page.append("<div><h2>AUTRES INFORMATIONS</h2></div>");
+        page.append("<div><h2>" + (hasRisquesPrincipaux(avisDTO) ? "AUTRES" : "") + " INFORMATIONS</h2></div>");
     
         if (!hasPollutionPrincipale(avisDTO)) {
             addRisque(htmlDocument,
@@ -488,7 +488,7 @@ public class PdfRedactor {
     
         if (!hasTypePPR(avisDTO, "PPRT")) {
             addRisque(htmlDocument,
-                      "TECHNOLOGIQUES",
+                      "RISQUES TECHNOLOGIQUES",
                       localAppPath + "/pictogrammes_risque/ic_industrie_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques technologiques.</p>"
                      );
@@ -496,7 +496,7 @@ public class PdfRedactor {
     
         if (!hasTypePPR(avisDTO, "PPRM")) {
             addRisque(htmlDocument,
-                      "MINIERS",
+                      "RISQUES MINIERS",
                       localAppPath + "/pictogrammes_risque/ic_cavite_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques miniers.</p>"
                      );
@@ -504,7 +504,7 @@ public class PdfRedactor {
     
         if (!hasTypePPR(avisDTO, "PPRN")) {
             addRisque(htmlDocument,
-                      "NATURELS",
+                      "RISQUES NATURELS",
                       localAppPath + "/pictogrammes_risque/ic_seisme_bleu.png",
                       "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.</p>"
                      );
@@ -630,11 +630,7 @@ public class PdfRedactor {
     
     private void redigerRisquesPrincipaux(Document htmlDocument, AvisDTO avisDTO) {
     
-        if ((avisDTO.getPlanPreventionRisquesDTOs().isEmpty()) &&
-            (avisDTO.getZonePlanExpositionBruit() == null) &&
-            !(hasPollutionPrincipale(avisDTO)) &&
-            !(hasRadonHaut(avisDTO)) &&
-            !(hasSismicite(avisDTO))) { return; }
+        if (hasRisquesPrincipaux(avisDTO)) { return; }
     
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
     
@@ -714,6 +710,15 @@ public class PdfRedactor {
                                (avisDTO.getZonePlanExpositionBruit().equals("D") ? "<p>Le niveau d’exposition au bruit de la parcelle est faible (zone D en verte). Dans la zone D, les nouveaux " +
                                                                                    "logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.</p>" : ""));
         }
+    }
+    
+    private boolean hasRisquesPrincipaux(AvisDTO avisDTO) {
+        
+        return (avisDTO.getPlanPreventionRisquesDTOs().isEmpty()) &&
+               (avisDTO.getZonePlanExpositionBruit() == null) &&
+               !(hasPollutionPrincipale(avisDTO)) &&
+               !(hasRadonHaut(avisDTO)) &&
+               !(hasSismicite(avisDTO));
     }
     
     private void addRisquePrincipal(Document htmlDocument, String id, String libelle, String url, String text) {

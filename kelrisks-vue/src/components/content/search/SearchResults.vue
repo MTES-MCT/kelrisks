@@ -35,14 +35,6 @@
                     <font-awesome-icon icon="copy"/>
                     Partager le résultat
                 </a>
-                <a @click="$emit('flow', 1)"
-                   class="bouton success"
-                   id="pdf"
-                   target="_blank">
-                    Créer un état des risques
-                    <font-awesome-icon class="end"
-                                       icon="chevron-right"/>
-                </a>
             </div>
 
             <div class="container bordered"
@@ -68,7 +60,7 @@
         </section>
 
         <section class="section section-grey v-flex"
-                 v-if="avis.ppr.length > 0 || hasSismiciteHaute || hasSismiciteMoyenne || hasPEB || hasPollutionPrincipale || hasRadonHaut">
+                 v-if="hasRisquesInformationObligatoire">
 
             <span class="title">Risques faisant l'objet d'une obligation d'information au titre de l'IAL</span>
 
@@ -269,7 +261,7 @@
         </section>
 
         <section class="section v-flex"
-                 v-if="avis.canalisations.length > 0 || hasArgile || avis.nucleaires.installations.length > 0 || hasAZI || hasTRI || hasPollutionNonReglementaire || hasRadonMoyen">
+                 v-if="hasRisquesInformationNonObligatoire">
 
             <span class="title">Risques ne faisant pas l'objet d'une obligation d'information au titre de l'IAL</span>
 
@@ -377,22 +369,22 @@
 
         <section class="section v-flex">
 
-            <span class="title">Autres informations :</span>
+            <span class="title">{{ hasRisquesInformationObligatoire || hasRisquesInformationNonObligatoire ? "Autres informations" : "Informations" }}</span>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.'"
-                    :title="'Naturels'"
+                    :title="'Risques naturels'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_inondation_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRN"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques miniers.'"
-                    :title="'Miniers'"
+                    :title="'Risques miniers'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_terre_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRM"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques technologiques.'"
-                    :title="'Technologiques'"
+                    :title="'Risques technologiques'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_industrie_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRT"/>
@@ -416,12 +408,11 @@
                 <a @click="$emit('flow', 1)"
                    class="bouton success"
                    href='#bullet-progress-bar_wrapper'>
-                    <!--                <font-awesome-icon icon="file-pdf"/>-->
-                    Créer un état des risques
+                    Compléter l'état des risques
                     <font-awesome-icon class="end"
                                        icon="chevron-right"/>
                 </a><br/>
-                <span>Certains risques nécessitent de faire des travaux obligatoires. Il est nécessaire de compléter ces informations pour finaliser l'état des risques et pollutions</span>
+                <span v-if="avis.ppr.length > 0">Certains risques nécessitent de faire des travaux obligatoires. Il est nécessaire de compléter ces informations pour finaliser l'état des risques.</span>
             </div>
         </section>
     </div>
@@ -528,6 +519,12 @@ export default {
                     console.log(codeAlea)
                     return 'ic_basias_bleu'
             }
+        },
+        hasRisquesInformationObligatoire () {
+            return this.avis.ppr.length > 0 || this.hasSismiciteHaute || this.hasSismiciteMoyenne || this.hasPEB || this.hasPollutionPrincipale || this.hasRadonHaut
+        },
+        hasRisquesInformationNonObligatoire () {
+            return this.avis.canalisations.length > 0 || this.hasArgile || this.avis.nucleaires.installations.length > 0 || this.hasAZI || this.hasTRI || this.hasPollutionNonReglementaire || this.hasRadonMoyen
         }
     },
     computed: {

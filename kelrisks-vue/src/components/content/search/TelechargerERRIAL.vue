@@ -10,7 +10,7 @@
                 <a @click="$emit('flow', -1)"
                    class="bouton">
                     <font-awesome-icon icon="chevron-left"/>
-                    Modifier l'État des risques et pollution
+                    Modifier l'État des risques
                 </a>
 
                 <a :href="env.basePath"
@@ -34,8 +34,8 @@
             <div class="container bordered ppr">
                 <div>
                     <div class="errial_title"><span class="title">Télécharger l'ERRIAL « État des Risques Réglementés - Information des Acquéreurs et des Locataires »</span></div>
-                    <p>Le propriétaire du bien concerné par l’état des risques et pollution est tenu de relire et compléter si nécessaire ces informations afin de s’assurer qu’elles sont
-                       exhaustives.</p>
+                    <p>Il appartient au propriétaire du bien de vérifier l'exactitude de ces informations autant que de besoin et, le cas échéant, de le compléter à partir d'informations disponibles
+                       sur le site internet de la préfecture ou d'informations dont il dispose sur le bien, notamment les sinistres que le bien a subis.</p>
 
                     <div style="margin: 0 auto 25px; width: 350px;">
                         <leaflet :data="currentData"
@@ -45,9 +45,9 @@
                     <div id="pdf"
                          @click="getPdf">
                         <a><span style="font-size: 5em;"><font-awesome-icon icon="file-pdf"/></span></a><br/>
-                        <a>État des risques et pollution au format PDF</a>
+                        <a>État des risques au format PDF</a>
                     </div>
-                    <p>En savoir plus sur les risques non règlementaires, consulter <a>Géorisque : Mieux connaître les risques sur le territoire</a>.</p>
+                    <!--                    <p>En savoir plus sur les risques, consulter <a href="https://www.georisques.gouv.fr/">Géorisque</a>.</p>-->
                 </div>
             </div>
 
