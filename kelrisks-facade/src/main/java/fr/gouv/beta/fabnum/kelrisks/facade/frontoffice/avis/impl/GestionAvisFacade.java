@@ -14,7 +14,6 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisques
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionArgileFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionBRGMFacade;
@@ -28,7 +27,6 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanE
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanPreventionRisquesGasparFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedCanalisation;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedInstallationNuclaire;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
@@ -65,8 +63,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFacade {
     
-    @Autowired
-    IGestionSiteSolPolueFacade                gestionSiteSolPolueFacade;
     @Autowired
     IGestionSiteIndustrielBasiasFacade        gestionSiteIndustrielBasiasFacade;
     @Autowired
@@ -160,8 +156,8 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                   .collect(Collectors.toList()));
     
         // Recherche d'une éventuelle zone poluée contenant la parcelle
-        List<Geometry<?>>     parcelleSitesSolsPolues = new ArrayList<>();
-        List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcellesUnion);
+        List<Geometry<?>> parcelleSitesSolsPolues = new ArrayList<>();
+        //        List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcellesUnion);
         //        if (!siteSolPolueDTOs.isEmpty()) {
         //            siteSolPolueDTOs.forEach(siteSolPolueDTO -> {
         //                parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon());
