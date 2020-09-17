@@ -158,17 +158,19 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                                                              Stream.of(new SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
                                                                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))
                                                   .collect(Collectors.toList()));
-        
+    
         // Recherche d'une éventuelle zone poluée contenant la parcelle
         List<Geometry<?>>     parcelleSitesSolsPolues = new ArrayList<>();
         List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcellesUnion);
-        if (!siteSolPolueDTOs.isEmpty()) {
-            siteSolPolueDTOs.forEach(siteSolPolueDTO -> {
-                parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon());
-                avisDTO.getLeaflet().getSsp().add(siteSolPolueDTO.getEwkt());
-            });
-        }
-        else { parcelleSitesSolsPolues.add(parcellesUnion); }
+        //        if (!siteSolPolueDTOs.isEmpty()) {
+        //            siteSolPolueDTOs.forEach(siteSolPolueDTO -> {
+        //                parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon());
+        //                avisDTO.getLeaflet().getSsp().add(siteSolPolueDTO.getEwkt());
+        //            });
+        //        }
+        //        else {
+        parcelleSitesSolsPolues.add(parcellesUnion);
+        //        }
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherZoneContenantParcelle");
         startTime = System.currentTimeMillis();
     
@@ -418,13 +420,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
         planPreventionRisquesGasparQO.setIdGaspar(idGaspar);
         planPreventionRisquesGasparQO.setCodeINSEE(codeINSEE);
+        planPreventionRisquesGasparQO.setAnnuleOuAbroge(false);
     
         List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
     
         if (gaspars.size() >= 1) {
         
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
-            
+        
             Map<String, Object> properties = Stream.of(new SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
                                                        new SimpleEntry<>("prescritLe", gaspars.get(0).getDateDeprescription() != null ? sdf.format(gaspars.get(0).getDateDeprescription()) : "n/a"),
                                                        new SimpleEntry<>("approuvéLe", gaspars.get(0).getDateApprobation() != null ? sdf.format(gaspars.get(0).getDateApprobation()) : "n/a"))
