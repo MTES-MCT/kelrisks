@@ -160,7 +160,7 @@ public class PdfRedactor {
             
             for (SiteIndustrielBasolDTO siteIndustrielBasolDTO : avisDTO.getSiteIndustrielBasolRayonParcelleDTOs()) {
     
-                addTableBodyRow(tbody, siteIndustrielBasolDTO.getProprietaire(), siteIndustrielBasolDTO.getIdentifiantbasias());
+                addTableBodyRow(tbody, siteIndustrielBasolDTO.getProprietaire(), "https://fiches-risques.brgm.fr/georisques/basias-detaillee/" + siteIndustrielBasolDTO.getIdentifiantbasias());
                 lines++;
     
                 if (lines > ROWS_PER_PAGE) {
@@ -249,7 +249,7 @@ public class PdfRedactor {
         page.append("<div><h2>ANNEXE 2 : LISTE DES ARRÊTÉS CAT-NAT PRIS SUR LA COMMUNE</h2></div>");
     
         if (!georisquePaginatedCatNat.getData().isEmpty()) {
-    
+        
             page.append("<p>" + "Nombre d'arrêtés de catastrophes naturelles (CAT-NAT) : " + georisquePaginatedCatNat.getData().size() + "</p>");
             
             List<TypeCatNat> typeCatNatList = groupCatNatByType(georisquePaginatedCatNat.getData());

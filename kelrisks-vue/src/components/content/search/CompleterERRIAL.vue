@@ -49,21 +49,21 @@
                         <p>Rappel du risque : {{plan.alea.familleAlea.libelle}}, {{plan.alea.libelle}}.</p>
                         <div class="text_wrapper"><b>L'immeuble est concerné par des prescriptions de travaux dans le règlement du {{plan.alea.familleAlea.famillePPR.libelle}}</b></div>
                         <div class="input_wrapper">
-                            <label><input :name="'prescription_' + index"
+                            <label><input :name="'prescription_' + plan.idGaspar"
                                           type="radio">Oui</label>
-                            <label><input :name="'prescription_' + index"
+                            <label><input :name="'prescription_' + plan.idGaspar"
                                           type="radio">Non</label>
-                            <label><input :name="'prescription_' + index"
+                            <label><input :name="'prescription_' + plan.idGaspar"
                                           checked="checked"
                                           type="radio">À préciser plus tard</label></div>
 
                         <div class="text_wrapper"><b>Si oui, les travaux prescrits ont été réalisés</b></div>
                         <div class="input_wrapper">
-                            <label><input :name="'travaux_' + index"
+                            <label><input :name="'travaux_' + plan.idGaspar"
                                           type="radio">Oui</label>
-                            <label><input :name="'travaux_' + index"
+                            <label><input :name="'travaux_' + plan.idGaspar"
                                           type="radio">Non</label>
-                            <label><input :name="'travaux_' + index"
+                            <label><input :name="'travaux_' + plan.idGaspar"
                                           checked="checked"
                                           type="radio">À préciser plus tard</label></div>
                     </div>
@@ -75,18 +75,18 @@
                     <div class="errial_title"><span class="title">Information relative aux sinistres indemnisés par l'assurance suite à une catastrophe naturelle, minière ou technologique</span></div>
                     <p>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ?</p>
                     <div class="input_wrapper">
-                        <label><input name="'cat_nat'"
+                        <label><input name="cat_nat"
                                       type="radio">Oui</label>
-                        <label><input name="'cat_nat"
+                        <label><input name="cat_nat"
                                       type="radio">Non</label>
                         <label><input checked="checked"
-                                      name="'cat_nat"
+                                      name="cat_nat"
                                       type="radio">À préciser plus tard</label></div>
                 </div>
             </div>
 
             <div id="bottomButtonsWrapper">
-                <a @click="$emit('flow', 1)"
+                <a @click="download"
                    class="bouton success"
                    target="_blank">
                     Télécharger l'État des risques
@@ -102,6 +102,9 @@
 <script>
 
 import Errors from "../base/Errors";
+import JQuery from 'jquery'
+
+let $ = JQuery
 
 export default {
     name: 'CompleterERRIAL',
@@ -118,6 +121,17 @@ export default {
     computed: {
         _paq: function () {
             return window._paq
+        }
+    },
+    methods: {
+        download () {
+
+            $("[name^='prescription_']:checked").each(function () {
+                console.log($(this).attr('name'))
+                console.log($(this).attr('name').value)
+            })
+            $("[name^='travaux_']:checked")
+            this.$emit('prescriptions', 1)
         }
     }
 }
