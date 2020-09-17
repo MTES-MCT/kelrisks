@@ -43,6 +43,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.PlanPreventionRisq
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -155,18 +156,9 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))
                                                   .collect(Collectors.toList()));
     
-        // Recherche d'une éventuelle zone poluée contenant la parcelle
-        List<Geometry<?>> parcelleSitesSolsPolues = new ArrayList<>();
-        //        List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcellesUnion);
-        //        if (!siteSolPolueDTOs.isEmpty()) {
-        //            siteSolPolueDTOs.forEach(siteSolPolueDTO -> {
-        //                parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon());
-        //                avisDTO.getLeaflet().getSsp().add(siteSolPolueDTO.getEwkt());
-        //            });
-        //        }
-        //        else {
+        List<Geometry<?>> parcelleSitesSolsPolues = new ArrayList<>(); // TODO : Renommer la variable devenue inutile
         parcelleSitesSolsPolues.add(parcellesUnion);
-        //        }
+    
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherZoneContenantParcelle");
         startTime = System.currentTimeMillis();
     
@@ -598,10 +590,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private List<? extends AbstractLocalisationAvecPrecision> removeLowPrecision(List<? extends AbstractLocalisationAvecPrecision> sites) {
-        
-        sites.removeIf(site -> !site.getPrecision().equals(PrecisionEnum.PARCELLE.getCode()) &&
-                               !site.getPrecision().equals(PrecisionEnum.NUMERO.getCode()));
-        
+    
+        sites.removeIf(site -> Arrays.asList(PrecisionEnum.BASOL_COMMUNE.getCode(),
+                                             PrecisionEnum.BASOL_RUE.getCode(),
+                                             PrecisionEnum.BASIAS_RUE.getCode(),
+                                             PrecisionEnum.S3IC_COMMUNE.getCode(),
+                                             null)
+                                       .contains(site.getPrecision()));
+    
         return sites;
     }
 }

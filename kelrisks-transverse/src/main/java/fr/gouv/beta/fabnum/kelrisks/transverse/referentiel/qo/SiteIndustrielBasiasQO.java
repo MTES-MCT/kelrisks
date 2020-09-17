@@ -28,7 +28,7 @@ public class SiteIndustrielBasiasQO extends AbstractQO {
                 builder.and(QSiteIndustrielBasias.siteIndustrielBasias.raisonSociale.containsIgnoreCase(word));
             }
         }
-        if (codeINSEE != null) {builder.and(QSiteIndustrielBasias.siteIndustrielBasias.codeInsee.eq(codeINSEE));}
+        if (codeINSEE != null) {builder.and(QSiteIndustrielBasias.siteIndustrielBasias.codeINSEE.eq(codeINSEE));}
         if (!CollectionUtils.isEmpty(precisions)) {builder.and(QSiteIndustrielBasias.siteIndustrielBasias.precision.in(precisions));}
     }
 }

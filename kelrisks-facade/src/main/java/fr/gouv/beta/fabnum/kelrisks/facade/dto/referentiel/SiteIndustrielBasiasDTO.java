@@ -6,9 +6,9 @@ import lombok.Data;
 public class SiteIndustrielBasiasDTO extends AbstractLocalisationAvecPrecision {
     
     private Long   id;
-    private String adresseId;
     private String identifiant;
     private String adresse;
     private String raisonSociale;
-    private String codeInsee;
+    private String precision;
+    private String codeINSEE;
 }

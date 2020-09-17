@@ -26,11 +26,7 @@ public interface ISiteIndustrielBasiasMapper extends IGeometryMapper {
     //    @formatter:off
     @Mappings(
             @Mapping(target = "ewkt",
-                     expression = "java(GeoJsonUtils.toGeoJson(siteIndustrielBasias.getMultiPolygon()," +
-                                  "                               Stream.of(new AbstractMap.SimpleEntry<>(\"raisonSociale\", StringUtils.stripToEmpty(siteIndustrielBasias.getRaisonSociale()))," +
-                                  "                                         new AbstractMap.SimpleEntry<>(\"identifiant\", StringUtils.stripToEmpty(siteIndustrielBasias.getIdentifiant())))" +
-                                  "                                       .collect(Collectors.toMap(Map.Entry::getKey," +
-                                  "                                                                 Map.Entry::getValue))))")
+                     expression = "java(GeoJsonUtils.toGeoJson(siteIndustrielBasias.getPoint(), Stream.of(new AbstractMap.SimpleEntry<>(\"raisonSociale\", StringUtils.stripToEmpty(siteIndustrielBasias.getRaisonSociale())), new AbstractMap.SimpleEntry<>(\"identifiant\", StringUtils.stripToEmpty(siteIndustrielBasias.getIdentifiant()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))")
     )
     //    @formatter:on
     SiteIndustrielBasiasDTO toDTO(SiteIndustrielBasias siteIndustrielBasias);

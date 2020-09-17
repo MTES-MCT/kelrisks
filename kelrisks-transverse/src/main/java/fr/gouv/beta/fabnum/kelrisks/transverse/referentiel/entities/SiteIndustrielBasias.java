@@ -24,21 +24,17 @@ public class SiteIndustrielBasias extends AbstractEntity {
     static final long serialVersionUID = 1L;
     
     @Column(name = "indice_departemental")
-    private String identifiant;
-    private String adresse;
+    private String      identifiant;
+    private String      adresse;
     @Column(name = "numero_insee")
-    private String codeInsee;
-    //    private String   geolocalisation;
+    private String      codeINSEE;
     @Column(name = "raison_sociale")
-    private String raisonSociale;
-    
+    private String      raisonSociale;
     @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
     @Type(type = "org.geolatte.geom.Geometry")
-    private Geometry<?> multiPolygon;
-    @Column(name = "geog_precision")
+    private Geometry<?> point;
+    @Column(name = "precision_adresse")
     private String      precision;
-    @Column(name = "adresse_id")
-    private String   adresseId;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -47,9 +43,18 @@ public class SiteIndustrielBasias extends AbstractEntity {
     private Long id;
     
     public Long getId() {
-    
+        
         if (this.id == null) { return 0L; }
         return this.id;
+    }
+    
+    public String getCleFonc() {
+        
+        StringBuffer cleFonc = new StringBuffer();
+        
+        //TODO : Définir une clé fonctionnelle
+        
+        return cleFonc.toString().toUpperCase();
     }
 }
   
