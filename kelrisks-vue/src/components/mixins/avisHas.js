@@ -59,16 +59,18 @@ export default {
         hasPEB: function () {
             return this.avis.zonePlanExpositionBruit !== undefined && this.avis.zonePlanExpositionBruit !== null
         },
-        hasSismiciteHaute: function () {
-            return this.avis.summary.commune.codeZoneSismicite === '3' ||
-                this.avis.summary.commune.codeZoneSismicite === '4' ||
+        hasSismiciteTresHaute: function () {
+            return this.avis.summary.commune.codeZoneSismicite === '4' ||
                 this.avis.summary.commune.codeZoneSismicite === '5'
+        },
+        hasSismiciteHaute: function () {
+            return this.avis.summary.commune.codeZoneSismicite === '3'
         },
         hasSismiciteMoyenne: function () {
             return this.avis.summary.commune.codeZoneSismicite === '2'
         },
         hasSismicite: function () {
-            return this.hasSismiciteMoyenne || this.hasSismiciteHaute
+            return this.hasSismiciteMoyenne || this.hasSismiciteHaute || this.hasSismiciteTresHaute
         },
         hasPPR: function () {
             return this.avis.ppr.length > 0

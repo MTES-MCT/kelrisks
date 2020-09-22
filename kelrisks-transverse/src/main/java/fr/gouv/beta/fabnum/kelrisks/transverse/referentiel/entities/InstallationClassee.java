@@ -18,7 +18,8 @@ import org.hibernate.annotations.Type;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "s3ic")
+@Table(name =
+               "s3ic")
 public class InstallationClassee extends AbstractEntity {
     
     static final long serialVersionUID = 1L;
@@ -26,7 +27,6 @@ public class InstallationClassee extends AbstractEntity {
     private String code;
     private String nom;
     private String regime;
-    private String commune;
     private String adresse;
     @Column(name = "complement_adresse")
     private String complementAdresse;

@@ -33,12 +33,12 @@ public interface SiteIndustrielBasiasRepository extends IAbstractRepository<Site
     
     @Query(value = "SELECT sib " +
                    " FROM SiteIndustrielBasias AS sib" +
-                   " WHERE st_intersects(sib.multiPolygon, st_union(:multiPolygon)) = TRUE")
+                   " WHERE st_intersects(sib.point, st_union(:multiPolygon)) = TRUE")
     List<SiteIndustrielBasias> rechercherSitesDansPolygons(List<Geometry<?>> multiPolygon);
     
     @Query(value = "SELECT sib " +
                    " FROM SiteIndustrielBasias AS sib" +
-                   " WHERE st_intersects(sib.multiPolygon, :multiPolygon) = TRUE")
+                   " WHERE st_intersects(sib.point, :multiPolygon) = TRUE")
     List<SiteIndustrielBasias> rechercherSitesDansPolygon(Geometry<?> multiPolygon);
     
     @Query(value = "SELECT * " +

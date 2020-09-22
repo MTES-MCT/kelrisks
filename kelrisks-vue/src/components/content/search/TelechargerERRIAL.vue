@@ -116,7 +116,7 @@ export default {
                     plan.alea.familleAlea.code])
             }
 
-            if (this.hasSismiciteHaute || this.hasSismiciteMoyenne) this.dataList.push([
+            if (this.hasSismicite) this.dataList.push([
                 typeof this.avis.summary.commune.communesLimitrophes.map === 'function' ?
                     [{data: this.avis.summary.commune.codeZoneSismicite === '1' ? [this.avis.summary.commune.multiPolygon] : [], color: '#D8D8D8'},
                         {data: this.avis.summary.commune.codeZoneSismicite === '2' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FFD332'},

@@ -109,7 +109,7 @@ public class PdfRedactor {
         page.append("<div><h2>ANNEXE 3 : SITUATION DU RISQUE DE POLLUTION DES SOLS DANS UN RAYON DE 500M AUTOUR DE VOTRE BIEN</h2></div>");
     
         if (avisDTO.getInstallationClasseeRayonParcelleDTOs().size() > 0) {
-            page.append("<p>Inventaire des installations classées soumises à autorisation ou à enregistrement</p>");
+            page.append("<p>Base des installations classées soumises à autorisation ou à enregistrement</p>");
             
             tbody = addTableHtml(page);
             
@@ -132,7 +132,7 @@ public class PdfRedactor {
         }
         
         if (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() > 0) {
-            page.append("<p>Inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS)</p>");
+            page.append("<p>Inventaire BASIAS des anciens sites industriels et activités de services</p>");
             
             tbody = addTableHtml(page);
             
@@ -154,7 +154,7 @@ public class PdfRedactor {
         }
         
         if (avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() + avisDTO.getSecteurInformationSolRayonParcelleDTOs().size() > 0) {
-            page.append("<p>Inventaire des sites pollués (Basol, SIS, SUP)</p>");
+            page.append("<p>Inventaires des sites pollués ou potentiellement pollués (Basol, SIS, SUP)</p>");
             
             tbody = addTableHtml(page);
             
@@ -333,20 +333,23 @@ public class PdfRedactor {
                       "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les " +
                       "constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être " +
                       "importants. Le zonage \"argile\" identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
-                      (avisDTO.getNiveauArgile() == 3 ? "<p>Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, " +
+                      (avisDTO.getNiveauArgile() == 3 ? "<p>Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, " +
                                                         "notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
                                                         "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
                                                       : "") +
-                      (avisDTO.getNiveauArgile() == 2 ? "<p>Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les" +
+                      (avisDTO.getNiveauArgile() == 2 ?
+                       "<p>Exposition moyenne : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les" +
                                                         " maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
                                                         "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
                                                       : "") +
-                      (avisDTO.getNiveauArgile() == 1 ? "<p>La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des " +
+                      (avisDTO.getNiveauArgile() == 1 ? "<p>Exposition faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une " +
+                                                        "faible proportion des " +
                                                         "bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches" +
                                                         " ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de " +
                                                         "sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br>" +
                                                         "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3" : "") +
-                      (avisDTO.getNiveauArgile() == 0 ? "<p>Aléa nul : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des " +
+                      (avisDTO.getNiveauArgile() == 0 ? "<p>Exposition nulle : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir " +
+                                                        "des " +
                                                         "poches ponctuelles de sols argileux." : "")
                      );
         }
@@ -514,7 +517,7 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "BRUIT",
                       localAppPath + "/pictogrammes_risque/ic_bruit_bleu.png",
-                      "<p>La parcelle n’est pas concernée par un plan d’exposition au bruit.</p>"
+                      "<p>La parcelle n’est pas concernée par un plan d’exposition au bruit d'un aéroport.</p>"
                      );
         }
     }
@@ -547,10 +550,11 @@ public class PdfRedactor {
         if (hasPPR(avisDTO)) {
             page.append("<h4 id=\"recommendations_PPR\">Plans de Prévention des Risques</h4>");
             page.append("<p>Certains risques peuvent nécessiter de réaliser des travaux obligatoires de mise en conformité de votre habitation. Pour le savoir, vous devez prendre connaissance du " +
-                        "plan de prévention, consultable sur le site internet de votre préfecture.");
+                        "plan de prévention des risques, consultable auprès de la commune ou sur le site internet de votre préfecture.");
             page.append("<p>Si votre bien est concerné par une obligation de travaux, vous pouvez bénéficier d'une aide de l'Etat, dans le cadre du Fonds de prévention des risques naturels majeurs " +
                         "(FPRNM). Pour plus de renseignements, contacter la direction départementale des territoires (DDT) de votre département.</p>");
-            page.append("<p>Pour savoir ce qu'il faut faire en cas de survenance du risque, consulter le Dossier d'information communal sur les risques majeurs (DICRIM) auprès de votre commune.</p>");
+            page.append("<p>Pour se préparer et connaître les bon réflexes en cas de survenance du risque, consulter le Dossier d'information communal sur les risques majeurs (DICRIM) auprès de " +
+                        "votre commune.</p>");
         }
     
         if (hasSismiciteHaute(avisDTO)) {
@@ -564,7 +568,7 @@ public class PdfRedactor {
     
         if (hasSismiciteMoyenne(avisDTO)) {
             page.append("<h4 id=\"recommendations_sismicite\">Sismicité</h4>");
-            page.append("<p>Pour certains bâtiments de taille importante ou sensibles des dispositions spécifiques s’appliquent selon la réglementation (arrêté du 22 octobre 2010).</p>");
+            page.append("<p>Pour certains bâtiments de taille importante ou sensibles des dispositions spécifiques s’appliquent selon la réglementation.</p>");
             page.append("<p>Un guide interactif est proposé sur le site Plan Séisme pour identifier précisément les dispositions à prendre en compte selon votre localisation, type d'habitat et " +
                         "projet. Il est consultable à l'adresse suivante : http://www.planseisme.fr/-Didacticiel-.html</p>");
         }
@@ -651,7 +655,8 @@ public class PdfRedactor {
                                 "Un PPR prescrit est un PPR en cours d’élaboration sur la commune dont le périmètre et les règles sont en cours d’élaboration."
                                ) +
                                "<br/><br/>" +
-                               "Le plan de prévention des risques est un document réalisé par l’État qui réglemente l’utilisation des sols en fonction des risques auxquels ils sont soumis.</p>");
+                               "Le plan de prévention des risques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d'urbanisme héritées du " +
+                               "passé et de mieux encadrer l'urbanisation future autour du site..</p>");
         }
         
         if (hasSismicite(avisDTO)) {
@@ -682,12 +687,10 @@ public class PdfRedactor {
                                "<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements " +
                                "changement d’affectation des terrains) si " +
                                "elles ne sont pas prises en compte dans le cadre du projet.</p>" +
-                               (avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0 ? "<p>- La parcelle a accueilli une activité industrielle ou agricole " +
-                                                                                             "relevant de la réglementation des " +
-                                                                                             "installations classées pour la protection de l’environnement. Cette " +
-                                                                                             "activité a pu provoquer des pollutions," +
-                                                                                             " notamment des sols des eaux souterraines ou des eaux superficielles" +
-                                                                                             ".</br>Installation(s) concerné(e)  : " +
+                               (avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0 ? "<p>- La parcelle a accueilli une installation classée pour la protection de l'environnement soumise à " +
+                                                                                             "autorisation ou enregistrement. Cette activité a pu provoquer des pollutions, notamment des sols des " +
+                                                                                             "eaux souterraines ou des eaux superficielles." +
+                                                                                             "</br>Installation(s) concerné(e)  : " +
                                                                                              "<br/>" + getLibelleInstallationsNucleaires(avisDTO) + "</p>" : "") +
                                (avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0 ? "<p>- La parcelle est située en secteur d’information sur les sols" +
                                                                                                ".</p>" : "") +
