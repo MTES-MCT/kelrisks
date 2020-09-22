@@ -26,7 +26,7 @@
     </parent>
 
     <properties>
-        <revision>v1.3.2.2009032139</revision>
+        <revision>v1.3.3.2009221914</revision>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

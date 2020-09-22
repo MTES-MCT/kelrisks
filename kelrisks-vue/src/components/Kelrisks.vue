@@ -103,7 +103,7 @@
 
             <a class="marianne"
                href="index.html">
-                <img :src="env.backPath + '/rf.png'"
+                <img :src="env.backPath + '/mte.png'"
                      alt="République Française"/>
             </a>
 
@@ -179,7 +179,7 @@
 
             <a class="marianne"
                href="index.html">
-                <img :src="env.backPath + '/rf.png'"
+                <img :src="env.backPath + '/mte.png'"
                      alt="République Française"/>
             </a>
 
