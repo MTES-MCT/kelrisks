@@ -826,7 +826,7 @@ public class PdfRedactor {
         // @formatter:off
         body.append("<div class=\"page\">\n" +
                     "    <div class=\"header\"><img height=\"80px\"\n" +
-                    "                               src=\"" + localAppPath + "/rf.png\"\n" +
+                    "                               src=\"" + localAppPath + "/mte.png\"\n" +
                     "                               style=\"margin : 0;\"/></div>\n" +
                     "    <div class=\"content\"></div>\n" +
                     "    <div class=\"footer\">\n\n" +
