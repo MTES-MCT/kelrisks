@@ -152,6 +152,7 @@
 
             <completer-e-r-r-i-a-l :avis="avis"
                                    @flow="updateflow"
+                                   @errial="errial"
                                    ref="errial"
                                    v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0"
                                    v-show="flow.index === 3"/>
@@ -276,6 +277,10 @@ export default {
     methods: {
         updateflow (value) {
             this.flow.index += value
+        },
+        errial (value) {
+            this.avis.errial = value
+            this.flow.index++
         },
         setflow (value) {
             this.flow.index = value

@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
@@ -96,18 +98,42 @@ public class PdfRedactor {
         img.attr("src", base64png);
     }
     
-    private void redigerAnnexe3PollutionRayon(Document htmlDocument, AvisDTO avisDTO) {
+    public void ajouterChoixUtilisateur(Document htmlDocument, String choixErrial) {
+        
+        ajouterChoix(htmlDocument, choixErrial, "pre_");
+        ajouterChoix(htmlDocument, choixErrial, "tra_");
+        ajouterChoix(htmlDocument, choixErrial, "cat");
+    }
     
+    private void ajouterChoix(Document htmlDocument, String errial, String match) {
+        
+        Pattern pattern = Pattern.compile("(" + match + ".*?):(.*?);");
+        Matcher matcher = pattern.matcher(errial);
+        while (matcher.find()) {
+            String name  = matcher.group(1);
+            String value = matcher.group(2).equals("1") ? "Oui" : "Non";
+            System.out.println(name);
+            Elements inputs = htmlDocument.select("input[name=" + name + "]");
+            for (Element input : inputs) {
+                if (!input.val().equals(value)) {
+                    input.parent().html(input.parent().html().replace(value, "<s>" + value + "</s>"));
+                }
+            }
+        }
+    }
+    
+    private void redigerAnnexe3PollutionRayon(Document htmlDocument, AvisDTO avisDTO) {
+        
         if ((avisDTO.getInstallationClasseeRayonParcelleDTOs().size() == 0) &&
             (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() == 0) &&
             (avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() + avisDTO.getSecteurInformationSolRayonParcelleDTOs().size() == 0)) { return; }
-    
+        
         Element page  = addPage(htmlDocument);
         Element tbody;
         int     lines = 0;
-    
+        
         page.append("<div><h2>ANNEXE 3 : SITUATION DU RISQUE DE POLLUTION DES SOLS DANS UN RAYON DE 500M AUTOUR DE VOTRE BIEN</h2></div>");
-    
+        
         if (avisDTO.getInstallationClasseeRayonParcelleDTOs().size() > 0) {
             page.append("<p>Base des installations classées soumises à autorisation ou à enregistrement</p>");
             
@@ -333,14 +359,15 @@ public class PdfRedactor {
                       "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les " +
                       "constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être " +
                       "importants. Le zonage \"argile\" identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
-                      (avisDTO.getNiveauArgile() == 3 ? "<p>Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, " +
+                      (avisDTO.getNiveauArgile() == 3 ? "<p>Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les " +
+                                                        "constructions, " +
                                                         "notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
                                                         "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
                                                       : "") +
                       (avisDTO.getNiveauArgile() == 2 ?
                        "<p>Exposition moyenne : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les" +
-                                                        " maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
-                                                        "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
+                       " maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
+                       "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
                                                       : "") +
                       (avisDTO.getNiveauArgile() == 1 ? "<p>Exposition faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une " +
                                                         "faible proportion des " +
@@ -446,13 +473,13 @@ public class PdfRedactor {
                         "<p>Rappel du risque : " + planPreventionRisquesDTO.getAlea().getFamilleAlea().getLibelle() + ", " + planPreventionRisquesDTO.getAlea().getLibelle() + ".</p>\n" +
                         "<div class=\"text_wrapper\"><b>Le bien est il concerné par des prescriptions de travaux ?</b></div>\n" +
                         "<div class=\"input_wrapper\">\n" +
-                        "    <label><input type=\"checkbox\">Oui</label>\n" +
-                        "    <label><input type=\"checkbox\">Non</label>\n" +
+                        "    <label><input value=\"1\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\">Oui</label>\n" +
+                        "    <label><input value=\"0\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\">Non</label>\n" +
                         "</div>\n" +
                         "<div class=\"text_wrapper\"><b>Si oui, les travaux prescrits ont été réalisés ?</b></div>\n" +
                         "<div class=\"input_wrapper\">\n" +
-                        "    <label><input type=\"checkbox\">Oui</label>\n" +
-                        "    <label><input type=\"checkbox\">Non</label>\n" +
+                        "    <label><input value=\"1\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\">Oui</label>\n" +
+                        "    <label><input value=\"0\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\">Non</label>\n" +
                         "</div>\n");
         }
     
@@ -460,8 +487,8 @@ public class PdfRedactor {
     
         page.append("<div class=\"text_wrapper\" ><b>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ?</b></div>\n" +
                     "<div class=\"input_wrapper\">\n" +
-                    "   <label><input type=\"checkbox\">Oui</label>\n" +
-                    "   <label><input type=\"checkbox\">Non</label>\n" +
+                    "    <label><input value=\"1\" name=\"cat\" type=\"checkbox\">Oui</label>\n" +
+                    "    <label><input value=\"0\" name=\"cat\" type=\"checkbox\">Non</label>\n" +
                     "</div>\n");
     
         page.append("<p style=\"padding-top : 30px;\">Les parties signataires à l'acte certifient avoir pris connaissance des informations restituées dans ce document et certifient avoir été en " +

@@ -80,6 +80,10 @@ export default {
             type: Object,
             default: () => {
             }
+        },
+        errial: {
+            type: String,
+            default: ""
         }
     },
     data: () => ({
@@ -197,7 +201,8 @@ export default {
 
             fetchWithError(this.env.apiPath + 'avis/pdf?' +
                 'codeINSEE=' + this.form.codeInsee + '&' +
-                'codeParcelle=' + this.form.selectedParcellesList.join(','),
+                'codeParcelle=' + this.form.selectedParcellesList.join(',') + '&' +
+                'errial=' + this.avis.errial,
                 {
                     method: "POST",
                     headers: {

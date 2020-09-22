@@ -42,8 +42,6 @@ export default {
         },
         zoomIn (map, zoom) {
 
-            console.log("zooming in")
-
             let zoomInControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-in")
             let zoomOutControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-out");
 
@@ -183,7 +181,6 @@ export default {
             this.initIntermediateZoomLevels();
 
             if (this.minZoom) {
-                console.log("there")
                 this.currentMinZoom = this.minZoom
                 if (this.currentZoom < this.currentMinZoom) this.zoomIn(map, this.currentMinZoom);
             }

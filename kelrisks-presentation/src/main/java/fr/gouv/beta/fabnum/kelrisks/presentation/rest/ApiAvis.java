@@ -154,15 +154,16 @@ public class ApiAvis extends AbstractBasicApi {
     public ResponseEntity<byte[]> avisPdf(@RequestBody List<PdfRedactor.Png> pngs,
                                           @RequestParam("codeINSEE") String codeINSEE,
                                           @RequestParam(value = "nomAdresse", required = false) String nomAdresse,
-                                          @RequestParam("codeParcelle") String codeParcelle) {
-        
+                                          @RequestParam("codeParcelle") String codeParcelle,
+                                          @RequestParam(value = "errial", required = false) String choixErrial) {
+    
         if (codeParcelle == null || codeParcelle.equals("")) {
-            
+        
             JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
             jsonInfoDTO.addError("Merci d'entrer un code parcelle ou de choisir une adresse parmi les résultats proposés dans le champ.");
             return null;
         }
-        
+    
         List<ParcelleDTO> parcelleDTOs = getParcelles(codeParcelle);
         
         if (parcelleDTOs == null || parcelleDTOs.isEmpty()) {
@@ -181,6 +182,7 @@ public class ApiAvis extends AbstractBasicApi {
             pdfRedactor.redigerAnalyse(htmlDocument, avisDTO, codeINSEE);
             pdfRedactor.ajouterImages(htmlDocument, pngs);
             pdfRedactor.ajouterQRCode(htmlDocument, avisDTO);
+            pdfRedactor.ajouterChoixUtilisateur(htmlDocument, choixErrial);
             
             String html = htmlDocument.outerHtml();
             

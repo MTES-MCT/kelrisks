@@ -101,6 +101,12 @@ export default {
         hasAZI: function () {
             if (this.avis.AZIs === null) return false
             return this.avis.AZIs.length > 0
+        },
+        hasRisquesInformationObligatoire () {
+            return this.avis.ppr.length > 0 || this.hasSismiciteHaute || this.hasSismiciteTresHaute || this.hasPEB || this.hasPollutionPrincipale || this.hasRadonHaut
+        },
+        hasRisquesInformationNonObligatoire () {
+            return this.avis.canalisations.length > 0 || this.hasArgile || this.avis.nucleaires.installations.length > 0 || this.hasAZI || this.hasTRI || this.hasPollutionNonReglementaire || this.hasRadonMoyen
         }
     }
 }
