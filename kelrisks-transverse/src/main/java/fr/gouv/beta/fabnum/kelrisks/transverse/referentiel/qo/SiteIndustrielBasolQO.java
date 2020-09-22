@@ -22,7 +22,7 @@ public class SiteIndustrielBasolQO extends AbstractQO {
     public void feedBuilder(BooleanBuilder builder) {
         
         if (id != null) {builder.and(QSiteIndustrielBasol.siteIndustrielBasol.id.eq(id));}
-        if (codeINSEE != null) {builder.and(QSiteIndustrielBasol.siteIndustrielBasol.codeInsee.eq(codeINSEE));}
+        if (codeINSEE != null) {builder.and(QSiteIndustrielBasol.siteIndustrielBasol.codeINSEE.eq(codeINSEE));}
         if (!CollectionUtils.isEmpty(precisions)) {builder.and(QSiteIndustrielBasol.siteIndustrielBasol.precision.in(precisions));}
     }
 }

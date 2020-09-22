@@ -31,20 +31,16 @@ public class SiteIndustrielBasol extends AbstractEntity {
     private String identifiantbasias;
     @Column(name = "adresse")
     private String adresse;
-    @Column(name = "commune")
-    private String commune;
     @Column(name = "code_insee")
-    private String codeInsee;
+    private String codeINSEE;
     @Column(name = "proprietaire")
     private String proprietaire;
     
     @Column(name = "geog", columnDefinition = "org.geolatte.geom.Geometry")
     @Type(type = "org.geolatte.geom.Geometry")
-    private Geometry<?> multiPolygon;
-    @Column(name = "geog_precision")
+    private Geometry<?> point;
+    @Column(name = "l2e_precision")
     private String      precision;
-    @Column(name = "adresse_id")
-    private String   adresseId;
     
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -53,7 +49,7 @@ public class SiteIndustrielBasol extends AbstractEntity {
     private Long id;
     
     public Long getId() {
-    
+        
         if (this.id == null) { return 0L; }
         return this.id;
     }

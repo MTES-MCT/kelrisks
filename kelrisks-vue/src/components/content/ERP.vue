@@ -12,9 +12,9 @@
                Le non respect de ces obligations peut entrainer une annulation du contrat ou une réfaction du prix.</p>
             <p>Les informations qui doivent être rapportées sont arrêtées par le préfet de département. Ces arrêtés relatifs à l'état des risques pour les biens immobiliers sont consultables en
                Préfecture ou sur les sites Internet de ces dernières.</p>
-            <p>L'Etat met à disposition ci-dessus un outil permettant de remplir plus facilement cet état des risques en pré-remplissant automatiquement un certain nombre d'informations. Il appartient
-               ensuite au propriétaire du bien de vérifier l'exactitude de ces informations autant que de besoin et, le cas échéant, de le compléter à partir d'informations disponibles sur le site
-               internet de la préfecture ou d'informations dont il dispose sur le bien, notamment les sinistres que le bien a subis.</p>
+            <p>L'Etat met à disposition ci-dessus un outil permettant de remplir plus facilement cet état des risques en pré-remplissant automatiquement un certain nombre d'informations.
+                <b>Il appartient ensuite au propriétaire du bien de vérifier l'exactitude de ces informations autant que de besoin et, le cas échéant, de le compléter à partir d'informations
+                   disponibles sur le site internet de la préfecture ou d'informations dont il dispose sur le bien, notamment les sinistres que le bien a subis</b>.</p>
         </div>
         <div id="erp_picture">
             <img height="334"
@@ -32,25 +32,25 @@ export default {
 </script>
 
 <style scoped>
-    #erp_wrapper {
-        background-color : #FFFFFF;
-        padding          : 5% 15%;
-        text-align       : left;
-        width            : 100%;
-    }
+#erp_wrapper {
+	background-color : #FFFFFF;
+	padding          : 5% 15%;
+	text-align       : left;
+	width            : 100%;
+}
 
-    #erp_text {
-        float : left;
-        width : 55%;
-    }
+#erp_text {
+	float : left;
+	width : 55%;
+}
 
-    #erp_text p {
-        text-align : left;
-        width      : 600px;
-    }
+#erp_text p {
+	text-align : left;
+	width      : 600px;
+}
 
-    #erp_picture {
-        float       : left;
-        margin-left : 7%;
-    }
+#erp_picture {
+	float       : left;
+	margin-left : 7%;
+}
 </style>

@@ -10,10 +10,10 @@ public class InstallationClasseeDTO extends AbstractLocalisationAvecPrecision {
     private String nom;
     private String regime;
     private String commune;
-    private String codeInsee;
-    private String codePostal;
     private String adresse;
+    private String codeINSEE;
     private String complementAdresse;
     private String adresseId;
+    private String precision;
 }
   

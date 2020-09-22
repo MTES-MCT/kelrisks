@@ -42,15 +42,15 @@ public class InstallationClasseeFacade extends AbstractFacade implements IGestio
     
     @Override
     public List<InstallationClasseeDTO> rechercherInstallationsAvecFaiblePrecisionDeGeolocalisation(String codeINSEE) {
-        
+
         InstallationClasseeQO installationClasseeQO = new InstallationClasseeQO();
     
         installationClasseeQO.setCodeINSEE(codeINSEE);
-        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode(), PrecisionEnum.RUE.getCode());
+        List<String> precision = Arrays.asList(PrecisionEnum.S3IC_COMMUNE.getCode(), null);
         installationClasseeQO.setPrecisions(precision);
-        
+    
         List<InstallationClasseeDTO> installationClasseeDTOs = installationClasseeMapper.toDTOs(installationClasseeService.rechercherAvecCritere(installationClasseeQO));
-        
+    
         return installationClasseeDTOs;
     }
     

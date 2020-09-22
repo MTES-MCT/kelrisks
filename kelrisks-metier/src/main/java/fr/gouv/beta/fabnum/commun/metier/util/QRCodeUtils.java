@@ -10,10 +10,10 @@ public class QRCodeUtils {
     
     public static String generateQRCodePng(String barcodeText) throws Exception {
         
-        if (barcodeText.length() > 2950) { throw new Exception("Texte trop long pour la génération d'un QR Code optimal."); }
+        if (barcodeText.length() > 4296) { throw new Exception("Texte trop long pour la génération d'un QR."); }
         
         ByteArrayOutputStream stream = QRCode.from(barcodeText)
-                                               .withSize(20, 20)
+                                               .withSize(300, 300)
                                                .to(ImageType.PNG)
                                                .stream();
         

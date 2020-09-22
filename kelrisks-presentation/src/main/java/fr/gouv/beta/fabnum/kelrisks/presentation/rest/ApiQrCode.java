@@ -85,10 +85,10 @@ public class ApiQrCode {
         if (values[2].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[2].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
         }
-        html += "      <p>" + "Nombre de Basias non géoréférencés dans la commune" + " : " + values[3].split("==")[0] + "</p>\n";
-        if (values[3].split("==").length > 1) {
-            html += "      <ul>" + Stream.of(values[3].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
-        }
+        //        html += "      <p>" + "Nombre de Basias non géoréférencés dans la commune" + " : " + values[3].split("==")[0] + "</p>\n";
+        //        if (values[3].split("==").length > 1) {
+        //            html += "      <ul>" + Stream.of(values[3].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
+        //        }
         html += "      <p>" + "Nombre de Basol sur la parcelle" + " : " + values[4].split("==")[0] + "</p>\n";
         if (values[4].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[4].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
@@ -101,10 +101,10 @@ public class ApiQrCode {
         if (values[6].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[6].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
         }
-        html += "      <p>" + "Nombre de Basol non géoréférencés dans la commune" + " : " + values[7].split("==")[0] + "</p>\n";
-        if (values[7].split("==").length > 1) {
-            html += "      <ul>" + Stream.of(values[7].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
-        }
+        //        html += "      <p>" + "Nombre de Basol non géoréférencés dans la commune" + " : " + values[7].split("==")[0] + "</p>\n";
+        //        if (values[7].split("==").length > 1) {
+        //            html += "      <ul>" + Stream.of(values[7].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
+        //        }
         html += "      <p>" + "Nombre de Secteurs d'Information Sol sur la parcelle" + " : " + values[8].split("==")[0] + "</p>\n";
         if (values[8].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[8].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
@@ -117,10 +117,10 @@ public class ApiQrCode {
         if (values[10].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[10].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
         }
-        html += "      <p>" + "Nombre de Secteurs d'Information Sol non géoréférencés dans la commune" + " : " + values[11].split("==")[0] + "</p>\n";
-        if (values[11].split("==").length > 1) {
-            html += "      <ul>" + Stream.of(values[11].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
-        }
+        //        html += "      <p>" + "Nombre de Secteurs d'Information Sol non géoréférencés dans la commune" + " : " + values[11].split("==")[0] + "</p>\n";
+        //        if (values[11].split("==").length > 1) {
+        //            html += "      <ul>" + Stream.of(values[11].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
+        //        }
         html += "      <p>" + "Nombre de Installations classées sur la parcelle" + " : " + values[12].split("==")[0] + "</p>\n";
         if (values[12].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[12].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
@@ -133,10 +133,10 @@ public class ApiQrCode {
         if (values[14].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[14].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
         }
-        html += "      <p>" + "Nombre de Installations classées non géoréférencés dans la commune" + " : " + values[15].split("==")[0] + "</p>\n";
-        if (values[15].split("==").length > 1) {
-            html += "      <ul>" + Stream.of(values[15].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
-        }
+        //        html += "      <p>" + "Nombre de Installations classées non géoréférencés dans la commune" + " : " + values[15].split("==")[0] + "</p>\n";
+        //        if (values[15].split("==").length > 1) {
+        //            html += "      <ul>" + Stream.of(values[15].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
+        //        }
         html += "      <p>" + "Niveau d'argile" + " : " + values[16] + "</p>\n";
         html += "      <p>" + "Nombre de Nombre de PPRs" + " : " + values[17].split("==")[0] + "</p>\n";
         if (values[17].split("==").length > 1) {

@@ -50,6 +50,9 @@ public class PlanPreventionRisquesGaspar extends AbstractEntity {
     @Column(name = "date_abrogation", columnDefinition = "DATE")
     Date dateAbrogation;
     
+    @Column(name = "date_annulation", columnDefinition = "DATE")
+    Date dateAnnulation;
+    
     @Column(name = "is_georisque")
     boolean existsInGeorisque = false;
     

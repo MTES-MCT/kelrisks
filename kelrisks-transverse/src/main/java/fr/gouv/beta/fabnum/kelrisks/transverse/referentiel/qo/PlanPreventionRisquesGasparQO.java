@@ -11,14 +11,19 @@ import com.querydsl.core.BooleanBuilder;
 @EqualsAndHashCode(callSuper = false)
 public class PlanPreventionRisquesGasparQO extends AbstractQO {
     
-    private String idGaspar;
-    private String codeINSEE;
+    private String  idGaspar;
+    private String  codeINSEE;
+    private Boolean annuleOuAbroge;
     
     @Override
     public void feedBuilder(BooleanBuilder builder) {
-    
+        
         if (idGaspar != null) { builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.idGaspar.eq(idGaspar)); }
         if (codeINSEE != null) { builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.codeINSEE.eq(codeINSEE)); }
+        if (annuleOuAbroge != null && !annuleOuAbroge) {
+            builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.dateAbrogation.isNull());
+            builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.dateAnnulation.isNull());
+        }
     }
 }
   

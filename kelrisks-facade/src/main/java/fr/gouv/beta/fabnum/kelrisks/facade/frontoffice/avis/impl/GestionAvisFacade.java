@@ -14,7 +14,6 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.PlanPreventionRisques
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SecteurInformationSolDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.avis.IGestionAvisFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionArgileFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionBRGMFacade;
@@ -28,7 +27,6 @@ import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanE
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionPlanPreventionRisquesGasparFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasolFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedCanalisation;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.BRGMPaginatedInstallationNuclaire;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedAZI;
@@ -45,6 +43,7 @@ import fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.qo.PlanPreventionRisq
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -65,8 +64,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFacade {
     
-    @Autowired
-    IGestionSiteSolPolueFacade                gestionSiteSolPolueFacade;
     @Autowired
     IGestionSiteIndustrielBasiasFacade        gestionSiteIndustrielBasiasFacade;
     @Autowired
@@ -158,17 +155,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                                                                                              Stream.of(new SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
                                                                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))
                                                   .collect(Collectors.toList()));
-        
-        // Recherche d'une éventuelle zone poluée contenant la parcelle
-        List<Geometry<?>>     parcelleSitesSolsPolues = new ArrayList<>();
-        List<SiteSolPolueDTO> siteSolPolueDTOs        = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcellesUnion);
-        if (!siteSolPolueDTOs.isEmpty()) {
-            siteSolPolueDTOs.forEach(siteSolPolueDTO -> {
-                parcelleSitesSolsPolues.add(siteSolPolueDTO.getMultiPolygon());
-                avisDTO.getLeaflet().getSsp().add(siteSolPolueDTO.getEwkt());
-            });
-        }
-        else { parcelleSitesSolsPolues.add(parcellesUnion); }
+    
+        List<Geometry<?>> parcelleSitesSolsPolues = new ArrayList<>(); // TODO : Renommer la variable devenue inutile
+        parcelleSitesSolsPolues.add(parcellesUnion);
+    
         System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherZoneContenantParcelle");
         startTime = System.currentTimeMillis();
     
@@ -418,13 +408,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
         planPreventionRisquesGasparQO.setIdGaspar(idGaspar);
         planPreventionRisquesGasparQO.setCodeINSEE(codeINSEE);
+        planPreventionRisquesGasparQO.setAnnuleOuAbroge(false);
     
         List<PlanPreventionRisquesGasparDTO> gaspars = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
     
         if (gaspars.size() >= 1) {
         
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
-            
+        
             Map<String, Object> properties = Stream.of(new SimpleEntry<>("'PPR'", gaspars.get(0).getAlea().getFamilleAlea().getLibelle()),
                                                        new SimpleEntry<>("prescritLe", gaspars.get(0).getDateDeprescription() != null ? sdf.format(gaspars.get(0).getDateDeprescription()) : "n/a"),
                                                        new SimpleEntry<>("approuvéLe", gaspars.get(0).getDateApprobation() != null ? sdf.format(gaspars.get(0).getDateApprobation()) : "n/a"))
@@ -599,10 +590,14 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     }
     
     private List<? extends AbstractLocalisationAvecPrecision> removeLowPrecision(List<? extends AbstractLocalisationAvecPrecision> sites) {
-        
-        sites.removeIf(site -> !site.getPrecision().equals(PrecisionEnum.PARCELLE.getCode()) &&
-                               !site.getPrecision().equals(PrecisionEnum.NUMERO.getCode()));
-        
+    
+        sites.removeIf(site -> Arrays.asList(PrecisionEnum.BASOL_COMMUNE.getCode(),
+                                             PrecisionEnum.BASOL_RUE.getCode(),
+                                             PrecisionEnum.BASIAS_RUE.getCode(),
+                                             PrecisionEnum.S3IC_COMMUNE.getCode(),
+                                             null)
+                                       .contains(site.getPrecision()));
+    
         return sites;
     }
 }

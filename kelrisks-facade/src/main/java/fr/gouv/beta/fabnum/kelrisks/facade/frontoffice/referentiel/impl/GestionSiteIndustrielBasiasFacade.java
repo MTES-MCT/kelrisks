@@ -102,7 +102,7 @@ public class GestionSiteIndustrielBasiasFacade extends AbstractFacade implements
         SiteIndustrielBasiasQO siteIndustrielBasiasQO = new SiteIndustrielBasiasQO();
         
         siteIndustrielBasiasQO.setCodeINSEE(codeINSEE);
-        List<String> precision = Arrays.asList(PrecisionEnum.COMMUNE.getCode(), PrecisionEnum.LIEU_DIT.getCode(), PrecisionEnum.RUE.getCode());
+        List<String> precision = Arrays.asList(PrecisionEnum.BASIAS_RUE.getCode(), null);
         siteIndustrielBasiasQO.setPrecisions(precision);
         
         List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOS = siteIndustrielMapper.toDTOs(siteIndustrielService.rechercherAvecCritere(siteIndustrielBasiasQO));

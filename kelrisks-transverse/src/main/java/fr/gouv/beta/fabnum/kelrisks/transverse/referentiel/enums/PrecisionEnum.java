@@ -2,11 +2,16 @@ package fr.gouv.beta.fabnum.kelrisks.transverse.referentiel.enums;
 
 public enum PrecisionEnum {
     
-    PARCELLE("parcel"),
-    NUMERO("housenumber"),
-    RUE("street"),
-    LIEU_DIT("locality"),
-    COMMUNE("municipality");
+    BASIAS_NUMERO("numéro"),
+    BASIAS_RUE("rue"),
+    
+    BASOL_NUMERO("housenumber"),
+    BASOL_RUE("street"),
+    BASOL_COMMUNE("municipality"),
+    
+    S3IC_NUMERO("housenumber"),
+    S3IC_PARCELLE("parcel"),
+    S3IC_COMMUNE("municipality");
     
     private String code;
     

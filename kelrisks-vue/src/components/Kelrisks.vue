@@ -133,8 +133,6 @@
 
             <unsafe-login v-if="env.backPath.includes('preprod') || env.backPath.includes('localhost')"/>
 
-            {{ env.backPath }}
-
             <search-form-parcelle @avis="avis = $event"
                                   @cgu="$refs.cgu.open()"
                                   @flow="updateflow"
@@ -154,6 +152,7 @@
 
             <completer-e-r-r-i-a-l :avis="avis"
                                    @flow="updateflow"
+                                   @errial="errial"
                                    ref="errial"
                                    v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0"
                                    v-show="flow.index === 3"/>
@@ -205,8 +204,6 @@
 
         </footer>
 
-        <contact :timeout="45"/>
-
         <konami/>
 
         <div id="loading"
@@ -222,7 +219,6 @@
 </template>
 
 <script>
-import Contact from '../components/content/Contact'
 import CGU from '../components/content/CGU'
 import HowTo from '../components/content/HowTo'
 import WhoAreWe from '../components/content/WhoAreWe'
@@ -273,7 +269,6 @@ export default {
         Stats,
         SearchResults,
         SearchFormParcelle,
-        Contact,
         CGU,
         HowTo,
         WhoAreWe,
@@ -282,6 +277,10 @@ export default {
     methods: {
         updateflow (value) {
             this.flow.index += value
+        },
+        errial (value) {
+            this.avis.errial = value
+            this.flow.index++
         },
         setflow (value) {
             this.flow.index = value

@@ -35,14 +35,6 @@
                     <font-awesome-icon icon="copy"/>
                     Partager le résultat
                 </a>
-                <a @click="$emit('flow', 1)"
-                   class="bouton success"
-                   id="pdf"
-                   target="_blank">
-                    Créer un état des risques
-                    <font-awesome-icon class="end"
-                                       icon="chevron-right"/>
-                </a>
             </div>
 
             <div class="container bordered"
@@ -68,7 +60,7 @@
         </section>
 
         <section class="section section-grey v-flex"
-                 v-if="avis.ppr.length > 0 || hasSismiciteHaute || hasSismiciteMoyenne || hasPEB || hasPollutionPrincipale || hasRadonHaut">
+                 v-if="hasRisquesInformationObligatoire">
 
             <span class="title">Risques faisant l'objet d'une obligation d'information au titre de l'IAL</span>
 
@@ -77,7 +69,7 @@
                                    (plan.dateApprobation ? 'Un PPR approuvé est un PPR définitivement adopté.' :
                                    plan.dateApplicationAnticipee ? 'Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation.' :
                                    'Un PPR prescrit est un PPR en cours d\'élaboration sur la commune dont le périmètre et les règles sont en cours d\'élaboration.') + '<br/><br/>' +
-                                  'Le plan de prévention des risques est un document réalisé par l’Etat qui interdit de construire dans les zones les plus exposées et encadre les constructions dans les autres zones exposées.<br/>' +
+                                  'Le plan de prévention des risques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d\'urbanisme héritées du passé et de mieux encadrer l\'urbanisation future autour du site..<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
@@ -126,7 +118,7 @@
                     :title="'Sismicité'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
-                    v-if="hasSismiciteHaute || hasSismiciteMoyenne"/>
+                    v-if="hasSismicite"/>
 
             <risque :description="'Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, notamment dans les bâtiments.<br/>'+
                                   '<a href=\'#recommendations_radon\'>Lire les recommandations</a>'"
@@ -160,7 +152,7 @@
             <risque :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
                     :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
-                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une activité industrielle ou agricole relevant de la réglementation des installations classées pour la protection de l’environnement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires : '') +
+                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une installation classée pour la protection de l\'environnement soumise à autorisation ou enregistrement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires : '') +
                              (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d’information sur les sols.</br>' : '') +
                              (false ? '- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées au titre du L 515-12 du code de l’environnement.' : '') +
                              '<p><a href=\'#recommendations_pollution\'>Lire les recommandations</a></p>'"
@@ -214,27 +206,36 @@
                 <template v-if="hasPPR">
                     <h4 id="recommendations_PPR">Plans de Prévention des Risques</h4>
                     <p>Certains risques peuvent nécessiter de réaliser des travaux obligatoires de mise en conformité de votre habitation. Pour le savoir, vous devez prendre connaissance du plan de
-                       prévention, consultable sur le site internet de votre préfecture.</p>
+                       prévention des risques, consultable auprès de la commune ou sur le site internet de votre préfecture.</p>
                     <p>Si votre bien est concerné par une obligation de travaux, vous pouvez bénéficier d'une aide de l'Etat, dans le cadre du Fonds de prévention des risques naturels majeurs (FPRNM).
                        Pour plus de renseignements, contacter la direction départementale des territoires (DDT) de votre département.</p>
-                    <p>Pour savoir ce qu'il faut faire en cas de survenance du risque, consulter le Dossier d'information communal sur les risques majeurs (DICRIM) auprès de votre commune.</p>
+                    <p>Pour se préparer et connaître les bons réflexes en cas de survenance du risque, consulter le Dossier d'information communal sur les risques majeurs (DICRIM) auprès de votre
+                       commune.</p>
                 </template>
 
                 <template v-if="hasSismicite">
                     <h4 id="recommendations_sismicite">Sismicité</h4>
+                    <p>Pour le bâti neuf et pour certains travaux lourds sur le bâti existant, en fonction de la zone de sismicité et du type de construction des dispositions spécifiques à mettre en
+                       oeuvre s'appliquent lors de la construction. Un guide interactif est proposé pour identifier précisément les dispositions à prendre en compte selon votre localisation, type
+                       d'habitat et projet :<br/>
+                        <a href="http://www.planseisme.fr/-Didacticiel-.html">Didacticiel de la règlementation parasismique</a></p>
                     <template v-if="hasSismiciteHaute">
-                        <p>Pour le bâti neuf et pour certains travaux lourds sur le bâti existant, en fonction de la zone de sismicité et du type de construction (habitation individuelle, habitations
-                           collectives, établissement recevant du public) des dispositions spécifiques à mettre en oeuvre s'appliquent lors de la construction. Un guide interactif est proposé pour
-                           identifier précisément les dispositions à prendre en compte selon votre localisation, type d'habitat et projet :<br/></p>
-                        <a href="http://www.planseisme.fr/-Didacticiel-.html">Didacticiel de la règlementation parasismique</a>
-                        <p>Pour connaitre les consignes à appliquer en cas de séisme , vous pouvez consulter le site :<br/></p>
-                        <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html">Que faire en cas de séisme ?</a>
+                        <p>Pour connaitre les consignes à appliquer en cas de séisme , vous pouvez consulter le site :<br/>
+                            <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html">Que faire en cas de séisme ?</a></p>
                     </template>
-                    <template v-if="hasSismiciteMoyenne">
-                        <p>Pour certains bâtiments de taille importante ou sensibles, des dispositions spécifiques à mettre en oeuvre s'appliquent lors de la construction (arrêté du 22 octobre 2010).
-                           Un guide interactif est proposé sur le site Plan Séisme pour identifier précisément les dispositions à prendre en compte selon votre localisation et projet. Il est
-                           consultable à l'adresse suivante :<br/></p>
-                        <a href="http://www.planseisme.fr/-Didacticiel-.html">Didacticiel de la règlementation parasismique</a>
+                    <template v-if="hasSismiciteTresHaute">
+
+                        <p>Consignes à suivre en cas de séisme :<br/>
+                           - s’informer : écouter la radio, les premières consignes étant données par Radio France ;<br/>
+                           - ne pas aller chercher les enfants à l’école.</p>
+                        <p>Rester où l’on est :</p>
+                        <p>- à l’intérieur : se mettre près d’un mur, une colonne porteuse ou sous des meubles solides, s’éloigner des fenêtres ;<br/>
+                           - à l’extérieur : ne pas rester sous des fils électriques ou sous ce qui peut s’effondrer (ponts, corniches, toitures…) ;<br/>
+                           - en voiture : s’arrêter et ne pas descendre avant la fin des secousses.</p>
+                        <p>Se protéger la tête avec les bras.</p>
+                        <p>Ne pas allumer de flamme</p>
+                        <p>Pour plus de détails, vous pouvez consulter le site :<br/>
+                            <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html">Que faire en cas de séisme ?</a></p>
                     </template>
                 </template>
 
@@ -269,7 +270,7 @@
         </section>
 
         <section class="section v-flex"
-                 v-if="avis.canalisations.length > 0 || hasArgile || avis.nucleaires.installations.length > 0 || hasAZI || hasTRI || hasPollutionNonReglementaire || hasRadonMoyen">
+                 v-if="hasRisquesInformationNonObligatoire">
 
             <span class="title">Risques ne faisant pas l'objet d'une obligation d'information au titre de l'IAL</span>
 
@@ -303,13 +304,13 @@
 
             <!-- TODO :  Le détail de ces données est consultable ici.-->
 
-            <risque :description="'Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.'"
+            <risque :description="'Les pollutions des sols doivent notamment être prises en compte dans les projets de changements d\'usage (travaux, constructions, changement d\'affectation du bien) pour préserver la sécurité, la santé ou la salubrité publiques et l\'environnement..'"
                     :detail="'<p>Dans un rayon de 500 m autour de votre parcelle, sont identifiés :</br>'+
-                              (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' sites référencés dans l’inventaire des installations classées pour la protection de l’environnement (ICPE)</br>' : '') +
-                              (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites potentiellement pollués, référencés dans l’inventaire des sites ayant accueilli par le passé une activité qui a pu générer une pollution des sols (BASIAS).</br>' : '') +
-                              (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués (BASOL - terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité publique)</br></p>' : '</p>') +
+                              (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' installations classées pour la protection de l\'environnement (ICPE) soumises à autorisation ou à enregistrement, installations qui peuvent présenter des dangers ou inconvénients du fait de leur activité.</br>' : '') +
+                              (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites référencés dans l\'inventaire BASIAS des sites ayant accueilli par le passé une activité industrielle ou une activité de service qui a pu générer une pollution des sols.</br>' : '') +
+                              (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués ou potentiellement pollués (Basol - terrain pollué ou potentiellement pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d\'information sur les sols, SUP - terrain pollué affecté d\'une serviture d\'utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
-                              (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent la présence d’anciennes activités qui ont localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas compte.</p>' : '')"
+                              (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent parfois la présence d\'anciennes activités qui sont localisées par défaut sur le centre géographique de la commune lorsqu\'une localisation précise n\'est pas disponible. La présente analyse n\'en tient donc pas compte.</p>' : '')"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
                     :title="'Pollution des sols'"
                     :parcelle="leaflet.data.parcelles"
@@ -342,10 +343,10 @@
             <risque :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
                     :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d’eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être importants. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.'"
-                    :detail="(avis.niveauArgile === 3 ? 'Aléa fort : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 2 ? 'Aléa moyen : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 1 ? 'La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 0 ? 'Aléa nul : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des poches ponctuelles de sols argileux.' : '') "
+                    :detail="(avis.niveauArgile === 3 ? 'Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 2 ? 'Exposition moyenne : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 1 ? 'Exposition faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 0 ? 'Exposition nulle : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des poches ponctuelles de sols argileux.' : '') "
                     :leaflet-data="[{ data : avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon),
                                       color : '#FFD332'},
                                     { data : avis.lentillesArgile.filter(x => x.niveauAlea === 2).map(x => x.multiPolygon),
@@ -377,32 +378,36 @@
 
         <section class="section v-flex">
 
-            <span class="title">Autres informations :</span>
+            <span class="title">{{ hasRisquesInformationObligatoire || hasRisquesInformationNonObligatoire ? "Autres informations" : "Informations" }}</span>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.'"
-                    :title="'Naturels'"
+                    :title="'Risques naturels'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_inondation_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRN"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques miniers.'"
-                    :title="'Miniers'"
+                    :title="'Risques miniers'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_terre_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRM"/>
 
             <risque :description="'<br/>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques technologiques.'"
-                    :title="'Technologiques'"
+                    :title="'Risques technologiques'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_industrie_bleu.png'"
                     style="width: calc(33% - 35px);"
                     v-if="!hasPPRT"/>
 
-            <risque :description="'<p>Votre parcelle ne figure pas dans l’inventaire :</p>' +
-                                      '<p>- des installations classées soumises à enregistrement ou à autorisation</br>' +
-                                      '- des secteurs d’information sur les sols</br>' +
-                                      '- des terrains pollués affectés d’une servitude d’utilité publique.</p>'"
+            <risque :description="'<p>Votre parcelle n\'est pas située sur un secteur d\'information sur les sols.</p>' +
+                                      '<p>Aucune installation classée pour la protection de l\'environnement soumise à autorisation ou enregristrement sur votre parcelle ne figure dans la base de données des installations classées.</p>' +
+                                      '<p>Aucune servitude d\'utilité publique (SUP) relative à la pollution des sols sur votre parcelle ne figure dans le Géoportail de l\'Urbanisme.</p>'"
                     :title="'Pollution des sols'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
                     v-if="!hasPollutionPrincipale"/>
 
             <risque :description="'La parcelle n’est pas concernée par un plan d’exposition au bruit.'"
                     :title="'Bruit'"
+                    :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_bruit_bleu.png'"
                     v-if="!hasPEB"/>
 
             <div class="clearfix"/>
@@ -411,12 +416,11 @@
                 <a @click="$emit('flow', 1)"
                    class="bouton success"
                    href='#bullet-progress-bar_wrapper'>
-                    <!--                <font-awesome-icon icon="file-pdf"/>-->
-                    Créer un état des risques
+                    Compléter l'état des risques
                     <font-awesome-icon class="end"
                                        icon="chevron-right"/>
                 </a><br/>
-                <span>Certains risques nécessitent de faire des travaux obligatoires. Il est nécessaire de compléter ces informations pour finaliser l'état des risques et pollutions</span>
+                <span v-if="avis.ppr.length > 0">Certains risques nécessitent de faire des travaux obligatoires. Il est nécessaire de compléter ces informations pour finaliser l'état des risques.</span>
             </div>
         </section>
     </div>

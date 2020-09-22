@@ -1,20 +1,15 @@
 package fr.gouv.beta.fabnum.kelrisks.presentation.rest;
 
 import fr.gouv.beta.fabnum.commun.facade.dto.AutocompleteDTO;
-import fr.gouv.beta.fabnum.commun.facade.dto.JsonInfoDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.ParcelleDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasiasDTO;
-import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteSolPolueDTO;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionInstallationClasseeFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteIndustrielBasiasFacade;
-import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionSiteSolPolueFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,33 +30,9 @@ public class ApiRestBasias extends AbstractBasicApi {
     IGestionSiteIndustrielBasiasFacade gestionSiteIndustrielBasiasFacade;
     @Autowired
     IGestionInstallationClasseeFacade  gestionInstallationClasseeFacade;
-    @Autowired
-    IGestionSiteSolPolueFacade         gestionSiteSolPolueFacade;
     
     public ApiRestBasias() {
         // Rien à faire
-    }
-    
-    @GetMapping("/api/ssp/basias/cadastre/{codeINSEE}/{codeParcelle}")
-    @ApiOperation(value = "Requête retournant les sites industiels Basias liés à la zone Sites Sols Polués intersectant la Parcelle.", response = String.class)
-    public Response basiasInSSP(@ApiParam(name = "codeINSEE", value = "Code INSEE de la commune.")
-                                @PathVariable("codeINSEE") String codeINSEE,
-                                @ApiParam(required = true, name = "codeParcelle", value = "Code de la parcelle.")
-                                @PathVariable("codeParcelle") String codeParcelle) {
-    
-        ParcelleDTO parcelleDTO = getParcelleDTO(codeINSEE, codeParcelle);
-    
-        if (parcelleDTO == null) {
-            JsonInfoDTO jsonInfoDTO = new JsonInfoDTO();
-            jsonInfoDTO.addError("Aucune parcelle n'a été trouvé avec le code INSEE / code Parcelle fourni");
-            return Response.ok(jsonInfoDTO).build();
-        }
-    
-        List<SiteSolPolueDTO> siteSolPolueDTO = gestionSiteSolPolueFacade.rechercherZoneContenantParcelle(parcelleDTO.getMultiPolygon());
-        List<SiteIndustrielBasiasDTO> siteIndustrielBasiasDTOs =
-                gestionSiteIndustrielBasiasFacade.rechercherSitesDansPolygons(siteSolPolueDTO.stream().map(SiteSolPolueDTO::getMultiPolygon).collect(Collectors.toList()));
-    
-        return Response.ok(siteIndustrielBasiasDTOs).build();
     }
     
     @GetMapping("/api/basias/cadastre/{codeINSEE}/{codeParcelle}")

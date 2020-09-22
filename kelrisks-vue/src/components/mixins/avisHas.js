@@ -59,16 +59,18 @@ export default {
         hasPEB: function () {
             return this.avis.zonePlanExpositionBruit !== undefined && this.avis.zonePlanExpositionBruit !== null
         },
-        hasSismiciteHaute: function () {
-            return this.avis.summary.commune.codeZoneSismicite === '3' ||
-                this.avis.summary.commune.codeZoneSismicite === '4' ||
+        hasSismiciteTresHaute: function () {
+            return this.avis.summary.commune.codeZoneSismicite === '4' ||
                 this.avis.summary.commune.codeZoneSismicite === '5'
+        },
+        hasSismiciteHaute: function () {
+            return this.avis.summary.commune.codeZoneSismicite === '3'
         },
         hasSismiciteMoyenne: function () {
             return this.avis.summary.commune.codeZoneSismicite === '2'
         },
         hasSismicite: function () {
-            return this.hasSismiciteMoyenne || this.hasSismiciteHaute
+            return this.hasSismiciteMoyenne || this.hasSismiciteHaute || this.hasSismiciteTresHaute
         },
         hasPPR: function () {
             return this.avis.ppr.length > 0
@@ -99,6 +101,12 @@ export default {
         hasAZI: function () {
             if (this.avis.AZIs === null) return false
             return this.avis.AZIs.length > 0
+        },
+        hasRisquesInformationObligatoire () {
+            return this.avis.ppr.length > 0 || this.hasSismiciteHaute || this.hasSismiciteTresHaute || this.hasPEB || this.hasPollutionPrincipale || this.hasRadonHaut
+        },
+        hasRisquesInformationNonObligatoire () {
+            return this.avis.canalisations.length > 0 || this.hasArgile || this.avis.nucleaires.installations.length > 0 || this.hasAZI || this.hasTRI || this.hasPollutionNonReglementaire || this.hasRadonMoyen
         }
     }
 }

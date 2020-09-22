@@ -10,25 +10,23 @@
                 <a @click="$emit('flow', -1)"
                    class="bouton">
                     <font-awesome-icon icon="chevron-left"/>
-                    Résultat
+                    Revenir au résultat
                 </a>
             </div>
 
-            <div id="actionButtonsWrapper">
-                <a @click="$emit('flow', 1)"
-                   class="bouton success"
-                   target="_blank">
-                    Télécharger l'État des risques
-                    <font-awesome-icon class="end"
-                                       icon="chevron-right"/>
-                </a>
-            </div>
+            <div id="actionButtonsWrapper"></div>
 
             <div class="container bordered">
                 <div>
                     <div style="margin-bottom: 20px"><span class="title">Parcelle(s) </span></div>
-                    <span class="rightAlign">Adresse&nbsp;: </span><b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, <br/><span class="rightAlign"/>{{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span></b><br/>
-                    <span class="rightAlign">Code parcelle&nbsp;: </span><b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span></b><br/>
+                    <span class="rightAlign">Adresse&nbsp;: </span><b><span v-if="avis.summary.adresse">{{ avis.summary.adresse }}, <br/><span class="rightAlign"/>{{ avis.summary.commune.codePostal }} {{
+                        avis.summary.commune.nomCommune
+                                                                                                        }}</span><span v-else-if="avis.summary.commune">{{
+                        avis.summary.commune.codePostal
+                                                                                                                                                        }}, {{ avis.summary.commune.nomCommune }}</span><span v-else><i>n/a</i></span></b><br/>
+                    <span class="rightAlign">Code parcelle&nbsp;: </span><b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{
+                        avis.summary.codeParcelle
+                                                                                                                                                       }}</span><span v-else><i>n/a</i></span></b><br/>
                     <br>
                 </div>
             </div>
@@ -52,26 +50,32 @@
                      v-bind:key="'plan_' + index"
                      v-for="(plan, index) in avis.ppr">
                     <div>
-                        <div class="errial_title"><span class="title">{{plan.alea.familleAlea.libelle}}</span></div>
-                        <p>Rappel du risque : {{plan.alea.familleAlea.libelle}}, {{plan.alea.libelle}}.</p>
-                        <div class="text_wrapper"><b>L'immeuble est concerné par des prescriptions de travaux dans le règlement du {{plan.alea.familleAlea.famillePPR.libelle}}</b></div>
+                        <div class="errial_title"><span class="title">{{ plan.alea.familleAlea.libelle }}</span></div>
+                        <p>Rappel du risque : {{ plan.alea.familleAlea.libelle }}, {{ plan.alea.libelle }}.</p>
+                        <div class="text_wrapper"><b>L'immeuble est concerné par des prescriptions de travaux dans le règlement du {{ plan.alea.familleAlea.famillePPR.libelle }}</b></div>
                         <div class="input_wrapper">
-                            <label><input :name="'prescription_' + index"
+                            <label><input :name="'pre_' + plan.idGaspar"
+                                          value="1"
                                           type="radio">Oui</label>
-                            <label><input :name="'prescription_' + index"
+                            <label><input :name="'pre_' + plan.idGaspar"
+                                          value="0"
                                           type="radio">Non</label>
-                            <label><input :name="'prescription_' + index"
+                            <label><input :name="'pre_' + plan.idGaspar"
+                                          value="-1"
                                           checked="checked"
                                           type="radio">À préciser plus tard</label></div>
 
                         <div class="text_wrapper"><b>Si oui, les travaux prescrits ont été réalisés</b></div>
                         <div class="input_wrapper">
-                            <label><input :name="'travaux_' + index"
+                            <label><input :name="'tra_' + plan.idGaspar"
+                                          value="1"
                                           type="radio">Oui</label>
-                            <label><input :name="'travaux_' + index"
+                            <label><input :name="'tra_' + plan.idGaspar"
+                                          value="0"
                                           type="radio">Non</label>
-                            <label><input :name="'travaux_' + index"
+                            <label><input :name="'tra_' + plan.idGaspar"
                                           checked="checked"
+                                          value="-1"
                                           type="radio">À préciser plus tard</label></div>
                     </div>
                 </div>
@@ -80,22 +84,23 @@
             <div class="container bordered ppr">
                 <div>
                     <div class="errial_title"><span class="title">Information relative aux sinistres indemnisés par l'assurance suite à une catastrophe naturelle, minière ou technologique</span></div>
-                    <p>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ? <br/> Pour consulter la liste des arrêtés de catastrophes naturelles
-                       (Cat-Nat) sur votre commune : URL</p>
-                    <div class="text_wrapper"><b>L'information est mentionnée dans l'acte de vente</b></div>
+                    <p>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ?</p>
                     <div class="input_wrapper">
-                        <label><input name="'cat_nat'"
+                        <label><input name="cat"
+                                      value="1"
                                       type="radio">Oui</label>
-                        <label><input name="'cat_nat"
+                        <label><input name="cat"
+                                      value="0"
                                       type="radio">Non</label>
                         <label><input checked="checked"
-                                      name="'cat_nat"
+                                      name="cat"
+                                      value="-1"
                                       type="radio">À préciser plus tard</label></div>
                 </div>
             </div>
 
             <div id="bottomButtonsWrapper">
-                <a @click="$emit('flow', 1)"
+                <a @click="download"
                    class="bouton success"
                    target="_blank">
                     Télécharger l'État des risques
@@ -111,6 +116,9 @@
 <script>
 
 import Errors from "../base/Errors";
+import JQuery from 'jquery'
+
+let $ = JQuery
 
 export default {
     name: 'CompleterERRIAL',
@@ -128,119 +136,158 @@ export default {
         _paq: function () {
             return window._paq
         }
+    },
+    methods: {
+        download () {
+
+            let errial = ''
+
+            $("[name^='pre_']:checked").each(function () {
+                console.log($(this))
+                console.log($(this).val())
+                console.log($(this).attr('name'))
+
+                if ($(this).val() !== "-1") {
+                    errial += $(this).attr('name') + ":" + $(this).val() + ";"
+                }
+            })
+
+            $("[name^='tra_']:checked").each(function () {
+                console.log($(this))
+                console.log($(this).val())
+                console.log($(this).attr('name'))
+
+                if ($(this).val() !== "-1") {
+                    errial += $(this).attr('name') + ":" + $(this).val() + ";"
+                }
+            })
+
+            let catnat = $("[name='cat']:checked")
+            console.log(catnat)
+            console.log(catnat.val())
+            console.log(catnat.prop("name"))
+
+            if (catnat.val() !== "-1") {
+                errial += "cat:" + catnat.val() + ";"
+            }
+
+            console.log(errial)
+
+            this.$emit('errial', errial)
+        }
     }
 }
 </script>
 
 <style scoped>
 
-    #searchButtonsWrapper {
-        float : left;
-    }
+#searchButtonsWrapper {
+	float : left;
+}
 
-    #searchButtonsWrapper a,
-    #actionButtonsWrapper a,
-    #bottomButtonsWrapper a {
-        display : inline-block;
-        float   : none;
-    }
+#searchButtonsWrapper a,
+#actionButtonsWrapper a,
+#bottomButtonsWrapper a {
+	display : inline-block;
+	float   : none;
+}
 
-    #bottomButtonsWrapper {
-        flex       : 0 0 100%;
-        margin-top : 25px;
-        text-align : center;
-    }
+#bottomButtonsWrapper {
+	flex       : 0 0 100%;
+	margin-top : 25px;
+	text-align : center;
+}
 
-    #actionButtonsWrapper {
-        float : right;
-    }
+#actionButtonsWrapper {
+	float : right;
+}
 
-    @media (min-width : 630px) {
-        #searchButtonsWrapper a:last-of-type,
-        #actionButtonsWrapper a:last-of-type {
-            margin-right : 0;
-        }
-    }
+@media (min-width : 630px) {
+	#searchButtonsWrapper a:last-of-type,
+	#actionButtonsWrapper a:last-of-type {
+		margin-right : 0;
+	}
+}
 
-    @media (max-width : 1350px) {
+@media (max-width : 1350px) {
 
-        #searchButtonsWrapper {
-            text-align : center;
-            width      : 100%;
-        }
+	#searchButtonsWrapper {
+		text-align : center;
+		width      : 100%;
+	}
 
-        #actionButtonsWrapper {
-            text-align : center;
-            width      : 100%;
-        }
-    }
+	#actionButtonsWrapper {
+		text-align : center;
+		width      : 100%;
+	}
+}
 
-    @media (max-width : 630px) {
-        #searchButtonsWrapper a,
-        #actionButtonsWrapper a {
-            margin-left  : 10px;
-            margin-right : 10px;
-        }
-    }
+@media (max-width : 630px) {
+	#searchButtonsWrapper a,
+	#actionButtonsWrapper a {
+		margin-left  : 10px;
+		margin-right : 10px;
+	}
+}
 
-    .container {
-        max-width : unset;
-    }
+.container {
+	max-width : unset;
+}
 
-    .container.bordered {
-        background-color : #FFFFFF;
-        border           : 1px solid #CCCCCC;
-        border-radius    : 2px;
-        display          : flex;
-        margin-bottom    : 20px;
-        padding          : 20px;
-        text-align       : left;
-        width            : 100%;
-    }
+.container.bordered {
+	background-color : #FFFFFF;
+	border           : 1px solid #CCCCCC;
+	border-radius    : 2px;
+	display          : flex;
+	margin-bottom    : 20px;
+	padding          : 20px;
+	text-align       : left;
+	width            : 100%;
+}
 
-    .container.bordered span {
-        line-height : 25px;
-    }
+.container.bordered span {
+	line-height : 25px;
+}
 
-    .container.bordered span.rightAlign {
-        display       : inline-block;
-        padding-right : 5px;
-        text-align    : right;
-        width         : 150px;
-    }
+.container.bordered span.rightAlign {
+	display       : inline-block;
+	padding-right : 5px;
+	text-align    : right;
+	width         : 150px;
+}
 
-    .container.bordered.ppr > div {
-        display   : flex;
-        flex-wrap : wrap;
-    }
+.container.bordered.ppr > div {
+	display   : flex;
+	flex-wrap : wrap;
+}
 
-    .container.bordered.ppr div.errial_title {
-        flex          : 1 0 100%;
-        margin-bottom : 20px;
-    }
+.container.bordered.ppr div.errial_title {
+	flex          : 1 0 100%;
+	margin-bottom : 20px;
+}
 
-    .container.bordered.ppr p {
-        flex : 1 0 100%;
-    }
+.container.bordered.ppr p {
+	flex : 1 0 100%;
+}
 
-    .text_wrapper {
-        clear          : both;
-        flex           : 1 0 50%;
-        padding-bottom : 25px;
-        text-align     : end;
-    }
+.text_wrapper {
+	clear          : both;
+	flex           : 1 0 50%;
+	padding-bottom : 25px;
+	text-align     : end;
+}
 
-    .input_wrapper {
-        flex : 1 0 350px;
-    }
+.input_wrapper {
+	flex : 1 0 350px;
+}
 
-    .input_wrapper label {
-        display     : inline-block;
-        margin-left : 20px;
-    }
+.input_wrapper label {
+	display     : inline-block;
+	margin-left : 20px;
+}
 
-    #aide {
-        background-color : #DAF5E7;
-        border-color     : #5CD495;
-    }
+#aide {
+	background-color : #DAF5E7;
+	border-color     : #5CD495;
+}
 </style>

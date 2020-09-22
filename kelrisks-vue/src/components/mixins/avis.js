@@ -161,7 +161,7 @@ export default {
                 })
                 .catch(() => {
 
-                    this.$refs.searchErrors.sendError('Votre requête n\'a pu aboutir dans un délais raisonnable, merci de réessayer ou de nous le signaler au moyen du formulaire de contact.')
+                    this.$refs.searchErrors.sendError('Votre requête n\'a pu aboutir dans un délais raisonnable, merci de réessayer ou de nous le signaler.')
 
                     this.avis = this.initAvis()
 
