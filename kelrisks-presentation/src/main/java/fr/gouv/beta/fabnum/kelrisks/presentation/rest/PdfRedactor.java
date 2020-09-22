@@ -36,8 +36,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PdfRedactor {
     
-    private static final int    ROWS_PER_PAGE        = 18;
-    private static final double TEXT_TO_HEIGHT_RATIO = 0.6;
+    private static final int    ROWS_PER_PAGE        = 25;
+    private static final double TEXT_TO_HEIGHT_RATIO = 0.55;
     @Value("${kelrisks.app.back.local.path}")
     String                   localAppPath;
     @Value("${kelrisks.app.back.path}")
