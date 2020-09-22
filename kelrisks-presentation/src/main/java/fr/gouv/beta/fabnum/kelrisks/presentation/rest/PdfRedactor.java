@@ -54,7 +54,7 @@ public class PdfRedactor {
         Element element = htmlDocument.select("#date").first();
         
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.FRANCE);
-        element.text("Établi le " + simpleDateFormat.format(new Date()) + " (valable 6 mois)");
+        element.text("Établi le " + simpleDateFormat.format(new Date()));
         
         element = htmlDocument.select("#commune").first();
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneAvecCodeINSEE(codeINSEE);
