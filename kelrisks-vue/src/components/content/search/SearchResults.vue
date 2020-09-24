@@ -196,12 +196,18 @@
 
             <div class="recommandations_wrapper">
 
-                <p>Pourquoi l'Etat des risques est important ?</p>
-                <p>À chaque vente ou location d'un bien, le propriétaire est tenu d'informer l’acquéreur ou le locataire de son bien immobilier (bâti et non bâti) certains risques auxquels le bien
-                   immobilier est exposé. Cette obligation d'information a été créée par la loi du 30 juillet 2003.</p><br/>
-                <p>L'État des risques permet de faire un bilan des principaux risques pouvant affecter ce bien, afin de bien informer les parties prenantes et de mettre en œuvre les mesures de
-                   protection éventuelles.</p><br/>
-                <p>Attention ! Le non respect de ces obligations peut entrainer une annulation du contrat ou une diminution du prix (réfaction).</p>
+                <div id="why_erp"
+                     class="container bordered">
+                    <div>
+                        <p><b>Pourquoi l'Etat des risques est important ?</b></p><br/>
+                        <p>À chaque vente ou location d'un bien, le propriétaire est tenu d'informer l’acquéreur ou le locataire de son bien immobilier (bâti et non bâti) certains risques auxquels le
+                           bien
+                           immobilier est exposé. Cette obligation d'information a été créée par la loi du 30 juillet 2003.</p><br/>
+                        <p>L'État des risques permet de faire un bilan des principaux risques pouvant affecter ce bien, afin de bien informer les parties prenantes et de mettre en œuvre les mesures de
+                           protection éventuelles.</p><br/>
+                        <p>Attention ! Le non respect de ces obligations peut entrainer une annulation du contrat ou une diminution du prix (réfaction).</p><br>
+                    </div>
+                </div>
 
                 <template v-if="hasPPR">
                     <h4 id="recommendations_PPR">Plans de Prévention des Risques</h4>
@@ -698,6 +704,12 @@ section.v-flex > span {
 .recommandations_wrapper p {
 	margin-bottom : 0;
 	margin-top    : 0;
+}
+
+#why_erp {
+	background-color : var(--theme-background-grey);
+	border           : 2px solid #BAB9B9;
+	width            : 100%;
 }
 
 .container.bordered {
