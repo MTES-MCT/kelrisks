@@ -132,7 +132,12 @@ export default {
             return window._paq
         }
     },
-    props: {},
+    props: {
+        tinyUrl: {
+            type: String,
+            default: undefined
+        }
+    },
     data: () => ({
         cgu: true,
         error: {
@@ -223,6 +228,40 @@ export default {
                 this.$refs.sfp_form_leaflet.invalidate()
             }, 1000);
             this.leaflet.hasGeoloc = visible
+        },
+        loadAvis (codeAvis) {
+            console.log('loadAvis')
+            // this.visibility.modifier = false
+            this.$emit('loading')
+            this.$emit('setflow', 0)
+            fetch(this.env.apiPath + 'url?' + 'code=' + codeAvis)
+                .then(stream => stream.json())
+                .then(value => {
+                    if (value.status === 422) {
+                        // console.log('Wrong code')
+                        this.$refs.searchErrors.sendError("Oups! Votre recherche n'a pas été trouvée :-(.")
+                        this.$refs.searchErrors.sendError("Si vous l'avons perdue, veuillez bien vouloir nous en excuser.")
+                        this.$emit('loaded')
+                        return
+                    }
+                    console.log(value.entity.url)
+                    let array = value.entity.url.split('|&|')
+                    console.log(array)
+
+                    this.form.selectedParcellesList = array[0].split(',')
+                    this.form.codeInsee = array[1]
+                    this.form.nomAdresse = array[2]
+
+                    console.log(this.form)
+
+                    this.getAvis()
+                })
+        }
+    },
+    watch: {
+        tinyUrl: function () {
+            console.log("watched")
+            this.loadAvis(this.tinyUrl)
         }
     }
 }

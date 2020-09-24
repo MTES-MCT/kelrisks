@@ -5,9 +5,6 @@ import functions from "../../script/fonctions";
 export default {
     data: () => ({
         querying: false,
-        tinyUrl: {
-            selectedParcellesList: []
-        },
         form: {
             codeInsee: '',
             nomAdresse: '',
@@ -71,8 +68,8 @@ export default {
             }
 
             let parcelle = this.form.selectedParcellesList.join(',')
-            let insee = this.tinyUrl.codeInsee ? this.tinyUrl.codeInsee : this.form.codeInsee
-            let nom = this.tinyUrl.nomAdresse ? this.tinyUrl.nomAdresse : this.form.nomAdresse
+            let insee = this.form.codeInsee
+            let nom = this.form.nomAdresse
 
             if (!parcelle && !nom) {
                 this.$refs.searchErrors.sendError('Merci de bien vouloir choisir une rue/numéro ou entrer une parcelle.')
@@ -157,9 +154,10 @@ export default {
                     this.$emit('form', this.form)
                     this.$emit('avis', this.avis)
                     this.$emit('leaflet', this.leaflet)
-                    this.$emit('tinyUrl', this.tinyUrl)
+                    this.$emit('loaded')
                 })
                 .catch(() => {
+                    this.$emit('loaded')
 
                     this.$refs.searchErrors.sendError('Votre requête n\'a pu aboutir dans un délais raisonnable, merci de réessayer ou de nous le signaler.')
 

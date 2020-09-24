@@ -452,11 +452,6 @@ export default {
             type: Object,
             default: () => {
             }
-        },
-        tinyUrl: {
-            type: Object,
-            default: () => {
-            }
         }
     },
     data: () => ({
@@ -484,34 +479,6 @@ export default {
     methods: {
         formatDate (date) {
             return moment(date).format('DD/MM/YYYY')
-        },
-        loadAvis (codeAvis) {
-            // console.log('loadAvis')
-            this.visibility.modifier = false
-            this.$emit('loading')
-            this.$emit('setflow', 0)
-            fetch(this.env.apiPath + 'url?' + 'code=' + codeAvis)
-                .then(stream => stream.json())
-                .then(value => {
-                    if (value.status === 422) {
-                        // console.log('Wrong code')
-                        this.$refs.searchErrors.sendError("Oups! Votre recherche n'a pas été trouvée :-(.")
-                        this.$refs.searchErrors.sendError("Si vous l'avons perdue, veuillez bien vouloir nous en excuser.")
-                        this.$emit('loaded')
-                        return
-                    }
-                    // console.log(value.entity.url)
-                    let array = value.entity.url.split('|&|')
-                    // console.log(array)
-
-                    this.tinyUrl.codeParcelle = array[0]
-                    this.tinyUrl.codeInsee = array[1]
-                    this.tinyUrl.nomAdresse = array[2]
-                    this.tinyUrl.geolocAdresse = array[3]
-                    this.tinyUrl.codeProprio = array[4]
-
-                    this.getAvis()
-                })
         },
         copyLink () {
             this._paq.push(['trackEvent', 'Flow', 'Copy Link']);
@@ -562,8 +529,6 @@ export default {
     },
     mounted () {
         this.mounted = true
-        let codeAvis = this.$route.params.codeAvis
-        if (codeAvis !== undefined) this.loadAvis(codeAvis)
 
         this.$nextTick(() => {
             // this.$refs.resultsErrors.sendSuccess('Participez à améliorer Kelrisks en répondant à ce court questionnaire (durée 3min)<a target=\'_blank\' style=\'display:inline-block; margin: 0 10px; min-width: 0; float: none;\' class=\'bouton\' href=\'https://docs.google.com/forms/d/e/1FAIpQLSd3tB_gWGZsucCihp4VYDqv0Vxq61nqnpQJeMkI17nY39St_w/viewform?usp=sf_link\'>Répondre</a>')

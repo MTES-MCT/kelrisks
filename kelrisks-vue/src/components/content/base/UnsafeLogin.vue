@@ -39,7 +39,6 @@ export default {
         }
     },
     mounted () {
-        console.log(sessionStorage.getItem('ERRIAL_loggedIn'))
         let ERRIAL_loggedIn = sessionStorage.getItem('ERRIAL_loggedIn')
         if (ERRIAL_loggedIn && ERRIAL_loggedIn !== 'undefined') {
             this.checkPassword(ERRIAL_loggedIn)

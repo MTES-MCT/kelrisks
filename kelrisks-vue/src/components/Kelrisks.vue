@@ -134,20 +134,21 @@
             <unsafe-login v-if="env.backPath.includes('preprod') || env.backPath.includes('localhost')"/>
 
             <search-form-parcelle @avis="avis = $event"
+                                  :tinyUrl="tinyUrl"
                                   @cgu="$refs.cgu.open()"
                                   @flow="updateflow"
                                   @form="form = $event"
                                   @leaflet="leaflet = $event"
-                                  @tinyUrl="tinyUrl = $event"
+                                  @loaded="loaded"
+                                  @loading="loading"
                                   ref="searchForm"
                                   v-show="flow.index === 1"/>
 
             <search-results :avis="avis"
                             :leaflet="leaflet"
-                            :tinyUrl="tinyUrl"
                             @flow="updateflow"
                             ref="results"
-                            v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0 && Object.entries(leaflet).length > 0 && Object.entries(tinyUrl).length > 0 "
+                            v-if="Object.entries(form).length > 0 && Object.entries(avis).length > 0 && Object.entries(leaflet).length > 0"
                             v-show="flow.index === 2"/>
 
             <completer-e-r-r-i-a-l :avis="avis"
@@ -248,7 +249,7 @@ export default {
         form: {},
         avis: {},
         leaflet: {},
-        tinyUrl: {},
+        tinyUrl: undefined,
         api: {
             message: 'API'
         },
@@ -312,6 +313,13 @@ export default {
     beforeDestroy () {
     },
     mounted () {
+
+        let tinyUrl = this.$route.params.codeAvis
+        if (tinyUrl !== undefined) this.tinyUrl = tinyUrl
+        console.log("mounted")
+        console.log(tinyUrl)
+        console.log(this.tinyUrl)
+
         fetchWithError(this.env.apiPath + 'appversion/')
             .then(stream => stream.json())
             .then(value => {
@@ -527,6 +535,7 @@ p {
 	position         : fixed;
 	top              : 0;
 	width            : 100%;
+	z-index          : 9999;
 }
 
 #loading p {
