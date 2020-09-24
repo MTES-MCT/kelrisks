@@ -69,7 +69,6 @@ export default {
 <style scoped>
     #howto_wrapper {
         background-color : #EBEFF3;
-        height           : 25%;
         margin           : 0 auto;
         padding          : 50px 200px 80px;
     }

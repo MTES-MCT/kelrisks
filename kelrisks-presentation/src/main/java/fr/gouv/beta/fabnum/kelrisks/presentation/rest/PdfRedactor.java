@@ -13,6 +13,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDT
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.net.URLEncoder;
@@ -111,12 +112,12 @@ public class PdfRedactor {
         Matcher matcher = pattern.matcher(errial);
         while (matcher.find()) {
             String name  = matcher.group(1);
-            String value = matcher.group(2).equals("1") ? "Oui" : "Non";
+            String value = matcher.group(2);
             System.out.println(name);
             Elements inputs = htmlDocument.select("input[name=" + name + "]");
             for (Element input : inputs) {
-                if (!input.val().equals(value)) {
-                    input.parent().html(input.parent().html().replace(value, "<s>" + value + "</s>"));
+                if (input.val().equals(value)) {
+                    input.parent().html(input.parent().html().replace("check_box.svg", "check_box_checked.svg"));
                 }
             }
         }
@@ -358,7 +359,7 @@ public class PdfRedactor {
                       localAppPath + "/pictogrammes_risque/ic_terre_bleu.png",
                       "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les " +
                       "constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être " +
-                      "importants. Le zonage \"argile\" identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
+                      "importants. Le zonage argile identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
                       (avisDTO.getNiveauArgile() == 3 ? "<p>Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les " +
                                                         "constructions, " +
                                                         "notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
@@ -396,7 +397,7 @@ public class PdfRedactor {
                                                                                        "ayant accueilli par le passé une activité qui a pu générer une " +
                                                                                        "pollution des sols (BASIAS).</p>" : "") +
                       (avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() + " " +
-                                                                                      "sites pollués (BASOL - terrain pollué appelant une action des pouvoirs " +
+                                                                                      "site(s) pollué(s) (BASOL - terrain pollué appelant une action des pouvoirs " +
                                                                                       "publics à titre curatif ou préventif, SIS - terrain placé en secteur " +
                                                                                       "d’information sur les sols, SUP - terrain pollué affecté d’une " +
                                                                                       "servitude d’utilité publique)</p>" : "</p>") +
@@ -417,7 +418,7 @@ public class PdfRedactor {
                       "INSTALLATIONS NUCLÉAIRES DE BASE",
                       localAppPath + "/pictogrammes_risque/ic_nucleaires_bleu.png",
                       "<p>Votre bien est situé à moins de " + (avisDTO.isHasCentraleNucleaire() ? "20 km" : "10 km") + " d’une installation nucléaire" +
-                      " de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. " +
+                      " de base, installation dans laquelle une certaine quantité de substance ou de matières radioactives est présente (ex. " +
                       "réacteurs nucléaires de production d’électricité (centrale nucléaire), installations de préparation, enrichissement, " +
                       "fabrication, traitement ou entreposage de combustibles nucléaires ; etc.).<p>Ces installations sont contrôlées par " +
                       "l’Autorité de Sureté Nucléaire.</p>" +
@@ -473,13 +474,17 @@ public class PdfRedactor {
                         "<p>Rappel du risque : " + planPreventionRisquesDTO.getAlea().getFamilleAlea().getLibelle() + ", " + planPreventionRisquesDTO.getAlea().getLibelle() + ".</p>\n" +
                         "<div class=\"text_wrapper\"><b>Le bien est il concerné par des prescriptions de travaux ?</b></div>\n" +
                         "<div class=\"input_wrapper\">\n" +
-                        "    <label><input value=\"1\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\">Oui</label>\n" +
-                        "    <label><input value=\"0\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\">Non</label>\n" +
+                        "    <label><input value=\"1\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        ".svg\"/></span>Oui</label>\n" +
+                        "    <label><input value=\"0\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        ".svg\"/></span>Non</label>\n" +
                         "</div>\n" +
                         "<div class=\"text_wrapper\"><b>Si oui, les travaux prescrits ont été réalisés ?</b></div>\n" +
                         "<div class=\"input_wrapper\">\n" +
-                        "    <label><input value=\"1\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\">Oui</label>\n" +
-                        "    <label><input value=\"0\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\">Non</label>\n" +
+                        "    <label><input value=\"1\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        ".svg\"/></span>Oui</label>\n" +
+                        "    <label><input value=\"0\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        ".svg\"/></span>Non</label>\n" +
                         "</div>\n");
         }
     
@@ -487,8 +492,8 @@ public class PdfRedactor {
     
         page.append("<div class=\"text_wrapper\" ><b>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ?</b></div>\n" +
                     "<div class=\"input_wrapper\">\n" +
-                    "    <label><input value=\"1\" name=\"cat\" type=\"checkbox\">Oui</label>\n" +
-                    "    <label><input value=\"0\" name=\"cat\" type=\"checkbox\">Non</label>\n" +
+                    "    <label><input value=\"1\" name=\"cat\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box.svg\"/></span>Oui</label>\n" +
+                    "    <label><input value=\"0\" name=\"cat\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box.svg\"/></span>Non</label>\n" +
                     "</div>\n");
     
         page.append("<p style=\"padding-top : 30px;\">Les parties signataires à l'acte certifient avoir pris connaissance des informations restituées dans ce document et certifient avoir été en " +
@@ -615,7 +620,7 @@ public class PdfRedactor {
                         "514-20 du Code de l’Environnement et L 125-7 du Code de l’Environnement).</p>");
             page.append("<p>En cas de changement d’usage du terrain (travaux, constructions, changement d’affectation du bien), le maître d’ouvrage doit faire appel à un bureau d’étude qui devra " +
                         "attester de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d’un dépôt de permis de construire ou d’aménager " +
-                        "(Article L.556-1 du Code de l’Environnement), l’attestation devra être délivrée par une bureau d’étude certifiée.</p>");
+                        "(Article L.556-1 du Code de l’Environnement), l’attestation devra être délivrée par un bureau d’étude certifiée.</p>");
         }
     }
     
@@ -661,7 +666,7 @@ public class PdfRedactor {
     
     private void redigerRisquesPrincipaux(Document htmlDocument, AvisDTO avisDTO) {
     
-        if (hasRisquesPrincipaux(avisDTO)) { return; }
+        if (!hasRisquesPrincipaux(avisDTO)) { return; }
     
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
     
@@ -683,27 +688,35 @@ public class PdfRedactor {
                                ) +
                                "<br/><br/>" +
                                "Le plan de prévention des risques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d'urbanisme héritées du " +
-                               "passé et de mieux encadrer l'urbanisation future autour du site..</p>");
+                               "passé et de mieux encadrer l'urbanisation future autour du site.</p>");
         }
         
         if (hasSismicite(avisDTO)) {
             addRisquePrincipal(htmlDocument,
                                "SISMICITE",
-                               "SISMICITÉ",
+                               "SISMICITÉ : " + avisDTO.getSummary().getCommune().getCodeZoneSismicite() + "/5",
                                localAppPath + "/pictogrammes_risque/ic_seisme_bleu.png",
                                "<p>Un tremblement de terre ou séisme, est un ensemble de secousses et de déformations brusques de l'écorce terrestre (surface de la Terre). Le zonage sismique " +
-                               "détermine l'importance de l'exposition au risque sismique..</p>");
+                               "détermine l'importance de l'exposition au risque sismique.</p>",
+                               new Legend("#D8D8D8", "1 - très faible"),
+                               new Legend("#FFD332", "2 - faible"),
+                               new Legend("#FF8000", "3 - modéré"),
+                               new Legend("#E02B17", "4 - moyen"),
+                               new Legend("#840505", "5 - fort"));
         }
     
         if (hasRadonHaut(avisDTO)) {
             addRisquePrincipal(htmlDocument,
                                "RADON",
-                               "RADON",
+                               "RADON : " + avisDTO.getSummary().getCommune().getClassePotentielRadon() + "/3",
                                localAppPath + "/pictogrammes_risque/ic_rn_bleu.png",
                                "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et " +
                                "il s’accumule dans les espaces clos, notamment dans " +
                                "les " +
-                               "bâtiments.</p>");
+                               "bâtiments.</p>",
+                               new Legend("#FFD332", "1 : potentiel radon faible"),
+                               new Legend("#FF8000", "2 : potentiel radon moyen"),
+                               new Legend("#840505", "3 : potentiel radon significatif"));
         }
         
         if (hasPollutionPrincipale(avisDTO)) {
@@ -718,9 +731,8 @@ public class PdfRedactor {
                                                                                              "autorisation ou enregistrement. Cette activité a pu provoquer des pollutions, notamment des sols des " +
                                                                                              "eaux souterraines ou des eaux superficielles." +
                                                                                              "</br>Installation(s) concerné(e)  : " +
-                                                                                             "<br/>" + getLibelleInstallationsNucleaires(avisDTO) + "</p>" : "") +
-                               (avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0 ? "<p>- La parcelle est située en secteur d’information sur les sols" +
-                                                                                               ".</p>" : "") +
+                                                                                             "<br/>" + getLibelleInstallationsClassees(avisDTO) + "</p>" : "") +
+                               (avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0 ? "<p>- La parcelle est située en secteur d’information sur les sols.</p>" : "") +
                                (false ? "- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées au titre du L 515-12 du " +
                                         "code de l’environnement." : ""));
         }
@@ -728,7 +740,7 @@ public class PdfRedactor {
         if (avisDTO.getZonePlanExpositionBruit() != null) {
             addRisquePrincipal(htmlDocument,
                                "PEB",
-                               "BRUIT",
+                               "BRUIT : " + avisDTO.getZonePlanExpositionBruit(),
                                localAppPath + "/pictogrammes_risque/ic_bruit_bleu.png",
                                "<p>La parcelle est concernée par un plan d’exposition au bruit car elle est exposée aux nuisances sonores d’un aéroport.</p>" +
                                (avisDTO.getZonePlanExpositionBruit().equals("A") ? "<p>Le niveau d’exposition au bruit de la parcelle est très fort (zone A en rouge). La zone A est principalement " +
@@ -738,20 +750,24 @@ public class PdfRedactor {
                                (avisDTO.getZonePlanExpositionBruit().equals("C") ? "<p>Le niveau d’exposition au bruit de la parcelle est modéré (zone C en jaune). Certaines constructions sont " +
                                                                                    "autorisées sous conditions.</p>" : "") +
                                (avisDTO.getZonePlanExpositionBruit().equals("D") ? "<p>Le niveau d’exposition au bruit de la parcelle est faible (zone D en verte). Dans la zone D, les nouveaux " +
-                                                                                   "logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.</p>" : ""));
+                                                                                   "logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.</p>" : ""),
+                               new Legend("#840505", "A - très fort"),
+                               new Legend("#FF8000", "B - fort"),
+                               new Legend("#FFD332", "C - modéré"),
+                               new Legend("#058E0C", "D - faible"));
         }
     }
     
     private boolean hasRisquesPrincipaux(AvisDTO avisDTO) {
-        
-        return (avisDTO.getPlanPreventionRisquesDTOs().isEmpty()) &&
-               (avisDTO.getZonePlanExpositionBruit() == null) &&
-               !(hasPollutionPrincipale(avisDTO)) &&
-               !(hasRadonHaut(avisDTO)) &&
-               !(hasSismicite(avisDTO));
+    
+        return !avisDTO.getPlanPreventionRisquesDTOs().isEmpty() ||
+               avisDTO.getZonePlanExpositionBruit() != null ||
+               hasPollutionPrincipale(avisDTO) ||
+               hasRadonHaut(avisDTO) ||
+               hasSismicite(avisDTO);
     }
     
-    private void addRisquePrincipal(Document htmlDocument, String id, String libelle, String url, String text) {
+    private void addRisquePrincipal(Document htmlDocument, String id, String libelle, String iconSrc, String text, Legend... legends) {
         
         Element page = htmlDocument.select(".page .content").last();
         
@@ -759,31 +775,36 @@ public class PdfRedactor {
         
         if (risquePrincipalNumberOf >= 2) { page = addPage(htmlDocument); }
         
-        Element description = addRisquePrincipalHtml(page, id);
+        Element description = addRisquePrincipalHtml(page, id, legends);
         
         description.select(".libelle").html(libelle);
-        description.select(".icon img").attr("src", url);
+        description.select(".icon img").attr("src", iconSrc);
         description.select(".text").html(text);
     }
     
-    private void addRisque(Document htmlDocument, String libelle, String url, String text) {
-    
+    private void addRisque(Document htmlDocument, String libelle, String iconSrc, String text) {
+        
         Element page = htmlDocument.select(".page .content").last();
-    
+        
         //        int risquePrincipalNumberOf = page.select(".risque").size();
         //
         //        if (risquePrincipalNumberOf >= 4) { page = addPage(htmlDocument); }
-    
+        
         if (shouldAddNewPageForRisque(htmlDocument, text.length())) { page = addPage(htmlDocument); }
-    
+        
         Element description = addRisqueHtml(page);
-    
+        
         description.select(".libelle").html(libelle);
-        description.select(".icon img").attr("src", url);
+        description.select(".icon img").attr("src", iconSrc);
         description.select(".text").html(text);
     }
     
-    private Element addRisquePrincipalHtml(Element page, String id) {
+    private Element addRisquePrincipalHtml(Element page, String id, Legend[] legends) {
+        
+        String legendHtml = "";
+        for (Legend legend : legends) {
+            legendHtml += "        <div style=\"background-color: " + legend.getColor() + "\" class=\"legend_color\"></div><div class=\"legend_text\">" + legend.getLabel() + "</div>\n";
+        }
         
         // @formatter:off
         page.append("<div id=\"" + id + "\"class=\"risque-principal\">\n" +
@@ -792,6 +813,9 @@ public class PdfRedactor {
                     "        <div class=\"icon\"><img height=\"80px\"\n" +
                     "                                 src=\"\"\n" +
                     "                                 style=\"margin : 0;\"/></div>\n" +
+                    "        <div class=\"legend\">\n" +
+                    legendHtml +
+                    "        </div>\n" +
                     "        <div class=\"text\"></div>\n" +
                     "    </div>\n" +
                     "    <div class=\"carte\"><img src=\"\"\n" +
@@ -861,6 +885,17 @@ public class PdfRedactor {
         
         for (InstallationNucleaireDTO installationNucleaireDTO : avisDTO.getInstallationNucleaireDTOS()) {
             libelle.append("- ").append(installationNucleaireDTO.getNomInstallation()).append(" (").append(installationNucleaireDTO.getLibCommune()).append(")<br/>");
+        }
+        
+        return libelle.toString();
+    }
+    
+    private String getLibelleInstallationsClassees(AvisDTO avisDTO) {
+        
+        StringBuilder libelle = new StringBuilder();
+        
+        for (InstallationClasseeDTO installationNucleaireDTO : avisDTO.getInstallationClasseeSurParcelleDTOs()) {
+            libelle.append("- ").append(installationNucleaireDTO.getNom()).append("<br/>");
         }
         
         return libelle.toString();
@@ -948,13 +983,21 @@ public class PdfRedactor {
     
     @Data
     private static class TypeCatNat {
-        
+    
         private final String                                libelleRisqueJO;
         private       List<GeorisquePaginatedCatNat.CatNat> catNatList = new ArrayList<>();
-        
+    
         public TypeCatNat(String libelleRisqueJO) {
-            
+        
             this.libelleRisqueJO = libelleRisqueJO;
         }
+    }
+    
+    @Data
+    @AllArgsConstructor
+    private static class Legend {
+        
+        private String color;
+        private String label;
     }
 }

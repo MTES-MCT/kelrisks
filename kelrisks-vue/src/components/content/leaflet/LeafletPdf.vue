@@ -53,9 +53,6 @@ export default {
     },
     methods: {
         centerMap () {
-            console.log('centerMap')
-
-            // this.mapCentered = false;
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
@@ -91,7 +88,7 @@ export default {
                     if (bounds._southWest.lng > this.maxZoomCenter[1]) bounds._southWest.lng = this.maxZoomCenter[1] - 0.0015
                 }
 
-                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds, false)
+                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds, true, false)
             }
         },
         getData (data) {
@@ -163,6 +160,12 @@ export default {
         this.$nextTick(() => {
 
             this.crippleMap('leafletMap_' + this.reference)
+
+            let map = this.$refs['leafletMap_' + this.reference].mapObject
+
+            map.on('zoomend', () => {
+                this.currentZoom = map.getZoom()
+            })
         })
     },
     watch: {

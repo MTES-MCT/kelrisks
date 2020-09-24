@@ -51,7 +51,8 @@
                      v-for="(plan, index) in avis.ppr">
                     <div>
                         <div class="errial_title"><span class="title">{{ plan.alea.familleAlea.libelle }}</span></div>
-                        <p>Rappel du risque : {{ plan.alea.familleAlea.libelle }}, {{ plan.alea.libelle }}.</p>
+                        <p>Rappel du risque : {{ plan.alea.familleAlea.libelle }}, {{ plan.alea.libelle }}
+                           {{ (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) }}.</p>
                         <div class="text_wrapper"><b>L'immeuble est concerné par des prescriptions de travaux dans le règlement du {{ plan.alea.familleAlea.famillePPR.libelle }}</b></div>
                         <div class="input_wrapper">
                             <label><input :name="'pre_' + plan.idGaspar"
@@ -117,6 +118,7 @@
 
 import Errors from "../base/Errors";
 import JQuery from 'jquery'
+import moment from "moment";
 
 let $ = JQuery
 
@@ -138,40 +140,30 @@ export default {
         }
     },
     methods: {
+        formatDate (date) {
+            return moment(date).format('DD/MM/YYYY')
+        },
         download () {
 
             let errial = ''
 
             $("[name^='pre_']:checked").each(function () {
-                console.log($(this))
-                console.log($(this).val())
-                console.log($(this).attr('name'))
-
                 if ($(this).val() !== "-1") {
                     errial += $(this).attr('name') + ":" + $(this).val() + ";"
                 }
             })
 
             $("[name^='tra_']:checked").each(function () {
-                console.log($(this))
-                console.log($(this).val())
-                console.log($(this).attr('name'))
-
                 if ($(this).val() !== "-1") {
                     errial += $(this).attr('name') + ":" + $(this).val() + ";"
                 }
             })
 
             let catnat = $("[name='cat']:checked")
-            console.log(catnat)
-            console.log(catnat.val())
-            console.log(catnat.prop("name"))
 
             if (catnat.val() !== "-1") {
                 errial += "cat:" + catnat.val() + ";"
             }
-
-            console.log(errial)
 
             this.$emit('errial', errial)
         }
