@@ -14,6 +14,7 @@ export default {
         intermediateZoomLevels: [],
         mapCentered: false,
         tilesLoaded: true,
+        zooming: false,
         currentMaxZoom: 18,
         currentMinZoom: null
     }),
@@ -42,6 +43,8 @@ export default {
         },
         zoomIn (map, zoom) {
 
+            this.zooming = true
+
             let zoomInControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-in")
             let zoomOutControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-out");
 
@@ -58,9 +61,14 @@ export default {
             if (this.currentZoom === this.currentMaxZoom) zoomInControl.addClass('leaflet-disabled')
             if (this.currentZoom === this.currentMinZoom) zoomOutControl.addClass('leaflet-disabled')
 
+            console.log(this.intermediateZoomLevels)
+            console.log(this.currentZoom)
+
             map.setView({lat: this.intermediateZoomLevels[this.currentZoom].y, lng: this.intermediateZoomLevels[this.currentZoom].x}, this.currentZoom, {animation: true});
         },
         zoomOut (map, zoom) {
+
+            this.zooming = true
 
             let zoomInControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-in")
             let zoomOutControl = $("#leafletMap_" + this.reference + " a.leaflet-control-zoom-out");
@@ -137,6 +145,10 @@ export default {
         },
         initIntermediateZoomLevels () {
 
+            console.log("initIntermediateZoomLevels")
+
+            console.log(this.currentMaxZoom)
+
             this.intermediateZoomLevels[this.currentMaxZoom] = {x: this.maxZoomCenter[1], y: this.maxZoomCenter[0]}
 
             let deltaX = Math.abs(this.minZoomCenter.x - this.maxZoomCenter[1])
@@ -148,7 +160,9 @@ export default {
 
             const increaseRatio = 3 / 4
 
-            for (let zoomLevel = this.currentMinZoom + 1; zoomLevel < this.currentMaxZoom; zoomLevel++) {
+            console.log(this.currentMinZoom)
+
+            for (let zoomLevel = this.currentMinZoom; zoomLevel < this.currentMaxZoom; zoomLevel++) {
 
                 let currentCenter = {x: null, y: null}
 
@@ -164,7 +178,7 @@ export default {
                 this.intermediateZoomLevels[zoomLevel] = currentCenter
             }
         },
-        initMapZoom (map, mapRef) {
+        initMapZoom (map, mapRef, injectZoomControls) {
 
             if (!this.currentMinZoom) {
 
@@ -175,21 +189,25 @@ export default {
 
                 this.currentZoom = this.currentMinZoom
 
-                this.injectCustomZoomControl(mapRef)
+                if (injectZoomControls) this.injectCustomZoomControl(mapRef)
             }
 
             this.initIntermediateZoomLevels();
 
             if (this.minZoom) {
+                console.log("zoomIn")
                 this.currentMinZoom = this.minZoom
-                if (this.currentZoom < this.currentMinZoom) this.zoomIn(map, this.currentMinZoom);
+                console.log(this.currentZoom)
+                console.log(this.currentMinZoom)
+                if (this.currentZoom < this.currentMinZoom) this.zoomIn(map, this.currentMinZoom)
             }
             if (this.maxZoom) {
                 this.currentMaxZoom = this.maxZoom
-                if (this.currentZoom > this.currentMaxZoom) this.zoomOut(map, this.currentMaxZoom);
+                if (this.currentZoom > this.currentMaxZoom) this.zoomOut(map, this.currentMaxZoom)
             }
+            if (!this.zooming) this.mapCentered = true
         },
-        updateMapUntilFitsBounds (map, mapRef, bounds, initZoom) {
+        updateMapUntilFitsBounds (map, mapRef, bounds, initZoom, injectZoomControls) {
 
             this.mapCentered = false
 
@@ -214,10 +232,14 @@ export default {
                         this.interval = null
 
                         setTimeout(() => {
-                            if (!this.isCenterDefault() && this.maxZoomCenter && initZoom) {
-                                this.initMapZoom(map, mapRef)
+
+                            if (!this.isCenterDefault() && this.maxZoomCenter && (initZoom || injectZoomControls)) {
+                                console.log("(!this.isCenterDefault() && this.maxZoomCenter && (initZoom || injectZoomControls))")
+                                this.initMapZoom(map, mapRef, injectZoomControls)
+                            } else {
+                                console.log("else")
+                                this.mapCentered = true;
                             }
-                            this.mapCentered = true;
                         }, 1000);
                     }
                 }, 1000);
@@ -226,5 +248,17 @@ export default {
         isCenterDefault () {
             return this.maxZoomCenter && this.maxZoomCenter[0] === 0 && this.maxZoomCenter[1] === 0
         }
+    },
+    watch: {
+        tilesLoaded: function () {
+
+            console.log("tilesLoaded : this.tilesLoaded = " + this.tilesLoaded + ", this.zooming = " + this.zooming)
+
+            if (this.tilesLoaded && this.zooming) {
+                this.zooming = false
+                this.mapCentered = true
+            }
+        }
     }
+
 }

@@ -39,6 +39,9 @@
 
                     <div style="margin: 0 auto 25px; width: 350px;">
                         <leaflet :data="currentData"
+                                 :max-zoom-center="leaflet.center"
+                                 :min-zoom="14"
+                                 :parcelle="leaflet.data.parcelles"
                                  @png="pngGenerated"
                                  v-show="currentPng !== undefined"/>
                     </div>

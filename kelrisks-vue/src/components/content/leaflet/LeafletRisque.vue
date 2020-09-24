@@ -88,7 +88,7 @@ export default {
                     if (bounds._southWest.lng > this.maxZoomCenter[1]) bounds._southWest.lng = this.maxZoomCenter[1] - 0.0015
                 }
 
-                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds, true)
+                this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, bounds, true, true)
             }
         },
         getData (data) {

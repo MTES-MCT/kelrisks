@@ -46,7 +46,7 @@ export default {
 
             let map = this.$refs['leafletMap_' + this.reference].mapObject
 
-            this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, this.$refs['parcelle_' + this.reference].getBounds(), true)
+            this.updateMapUntilFitsBounds(map, 'leafletMap_' + this.reference, this.$refs['parcelle_' + this.reference].getBounds(), true, true)
         }
     },
     computed: {

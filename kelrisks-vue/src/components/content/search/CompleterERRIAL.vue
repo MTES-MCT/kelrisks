@@ -143,35 +143,22 @@ export default {
             let errial = ''
 
             $("[name^='pre_']:checked").each(function () {
-                console.log($(this))
-                console.log($(this).val())
-                console.log($(this).attr('name'))
-
                 if ($(this).val() !== "-1") {
                     errial += $(this).attr('name') + ":" + $(this).val() + ";"
                 }
             })
 
             $("[name^='tra_']:checked").each(function () {
-                console.log($(this))
-                console.log($(this).val())
-                console.log($(this).attr('name'))
-
                 if ($(this).val() !== "-1") {
                     errial += $(this).attr('name') + ":" + $(this).val() + ";"
                 }
             })
 
             let catnat = $("[name='cat']:checked")
-            console.log(catnat)
-            console.log(catnat.val())
-            console.log(catnat.prop("name"))
 
             if (catnat.val() !== "-1") {
                 errial += "cat:" + catnat.val() + ";"
             }
-
-            console.log(errial)
 
             this.$emit('errial', errial)
         }
