@@ -1,22 +1,23 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+    <div id="app">
+        <router-view/>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+    name: 'App'
 }
 </script>
 
 <style>
-  #app {
-    font-family             : 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing  : antialiased;
-    -moz-osx-font-smoothing : grayscale;
-    text-align              : center;
-    color                   : #2C3E50;
-    /*margin-top              : 60px;*/
-  }
+#app {
+	color                   : #2C3E50;
+	font-family             : 'Avenir', Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing  : antialiased;
+	height                  : 100%;
+	-moz-osx-font-smoothing : grayscale;
+	/*margin-top              : 60px;*/
+	text-align              : center;
+}
 </style>

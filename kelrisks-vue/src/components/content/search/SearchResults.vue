@@ -152,7 +152,7 @@
             <risque :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
                     :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
-                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une installation classée pour la protection de l\'environnement soumise à autorisation ou enregistrement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires : '') +
+                    :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une installation classée pour la protection de l\'environnement soumise à autorisation ou enregistrement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsclassees : '') +
                              (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d’information sur les sols.</br>' : '') +
                              (false ? '- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées au titre du L 515-12 du code de l’environnement.' : '') +
                              '<p><a href=\'#recommendations_pollution\'>Lire les recommandations</a></p>'"
@@ -220,7 +220,7 @@
                        d'habitat et projet :<br/>
                         <a href="http://www.planseisme.fr/-Didacticiel-.html">Didacticiel de la règlementation parasismique</a></p>
                     <template v-if="hasSismiciteHaute">
-                        <p>Pour connaitre les consignes à appliquer en cas de séisme , vous pouvez consulter le site :<br/>
+                        <p>Pour connaitre les consignes à appliquer en cas de séisme, vous pouvez consulter le site :<br/>
                             <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html">Que faire en cas de séisme ?</a></p>
                     </template>
                     <template v-if="hasSismiciteTresHaute">
@@ -258,7 +258,7 @@
                        Code de l’Environnement et L 125-7 du Code de l’Environnement).</p>
                     <p>En cas de changement d'usage du terrain (travaux, constructions, changement d'affectation du bien), le maître d'ouvrage doit faire appel à un bureau d'étude qui devra attester
                        de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d'un dépôt de permis de construire ou d'aménager (Article L.556-1 du Code de
-                       l'Environnement), l'attestation devra être délivrée par une bureau d'étude certifiée. Pour vous accompagner dans vos démarches, une liste de bureaux d’études
+                       l'Environnement), l'attestation devra être délivrée par un bureau d'étude certifiée. Pour vous accompagner dans vos démarches, une liste de bureaux d’études
                        certifiés dans le domaine des sols pollués est consultable à l'aide de ce lien :</p>
                     <p><a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                           href='https://www.lne.fr/recherche-certificats/search/222'
@@ -308,7 +308,7 @@
                     :detail="'<p>Dans un rayon de 500 m autour de votre parcelle, sont identifiés :</br>'+
                               (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' installations classées pour la protection de l\'environnement (ICPE) soumises à autorisation ou à enregistrement, installations qui peuvent présenter des dangers ou inconvénients du fait de leur activité.</br>' : '') +
                               (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites référencés dans l\'inventaire BASIAS des sites ayant accueilli par le passé une activité industrielle ou une activité de service qui a pu générer une pollution des sols.</br>' : '') +
-                              (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' sites pollués ou potentiellement pollués (Basol - terrain pollué ou potentiellement pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d\'information sur les sols, SUP - terrain pollué affecté d\'une serviture d\'utilité publique)</br></p>' : '</p>') +
+                              (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' site(s) pollué(s) ou potentiellement pollués (Basol - terrain pollué ou potentiellement pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d\'information sur les sols, SUP - terrain pollué affecté d\'une serviture d\'utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
                               (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent parfois la présence d\'anciennes activités qui sont localisées par défaut sur le centre géographique de la commune lorsqu\'une localisation précise n\'est pas disponible. La présente analyse n\'en tient donc pas compte.</p>' : '')"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
@@ -355,9 +355,9 @@
                                       color : '#840505'}]"
                     :leaflet-min-zoom="14"
                     :legend-blocks="[
-                        ['#FFD332', 'Aléa faible'],
-                        ['#FF8000', 'Aléa moyen'],
-                        ['#840505', 'Aléa fort']]"
+                        ['#FFD332', 'Exposition faible'],
+                        ['#FF8000', 'Exposition moyenne'],
+                        ['#840505', 'Exposition forte']]"
                     :level="avis.niveauArgile + ''"
                     :level-max="'3'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_terre_bleu.png'"
@@ -537,8 +537,8 @@ export default {
             let libelle = ''
 
             for (let installation in this.avis.installationClasseeParcelle.liste) {
-                installation = this.avis.installationClasseeParcelle[installation]
-                libelle += '- ' + installation.nom + ' (' + installation.commune + ')<br/>'
+                installation = this.avis.installationClasseeParcelle.liste[installation]
+                libelle += '- ' + installation.nom + '<br/>'
             }
 
             return libelle

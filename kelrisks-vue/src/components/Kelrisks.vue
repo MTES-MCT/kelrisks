@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+    <div style="height: 100%;">
         <svg aria-hidden="true"
              focusable="false"
              style="display:none">

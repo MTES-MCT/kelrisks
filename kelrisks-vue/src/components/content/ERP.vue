@@ -34,14 +34,16 @@ export default {
 <style scoped>
 #erp_wrapper {
 	background-color : #FFFFFF;
+	height           : 100%;
 	padding          : 5% 15%;
 	text-align       : left;
 	width            : 100%;
 }
 
 #erp_text {
-	float : left;
-	width : 55%;
+	float  : left;
+	height : 100%;
+	width  : 55%;
 }
 
 #erp_text p {
@@ -51,6 +53,16 @@ export default {
 
 #erp_picture {
 	float       : left;
+	height      : 100%;
 	margin-left : 7%;
+	position    : relative;
+	width       : 344px;
+}
+
+#erp_picture img {
+	bottom   : 100px;
+	margin   : auto;
+	position : absolute;
+	top      : 0;
 }
 </style>
