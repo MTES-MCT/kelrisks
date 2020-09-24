@@ -13,6 +13,7 @@ import fr.gouv.beta.fabnum.kelrisks.facade.dto.referentiel.SiteIndustrielBasolDT
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionCommuneFacade;
 import fr.gouv.beta.fabnum.kelrisks.facade.frontoffice.referentiel.IGestionGeorisquesFacade;
 import fr.gouv.beta.fabnum.kelrisks.transverse.apiclient.GeorisquePaginatedCatNat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.net.URLEncoder;
@@ -693,21 +694,29 @@ public class PdfRedactor {
         if (hasSismicite(avisDTO)) {
             addRisquePrincipal(htmlDocument,
                                "SISMICITE",
-                               "SISMICITÉ",
+                               "SISMICITÉ : " + avisDTO.getSummary().getCommune().getCodeZoneSismicite() + "/5",
                                localAppPath + "/pictogrammes_risque/ic_seisme_bleu.png",
                                "<p>Un tremblement de terre ou séisme, est un ensemble de secousses et de déformations brusques de l'écorce terrestre (surface de la Terre). Le zonage sismique " +
-                               "détermine l'importance de l'exposition au risque sismique.</p>");
+                               "détermine l'importance de l'exposition au risque sismique.</p>",
+                               new Legend("#D8D8D8", "1 - très faible"),
+                               new Legend("#FFD332", "2 - faible"),
+                               new Legend("#FF8000", "3 - modéré"),
+                               new Legend("#E02B17", "4 - moyen"),
+                               new Legend("#840505", "5 - fort"));
         }
     
         if (hasRadonHaut(avisDTO)) {
             addRisquePrincipal(htmlDocument,
                                "RADON",
-                               "RADON",
+                               "RADON : " + avisDTO.getSummary().getCommune().getClassePotentielRadon() + "/3",
                                localAppPath + "/pictogrammes_risque/ic_rn_bleu.png",
                                "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et " +
                                "il s’accumule dans les espaces clos, notamment dans " +
                                "les " +
-                               "bâtiments.</p>");
+                               "bâtiments.</p>",
+                               new Legend("#FFD332", "1 : potentiel radon faible"),
+                               new Legend("#FF8000", "2 : potentiel radon moyen"),
+                               new Legend("#840505", "3 : potentiel radon significatif"));
         }
         
         if (hasPollutionPrincipale(avisDTO)) {
@@ -731,7 +740,7 @@ public class PdfRedactor {
         if (avisDTO.getZonePlanExpositionBruit() != null) {
             addRisquePrincipal(htmlDocument,
                                "PEB",
-                               "BRUIT",
+                               "BRUIT : " + avisDTO.getZonePlanExpositionBruit(),
                                localAppPath + "/pictogrammes_risque/ic_bruit_bleu.png",
                                "<p>La parcelle est concernée par un plan d’exposition au bruit car elle est exposée aux nuisances sonores d’un aéroport.</p>" +
                                (avisDTO.getZonePlanExpositionBruit().equals("A") ? "<p>Le niveau d’exposition au bruit de la parcelle est très fort (zone A en rouge). La zone A est principalement " +
@@ -741,7 +750,11 @@ public class PdfRedactor {
                                (avisDTO.getZonePlanExpositionBruit().equals("C") ? "<p>Le niveau d’exposition au bruit de la parcelle est modéré (zone C en jaune). Certaines constructions sont " +
                                                                                    "autorisées sous conditions.</p>" : "") +
                                (avisDTO.getZonePlanExpositionBruit().equals("D") ? "<p>Le niveau d’exposition au bruit de la parcelle est faible (zone D en verte). Dans la zone D, les nouveaux " +
-                                                                                   "logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.</p>" : ""));
+                                                                                   "logements sont autorisés à condition qu’ils fassent l’objet d’une isolation phonique.</p>" : ""),
+                               new Legend("#840505", "A - très fort"),
+                               new Legend("#FF8000", "B - fort"),
+                               new Legend("#FFD332", "C - modéré"),
+                               new Legend("#058E0C", "D - faible"));
         }
     }
     
@@ -754,7 +767,7 @@ public class PdfRedactor {
                hasSismicite(avisDTO);
     }
     
-    private void addRisquePrincipal(Document htmlDocument, String id, String libelle, String url, String text) {
+    private void addRisquePrincipal(Document htmlDocument, String id, String libelle, String iconSrc, String text, Legend... legends) {
         
         Element page = htmlDocument.select(".page .content").last();
         
@@ -762,31 +775,36 @@ public class PdfRedactor {
         
         if (risquePrincipalNumberOf >= 2) { page = addPage(htmlDocument); }
         
-        Element description = addRisquePrincipalHtml(page, id);
+        Element description = addRisquePrincipalHtml(page, id, legends);
         
         description.select(".libelle").html(libelle);
-        description.select(".icon img").attr("src", url);
+        description.select(".icon img").attr("src", iconSrc);
         description.select(".text").html(text);
     }
     
-    private void addRisque(Document htmlDocument, String libelle, String url, String text) {
-    
+    private void addRisque(Document htmlDocument, String libelle, String iconSrc, String text) {
+        
         Element page = htmlDocument.select(".page .content").last();
-    
+        
         //        int risquePrincipalNumberOf = page.select(".risque").size();
         //
         //        if (risquePrincipalNumberOf >= 4) { page = addPage(htmlDocument); }
-    
+        
         if (shouldAddNewPageForRisque(htmlDocument, text.length())) { page = addPage(htmlDocument); }
-    
+        
         Element description = addRisqueHtml(page);
-    
+        
         description.select(".libelle").html(libelle);
-        description.select(".icon img").attr("src", url);
+        description.select(".icon img").attr("src", iconSrc);
         description.select(".text").html(text);
     }
     
-    private Element addRisquePrincipalHtml(Element page, String id) {
+    private Element addRisquePrincipalHtml(Element page, String id, Legend[] legends) {
+        
+        String legendHtml = "";
+        for (Legend legend : legends) {
+            legendHtml += "        <div style=\"background-color: " + legend.getColor() + "\" class=\"legend_color\"></div><div class=\"legend_text\">" + legend.getLabel() + "</div>\n";
+        }
         
         // @formatter:off
         page.append("<div id=\"" + id + "\"class=\"risque-principal\">\n" +
@@ -795,6 +813,9 @@ public class PdfRedactor {
                     "        <div class=\"icon\"><img height=\"80px\"\n" +
                     "                                 src=\"\"\n" +
                     "                                 style=\"margin : 0;\"/></div>\n" +
+                    "        <div class=\"legend\">\n" +
+                    legendHtml +
+                    "        </div>\n" +
                     "        <div class=\"text\"></div>\n" +
                     "    </div>\n" +
                     "    <div class=\"carte\"><img src=\"\"\n" +
@@ -962,13 +983,21 @@ public class PdfRedactor {
     
     @Data
     private static class TypeCatNat {
-        
+    
         private final String                                libelleRisqueJO;
         private       List<GeorisquePaginatedCatNat.CatNat> catNatList = new ArrayList<>();
-        
+    
         public TypeCatNat(String libelleRisqueJO) {
-            
+        
             this.libelleRisqueJO = libelleRisqueJO;
         }
+    }
+    
+    @Data
+    @AllArgsConstructor
+    private static class Legend {
+        
+        private String color;
+        private String label;
     }
 }
