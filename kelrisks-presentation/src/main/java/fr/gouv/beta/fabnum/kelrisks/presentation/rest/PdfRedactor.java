@@ -474,16 +474,16 @@ public class PdfRedactor {
                         "<p>Rappel du risque : " + planPreventionRisquesDTO.getAlea().getFamilleAlea().getLibelle() + ", " + planPreventionRisquesDTO.getAlea().getLibelle() + ".</p>\n" +
                         "<div class=\"text_wrapper\"><b>Le bien est il concerné par des prescriptions de travaux ?</b></div>\n" +
                         "<div class=\"input_wrapper\">\n" +
-                        "    <label><input value=\"1\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        "    <label><input value=\"1\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Oui</label>\n" +
-                        "    <label><input value=\"0\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        "    <label><input value=\"0\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Non</label>\n" +
                         "</div>\n" +
                         "<div class=\"text_wrapper\"><b>Si oui, les travaux prescrits ont été réalisés ?</b></div>\n" +
                         "<div class=\"input_wrapper\">\n" +
-                        "    <label><input value=\"1\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        "    <label><input value=\"1\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Oui</label>\n" +
-                        "    <label><input value=\"0\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        "    <label><input value=\"0\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Non</label>\n" +
                         "</div>\n");
         }
@@ -492,8 +492,8 @@ public class PdfRedactor {
     
         page.append("<div class=\"text_wrapper\" ><b>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ?</b></div>\n" +
                     "<div class=\"input_wrapper\">\n" +
-                    "    <label><input value=\"1\" name=\"cat\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box.svg\"/></span>Oui</label>\n" +
-                    "    <label><input value=\"0\" name=\"cat\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box.svg\"/></span>Non</label>\n" +
+                    "    <label><input value=\"1\" name=\"cat\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box.svg\"/></span>Oui</label>\n" +
+                    "    <label><input value=\"0\" name=\"cat\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box.svg\"/></span>Non</label>\n" +
                     "</div>\n");
     
         page.append("<p style=\"padding-top : 30px;\">Les parties signataires à l'acte certifient avoir pris connaissance des informations restituées dans ce document et certifient avoir été en " +
