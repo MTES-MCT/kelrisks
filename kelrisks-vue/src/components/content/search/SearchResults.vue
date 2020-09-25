@@ -318,7 +318,7 @@
                               (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
                               (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent parfois la présence d\'anciennes activités qui sont localisées par défaut sur le centre géographique de la commune lorsqu\'une localisation précise n\'est pas disponible. La présente analyse n\'en tient donc pas compte.</p>' : '')"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
-                    :title="'Pollution des sols'"
+                    :title="'Pollution des sols (500m)'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
                     :leaflet-data="[{ data : avis.installationClasseeRayonParcelle.liste.map(x => x.ewkt),
@@ -377,7 +377,7 @@
                                       color : '#2A4999'}]"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_reseaux_canalisation_bleu.png'"
                     :title="'Canalisations transport de matières dangereuses'"
-                    v-if="avis.canalisations.length > 0"/>
+                    v-if="hasCanalisations"/>
 
             <div class="clearfix"/>
         </section>

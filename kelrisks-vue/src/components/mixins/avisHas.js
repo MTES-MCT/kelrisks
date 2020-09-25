@@ -59,6 +59,9 @@ export default {
         hasPEB: function () {
             return this.avis.zonePlanExpositionBruit !== undefined && this.avis.zonePlanExpositionBruit !== null
         },
+        hasCanalisations: function () {
+            return this.avis.canalisations.length > 0
+        },
         hasSismiciteTresHaute: function () {
             return this.avis.summary.commune.codeZoneSismicite === '4' ||
                 this.avis.summary.commune.codeZoneSismicite === '5'

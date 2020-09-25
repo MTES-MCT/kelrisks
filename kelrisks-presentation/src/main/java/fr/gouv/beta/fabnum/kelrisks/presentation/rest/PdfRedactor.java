@@ -37,8 +37,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class PdfRedactor {
     
-    private static final int    ROWS_PER_PAGE        = 25;
-    private static final double TEXT_TO_HEIGHT_RATIO = 0.55;
+    private static final int    ROWS_PER_PAGE                       = 25;
+    private static final double TEXT_TO_HEIGHT_RATIO                = 0.55;
+    private static final int    MAXIMUM_RISQUE_TEXT_LENGTH_PER_PAGE = 1000;
     @Value("${kelrisks.app.back.local.path}")
     String                   localAppPath;
     @Value("${kelrisks.app.back.path}")
@@ -142,7 +143,8 @@ public class PdfRedactor {
             
             for (InstallationClasseeDTO installationClasseeRayonParcelleDTO : avisDTO.getInstallationClasseeRayonParcelleDTOs()) {
     
-                addTableBodyRow(tbody, installationClasseeRayonParcelleDTO.getNom(), installationClasseeRayonParcelleDTO.getCode());
+                addTableBodyRow(tbody, installationClasseeRayonParcelleDTO.getNom(),
+                                "https://www.georisques.gouv.fr/risques/installations/donnees/details/" + installationClasseeRayonParcelleDTO.getCode());
                 lines++;
     
                 if (lines > ROWS_PER_PAGE) {
@@ -165,7 +167,7 @@ public class PdfRedactor {
             
             for (SiteIndustrielBasiasDTO siteIndustrielBasiasDTO : avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs()) {
     
-                addTableBodyRow(tbody, siteIndustrielBasiasDTO.getRaisonSociale(), siteIndustrielBasiasDTO.getIdentifiant());
+                addTableBodyRow(tbody, siteIndustrielBasiasDTO.getRaisonSociale(), "https://fiches-risques.brgm.fr/georisques/basias-detaillee/" + siteIndustrielBasiasDTO.getIdentifiant());
                 lines++;
     
                 if (lines > ROWS_PER_PAGE) {
@@ -354,63 +356,95 @@ public class PdfRedactor {
         page.append("<div><h2>ANNEXE 1 : RISQUES NE FAISANT PAS L’OBJET D’UNE OBLIGATION D’INFORMATION AU TITRE DE L'IAL</h2></div>");
     
         if (hasArgile(avisDTO)) {
-            addRisque(htmlDocument,
-                      "ARGILE",
-                      localAppPath + "/pictogrammes_risque/ic_terre_bleu.png",
-                      "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les " +
-                      "constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être " +
-                      "importants. Le zonage argile identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
-                      (avisDTO.getNiveauArgile() == 3 ? "<p>Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les " +
-                                                        "constructions, " +
-                                                        "notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
-                                                        "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
-                                                      : "") +
-                      (avisDTO.getNiveauArgile() == 2 ?
-                       "<p>Exposition moyenne : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les" +
-                       " maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
-                       "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
-                                                      : "") +
-                      (avisDTO.getNiveauArgile() == 1 ? "<p>Exposition faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une " +
-                                                        "faible proportion des " +
-                                                        "bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches" +
-                                                        " ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de " +
-                                                        "sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br>" +
-                                                        "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3" : "") +
-                      (avisDTO.getNiveauArgile() == 0 ? "<p>Exposition nulle : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir " +
-                                                        "des " +
-                                                        "poches ponctuelles de sols argileux." : "")
-                     );
+            addRisquePrincipal(htmlDocument,
+                               "ARGILE",
+                               "ARGILE",
+                               localAppPath + "/pictogrammes_risque/ic_terre_bleu.png",
+                               "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser " +
+                               "progressivement les " +
+                               "constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant " +
+                               "être " +
+                               "importants. Le zonage argile identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
+                               (avisDTO.getNiveauArgile() == 3 ? "<p>Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les " +
+                                                                 "constructions, " +
+                                                                 "notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails" +
+                                                                 " :</br>" +
+                                                                 "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
+                                                               : "") +
+                               (avisDTO.getNiveauArgile() == 2 ?
+                                "<p>Exposition moyenne : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les" +
+                                " maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br>" +
+                                "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
+                                                               : "") +
+                               (avisDTO.getNiveauArgile() == 1 ? "<p>Exposition faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront " +
+                                                                 "qu’une " +
+                                                                 "faible proportion des " +
+                                                                 "bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des " +
+                                                                 "arbres proches" +
+                                                                 " ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une " +
+                                                                 "étude de " +
+                                                                 "sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br>" +
+                                                                 "https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3" : "") +
+                               (avisDTO.getNiveauArgile() == 0 ? "<p>Exposition nulle : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut" +
+                                                                 " y avoir " +
+                                                                 "des " +
+                                                                 "poches ponctuelles de sols argileux." : ""),
+                               new Legend("#FFD332", "Exposition faible"),
+                               new Legend("#FF8000", "Exposition moyenne"),
+                               new Legend("#840505", "Exposition fort"));
         }
     
         if (hasPollutionNonReglementaire(avisDTO)) {
-            addRisque(htmlDocument,
-                      "POLLUTION DES SOLS",
-                      localAppPath + "/pictogrammes_risque/ic_basias_bleu.png",
-                      "<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement " +
-                      "d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.<br/></p><p>Dans un rayon de 500 m autour de " +
-                      "votre parcelle, sont identifiés :</p>" +
-                      (avisDTO.getInstallationClasseeRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getInstallationClasseeRayonParcelleDTOs().size() + " " +
-                                                                                      "sites référencés dans l’inventaire des installations classées pour la " +
-                                                                                      "protection de l’environnement (ICPE)</p>" : "") +
-                      (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() + " " +
-                                                                                       "sites potentiellement pollués, référencés dans l’inventaire des sites " +
-                                                                                       "ayant accueilli par le passé une activité qui a pu générer une " +
-                                                                                       "pollution des sols (BASIAS).</p>" : "") +
-                      (avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() + " " +
-                                                                                      "site(s) pollué(s) (BASOL - terrain pollué appelant une action des pouvoirs " +
-                                                                                      "publics à titre curatif ou préventif, SIS - terrain placé en secteur " +
-                                                                                      "d’information sur les sols, SUP - terrain pollué affecté d’une " +
-                                                                                      "servitude d’utilité publique)</p>" : "</p>") +
-                      (!hasPollutionPrincipale(avisDTO) && numberOfParcelleMatches(avisDTO) > 0 ? "<p>" + numberOfParcelleMatches(avisDTO) + " site(s) " +
-                                                                                                  "présente(nt) une proximité forte avec votre parcelle. Dans " +
-                                                                                                  "le cas où vous souhaiteriez en savoir davantage, il est " +
-                                                                                                  "recommandé de faire réaliser une étude historique et, le " +
-                                                                                                  "cas échéant, des analyses de sols par un bureau d’étude " +
-                                                                                                  "spécialisé dans le domaine des sols pollués.</p>" : "") +
-                      (hasPollutionCentroidCommune(avisDTO) ? "<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont " +
-                                                              "localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas " +
-                                                              "compte. Le détail de ces données est consultable en ANNEXE 3.</p>" : "")
-                     );
+            addRisquePrincipal(htmlDocument,
+                               "POLLUTION_NON_REG",
+                               "POLLUTION DES SOLS (500m)",
+                               localAppPath + "/pictogrammes_risque/ic_basias_bleu.png",
+                               "<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement " +
+                               "d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.<br/></p><p>Dans un rayon de 500 m autour de " +
+                               "votre parcelle, sont identifiés :</p>" +
+                               (avisDTO.getInstallationClasseeRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getInstallationClasseeRayonParcelleDTOs().size() + " " +
+                                                                                               "sites référencés dans l’inventaire des installations classées pour la " +
+                                                                                               "protection de l’environnement (ICPE)</p>" : "") +
+                               (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() + " " +
+                                                                                                "sites potentiellement pollués, référencés dans l’inventaire des sites " +
+                                                                                                "ayant accueilli par le passé une activité qui a pu générer une " +
+                                                                                                "pollution des sols (BASIAS).</p>" : "") +
+                               (avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() + " " +
+                                                                                               "site(s) pollué(s) (BASOL - terrain pollué appelant une action des pouvoirs " +
+                                                                                               "publics à titre curatif ou préventif, SIS - terrain placé en secteur " +
+                                                                                               "d’information sur les sols, SUP - terrain pollué affecté d’une " +
+                                                                                               "servitude d’utilité publique)</p>" : "</p>") +
+                               (!hasPollutionPrincipale(avisDTO) && numberOfParcelleMatches(avisDTO) > 0 ? "<p>" + numberOfParcelleMatches(avisDTO) + " site(s) " +
+                                                                                                           "présente(nt) une proximité forte avec votre parcelle. Dans " +
+                                                                                                           "le cas où vous souhaiteriez en savoir davantage, il est " +
+                                                                                                           "recommandé de faire réaliser une étude historique et, le " +
+                                                                                                           "cas échéant, des analyses de sols par un bureau d’étude " +
+                                                                                                           "spécialisé dans le domaine des sols pollués.</p>" : "") +
+                               (hasPollutionCentroidCommune(avisDTO) ? "<p>Les données disponibles mentionnent enfin la présence d’anciennes activités qui ont " +
+                                                                       "localisées dans le centre de la commune par défaut. La présente analyse n’en tient donc pas " +
+                                                                       "compte. Le détail de ces données est consultable en ANNEXE 3.</p>" : "")
+                              );
+        }
+    
+        if (hasRadonMoyen(avisDTO)) {
+            addRisquePrincipal(htmlDocument,
+                               "RADON",
+                               "RADON",
+                               localAppPath + "/pictogrammes_risque/ic_rn_bleu.png",
+                               "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, " +
+                               "notamment dans les bâtiments.</p>",
+                               new Legend("#FFD332", "1 : potentiel radon faible"),
+                               new Legend("#FF8000", "2 : potentiel radon moyen"),
+                               new Legend("#840505", "3 : potentiel radon significatif"));
+        }
+    
+        if (avisDTO.getGeogCanalisations().size() > 0) {
+            addRisquePrincipal(htmlDocument,
+                               "CANALISATIONS",
+                               "CANALISATIONS TRANSPORT DE MATIÈRES DANGEREUSES",
+                               localAppPath + "/pictogrammes_risque/ic_reseaux_canalisation_bleu.png",
+                               "<p>Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de" +
+                               " votre parcelle. La carte représente les implantations présentes autour de votre localisation.</p>");
         }
     
         if (avisDTO.getInstallationNucleaireDTOS().size() > 0) {
@@ -426,14 +460,6 @@ public class PdfRedactor {
                      );
         }
     
-        if (avisDTO.getGeogCanalisations().size() > 0) {
-            addRisque(htmlDocument,
-                      "CANALISATIONS TRANSPORT DE MATIÈRES DANGEREUSES",
-                      localAppPath + "/pictogrammes_risque/ic_reseaux_canalisation_bleu.png",
-                      "<p>Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de" +
-                      " votre parcelle. La carte représente les implantations présentes autour de votre localisation.</p>");
-        }
-    
         if (hasTRI(avisDTO) && !hasPPRi(avisDTO)) {
             addRisque(htmlDocument,
                       "INONDATIONS",
@@ -441,15 +467,6 @@ public class PdfRedactor {
                       "<p>Votre bien est situé dans un territoire exposé à un risque important d'inondation (TRI) sur lequel l'Etat et les collectivités territoriales ont engagé une démarche " +
                       "d'identification et de gestion de ce risque pour anticiper et réduire l’impact d'une éventuelle inondation. Pour plus d'information, renseignez-vous auprès de la commune ou " +
                       "consultez le Plan de Gestion des Risques d'Inondation (PGRI)</p>"
-                     );
-        }
-    
-        if (hasRadonMoyen(avisDTO)) {
-            addRisque(htmlDocument,
-                      "RADON",
-                      localAppPath + "/pictogrammes_risque/ic_rn_bleu.png",
-                      "<p>Le radon est un gaz radioactif naturel inodore, incolore et inerte. Ce gaz est présent partout dans les sols et il s’accumule dans les espaces clos, " +
-                      "notamment dans les bâtiments.</p>"
                      );
         }
     
@@ -474,16 +491,16 @@ public class PdfRedactor {
                         "<p>Rappel du risque : " + planPreventionRisquesDTO.getAlea().getFamilleAlea().getLibelle() + ", " + planPreventionRisquesDTO.getAlea().getLibelle() + ".</p>\n" +
                         "<div class=\"text_wrapper\"><b>Le bien est il concerné par des prescriptions de travaux ?</b></div>\n" +
                         "<div class=\"input_wrapper\">\n" +
-                        "    <label><input value=\"1\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        "    <label><input value=\"1\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Oui</label>\n" +
-                        "    <label><input value=\"0\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        "    <label><input value=\"0\" name=\"pre_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Non</label>\n" +
                         "</div>\n" +
                         "<div class=\"text_wrapper\"><b>Si oui, les travaux prescrits ont été réalisés ?</b></div>\n" +
                         "<div class=\"input_wrapper\">\n" +
-                        "    <label><input value=\"1\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        "    <label><input value=\"1\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Oui</label>\n" +
-                        "    <label><input value=\"0\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box" +
+                        "    <label><input value=\"0\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Non</label>\n" +
                         "</div>\n");
         }
@@ -492,8 +509,8 @@ public class PdfRedactor {
     
         page.append("<div class=\"text_wrapper\" ><b>Le bien a-t-il fait l'objet d'indemnisation par une assurance suite à des dégâts liés à une catastrophe ?</b></div>\n" +
                     "<div class=\"input_wrapper\">\n" +
-                    "    <label><input value=\"1\" name=\"cat\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box.svg\"/></span>Oui</label>\n" +
-                    "    <label><input value=\"0\" name=\"cat\" type=\"checkbox\"><span><img src=\"http://localhost:8080/check_box.svg\"/></span>Non</label>\n" +
+                    "    <label><input value=\"1\" name=\"cat\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box.svg\"/></span>Oui</label>\n" +
+                    "    <label><input value=\"0\" name=\"cat\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box.svg\"/></span>Non</label>\n" +
                     "</div>\n");
     
         page.append("<p style=\"padding-top : 30px;\">Les parties signataires à l'acte certifient avoir pris connaissance des informations restituées dans ce document et certifient avoir été en " +
@@ -783,17 +800,19 @@ public class PdfRedactor {
     }
     
     private void addRisque(Document htmlDocument, String libelle, String iconSrc, String text) {
-        
+    
         Element page = htmlDocument.select(".page .content").last();
-        
-        //        int risquePrincipalNumberOf = page.select(".risque").size();
-        //
-        //        if (risquePrincipalNumberOf >= 4) { page = addPage(htmlDocument); }
-        
-        if (shouldAddNewPageForRisque(htmlDocument, text.length())) { page = addPage(htmlDocument); }
-        
+    
+        int risquePrincipalNumberOf = page.select(".risque-principal").size();
+        if (risquePrincipalNumberOf >= 2) {
+            page = addPage(htmlDocument);
+            risquePrincipalNumberOf = 0;
+        }
+    
+        if (shouldAddNewPageForRisque(htmlDocument, text.length(), risquePrincipalNumberOf != 0)) { page = addPage(htmlDocument); }
+    
         Element description = addRisqueHtml(page);
-        
+    
         description.select(".libelle").html(libelle);
         description.select(".icon img").attr("src", iconSrc);
         description.select(".text").html(text);
@@ -944,9 +963,11 @@ public class PdfRedactor {
         return avisDTO.getLentillesArgile() != null && avisDTO.getLentillesArgile().size() > 0;
     }
     
-    private boolean shouldAddNewPageForRisque(Document htmlDocument, int newRisqueTextLength) {
+    private boolean shouldAddNewPageForRisque(Document htmlDocument, int newRisqueTextLength, boolean alreadyHasRisquePrincipal) {
         
-        return getCurrentRisqueHeight(htmlDocument) + 200 + newRisqueTextLength * TEXT_TO_HEIGHT_RATIO > 1000;
+        int availableTextLength = alreadyHasRisquePrincipal ? MAXIMUM_RISQUE_TEXT_LENGTH_PER_PAGE / 2 : MAXIMUM_RISQUE_TEXT_LENGTH_PER_PAGE;
+        
+        return getCurrentRisqueHeight(htmlDocument) + 200 + newRisqueTextLength * TEXT_TO_HEIGHT_RATIO > availableTextLength;
     }
     
     private int getCurrentRisqueHeight(Document htmlDocument) {
