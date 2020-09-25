@@ -25,8 +25,14 @@
             <div class="container bordered">
                 <div>
                     <div style="margin-bottom: 20px"><span class="title">Parcelle(s) </span></div>
-                    <span class="rightAlign">Adresse&nbsp;: </span><b><span v-if="avis.summary.adresse">{{avis.summary.adresse}}, <br/><span class="rightAlign"/>{{avis.summary.commune.codePostal}} {{avis.summary.commune.nomCommune}}</span><span v-else-if="avis.summary.commune">{{avis.summary.commune.codePostal}}, {{avis.summary.commune.nomCommune}}</span><span v-else><i>n/a</i></span></b><br/>
-                    <span class="rightAlign">Code parcelle&nbsp;: </span><b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{avis.summary.codeParcelle}}</span><span v-else><i>n/a</i></span></b><br/>
+                    <span class="rightAlign">Adresse&nbsp;: </span><b><span v-if="avis.summary.adresse">{{ avis.summary.adresse }}, <br/><span class="rightAlign"/>{{ avis.summary.commune.codePostal }} {{
+                        avis.summary.commune.nomCommune
+                                                                                                        }}</span><span v-else-if="avis.summary.commune">{{
+                        avis.summary.commune.codePostal
+                                                                                                                                                        }}, {{ avis.summary.commune.nomCommune }}</span><span v-else><i>n/a</i></span></b><br/>
+                    <span class="rightAlign">Code parcelle&nbsp;: </span><b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{
+                        avis.summary.codeParcelle
+                                                                                                                                                       }}</span><span v-else><i>n/a</i></span></b><br/>
                     <br>
                 </div>
             </div>
@@ -138,7 +144,7 @@ export default {
                     undefined,
                 "SISMICITE"])
 
-            if (this.hasRadonHaut) this.dataList.push([
+            if (this.hasRadonHaut || this.hasRadonMoyen) this.dataList.push([
                 typeof this.avis.summary.commune.communesLimitrophes.map === 'function' ?
                     [{data: this.avis.summary.commune.classePotentielRadon === '1' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FFD332'},
                         {data: this.avis.summary.commune.classePotentielRadon === '2' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FF8000'},
@@ -157,6 +163,28 @@ export default {
                         {data: this.avis.plansExpositionBruit.filter(x => x.zone === 'A').map(x => x.multiPolygon), color: '#840505'}] :
                     undefined,
                 "PEB"])
+
+            if (this.hasPollutionNonReglementaire) this.dataList.push([
+                typeof this.avis.plansExpositionBruit.map === 'function' ?
+                    [{data: this.avis.installationClasseeRayonParcelle.liste.map(x => x.ewkt), color: '#8E0800'},
+                        {data: this.avis.basiasRayonParcelle.liste.map(x => x.ewkt), color: '#9E9E00'},
+                        {data: this.avis.basolRayonParcelle.liste.map(x => x.ewkt), color: '#925600'}] :
+                    undefined,
+                "POLLUTION_NON_REG"])
+
+            if (this.hasArgile) this.dataList.push([
+                typeof this.avis.plansExpositionBruit.map === 'function' ?
+                    [{data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon), color: '#FFD332'},
+                        {data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 2).map(x => x.multiPolygon), color: '#FF8000'},
+                        {data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 3).map(x => x.multiPolygon), color: '#840505'}] :
+                    undefined,
+                "ARGILE"])
+
+            if (this.hasCanalisations) this.dataList.push([
+                typeof this.avis.plansExpositionBruit.map === 'function' ?
+                    [{data: this.avis.canalisations, color: '#2A4999'}] :
+                    undefined,
+                "CANALISATIONS"])
 
             this.currentPng = '';
         },
@@ -247,98 +275,98 @@ export default {
 
 <style scoped>
 
-    #searchButtonsWrapper {
-        float : left;
-    }
+#searchButtonsWrapper {
+	float : left;
+}
 
-    #searchButtonsWrapper a,
-    #actionButtonsWrapper a,
-    #bottomButtonsWrapper a {
-        display : inline-block;
-        float   : none;
-    }
+#searchButtonsWrapper a,
+#actionButtonsWrapper a,
+#bottomButtonsWrapper a {
+	display : inline-block;
+	float   : none;
+}
 
-    #bottomButtonsWrapper {
-        flex       : 0 0 100%;
-        margin-top : 25px;
-        text-align : center;
-    }
+#bottomButtonsWrapper {
+	flex       : 0 0 100%;
+	margin-top : 25px;
+	text-align : center;
+}
 
-    #actionButtonsWrapper {
-        float : right;
-    }
+#actionButtonsWrapper {
+	float : right;
+}
 
-    @media (min-width : 630px) {
-        #searchButtonsWrapper a:last-of-type,
-        #actionButtonsWrapper a:last-of-type {
-            margin-right : 0;
-        }
-    }
+@media (min-width : 630px) {
+	#searchButtonsWrapper a:last-of-type,
+	#actionButtonsWrapper a:last-of-type {
+		margin-right : 0;
+	}
+}
 
-    @media (max-width : 1350px) {
+@media (max-width : 1350px) {
 
-        #searchButtonsWrapper {
-            text-align : center;
-            width      : 100%;
-        }
+	#searchButtonsWrapper {
+		text-align : center;
+		width      : 100%;
+	}
 
-        #actionButtonsWrapper {
-            text-align : center;
-            width      : 100%;
-        }
-    }
+	#actionButtonsWrapper {
+		text-align : center;
+		width      : 100%;
+	}
+}
 
-    @media (max-width : 630px) {
-        #searchButtonsWrapper a,
-        #actionButtonsWrapper a {
-            margin-left  : 10px;
-            margin-right : 10px;
-        }
-    }
+@media (max-width : 630px) {
+	#searchButtonsWrapper a,
+	#actionButtonsWrapper a {
+		margin-left  : 10px;
+		margin-right : 10px;
+	}
+}
 
-    .container {
-        max-width : unset;
-    }
+.container {
+	max-width : unset;
+}
 
-    .container.bordered {
-        background-color : #FFFFFF;
-        border           : 1px solid #CCCCCC;
-        border-radius    : 2px;
-        display          : flex;
-        margin-bottom    : 20px;
-        padding          : 20px;
-        text-align       : left;
-        width            : 100%;
-    }
+.container.bordered {
+	background-color : #FFFFFF;
+	border           : 1px solid #CCCCCC;
+	border-radius    : 2px;
+	display          : flex;
+	margin-bottom    : 20px;
+	padding          : 20px;
+	text-align       : left;
+	width            : 100%;
+}
 
-    .container.bordered span {
-        line-height : 25px;
-    }
+.container.bordered span {
+	line-height : 25px;
+}
 
-    .container.bordered span.rightAlign {
-        display       : inline-block;
-        padding-right : 5px;
-        text-align    : right;
-        width         : 150px;
-    }
+.container.bordered span.rightAlign {
+	display       : inline-block;
+	padding-right : 5px;
+	text-align    : right;
+	width         : 150px;
+}
 
-    .container.bordered.ppr > div {
-        display   : flex;
-        flex-wrap : wrap;
-    }
+.container.bordered.ppr > div {
+	display   : flex;
+	flex-wrap : wrap;
+}
 
-    .container.bordered.ppr div.errial_title {
-        flex          : 1 0 100%;
-        margin-bottom : 20px;
-    }
+.container.bordered.ppr div.errial_title {
+	flex          : 1 0 100%;
+	margin-bottom : 20px;
+}
 
-    .container.bordered.ppr p {
-        flex : 1 0 100%;
-    }
+.container.bordered.ppr p {
+	flex : 1 0 100%;
+}
 
-    #pdf {
-        margin     : 25px;
-        text-align : center;
-        width      : 100%;
-    }
+#pdf {
+	margin     : 25px;
+	text-align : center;
+	width      : 100%;
+}
 </style>
