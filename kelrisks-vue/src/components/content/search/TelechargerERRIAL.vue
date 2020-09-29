@@ -42,6 +42,7 @@
                     <div class="errial_title"><span class="title">Télécharger l'ERRIAL « État des Risques Réglementés - Information des Acquéreurs et des Locataires »</span></div>
                     <p>Il appartient au propriétaire du bien de vérifier l'exactitude de ces informations autant que de besoin et, le cas échéant, de le compléter à partir d'informations disponibles
                        sur le site internet de la préfecture ou d'informations dont il dispose sur le bien, notamment les sinistres que le bien a subis.</p>
+                    <p v-if="hasPPR"><strong>Le propriétaire doit joindre les extraits de la carte réglementaire et du règlement du PPR qui concernent la parcelle.</strong></p>
 
                     <div style="margin: 0 auto 25px; width: 350px;">
                         <leaflet :data="currentData"
@@ -251,7 +252,7 @@ export default {
                     const fileURL = window.URL.createObjectURL(resp)
                     const link = document.createElement('a')
                     link.href = fileURL
-                    link.download = "Kelrisks_Parcelle_" + this.form.codeParcelle + "_(" + this.avis.summary.commune.codePostal + ")_" + moment(new Date()).format('DD/MM/YYYY') + ".pdf"
+                    link.download = "ERRIAL_Parcelle_" + this.form.selectedParcellesList.join(',') + "_" + moment(new Date()).format('DDMMYYYY') + ".pdf"
                     link.click()
                     // window.location.assign(fileURL);
                 })

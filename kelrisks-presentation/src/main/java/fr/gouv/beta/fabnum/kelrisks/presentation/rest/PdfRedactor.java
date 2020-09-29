@@ -110,6 +110,11 @@ public class PdfRedactor {
         ajouterChoix(htmlDocument, choixErrial, "cat");
     }
     
+    public void setFileName(Document htmlDocument, String fileName) {
+        
+        htmlDocument.select("html head title").first().html(fileName);
+    }
+    
     private void ajouterChoix(Document htmlDocument, String errial, String match) {
         
         Pattern pattern = Pattern.compile("(" + match + ".*?):(.*?);");
@@ -147,15 +152,15 @@ public class PdfRedactor {
             
             for (InstallationClasseeDTO installationClasseeRayonParcelleDTO : avisDTO.getInstallationClasseeRayonParcelleDTOs()) {
     
-                addTableBodyRow(tbody, installationClasseeRayonParcelleDTO.getNom(),
-                                "https://www.georisques.gouv.fr/risques/installations/donnees/details/" + installationClasseeRayonParcelleDTO.getCode());
-                lines++;
-    
                 if (lines > ROWS_PER_PAGE) {
                     page = addPage(htmlDocument);
                     tbody = addTableHtml(page);
                     lines = 0;
                 }
+    
+                addTableBodyRow(tbody, installationClasseeRayonParcelleDTO.getNom(),
+                                "https://www.georisques.gouv.fr/risques/installations/donnees/details/" + installationClasseeRayonParcelleDTO.getCode());
+                lines++;
             }
             
             if (lines + avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() > ROWS_PER_PAGE) {
@@ -172,14 +177,15 @@ public class PdfRedactor {
             
             for (SiteIndustrielBasiasDTO siteIndustrielBasiasDTO : avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs()) {
     
-                addTableBodyRow(tbody, siteIndustrielBasiasDTO.getRaisonSociale(), "https://fiches-risques.brgm.fr/georisques/basias-detaillee/" + siteIndustrielBasiasDTO.getIdentifiant());
-                lines += 1.25;
-    
                 if (lines > ROWS_PER_PAGE) {
                     page = addPage(htmlDocument);
                     tbody = addTableHtml(page);
                     lines = 0;
                 }
+    
+                addTableBodyRow(tbody, siteIndustrielBasiasDTO.getRaisonSociale(), "https://fiches-risques.brgm.fr/georisques/basias-detaillee/" + siteIndustrielBasiasDTO.getIdentifiant());
+    
+                lines += 1.25;
             }
             
             if (lines + avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() + avisDTO.getSecteurInformationSolRayonParcelleDTOs().size() > ROWS_PER_PAGE) {
@@ -195,14 +201,15 @@ public class PdfRedactor {
             
             for (SiteIndustrielBasolDTO siteIndustrielBasolDTO : avisDTO.getSiteIndustrielBasolRayonParcelleDTOs()) {
     
-                addTableBodyRow(tbody, siteIndustrielBasolDTO.getProprietaire(), "https://fiches-risques.brgm.fr/georisques/basias-detaillee/" + siteIndustrielBasolDTO.getIdentifiantbasias());
-                lines += 1.25;
-    
                 if (lines > ROWS_PER_PAGE) {
                     page = addPage(htmlDocument);
                     tbody = addTableHtml(page);
                     lines = 0;
                 }
+    
+                addTableBodyRow(tbody, siteIndustrielBasolDTO.getProprietaire(), "https://fiches-risques.brgm.fr/georisques/basias-detaillee/" + siteIndustrielBasolDTO.getIdentifiantbasias());
+    
+                lines += 1.25;
             }
             
             for (SecteurInformationSolDTO secteurInformationSolDTO : avisDTO.getSecteurInformationSolRayonParcelleDTOs()) {
@@ -508,7 +515,8 @@ public class PdfRedactor {
         page.append("<p style=\"padding-top : 30px;\">Les parties signataires à l'acte certifient avoir pris connaissance des informations restituées dans ce document et certifient avoir été en " +
                     "mesure de les corriger et le cas " +
                     "échéant de les compléter à partir des informations disponibles sur le site internet de la Préfecture ou d'informations concernant le bien, notamment les sinistres que le bien a" +
-                    " subis.</p>");
+                    " subis.</p>" +
+                    (hasPPR(avisDTO) ? "<p><strong>Le propriétaire doit joindre les extraits de la carte réglementaire et du règlement du PPR qui concernent la parcelle.</strong></p>" : ""));
     
         page.append("<h4 id=\"signatures_title\">SIGNATURES</h4>");
     
@@ -739,9 +747,10 @@ public class PdfRedactor {
                                (avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0 ? "<p>- La parcelle a accueilli une installation classée pour la protection de l'environnement soumise à " +
                                                                                              "autorisation ou enregistrement. Cette activité a pu provoquer des pollutions, notamment des sols des " +
                                                                                              "eaux souterraines ou des eaux superficielles." +
-                                                                                             "</br>Installation(s) concernée(s)  : " +
-                                                                                             "<br/>" + getLibelleInstallationsClassees(avisDTO) + "</p>" : "") +
-                               (avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0 ? "<p>- La parcelle est située en secteur d’information sur les sols.</p>" : "") +
+                                                                                             "</br>Installation(s) concernée(s)  : <br/>" +
+                                                                                             "" + getLibelleInstallationsClassees(avisDTO) + "</p>" : "") +
+                               (avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0 ? "<p>- La parcelle est située en secteur d’information sur les sols : <br/>" +
+                                                                                               "" + getLibelleSecteursInformation(avisDTO) + "</p>" : "") +
                                (false ? "- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées au titre du L 515-12 du " +
                                         "code de l’environnement." : ""));
         }
@@ -808,13 +817,16 @@ public class PdfRedactor {
     }
     
     private void addRisque(Document htmlDocument, String libelle, String iconSrc, String text) {
-        
+    
         Element page = htmlDocument.select(".page .content").last();
-        
+    
         if (shouldAddNewPageForRisque(htmlDocument, page, text.length())) { page = addPage(htmlDocument); }
-        
-        Element description = addRisqueHtml(page);
-        
+    
+        int     numberOfRisques  = page.select(".risque").size();
+        boolean shouldClearFloat = numberOfRisques % 2 == 0;
+    
+        Element description = addRisqueHtml(page, shouldClearFloat);
+    
         description.select(".libelle").html(libelle);
         description.select(".icon img").attr("src", iconSrc);
         description.select(".text").html(text);
@@ -847,10 +859,10 @@ public class PdfRedactor {
         return page.select(".description").last();
     }
     
-    private Element addRisqueHtml(Element page) {
+    private Element addRisqueHtml(Element page, boolean shouldClearFloat) {
         
         // @formatter:off
-        page.append("<div class=\"risque\">\n" +
+        page.append("<div class=\"risque\""+ (shouldClearFloat ? " style=\"clear:both;\"" : "") +">\n" +
                     "    <div><b><h3 class=\"libelle\"></h3></b></div>\n" +
                     "    <div class=\"icon\"><img height=\"80px\"\n" +
                     "                             src=\"\"\n" +
@@ -917,6 +929,17 @@ public class PdfRedactor {
         
         for (InstallationClasseeDTO installationNucleaireDTO : avisDTO.getInstallationClasseeSurParcelleDTOs()) {
             libelle.append("- ").append(installationNucleaireDTO.getNom()).append("<br/>");
+        }
+        
+        return libelle.toString();
+    }
+    
+    private String getLibelleSecteursInformation(AvisDTO avisDTO) {
+        
+        StringBuilder libelle = new StringBuilder();
+        
+        for (SecteurInformationSolDTO secteurInformationSolDTO : avisDTO.getSecteurInformationSolSurParcelleDTOs()) {
+            libelle.append("- ").append(secteurInformationSolDTO.getNom()).append("<br/>");
         }
         
         return libelle.toString();
