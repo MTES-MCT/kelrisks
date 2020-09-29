@@ -90,12 +90,14 @@ export default {
 
                     if (this.$refs.searchErrors.hasError) {
                         this._paq.push(['trackEvent', 'Flow', 'Informations', 'Erreur'])
+                        this.querying = false
                         // this.$refs.searchErrors.emitErrors()
                         return
                     }
 
                     if (this.$refs.searchErrors.hasWarning) {
                         this._paq.push(['trackEvent', 'Flow', 'Informations', 'Warning'])
+                        this.querying = false
                         // this.$refs.searchErrors.emitWarnings()
                         return
                     }

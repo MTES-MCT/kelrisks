@@ -69,7 +69,7 @@
                                    (plan.dateApprobation ? 'Un PPR approuvé est un PPR définitivement adopté.' :
                                    plan.dateApplicationAnticipee ? 'Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation.' :
                                    'Un PPR prescrit est un PPR en cours d\'élaboration sur la commune dont le périmètre et les règles sont en cours d\'élaboration.') + '<br/><br/>' +
-                                  'Le plan de prévention des risques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d\'urbanisme héritées du passé et de mieux encadrer l\'urbanisation future autour du site..<br/>' +
+                                  'Le plan de prévention des risques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d\'urbanisme héritées du passé et de mieux encadrer l\'urbanisation future autour du site.<br/>' +
                                   '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
@@ -153,7 +153,7 @@
                     :max-zoom-center="leaflet.center"
                     :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
                     :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une installation classée pour la protection de l\'environnement soumise à autorisation ou enregistrement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsclassees : '') +
-                             (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en secteur d’information sur les sols.</br>' : '') +
+                             (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en <a href=\'' + avis.sisParcelle.ficheRisque + '\' target=\'_blank\' rel=\'noopener noreferrer\'>secteur d’information sur les sols</a>.</br>' : '') +
                              (false ? '- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées au titre du L 515-12 du code de l’environnement.' : '') +
                              '<p><a href=\'#recommendations_pollution\'>Lire les recommandations</a></p>'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"
@@ -312,8 +312,8 @@
 
             <risque :description="'Les pollutions des sols doivent notamment être prises en compte dans les projets de changements d\'usage (travaux, constructions, changement d\'affectation du bien) pour préserver la sécurité, la santé ou la salubrité publiques et l\'environnement..'"
                     :detail="'<p>Dans un rayon de 500 m autour de votre parcelle, sont identifiés :</br>'+
-                              (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' installations classées pour la protection de l\'environnement (ICPE) soumises à autorisation ou à enregistrement, installations qui peuvent présenter des dangers ou inconvénients du fait de leur activité.</br>' : '') +
-                              (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' sites référencés dans l\'inventaire BASIAS des sites ayant accueilli par le passé une activité industrielle ou une activité de service qui a pu générer une pollution des sols.</br>' : '') +
+                              (avis.installationClasseeRayonParcelle.numberOf > 0 ? '- '+ avis.installationClasseeRayonParcelle.numberOf +' installation(s) classée(s) pour la protection de l\'environnement (ICPE) soumises à autorisation ou à enregistrement, installations qui peuvent présenter des dangers ou inconvénients du fait de leur activité.</br>' : '') +
+                              (avis.basiasRayonParcelle.numberOf > 0 ? '- '+ avis.basiasRayonParcelle.numberOf +' site(s) référencé(s) dans l\'inventaire BASIAS des sites ayant accueilli par le passé une activité industrielle ou une activité de service qui a pu générer une pollution des sols.</br>' : '') +
                               (avis.basolRayonParcelle.numberOf > 0 ? '- '+ avis.basolRayonParcelle.numberOf +' site(s) pollué(s) ou potentiellement pollués (Basol - terrain pollué ou potentiellement pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain placé en secteur d\'information sur les sols, SUP - terrain pollué affecté d\'une serviture d\'utilité publique)</br></p>' : '</p>') +
                               (!hasPollutionPrincipale && numberOfParcelleMatches > 0 ? '<p>' + numberOfParcelleMatches + ' site(s) présente(nt) une proximité forte avec votre parcelle. Dans le cas où vous souhaiteriez en savoir davantage, il est recommandé de faire réaliser une étude historique et, le cas échéant, des analyses de sols par un bureau d’étude spécialisé dans le domaine des sols pollués.</p>' : '') +
                               (hasPollutionCentroidCommune ? '<p>Les données disponibles mentionnent parfois la présence d\'anciennes activités qui sont localisées par défaut sur le centre géographique de la commune lorsqu\'une localisation précise n\'est pas disponible. La présente analyse n\'en tient donc pas compte.</p>' : '')"
@@ -341,7 +341,7 @@
 
             <risque :description="'Votre bien est situé à moins de ' + (avis.hasCentraleNucleaire ? '20 km' :  '10 km') + ' d’une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
                     :detail="'<p>Ces installations sont contrôlées par l’Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
-                             '<p>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsNucleaires + '</p>'"
+                             '<p>Installation(s) concernée(s)  : <br/>' + getLibelleInstallationsNucleaires + '</p>'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_nucleaires_bleu.png'"
                     :title="'Installations nucléaires de base'"
                     v-if="avis.nucleaires.installations.length > 0"/>
@@ -361,9 +361,9 @@
                                       color : '#840505'}]"
                     :leaflet-min-zoom="14"
                     :legend-blocks="[
-                        ['#FFD332', 'Exposition faible'],
-                        ['#FF8000', 'Exposition moyenne'],
-                        ['#840505', 'Exposition forte']]"
+                        ['#FFD332', '1 : Exposition faible'],
+                        ['#FF8000', '2 : Exposition moyenne'],
+                        ['#840505', '3 : Exposition forte']]"
                     :level="avis.niveauArgile + ''"
                     :level-max="'3'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_terre_bleu.png'"
@@ -511,7 +511,7 @@ export default {
 
             for (let installation in this.avis.installationClasseeParcelle.liste) {
                 installation = this.avis.installationClasseeParcelle.liste[installation]
-                libelle += '- ' + installation.nom + '<br/>'
+                libelle += '- <a href="https://www.georisques.gouv.fr/risques/installations/donnees/details/' + installation.code + '" target="_blank" rel="noopener noreferrer">' + installation.nom + '</a><br/>'
             }
 
             return libelle

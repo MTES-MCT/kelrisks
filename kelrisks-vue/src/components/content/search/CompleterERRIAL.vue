@@ -51,8 +51,9 @@
                      v-for="(plan, index) in avis.ppr">
                     <div>
                         <div class="errial_title"><span class="title">{{ plan.alea.familleAlea.libelle }}</span></div>
-                        <p>Rappel du risque : {{ plan.alea.familleAlea.libelle }}, {{ plan.alea.libelle }}
-                           {{ (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) }}.</p>
+                        <p>Rappel du risque : {{ plan.alea.familleAlea.libelle }}, {{
+                                plan.alea.libelle
+                           }}{{ (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) }}.</p>
                         <div class="text_wrapper"><b>L'immeuble est concerné par des prescriptions de travaux dans le règlement du {{ plan.alea.familleAlea.famillePPR.libelle }}</b></div>
                         <div class="input_wrapper">
                             <label><input :name="'pre_' + plan.idGaspar"

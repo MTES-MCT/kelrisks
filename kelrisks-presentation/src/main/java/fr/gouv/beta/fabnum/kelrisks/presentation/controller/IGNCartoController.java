@@ -23,11 +23,11 @@ public class IGNCartoController {
     
     @GetMapping("/ign/generateur/{idgen}/{partition}")
     public IGNCartoGenerateurPaginatedFeatures generateur(@PathVariable("idgen") String idgen, @PathVariable("partition") String partition) {
-        
+    
         IGNCartoGenerateurPaginatedFeatures ignCartoGenerateurPaginatedFeatures = ignCartoFacade.rechercherGenerateur(partition);
-        
-        ignCartoGenerateurPaginatedFeatures.getFeatures().removeIf(generateur -> !generateur.getProperties().getIdgen().equalsIgnoreCase(idgen));
-        
+    
+        if (ignCartoGenerateurPaginatedFeatures != null) { ignCartoGenerateurPaginatedFeatures.getFeatures().removeIf(generateur -> !generateur.getProperties().getIdgen().equalsIgnoreCase(idgen)); }
+    
         return ignCartoGenerateurPaginatedFeatures;
     }
 }

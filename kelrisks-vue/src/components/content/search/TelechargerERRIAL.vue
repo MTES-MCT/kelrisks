@@ -49,7 +49,7 @@
                                  :min-zoom="14"
                                  :parcelle="leaflet.data.parcelles"
                                  @png="pngGenerated"
-                                 v-show="currentPng !== undefined"/>
+                                 v-show="currentData !== ''"/>
                     </div>
                     <div id="pdf"
                          @click="getPdf">
@@ -102,13 +102,12 @@ export default {
         },
         dataList: [],
         currentData: '',
-        currentPng: undefined,
         currentPngName: '',
         pngList: [],
     }),
     methods: {
         generatePngs () {
-            // console.log('generatePngs')
+            console.log('generatePngs')
 
             this.dataList = []
 
@@ -146,12 +145,12 @@ export default {
 
             if (this.hasRadonHaut || this.hasRadonMoyen) this.dataList.push([
                 typeof this.avis.summary.commune.communesLimitrophes.map === 'function' ?
-                    [{data: this.avis.summary.commune.classePotentielRadon === '1' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FFD332'},
-                        {data: this.avis.summary.commune.classePotentielRadon === '2' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FF8000'},
-                        {data: this.avis.summary.commune.classePotentielRadon === '3' ? [this.avis.summary.commune.multiPolygon] : [], color: '#840505'},
-                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '1').map(x => x.multiPolygon), color: '#FFD332'},
-                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '2').map(x => x.multiPolygon), color: '#FF8000'},
-                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon), color: '#840505'}] :
+                    [{data: this.avis.summary.commune.classePotentielRadon === '1' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FFD334'},
+                        {data: this.avis.summary.commune.classePotentielRadon === '2' ? [this.avis.summary.commune.multiPolygon] : [], color: '#FF8002'},
+                        {data: this.avis.summary.commune.classePotentielRadon === '3' ? [this.avis.summary.commune.multiPolygon] : [], color: '#840507'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '1').map(x => x.multiPolygon), color: '#FFD334'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '2').map(x => x.multiPolygon), color: '#FF8004'},
+                        {data: this.avis.summary.commune.communesLimitrophes.filter(x => x.classePotentielRadon === '3').map(x => x.multiPolygon), color: '#840507'}] :
                     undefined,
                 "RADON"])
 
@@ -174,9 +173,9 @@ export default {
 
             if (this.hasArgile) this.dataList.push([
                 typeof this.avis.plansExpositionBruit.map === 'function' ?
-                    [{data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon), color: '#FFD332'},
-                        {data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 2).map(x => x.multiPolygon), color: '#FF8000'},
-                        {data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 3).map(x => x.multiPolygon), color: '#840505'}] :
+                    [{data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon), color: '#FFE340'},
+                        {data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 2).map(x => x.multiPolygon), color: '#FF9020'},
+                        {data: this.avis.lentillesArgile.filter(x => x.niveauAlea === 3).map(x => x.multiPolygon), color: '#841520'}] :
                     undefined,
                 "ARGILE"])
 
@@ -186,12 +185,13 @@ export default {
                     undefined,
                 "CANALISATIONS"])
 
-            this.currentPng = '';
+            this.feedLeaflet();
         },
         pngGenerated (png) {
-            // console.log('pngGenerated')
+            console.log('pngGenerated')
+            console.log(png)
 
-            this.currentPng = png
+            this.pushCurrentPng(png)
         },
         debounceFetchPdf () {
             if (this.debounce) clearTimeout(this.debounce);
@@ -202,14 +202,14 @@ export default {
             }, 100);
         },
         getPdf () {
-            // console.log('getPdf')
+            console.log('getPdf')
 
             this.generatePngs()
         },
         feedLeaflet () {
-            // console.log("feedLeaflet")
+            console.log("feedLeaflet")
 
-            // console.log(this.dataList)
+            console.log(this.dataList)
 
             while (this.dataList.length !== 0) {
 
@@ -224,7 +224,7 @@ export default {
                 }
             }
 
-            this.currentPng = undefined
+            this.currentData = ''
             this.debounceFetchPdf()
         },
         fetchPdf () {
@@ -255,13 +255,11 @@ export default {
                     link.click()
                     // window.location.assign(fileURL);
                 })
-        }
-    },
-    watch: {
-        currentPng: function () {
-            // console.log('watch : currentPng')
+        },
+        pushCurrentPng (png) {
+            console.log('Push currentPng')
 
-            if (this.currentPng) this.pngList.push({name: this.currentPngName, png: this.currentPng})
+            if (png) this.pngList.push({name: this.currentPngName, png: png})
             this.feedLeaflet()
         }
     },
