@@ -19,7 +19,7 @@
                         :ref="'lGeoJson_' + reference + '_' + index"
                         v-else
                         :key="json.color + '_' + index"
-                        :options="featureOptions"
+                        :options="featureOptions(json.color)"
                         :options-style="styleFunction(json.color)"
                         v-for="(json, index) in data"/>
         </l-map>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import {icon, marker} from "leaflet";
+import {divIcon, marker} from "leaflet";
 import {LGeoJson, LMap, LTileLayer} from 'vue2-leaflet';
 import mixinLeaflet from "./leaflet_common";
 
@@ -49,8 +49,7 @@ export default {
             default: () => []
         }
     },
-    data: () => ({
-    }),
+    data: () => ({}),
     methods: {
         centerMap () {
 
@@ -141,24 +140,38 @@ export default {
     },
     computed: {
         featureOptions () {
-            return {
+            return color => ({
                 onEachFeature: this.onEachFeatureFunction,
-                pointToLayer: this.createIcon
-            };
+                pointToLayer: this.createIcon(color)
+            });
         },
         createIcon () {
-            return (feature, latlng) => {
-                let myIcon = icon({
-                    iconUrl: '/images/leaflet/adresse.svg',
-                    shadowUrl: '/images/leaflet/shadow.png',
-                    iconSize: [35, 35], // width and height of the image in pixels
-                    shadowSize: [30, 22], // width, height of optional shadow image
-                    iconAnchor: [17, 35], // point of the icon which will correspond to marker's location
-                    shadowAnchor: [0, 24],  // anchor point of the shadow. should be offset
-                    popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
-                })
-                return marker(latlng, {icon: myIcon})
-            };
+
+            return myCustomColour => {
+
+                const markerHtmlStyles =
+                    ' background-color: ' + myCustomColour + '99;' +
+                    ' width: 1.5rem;' +
+                    ' height: 1.5rem;' +
+                    ' display: block;' +
+                    ' left: -0.75rem;' +
+                    ' top: -0.75rem;' +
+                    ' position: relative;' +
+                    ' border-radius: 1.5rem 1.5rem 0;' +
+                    ' transform: rotate(45deg);' +
+                    ' border: 1px solid #FFFFFF99'
+
+                return (feature, latlng) => {
+                    let myIcon = divIcon({
+                        className: "my-custom-pin",
+                        iconAnchor: [0, 24],
+                        labelAnchor: [-6, 0],
+                        popupAnchor: [0, -36],
+                        html: '<span style="' + markerHtmlStyles + '" />'
+                    })
+                    return marker(latlng, {icon: myIcon})
+                };
+            }
         }
     },
     mounted () {
@@ -194,8 +207,8 @@ export default {
 </script>
 
 <style scoped>
-    .leaflet_wrapper {
-        height : 100%;
-        width  : 100%;
-    }
+.leaflet_wrapper {
+	height : 100%;
+	width  : 100%;
+}
 </style>
