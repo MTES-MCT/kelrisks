@@ -153,7 +153,7 @@
                     :max-zoom-center="leaflet.center"
                     :description="'<p>Les pollutions des sols peuvent présenter un risque sanitaire lors des changements d’usage des sols (travaux, aménagements changement d’affectation des terrains) si elles ne sont pas prises en compte dans le cadre du projet.</p>'"
                     :detail="(avis.installationClasseeParcelle.numberOf > 0 ? '- La parcelle a accueilli une installation classée pour la protection de l\'environnement soumise à autorisation ou enregistrement. Cette activité a pu provoquer des pollutions, notamment des sols des eaux souterraines ou des eaux superficielles.</br>Installation(s) concerné(e)  : <br/>' + getLibelleInstallationsclassees : '') +
-                             (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en <a href=\'' + avis.sisParcelle.ficheRisque + '\' target=\'_blank\' rel=\'noopener noreferrer\'>secteur d’information sur les sols</a>.</br>' : '') +
+                             (avis.sisParcelle.numberOf > 0 ? '- La parcelle est située en <a href=\'' + avis.sisParcelle.fiche_risque + '\' target=\'_blank\' rel=\'noopener noreferrer\'>secteur d’information sur les sols</a>.</br>' : '') +
                              (false ? '- La parcelle est affectée d’une servitude d’utilité publique au titre des installations classées au titre du L 515-12 du code de l’environnement.' : '') +
                              '<p><a href=\'#recommendations_pollution\'>Lire les recommandations</a></p>'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_basias_bleu.png'"

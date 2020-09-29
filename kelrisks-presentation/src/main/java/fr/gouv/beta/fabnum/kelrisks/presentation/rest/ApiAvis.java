@@ -17,6 +17,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -165,24 +167,28 @@ public class ApiAvis extends AbstractBasicApi {
         }
     
         List<ParcelleDTO> parcelleDTOs = getParcelles(codeParcelle);
-        
+    
         if (parcelleDTOs == null || parcelleDTOs.isEmpty()) {
             return null;
         }
-        
+    
         CommuneDTO communeDTO = gestionCommuneFacade.rechercherCommuneComplete(codeINSEE);
-        
+    
         AvisDTO avisDTO = gestionAvisFacade.rendreAvis(parcelleDTOs, communeDTO, nomAdresse);
-        
+    
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy");
+        String           fileName         = "ERRIAL_Parcelle_" + codeParcelle + "_" + simpleDateFormat.format(new Date());
+    
         try {
             File baseAvis = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "avis.html");
-            
+        
             org.jsoup.nodes.Document htmlDocument = Jsoup.parse(baseAvis, StandardCharsets.UTF_8.name());
-    
+        
             pdfRedactor.redigerAnalyse(htmlDocument, avisDTO, codeINSEE);
             pdfRedactor.ajouterImages(htmlDocument, pngs);
             pdfRedactor.ajouterQRCode(htmlDocument, avisDTO);
             pdfRedactor.ajouterChoixUtilisateur(htmlDocument, choixErrial);
+            pdfRedactor.setFileName(htmlDocument, fileName);
             
             String html = htmlDocument.outerHtml();
             
@@ -200,7 +206,7 @@ public class ApiAvis extends AbstractBasicApi {
             
             return ResponseEntity.ok()
                            .header("Content-Disposition",
-                                   "attachment; filename=Kelrisks_Parcelle_" + avisDTO.getSummary().getCodeParcelle() + "_(" + avisDTO.getSummary().getCommune().getCodePostal() + ").pdf")
+                                   "attachment; filename=" + fileName + ".pdf")
                            .body(byteArrayOutputStream.toByteArray());
         }
         catch (Exception e) {
