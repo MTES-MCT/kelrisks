@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -90,7 +91,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     IGestionBRGMFacade                        gestionBRGMFacade;
     
     @Override
-    @Cacheable(value = "avis", keyGenerator = "customAvisKeyGenerator")
+    @Cacheable(value = "avis", keyGenerator = "customAvisKeyGenerator", unless = "#result.hasError || #result.hasWarning")
     public AvisDTO rendreAvis(List<ParcelleDTO> parcelleDTOs, CommuneDTO communeDTO, @NotNull String nomAdresse) {
         
         AvisDTO avisDTO = new AvisDTO();
@@ -124,96 +125,104 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
     
     private AvisDTO getAvisFromParcelle(AvisDTO avisDTO, List<ParcelleDTO> parcelleDTOs, CommuneDTO communeDTO) {
     
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.FRANCE);
-        System.out.println("------------- " + simpleDateFormat.format(new Date()) + " - " + parcelleDTOs.stream().map(parcelleDTO -> parcelleDTO.getSection() + parcelleDTO.getNumero()).collect(Collectors.joining(", ")) + " @ " + communeDTO.getNomCommune() + " - " + communeDTO.getCodePostal() + " (" + communeDTO.getCodeINSEE() + ") -------------");
-        long startTime = System.currentTimeMillis();
-        Geometry<?> parcellesUnion = gestionParcelleFacade.rechercherUnionParcelles(parcelleDTOs.stream()
-                                                                                            .map(ParcelleDTO::getId)
-                                                                                            .collect(Collectors.toList()));
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherUnionParcelles");
-        startTime = System.currentTimeMillis();
-        Geometry<?> touchesParcelle = gestionParcelleFacade.rechercherUnionParcellesContigues(parcellesUnion);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherUnionParcellesContigues");
-        startTime = System.currentTimeMillis();
-        Geometry<?> expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcellesUnion, 500);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherExpendedParcelle");
-        startTime = System.currentTimeMillis();
-        Point<?> centroid = (Point<?>) gestionParcelleFacade.rechercherCentroidParcelle(parcellesUnion);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherCentroidParcelle (" +
-                           centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis()) + ", " +
-                           centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()) + ")");
-        startTime = System.currentTimeMillis();
-    
-        avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
-                                                                 Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
-    
-        avisDTO.getSummary().setCodeParcelle(parcelleDTOs.stream()
-                                                     .map(parcelleDTO -> parcelleDTO.getSection() + "-" + parcelleDTO.getNumero())
-                                                     .collect(Collectors.joining(", ")));
-        avisDTO.getLeaflet().setParcelles(parcelleDTOs.stream()
-                                                  .map(parcelleDTO -> GeoJsonUtils.toGeoJson(parcelleDTO.getMultiPolygon(),
-                                                                                             Stream.of(new SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
-                                                                                                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))
-                                                  .collect(Collectors.toList()));
-    
-        List<Geometry<?>> parcelleSitesSolsPolues = new ArrayList<>(); // TODO : Renommer la variable devenue inutile
-        parcelleSitesSolsPolues.add(parcellesUnion);
-    
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherZoneContenantParcelle");
-        startTime = System.currentTimeMillis();
-    
-        getAvisBasias(avisDTO, parcellesUnion, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasias");
-        startTime = System.currentTimeMillis();
-    
-        getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasol");
-        startTime = System.currentTimeMillis();
-    
-        getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisICPE");
-        startTime = System.currentTimeMillis();
-    
-        getAvisSis(avisDTO, centroid);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSis");
-        startTime = System.currentTimeMillis();
-    
-        getAvisPPR(avisDTO, parcelleSitesSolsPolues, centroid, communeDTO.getCodeINSEE());
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPPR");
-        startTime = System.currentTimeMillis();
-    
-        getAvisAZI(avisDTO, communeDTO.getCodeINSEE());
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisAZI");
-        startTime = System.currentTimeMillis();
-    
-        getAvisTRI(avisDTO, communeDTO.getCodeINSEE());
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisTRI");
-        startTime = System.currentTimeMillis();
-    
-        getAvisArgile(avisDTO, parcellesUnion);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisArgile");
-        startTime = System.currentTimeMillis();
-    
-        getAvisSismicite(avisDTO, communeDTO);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSismicite");
-        startTime = System.currentTimeMillis();
-    
-        getAvisRadon(avisDTO, communeDTO);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisRadon");
-        startTime = System.currentTimeMillis();
-    
-        getAvisCanalisations(avisDTO, centroid);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisCanalisations");
-        startTime = System.currentTimeMillis();
-    
-        getAvisPlanExpositionBruit(avisDTO, centroid);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPlanExpositionBruit");
-        startTime = System.currentTimeMillis();
-    
-        getAvisInstallationsNucleaires(avisDTO, centroid);
-        System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisInstallationsNucleaires");
-    
-        return avisDTO;
+        try {
+        
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.FRANCE);
+            System.out.println("------------- " + simpleDateFormat.format(new Date()) + " - " + parcelleDTOs.stream().map(parcelleDTO -> parcelleDTO.getSection() + parcelleDTO.getNumero()).collect(Collectors.joining(", ")) + " @ " + communeDTO.getNomCommune() + " - " + communeDTO.getCodePostal() + " (" + communeDTO.getCodeINSEE() + ") -------------");
+            long startTime = System.currentTimeMillis();
+            Geometry<?> parcellesUnion = gestionParcelleFacade.rechercherUnionParcelles(parcelleDTOs.stream()
+                                                                                                .map(ParcelleDTO::getId)
+                                                                                                .collect(Collectors.toList()));
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherUnionParcelles");
+            startTime = System.currentTimeMillis();
+            Geometry<?> touchesParcelle = gestionParcelleFacade.rechercherUnionParcellesContigues(parcellesUnion);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherUnionParcellesContigues");
+            startTime = System.currentTimeMillis();
+            Geometry<?> expendedParcelle = gestionParcelleFacade.rechercherExpendedParcelle(parcellesUnion, 500);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherExpendedParcelle");
+            startTime = System.currentTimeMillis();
+            Point<?> centroid = (Point<?>) gestionParcelleFacade.rechercherCentroidParcelle(parcellesUnion);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherCentroidParcelle (" +
+                               centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis()) + ", " +
+                               centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()) + ")");
+            startTime = System.currentTimeMillis();
+        
+            avisDTO.getLeaflet().setCenter(new AvisDTO.Leaflet.Point(Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis())),
+                                                                     Double.toString(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()))));
+        
+            avisDTO.getSummary().setCodeParcelle(parcelleDTOs.stream()
+                                                         .map(parcelleDTO -> parcelleDTO.getSection() + "-" + parcelleDTO.getNumero())
+                                                         .collect(Collectors.joining(", ")));
+            avisDTO.getLeaflet().setParcelles(parcelleDTOs.stream()
+                                                      .map(parcelleDTO -> GeoJsonUtils.toGeoJson(parcelleDTO.getMultiPolygon(),
+                                                                                                 Stream.of(new SimpleEntry<>("parcelle", parcelleDTO.getSection() + "-" + parcelleDTO.getNumero()))
+                                                                                                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))
+                                                      .collect(Collectors.toList()));
+        
+            List<Geometry<?>> parcelleSitesSolsPolues = new ArrayList<>(); // TODO : Renommer la variable devenue inutile
+            parcelleSitesSolsPolues.add(parcellesUnion);
+        
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "rechercherZoneContenantParcelle");
+            startTime = System.currentTimeMillis();
+        
+            getAvisBasias(avisDTO, parcellesUnion, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasias");
+            startTime = System.currentTimeMillis();
+        
+            getAvisBasol(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisBasol");
+            startTime = System.currentTimeMillis();
+        
+            getAvisICPE(avisDTO, parcelleSitesSolsPolues, touchesParcelle, expendedParcelle, communeDTO.getCodeINSEE());
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisICPE");
+            startTime = System.currentTimeMillis();
+        
+            getAvisSis(avisDTO, centroid);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSis");
+            startTime = System.currentTimeMillis();
+        
+            getAvisPPR(avisDTO, parcelleSitesSolsPolues, centroid, communeDTO.getCodeINSEE());
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPPR");
+            startTime = System.currentTimeMillis();
+        
+            getAvisAZI(avisDTO, communeDTO.getCodeINSEE());
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisAZI");
+            startTime = System.currentTimeMillis();
+        
+            getAvisTRI(avisDTO, communeDTO.getCodeINSEE());
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisTRI");
+            startTime = System.currentTimeMillis();
+        
+            getAvisArgile(avisDTO, parcellesUnion);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisArgile");
+            startTime = System.currentTimeMillis();
+        
+            getAvisSismicite(avisDTO, communeDTO);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisSismicite");
+            startTime = System.currentTimeMillis();
+        
+            getAvisRadon(avisDTO, communeDTO);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisRadon");
+            startTime = System.currentTimeMillis();
+        
+            getAvisCanalisations(avisDTO, centroid);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisCanalisations");
+            startTime = System.currentTimeMillis();
+        
+            getAvisPlanExpositionBruit(avisDTO, centroid);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisPlanExpositionBruit");
+            startTime = System.currentTimeMillis();
+        
+            getAvisInstallationsNucleaires(avisDTO, centroid);
+            System.out.println((System.currentTimeMillis() - startTime) + " => " + "getAvisInstallationsNucleaires");
+        
+            return avisDTO;
+        }
+        catch (TimeoutException e) {
+            AvisDTO avis = new AvisDTO();
+            avis.addError("Un fournisseur de données n'est pas joignable pour le moment ou a rencontré une erreur. Merci de réessayer ultérieurement.");
+            return avis;
+        }
     }
     
     private void getAvisSis(AvisDTO avisDTO, Point<?> centroid) {
@@ -252,60 +261,61 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         }
     }
     
-    private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, Point<?> centroid, String codeINSEE) {
-    
+    private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, Point<?> centroid, String codeINSEE) throws TimeoutException {
+        
         long startTime = System.currentTimeMillis();
-    
+        
         String parcelleSitesSolsPoluesGeoJson = GeoJsonUtils.getGeometryFromGeoJson(GeoJsonUtils.toGeoJson(parcelleSitesSolsPolues));
-    
+        
         List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList = new ArrayList<>();
-    
+        
         IGNCartoAssiettePaginatedFeatures assiettes = gestionIGNCartoFacade.rechercherAssiettesContenantPolygon(parcelleSitesSolsPoluesGeoJson);
         System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionIGNCartoFacade.rechercherAssiettesContenantPolygon");
         startTime = System.currentTimeMillis();
-    
-        if (assiettes != null) {
         
-            assiettes.getFeatures().forEach(assiette -> {
-            
-                IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateur(assiette.getProperties().getPartition());
-            
-                if (generateurs != null) {
-                
-                    // Sécurisation de la jointure assiette / générateur qui ne peut être faite via l'API GpU
-                    generateurs.getFeatures().removeIf(generateur -> !generateur.getProperties().getIdgen().equalsIgnoreCase(assiette.getProperties().getIdgen()));
-                
-                    generateurs.getFeatures().forEach(generateur -> {
-                    
-                        PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
-                        if (gaspar == null) { System.out.println(" V " + "!!!! Id Gaspar : " + generateur.getProperties().getId_gaspar() + "(" + codeINSEE + ") NOT found !!!!"); }
-                        updatePprList(planPreventionRisquesList, gaspar);
-                    });
-                }
-            });
+        if (assiettes == null) { throw new TimeoutException(); }
+        
+        for (IGNCartoAssiettePaginatedFeatures.Assiette assiette : assiettes.getFeatures()) {
+            getGenerateurs(codeINSEE, planPreventionRisquesList, assiette);
         }
+        
         System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionIGNCartoFacade.rechercherGenerateur");
         startTime = System.currentTimeMillis();
-    
+        
         GeorisquePaginatedPPR georisquePaginatedPPR = gestionGeorisquesFacade.rechercherPprCoordonnees(centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLonAxis()),
                                                                                                        centroid.getPositionN(0).getCoordinate(CoordinateSystemAxis.mkLatAxis()));
         System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionGeorisquesFacade.rechercherPprCoordonnees");
         startTime = System.currentTimeMillis();
-    
-        if (georisquePaginatedPPR != null) {
         
-            georisquePaginatedPPR.getData().stream()
-                    .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
-                    // multiplicité des sources
-                    .forEach(ppr -> {
-    
-                        PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
-                        if (gaspar == null) { System.out.println(" V " + "!!!! Id Gaspar : " + ppr.getId_gaspar() + "(" + codeINSEE + ") NOT found !!!!"); }
-                        else if (!gaspar.isExistsInGpu()) { updatePprList(planPreventionRisquesList, gaspar); }
-                    });
-        }
-    
+        if (georisquePaginatedPPR == null) { throw new TimeoutException(); }
+        
+        georisquePaginatedPPR.getData().stream()
+                .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
+                // multiplicité des sources
+                .forEach(ppr -> {
+                    
+                    PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, ppr.getId_gaspar(), ppr.getGeom_perimetre());
+                    if (gaspar == null) { System.out.println(" V " + "!!!! Id Gaspar : " + ppr.getId_gaspar() + "(" + codeINSEE + ") NOT found !!!!"); }
+                    else if (!gaspar.isExistsInGpu()) { updatePprList(planPreventionRisquesList, gaspar); }
+                });
         avisDTO.setPlanPreventionRisquesDTOs(planPreventionRisquesList);
+    }
+    
+    private void getGenerateurs(String codeINSEE, List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList, IGNCartoAssiettePaginatedFeatures.Assiette assiette) throws TimeoutException {
+        
+        IGNCartoGenerateurPaginatedFeatures generateurs = gestionIGNCartoFacade.rechercherGenerateur(assiette.getProperties().getPartition());
+        
+        if (generateurs == null) { throw new TimeoutException(); }
+        
+        // Sécurisation de la jointure assiette / générateur qui ne peut être faite via l'API GpU
+        generateurs.getFeatures().removeIf(generateur -> !generateur.getProperties().getIdgen().equalsIgnoreCase(assiette.getProperties().getIdgen()));
+        
+        generateurs.getFeatures().forEach(generateur -> {
+            
+            PlanPreventionRisquesGasparDTO gaspar = getGaspar(codeINSEE, generateur.getProperties().getId_gaspar(), assiette.getGeometry());
+            if (gaspar == null) { System.out.println(" V " + "!!!! Id Gaspar : " + generateur.getProperties().getId_gaspar() + "(" + codeINSEE + ") NOT found !!!!"); }
+            updatePprList(planPreventionRisquesList, gaspar);
+        });
     }
     
     private void updatePprList(List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList, PlanPreventionRisquesGasparDTO gaspar) {

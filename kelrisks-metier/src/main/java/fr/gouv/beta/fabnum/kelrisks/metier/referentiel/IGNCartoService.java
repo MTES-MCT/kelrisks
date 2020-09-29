@@ -38,7 +38,8 @@ public class IGNCartoService implements IIGNCartoService {
                        .bodyToMono(IGNCartoAssiettePaginatedFeatures.class)
                        .onErrorResume(e -> {
                            System.out.println(" V : " + e.getLocalizedMessage());
-                           return Mono.just(new IGNCartoAssiettePaginatedFeatures());
+                           System.out.println(assietteUri);
+                           return Mono.empty();
                        })
                        .block(Duration.ofSeconds(60L));
     }
@@ -58,7 +59,8 @@ public class IGNCartoService implements IIGNCartoService {
                        .bodyToMono(IGNCartoGenerateurPaginatedFeatures.class)
                        .onErrorResume(e -> {
                            System.out.println(" V : " + e.getLocalizedMessage());
-                           return Mono.just(new IGNCartoGenerateurPaginatedFeatures());
+                           System.out.println(generateurUri);
+                           return Mono.empty();
                        })
                        .block(Duration.ofSeconds(60L));
     }
