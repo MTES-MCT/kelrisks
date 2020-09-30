@@ -70,17 +70,17 @@ public class ApiQrCode {
     }
     
     private String getQrCodeContent(String[] values) {
-        
+    
         String html = "";
-        
+    
         html += "      <p>" + "Nombre de Basias sur la parcelle" + " : " + values[0].split("==")[0] + "</p>\n";
         if (values[0].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[0].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
         }
-        html += "      <p>" + "Nombre de Basias dans un rayon de 500m" + " : " + values[1].split("==")[0] + "</p>\n";
-        if (values[1].split("==").length > 1) {
-            html += "      <ul>" + Stream.of(values[1].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
-        }
+        //        html += "      <p>" + "Nombre de Basias dans un rayon de 500m" + " : " + values[1].split("==")[0] + "</p>\n";
+        //        if (values[1].split("==").length > 1) {
+        //            html += "      <ul>" + Stream.of(values[1].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
+        //        }
         html += "      <p>" + "Nombre de Basias dans une parcelle contigüe" + " : " + values[2].split("==")[0] + "</p>\n";
         if (values[2].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[2].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
@@ -93,10 +93,10 @@ public class ApiQrCode {
         if (values[4].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[4].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
         }
-        html += "      <p>" + "Nombre de Basol dans un rayon de 500m" + " : " + values[5].split("==")[0] + "</p>\n";
-        if (values[5].split("==").length > 1) {
-            html += "      <ul>" + Stream.of(values[5].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
-        }
+        //        html += "      <p>" + "Nombre de Basol dans un rayon de 500m" + " : " + values[5].split("==")[0] + "</p>\n";
+        //        if (values[5].split("==").length > 1) {
+        //            html += "      <ul>" + Stream.of(values[5].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
+        //        }
         html += "      <p>" + "Nombre de Basol dans une parcelle contigüe" + " : " + values[6].split("==")[0] + "</p>\n";
         if (values[6].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[6].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
@@ -109,10 +109,10 @@ public class ApiQrCode {
         if (values[8].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[8].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
         }
-        html += "      <p>" + "Nombre de Secteurs d'Information Sol dans un rayon de 500m" + " : " + values[9].split("==")[0] + "</p>\n";
-        if (values[9].split("==").length > 1) {
-            html += "      <ul>" + Stream.of(values[9].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
-        }
+        //        html += "      <p>" + "Nombre de Secteurs d'Information Sol dans un rayon de 500m" + " : " + values[9].split("==")[0] + "</p>\n";
+        //        if (values[9].split("==").length > 1) {
+        //            html += "      <ul>" + Stream.of(values[9].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
+        //        }
         html += "      <p>" + "Nombre de Secteurs d'Information Sol dans une parcelle contigüe" + " : " + values[10].split("==")[0] + "</p>\n";
         if (values[10].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[10].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
@@ -125,10 +125,10 @@ public class ApiQrCode {
         if (values[12].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[12].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
         }
-        html += "      <p>" + "Nombre de Installations classées dans un rayon de 500m" + " : " + values[13].split("==")[0] + "</p>\n";
-        if (values[13].split("==").length > 1) {
-            html += "      <ul>" + Stream.of(values[13].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
-        }
+        //        html += "      <p>" + "Nombre de Installations classées dans un rayon de 500m" + " : " + values[13].split("==")[0] + "</p>\n";
+        //        if (values[13].split("==").length > 1) {
+        //            html += "      <ul>" + Stream.of(values[13].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
+        //        }
         html += "      <p>" + "Nombre de Installations classées dans une parcelle contigüe" + " : " + values[14].split("==")[0] + "</p>\n";
         if (values[14].split("==").length > 1) {
             html += "      <ul>" + Stream.of(values[14].split("==")[1].split(",")).map(s -> "         <li>" + s + "</li>\n").collect(Collectors.joining()) + "</ul>\n";
