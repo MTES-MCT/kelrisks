@@ -207,6 +207,7 @@ export default {
                         } else {
                             this.clearSelectedParcelles()
                             if (this.form.codeParcelle !== '') this.$refs.searchErrors.sendWarning('Aucune parcelle n\'a été trouvé avec le code suivant : ' + this.form.codeParcelle + '.')
+                            else this.$refs.searchErrors.sendWarning('Malheureusement, le service n\'est pas disponible pour votre adresse. Vous pouvez retrouver ces informations à votre préfecture.')
                         }
                     })
                     .catch((e) => {

@@ -697,7 +697,8 @@ public class PdfRedactor {
                                ppr.getAlea().getFamilleAlea().getCode(),
                                ppr.getAlea().getFamilleAlea().getLibelle().toUpperCase(),
                                localAppPath + "/pictogrammes_risque/" + getLogoRisque(ppr.getAlea().getFamilleAlea().getCode()) + ".png",
-                               "<p>L’immeuble est situé dans le périmètre d’un " + ppr.getAlea().getFamilleAlea().getFamillePPR().getLibelle() + " de type " + ppr.getAlea().getFamilleAlea().getLibelle() + " - " + ppr.getAlea().getLibelle() +
+                               "<p>" + (!ppr.isExistsInGeorisque() && !ppr.isExistsInGpu() ? "La commune est située" : "L’immeuble est situé") +
+                               " dans le périmètre d’un " + ppr.getAlea().getFamilleAlea().getFamillePPR().getLibelle() + " de type " + ppr.getAlea().getFamilleAlea().getLibelle() + " - " + ppr.getAlea().getLibelle() +
                                (ppr.getDateApprobation() != null ? ", approuvé le " + sdf.format(ppr.getDateApprobation()) : ", prescrit le " + sdf.format(ppr.getDatePrescription())) + "." + "<br/>" +
                                (ppr.getDateApprobation() != null ? "Un PPR approuvé est un PPR définitivement adopté." :
                                 ppr.getDateApplicationAnticipee() != null ? "Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation." :

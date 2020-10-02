@@ -64,7 +64,7 @@
 
             <span class="title">Risques faisant l'objet d'une obligation d'information au titre de l'IAL</span>
 
-            <risque :description="'L’immeuble est situé dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle +
+            <risque :description="(!plan.existsInGeorisque && !plan.existsInGpu ? 'La commune est située' : 'L’immeuble est situé') + ' dans le périmètre d’un ' +  plan.alea.familleAlea.famillePPR.libelle + ' de type ' + plan.alea.familleAlea.libelle + ' - ' + plan.alea.libelle +
                                   (plan.dateApprobation ? ', approuvé le ' + formatDate(plan.dateApprobation) : ', prescrit le ' + formatDate(plan.datePrescription)) +'.<br/>' +
                                    (plan.dateApprobation ? 'Un PPR approuvé est un PPR définitivement adopté.' :
                                    plan.dateApplicationAnticipee ? 'Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation.' :

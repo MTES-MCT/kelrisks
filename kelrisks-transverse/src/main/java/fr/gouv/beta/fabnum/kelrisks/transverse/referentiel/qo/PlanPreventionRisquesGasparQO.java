@@ -14,6 +14,8 @@ public class PlanPreventionRisquesGasparQO extends AbstractQO {
     private String  idGaspar;
     private String  codeINSEE;
     private Boolean annuleOuAbroge;
+    private Boolean existsInGeorisque;
+    private Boolean existsInGpu;
     
     @Override
     public void feedBuilder(BooleanBuilder builder) {
