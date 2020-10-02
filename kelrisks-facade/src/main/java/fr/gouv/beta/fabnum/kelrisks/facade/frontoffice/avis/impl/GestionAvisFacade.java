@@ -218,7 +218,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         
             return avisDTO;
         }
-        catch (TimeoutException e) {
+        catch (Exception e) {
             AvisDTO avis = new AvisDTO();
             avis.addError("Un fournisseur de données n'est pas joignable pour le moment ou a rencontré une erreur. Merci de réessayer ultérieurement.");
             return avis;
@@ -261,7 +261,10 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         }
     }
     
-    private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, Point<?> centroid, String codeINSEE) throws TimeoutException {
+    private void getAvisPPR(AvisDTO avisDTO, List<Geometry<?>> parcelleSitesSolsPolues, Point<?> centroid, String codeINSEE) {
+        
+        boolean pprGpuFound       = true;
+        boolean pprGeorisqueFound = true;
         
         long startTime = System.currentTimeMillis();
         
@@ -273,10 +276,15 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionIGNCartoFacade.rechercherAssiettesContenantPolygon");
         startTime = System.currentTimeMillis();
         
-        if (assiettes == null) { throw new TimeoutException(); }
+        if (assiettes == null) { pprGpuFound = false; }
         
-        for (IGNCartoAssiettePaginatedFeatures.Assiette assiette : assiettes.getFeatures()) {
-            getGenerateurs(codeINSEE, planPreventionRisquesList, assiette);
+        try {
+            for (IGNCartoAssiettePaginatedFeatures.Assiette assiette : assiettes.getFeatures()) {
+                getGenerateurs(codeINSEE, planPreventionRisquesList, assiette);
+            }
+        }
+        catch (TimeoutException e) {
+            pprGpuFound = false;
         }
         
         System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionIGNCartoFacade.rechercherGenerateur");
@@ -287,7 +295,7 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
         System.out.println(" V " + (System.currentTimeMillis() - startTime) + " => " + "gestionGeorisquesFacade.rechercherPprCoordonnees");
         startTime = System.currentTimeMillis();
         
-        if (georisquePaginatedPPR == null) { throw new TimeoutException(); }
+        if (georisquePaginatedPPR == null) { pprGeorisqueFound = false; }
         
         georisquePaginatedPPR.getData().stream()
                 .filter(ppr -> planPreventionRisquesList.stream().noneMatch(pprGasparDTO -> pprGasparDTO.getIdGaspar().equals(ppr.getId_gaspar()))) // Éviter les doublons en raison de la
@@ -298,7 +306,30 @@ public class GestionAvisFacade extends AbstractFacade implements IGestionAvisFac
                     if (gaspar == null) { System.out.println(" V " + "!!!! Id Gaspar : " + ppr.getId_gaspar() + "(" + codeINSEE + ") NOT found !!!!"); }
                     else if (!gaspar.isExistsInGpu()) { updatePprList(planPreventionRisquesList, gaspar); }
                 });
+        
+        List<PlanPreventionRisquesGasparDTO> gaspars = rechercherPprsGasparRestantSurCommune(codeINSEE, pprGpuFound, pprGeorisqueFound);
+        planPreventionRisquesList.addAll(gaspars);
+        
         avisDTO.setPlanPreventionRisquesDTOs(planPreventionRisquesList);
+    }
+    
+    private List<PlanPreventionRisquesGasparDTO> rechercherPprsGasparRestantSurCommune(String codeInsee, Boolean pprGpuFound, Boolean pprGeorisqueFound) {
+        
+        PlanPreventionRisquesGasparQO planPreventionRisquesGasparQO = new PlanPreventionRisquesGasparQO();
+        planPreventionRisquesGasparQO.setCodeINSEE(codeInsee);
+        planPreventionRisquesGasparQO.setAnnuleOuAbroge(false);
+        if (pprGpuFound) { planPreventionRisquesGasparQO.setExistsInGpu(false); }
+        if (pprGeorisqueFound) { planPreventionRisquesGasparQO.setExistsInGeorisque(false); }
+        
+        List<PlanPreventionRisquesGasparDTO> planPreventionRisquesGasparDTOS = gestionPlanPreventionRisquesGasparFacade.rechercherAvecCritere(planPreventionRisquesGasparQO);
+        
+        //        Permet de corriger dans le cas ou il y aurait eu une erreur lors de la requête à l'une des deux API.
+        planPreventionRisquesGasparDTOS.forEach(planPreventionRisquesGasparDTO -> {
+            if (!pprGpuFound) { planPreventionRisquesGasparDTO.setExistsInGpu(false); }
+            if (!pprGeorisqueFound) { planPreventionRisquesGasparDTO.setExistsInGeorisque(false); }
+        });
+        
+        return planPreventionRisquesGasparDTOS;
     }
     
     private void getGenerateurs(String codeINSEE, List<PlanPreventionRisquesGasparDTO> planPreventionRisquesList, IGNCartoAssiettePaginatedFeatures.Assiette assiette) throws TimeoutException {
