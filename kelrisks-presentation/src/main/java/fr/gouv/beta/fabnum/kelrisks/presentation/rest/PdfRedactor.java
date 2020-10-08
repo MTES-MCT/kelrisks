@@ -484,7 +484,13 @@ public class PdfRedactor {
     
         page.append("<div id=\"informations-a-preciser\"><h2>INFORMATIONS À PRÉCISER PAR LE VENDEUR / BAILLEUR</h2></div>\n");
     
+        int numberOfPpr = 0;
+    
         for (PlanPreventionRisquesGasparDTO planPreventionRisquesDTO : avisDTO.getPlanPreventionRisquesDTOs()) {
+        
+            if (numberOfPpr >= 5) {
+                page = addPage(htmlDocument);
+            }
         
             page.append("<h3>" + planPreventionRisquesDTO.getAlea().getFamilleAlea().getLibelle().toUpperCase() + "</h3/>\n" +
                         "<p>Rappel du risque : " + planPreventionRisquesDTO.getAlea().getFamilleAlea().getLibelle() + ", " + planPreventionRisquesDTO.getAlea().getLibelle() + ".</p>\n" +
@@ -502,7 +508,11 @@ public class PdfRedactor {
                         "    <label><input value=\"0\" name=\"tra_" + planPreventionRisquesDTO.getIdGaspar() + "\" type=\"checkbox\"><span><img src=\"" + localAppPath + "/check_box" +
                         ".svg\"/></span>Non</label>\n" +
                         "</div>\n");
+        
+            numberOfPpr++;
         }
+    
+        if (numberOfPpr >= 3) { page = addPage(htmlDocument); }
     
         page.append("<div><h3>INFORMATION RELATIVE AUX SINISTRES INDEMNISÉS PAR L'ASSURANCE SUITE À UNE CATASTROPHE NATURELLE, MINIÈRE OU TECHNOLOGIQUE</h3></div>\n");
     
