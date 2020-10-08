@@ -41,14 +41,11 @@
                  id="summary_leaflet_wrapper">
                 <div id="summary">
                     <div style="margin-bottom: 20px"><span class="title">Parcelle(s) </span></div>
-                    <span class="rightAlign">Adresse&nbsp;: </span><b><span v-if="avis.summary.adresse">{{ avis.summary.adresse }}, <br/><span class="rightAlign"/>{{ avis.summary.commune.codePostal }} {{
-                        avis.summary.commune.nomCommune
-                                                                                                        }}</span><span v-else-if="avis.summary.commune">{{
-                        avis.summary.commune.codePostal
-                                                                                                                                                        }}, {{ avis.summary.commune.nomCommune }}</span><span v-else><i>n/a</i></span></b><br/>
-                    <span class="rightAlign">Code parcelle&nbsp;: </span><b><span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{
-                        avis.summary.codeParcelle
-                                                                                                                                                       }}</span><span v-else><i>n/a</i></span></b><br/>
+                    <span class="rightAlign">Adresse&nbsp;: </span><b><span v-if="avis.summary.adresse">{{ avis.summary.adresse }}, <br/>
+                    <span class="rightAlign"/>{{ avis.summary.commune.codePostal }} {{ avis.summary.commune.nomCommune }}</span>
+                    <span v-else-if="avis.summary.commune">{{ avis.summary.commune.codePostal }},{{ avis.summary.commune.nomCommune }}</span><span v-else><i>n/a</i></span></b><br/>
+                    <span class="rightAlign">Code parcelle&nbsp;: </span><b>
+                    <span v-if="avis.summary.codeParcelle && avis.summary.codeParcelle !== ''">{{ avis.summary.codeParcelle }}</span><span v-else><i>n/a</i></span></b><br/>
                     <br>
                 </div>
                 <div id="leaflet">
@@ -70,7 +67,7 @@
                                    plan.dateApplicationAnticipee ? 'Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation.' :
                                    'Un PPR prescrit est un PPR en cours d\'élaboration sur la commune dont le périmètre et les règles sont en cours d\'élaboration.') + '<br/><br/>' +
                                   'Le plan de prévention des risques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d\'urbanisme héritées du passé et de mieux encadrer l\'urbanisation future autour du site.<br/>' +
-                                  '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>'"
+                                  '<a href=\'#recommendations_PPR\'>Lire les recommandations</a>' + !plan.existsInGeorisque +', ' + !plan.existsInGpu"
                     :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
                     :leaflet-data="[{ data : plan.assiettes,
