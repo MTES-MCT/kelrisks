@@ -19,13 +19,15 @@ public class PlanPreventionRisquesGasparQO extends AbstractQO {
     
     @Override
     public void feedBuilder(BooleanBuilder builder) {
-        
+    
         if (idGaspar != null) { builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.idGaspar.eq(idGaspar)); }
         if (codeINSEE != null) { builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.codeINSEE.eq(codeINSEE)); }
         if (annuleOuAbroge != null && !annuleOuAbroge) {
             builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.dateAbrogation.isNull());
             builder.and(QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.dateAnnulation.isNull());
         }
+        if (existsInGeorisque != null) {builder.and((QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.existsInGeorisque.eq(existsInGeorisque)));}
+        if (existsInGpu != null) {builder.and((QPlanPreventionRisquesGaspar.planPreventionRisquesGaspar.existsInGpu.eq(existsInGpu)));}
     }
 }
   
