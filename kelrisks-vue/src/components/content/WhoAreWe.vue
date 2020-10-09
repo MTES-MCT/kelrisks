@@ -24,10 +24,18 @@
       <p>Actuellement, le service Kelrisks interroge les bases de données publiques suivantes :</p>
 
       <ul>
-        <li>Basias : <a href="http://www.georisques.gouv.fr/dossiers/telechargement/basias">www.georisques.gouv.fr</a></li>
-        <li>Basol : <a href="https://basol.developpement-durable.gouv.fr/recherche.php">basol.developpement-durable.gouv.fr</a></li>
-        <li>S3IC : <a href="http://www.installationsclassees.developpement-durable.gouv.fr/">www.installationsclassees.developpement-durable.gouv.fr</a></li>
-        <li>SIS : <a href="http://www.georisques.gouv.fr/les-secteurs-dinformations-des-sols-sis">www.georisques.gouv.fr</a></li>
+          <li>Basias : <a href="http://www.georisques.gouv.fr/dossiers/telechargement/basias"
+                          rel="noopener noreferrer"
+                          target="_blank">www.georisques.gouv.fr</a></li>
+          <li>Basol : <a href="https://basol.developpement-durable.gouv.fr/recherche.php"
+                         rel="noopener noreferrer"
+                         target="_blank">basol.developpement-durable.gouv.fr</a></li>
+          <li>S3IC : <a href="http://www.installationsclassees.developpement-durable.gouv.fr/"
+                        rel="noopener noreferrer"
+                        target="_blank">www.installationsclassees.developpement-durable.gouv.fr</a></li>
+          <li>SIS : <a href="http://www.georisques.gouv.fr/les-secteurs-dinformations-des-sols-sis"
+                       rel="noopener noreferrer"
+                       target="_blank">www.georisques.gouv.fr</a></li>
       </ul>
 
       <p class="section__subtitle">Comment travaillons nous ?</p>

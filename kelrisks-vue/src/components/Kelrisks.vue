@@ -193,14 +193,18 @@
 
             <div class="column">
                 <a @click="$refs.haw.open()">Qui sommes nous ?</a>
-                <a @click="$refs.cgu.open()">CGU</a>
+                <a href="https://www.georisques.gouv.fr/cgu"
+                   rel="noopener noreferrer"
+                   target="_blank">CGU</a>
                 <a @click="showStats()">Stats</a>
-                <a href="/swagger-ui.html">API</a>
+                <a href="/swagger-ui.html"
+                   rel="noopener noreferrer"
+                   target="_blank">API</a>
             </div>
 
             <div class="version">{{ env.presentationVersion }}</div>
 
-            <c-g-u ref="cgu"/>
+            <!--            <c-g-u ref="cgu"/>-->
             <who-are-we ref="haw"/>
 
         </footer>

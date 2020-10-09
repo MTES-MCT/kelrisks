@@ -82,7 +82,9 @@
 
             <p>Ils sont disponibles sur Github à l'adresse suivante :</p>
 
-            <p><a href="https://github.com/MTES-MCT/kelrisks">Github</a></p>
+            <p><a href="https://github.com/MTES-MCT/kelrisks"
+                  rel="noopener noreferrer"
+                  target="_blank">Github</a></p>
 
             <p>Données administratives publiques relatives aux domaines et aux titres miniers
                Les informations publiques délivrées par le service le sont sous Licence Ouverte V 2.0. Vous êtes donc libres de réutiliser ces informations sous réserve de mentionner la

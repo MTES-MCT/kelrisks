@@ -221,10 +221,14 @@
                     <p>Pour le bâti neuf et pour certains travaux lourds sur le bâti existant, en fonction de la zone de sismicité et du type de construction des dispositions spécifiques à mettre en
                        oeuvre s'appliquent lors de la construction. Un guide interactif est proposé pour identifier précisément les dispositions à prendre en compte selon votre localisation, type
                        d'habitat et projet :<br/>
-                        <a href="http://www.planseisme.fr/-Didacticiel-.html">Didacticiel de la règlementation parasismique</a></p>
+                        <a href="http://www.planseisme.fr/-Didacticiel-.html"
+                           rel="noopener noreferrer"
+                           target="_blank">Didacticiel de la règlementation parasismique</a></p>
                     <template v-if="hasSismiciteHaute">
                         <p>Pour connaitre les consignes à appliquer en cas de séisme, vous pouvez consulter le site :<br/>
-                            <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html">Que faire en cas de séisme ?</a></p>
+                            <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html"
+                               rel="noopener noreferrer"
+                               target="_blank">Que faire en cas de séisme ?</a></p>
                     </template>
                     <template v-if="hasSismiciteTresHaute">
 
@@ -238,7 +242,9 @@
                         <p>Se protéger la tête avec les bras.</p>
                         <p>Ne pas allumer de flamme</p>
                         <p>Pour plus de détails, vous pouvez consulter le site :<br/>
-                            <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html">Que faire en cas de séisme ?</a></p>
+                            <a href="http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html"
+                               rel="noopener noreferrer"
+                               target="_blank">Que faire en cas de séisme ?</a></p>
                     </template>
                 </template>
 
@@ -251,8 +257,10 @@
                        mesures de radon pour vérifier leur efficacité.</p>
                     <p>Une fiche d'informations sur le radon, le risque associé, son mesurage, les solutions techniques et les recommandations à suivre en fonction des résultats du mesurage est
                        disponible : </p>
-                    <p><a href="http://www.georisques.gouv.fr/sites/default/files/2018-Fiche%20d_information_sur_le_risque_potentiel_radon_DHUP-DGS-DGPR_102018_v3.pdf">Information sur le risque
-                                                                                                                                                                        potentiel radon</a>.</p>
+                    <p><a href="http://www.georisques.gouv.fr/sites/default/files/2018-Fiche%20d_information_sur_le_risque_potentiel_radon_DHUP-DGS-DGPR_102018_v3.pdf"
+                          rel="noopener noreferrer"
+                          target="_blank">Information sur le risque
+                                          potentiel radon</a>.</p>
                 </template>
 
                 <template v-if="hasPollutionPrincipale">
@@ -265,6 +273,8 @@
                        certifiés dans le domaine des sols pollués est consultable à l'aide de ce lien :</p>
                     <p><a @click="_paq.push(['trackEvent', 'Flow', 'Avis', 'Bureau_Etude'])"
                           href='https://www.lne.fr/recherche-certificats/search/222'
+                          rel="noopener noreferrer"
+                          target="_blank"
                           style="float: none; text-align: center">Accéder à la liste des bureaux d’études certifiés</a></p>
                 </template>
             </div>
@@ -337,7 +347,7 @@
                     v-if="hasAZI && !hasTRI && !hasPPRi"/>
 
             <risque :description="'Votre bien est situé à moins de ' + (avis.hasCentraleNucleaire ? '20 km' :  '10 km') + ' d’une installation nucléaire de base, installation dans laquelle une certaine quantité de substance ou de matière radioactives est présente (ex. réacteurs nucléaires de production d\'électricité (centrale nucléraire), installations de préparation, enrichissement, fabrication, traitement ou entreposage de combustibles nucléaires ; etc.)'"
-                    :detail="'<p>Ces installations sont contrôlées par l’Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
+                    :detail="'<p>Ces installations sont contrôlées par l’Autorité de Sureté Nucléaire dont les rapports de contrôle sont consultables au lien suivant : <a href=\'https://www.asn.fr/Controler/Actualites-du-controle\' target=\'_blank\' rel=\'noopener noreferrer\'>https://www.asn.fr/Controler/Actualites-du-controle.</a></p>' +
                              '<p>Installation(s) concernée(s)  : <br/>' + getLibelleInstallationsNucleaires + '</p>'"
                     :logo-u-r-l="env.backPath + '/pictogrammes_risque/ic_nucleaires_bleu.png'"
                     :title="'Installations nucléaires de base'"
@@ -346,9 +356,9 @@
             <risque :parcelle="leaflet.data.parcelles"
                     :max-zoom-center="leaflet.center"
                     :description="'Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d’eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer des dégâts pouvant être importants. Le zonage \'argile\' identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.'"
-                    :detail="(avis.niveauArgile === 3 ? 'Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 2 ? 'Exposition moyenne : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
-                             (avis.niveauArgile === 1 ? 'Exposition faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\'>Sols argileux sécheresse et construction</a>' : '') +
+                    :detail="(avis.niveauArgile === 3 ? 'Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\' target=\'_blank\' rel=\'noopener noreferrer\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 2 ? 'Exposition moyenne : La probabilité de survenue d’un sinistre est moyenne, l’intensité attendue étant modérée.  Les constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\' target=\'_blank\' rel=\'noopener noreferrer\'>Sols argileux sécheresse et construction</a>' : '') +
+                             (avis.niveauArgile === 1 ? 'Exposition faible : La survenance de sinistres est possible en cas de sécheresse importante, mais ces désordres ne toucheront qu’une faible proportion des bâtiments (en priorité ceux qui présentent des défauts de construction ou un contexte local défavorable, avec par exemple des arbres proches ou une hétérogénéité du sous-sol). Il est conseillé, notamment pour la construction d’une maison individuelle, de réaliser une étude de sols pour déterminer si des prescriptions constructives spécifiques sont nécessaires. Pour plus de détails :</br><a href=\'https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3\' target=\'_blank\' rel=\'noopener noreferrer\'>Sols argileux sécheresse et construction</a>' : '') +
                              (avis.niveauArgile === 0 ? 'Exposition nulle : aucune présence de sols argileux n’a été identifiée selon les cartes géologiques actuelles. Toutefois il peut y avoir des poches ponctuelles de sols argileux.' : '') "
                     :leaflet-data="[{ data : avis.lentillesArgile.filter(x => x.niveauAlea === 1).map(x => x.multiPolygon),
                                       color : '#FFD332'},
@@ -418,7 +428,9 @@
             <div id="bottomButtonsWrapper">
                 <a @click="$emit('flow', 1)"
                    class="bouton success"
-                   href='#bullet-progress-bar_wrapper'>
+                   href='#bullet-progress-bar_wrapper'
+                   rel="noopener noreferrer"
+                   target="_blank">
                     Compléter l'état des risques
                     <font-awesome-icon class="end"
                                        icon="chevron-right"/>
