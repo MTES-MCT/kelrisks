@@ -10,7 +10,7 @@
         <div id="cgu">
             <p class="section__subtitle">Présentation</p>
 
-            <p>Kelrisks est un service numérique du Ministère de la Transition écologique et solidaire.</p>
+            <p>ERRIAL est un service numérique du Ministère de la Transition écologique et solidaire.</p>
 
             <p>Ce service est destiné à tout professionnel qui désire évaluer la pollution d'une parcelle dans le cadre de son activité, ainsi qu'à tout particulier qui souhaite exercer son
                droit à
@@ -19,7 +19,7 @@
             <p>Le présent document a pour objet de régler les relations entre les différents intervenants sur le service. Il définit les conditions et modalités d’utilisation des services
                https://kelrisks.beta.gouv.fr/#/ et https://kelrisks.beta.gouv.fr/swagger-ui.html sur Internet.</p>
 
-            <p>Le service est développé et opéré par la Fabrique numérique des ministères de la Transition écologique et solidaire et de la Cohésion des territoires, avec l’appui de l’incubateur
+            <p>Le service est développé et opéré par la Fabrique numérique des ministères de la Transition écologique et de la Cohésion des territoires, avec l’appui de l’incubateur
                de
                services
                numériques beta.gouv.fr de la direction interministérielle du numérique et du système d’information et de communication de l’État (DINSIC).</p>
@@ -36,7 +36,7 @@
             <p>Le service est composé, d’une part, d’une application web qui vous permet de :</p>
 
             <ul>
-                <li>- connaitre en quelques minutes le référencement d'une parcelle dans l'une des bases de données de l'Etat relatives à la pollution des sols.</li>
+                <li>- connaitre en quelques minutes le référencement d'une parcelle dans l'une des bases de données de l'État relatives à la pollution des sols.</li>
                 <li>- Editer la recherche en PDF</li>
                 <li>- Avoir des informations sur le voisinage direct (100m) de la parcelle.</li>
             </ul>
@@ -89,7 +89,7 @@
             <p>Données administratives publiques relatives aux domaines et aux titres miniers
                Les informations publiques délivrées par le service le sont sous Licence Ouverte V 2.0. Vous êtes donc libres de réutiliser ces informations sous réserve de mentionner la
                paternité de
-               l’information et la date de dernière mise à jour de l’information utilisée. Par exemple sur la forme « Ministère de la Transition écologique et solidaire – Données originales
+               l’information et la date de dernière mise à jour de l’information utilisée. Par exemple sur la forme « Ministère de la transition écologique – Données originales
                téléchargées sur
                 <a href="https://kelrisks.beta.gouv.fr">kelrisks</a>, mise à jour du 01 septembre 2018 ».</p>
 

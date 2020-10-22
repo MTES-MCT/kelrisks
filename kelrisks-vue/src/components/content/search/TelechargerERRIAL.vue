@@ -10,7 +10,7 @@
                 <a @click="$emit('flow', -1)"
                    class="bouton">
                     <font-awesome-icon icon="chevron-left"/>
-                    Modifier l'État des risques
+                    Modifier l'état des risques
                 </a>
 
                 <a :href="env.basePath"

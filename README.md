@@ -49,4 +49,4 @@ Cf. [comment déployer](deploy.md).
 ## Liens
 
 * [Beta.gouv.fr](https://beta.gouv.fr/)
-* [Ministère de la Transition écologique et solidaire](https://www.ecologique-solidaire.gouv.fr/)
+* [Ministère de la Transition écologique](https://www.ecologique-solidaire.gouv.fr/)

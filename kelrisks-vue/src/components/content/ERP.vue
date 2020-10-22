@@ -11,8 +11,8 @@
                enregistrement doivent en informer leurs acquéreurs ou locataires, au moyen d'un état des risques.
                Le non respect de ces obligations peut entrainer une annulation du contrat ou une réfaction du prix.</p>
             <p>Les informations qui doivent être rapportées sont arrêtées par le préfet de département. Ces arrêtés relatifs à l'état des risques pour les biens immobiliers sont consultables en
-               Préfecture ou sur les sites Internet de ces dernières.</p>
-            <p>L'Etat met à disposition ci-dessus un outil permettant de remplir plus facilement cet état des risques en pré-remplissant automatiquement un certain nombre d'informations.
+               Préfecture ou sur le site Internet de ces dernières.</p>
+            <p>L'État met à disposition ci-dessus un outil permettant de remplir plus facilement cet état des risques en pré-remplissant automatiquement un certain nombre d'informations.
                 <b>Il appartient ensuite au propriétaire du bien de vérifier l'exactitude de ces informations autant que de besoin et, le cas échéant, de le compléter à partir d'informations
                    disponibles sur le site internet de la préfecture ou d'informations dont il dispose sur le bien, notamment les sinistres que le bien a subis</b>.</p>
         </div>

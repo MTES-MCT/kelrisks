@@ -375,7 +375,7 @@ public class PdfRedactor {
                                localAppPath + "/pictogrammes_risque/ic_terre_bleu.png",
                                "<p>Les sols argileux évoluent en fonction de leur teneur en eau. De fortes variations d'eau (sécheresse ou d’apport massif d’eau) peuvent donc fragiliser " +
                                "progressivement les constructions (notamment les maisons individuelles aux fondations superficielles) suite à des gonflements et des tassements du sol, et entrainer " +
-                               "des dégâts pouvant être importants. Le zonage argile identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’aléa.</p>" +
+                               "des dégâts pouvant être importants. Le zonage argile identifie les zones exposées à ce phénomène de retrait-gonflement selon leur degré d’exposition.</p>" +
                                (avisDTO.getNiveauArgile() == 3 ? "<p>Exposition forte : La probabilité de survenue d’un sinistre est élevée et l’intensité des phénomènes attendus est forte. Les " +
                                                                  "constructions, notamment les maisons individuelles, doivent être réalisées en suivant des prescriptions constructives ad hoc. Pour " +
                                                                  "plus de détails :</br>https://www.cohesion-territoires.gouv.fr/sols-argileux-secheresse-et-construction#e3"
@@ -409,8 +409,7 @@ public class PdfRedactor {
                                                                                                "l’inventaire des installations classées pour la protection de l’environnement (ICPE)</p>" : "") +
                                (avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getSiteIndustrielBasiasRayonParcelleDTOs().size() + " site(s) potentiellement " +
                                                                                                 "pollué(s), référencé(s) dans l’inventaire des sites ayant accueilli par le passé une activité qui a " +
-                                                                                                "pu " +
-                                                                                                "générer une pollution des sols (BASIAS).</p>" : "") +
+                                                                                                "pu générer une pollution des sols (BASIAS).</p>" : "") +
                                (avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() > 0 ? "<p>- " + avisDTO.getSiteIndustrielBasolRayonParcelleDTOs().size() + " site(s) pollué(s) (BASOL - " +
                                                                                                "terrain pollué appelant une action des pouvoirs publics à titre curatif ou préventif, SIS - terrain " +
                                                                                                "placé en secteur d’information sur les sols, SUP - terrain pollué affecté d’une servitude d’utilité " +
@@ -442,8 +441,8 @@ public class PdfRedactor {
                                "CANALISATIONS",
                                "CANALISATIONS TRANSPORT DE MATIÈRES DANGEREUSES",
                                localAppPath + "/pictogrammes_risque/ic_reseaux_canalisation_bleu.png",
-                               "<p>Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de" +
-                               " votre parcelle. La carte représente les implantations présentes autour de votre localisation.</p>");
+                               "<p>Une canalisation de matières dangereuses (gaz naturel, produits pétroliers ou chimiques) est située dans un rayon de 500m autour de votre parcelle. La carte " +
+                               "représente les implantations présentes autour de votre localisation. Il convient de rechercher une information plus précise en se rendant en mairie.</p>");
         }
     
         if (avisDTO.getInstallationNucleaireDTOS().size() > 0) {
@@ -463,9 +462,9 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "INONDATIONS",
                       localAppPath + "/pictogrammes_risque/ic_inondation_bleu.png",
-                      "<p>Votre bien est situé dans un territoire exposé à un risque important d'inondation (TRI) sur lequel l'Etat et les collectivités territoriales ont engagé une démarche " +
+                      "<p>Votre bien est situé dans un territoire exposé à un risque important d'inondation (TRI) sur lequel l'État et les collectivités territoriales ont engagé une démarche " +
                       "d'identification et de gestion de ce risque pour anticiper et réduire l’impact d'une éventuelle inondation. Pour plus d'information, renseignez-vous auprès de la commune ou " +
-                      "consultez le Plan de Gestion des Risques d'Inondation (PGRI)</p>"
+                      "consultez le plan de gestion des risques d'inondation (PGRI)</p>"
                      );
         }
     
@@ -473,7 +472,7 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "INONDATIONS",
                       localAppPath + "/pictogrammes_risque/ic_inondation_bleu.png",
-                      "<p>Votre bien est situé sur une commune figurant dans un atlas des zones inondables qui modélisent les potentiels risques à partir des dernières inondations connues.</p>"
+                      "<p>Votre bien est situé sur une commune figurant dans un atlas des zones inondables (AZI) qui modélisent les risques potentiels à partir des dernières inondations connues.</p>"
                      );
         }
     }
@@ -552,7 +551,7 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "RISQUES TECHNOLOGIQUES",
                       localAppPath + "/pictogrammes_risque/ic_industrie_bleu.png",
-                      "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques technologiques.</p>"
+                      "<p>Il n’y a pas de plan de prévention des risques recensé sur les risques technologiques.</p>"
                      );
         }
     
@@ -560,7 +559,7 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "RISQUES MINIERS",
                       localAppPath + "/pictogrammes_risque/ic_cavite_bleu.png",
-                      "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques miniers.</p>"
+                      "<p>Il n’y a pas de plan de prévention des risques recensé sur les risques miniers.</p>"
                      );
         }
     
@@ -568,7 +567,7 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "RISQUES NATURELS",
                       localAppPath + "/pictogrammes_risque/ic_seisme_bleu.png",
-                      "<p>Il n’existe pas de Plan de Prévention des Risques recensé sur les risques naturels.</p>"
+                      "<p>Il n’y a pas de plan de prévention des risques recensé sur les risques naturels.</p>"
                      );
         }
     
@@ -576,7 +575,7 @@ public class PdfRedactor {
             addRisque(htmlDocument,
                       "BRUIT",
                       localAppPath + "/pictogrammes_risque/ic_bruit_bleu.png",
-                      "<p>La parcelle n’est pas concernée par un plan d’exposition au bruit d'un aéroport.</p>"
+                      "<p>La parcelle n’est pas concernée par un plan d’exposition au bruit d’un aéroport.</p>"
                      );
         }
     }
@@ -607,47 +606,72 @@ public class PdfRedactor {
         page.append("<div id=\"recommandations\"><h2>RECOMMANDATIONS</h2></div>");
     
         if (hasPPR(avisDTO)) {
-            page.append("<h4 id=\"recommendations_PPR\">Plans de Prévention des Risques</h4>");
-            page.append("<p>Certains risques peuvent nécessiter de réaliser des travaux obligatoires de mise en conformité de votre habitation. Pour le savoir, vous devez prendre connaissance du " +
-                        "plan de prévention des risques, consultable auprès de la commune ou sur le site internet de votre préfecture.");
-            page.append("<p>Si votre bien est concerné par une obligation de travaux, vous pouvez bénéficier d'une aide de l'Etat, dans le cadre du Fonds de prévention des risques naturels majeurs " +
-                        "(FPRNM). Pour plus de renseignements, contacter la direction départementale des territoires (DDT) de votre département.</p>");
-            page.append("<p>Pour se préparer et connaître les bon réflexes en cas de survenance du risque, consulter le Dossier d'information communal sur les risques majeurs (DICRIM) auprès de " +
+            page.append("<h4 id=\"recommendations_PPR\">Plans de prévention des risques</h4>");
+            page.append("<p>Votre immeuble est situé dans le périmètre d’un plan de prévention des risques. Il peut être concerné par l’obligation de réaliser certains travaux. Pour le savoir vous " +
+                        "devez consulter le PPR auprès de votre commune ou sur le site de votre préfecture..");
+            if (hasTypePPR(avisDTO, "PPRN")) {
+                page.append("<p>Si votre bien est concerné par une obligation de travaux, vous pouvez bénéficier d'une aide de l'État, dans le cadre du Fonds de prévention des risques naturels " +
+                            "majeurs (FPRNM). Pour plus de renseignements, contacter la direction départementale des territoires (DDT) de votre département.</p>");
+            }
+            page.append("<p>Pour se préparer et connaître les bons réflexes en cas de survenance du risque, consulter le dossier d'information communal sur les risques majeurs (DICRIM) auprès de " +
                         "votre commune.</p>");
         }
     
-        if (hasSismiciteHaute(avisDTO)) {
+        if (hasSismicite(avisDTO) || hasSismiciteMoyenne(avisDTO)) {
             page.append("<h4 id=\"recommendations_sismicite\">Sismicité</h4>");
-            page.append("<p>Pour le bâti neuf et pour certains travaux lourds sur le bâti existant, en fonction de la zone de sismicité et du type de construction (habitation individuelle, " +
-                        "habitations collectives, établissement recevant du public) des dispositions spécifiques à mettre en oeuvre s'appliquent lors de la construction.</p>");
-            page.append("<p>Un guide interactif est proposé sur le site Plan Séisme pour identifier précisément les dispositions à prendre en compte selon votre localisation, type d'habitat et " +
-                        "projet. Il est consultable à l'adresse suivante : http://www.planseisme.fr/-Didacticiel-.html</p>");
-            page.append("<p>Pour connaitre les consignes à appliquer en cas de séisme , vous pouvez consulter le site : http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html</p>");
-        }
-    
-        if (hasSismiciteMoyenne(avisDTO)) {
-            page.append("<h4 id=\"recommendations_sismicite\">Sismicité</h4>");
-            page.append("<p>Pour certains bâtiments de taille importante ou sensibles des dispositions spécifiques s’appliquent selon la réglementation.</p>");
-            page.append("<p>Un guide interactif est proposé sur le site Plan Séisme pour identifier précisément les dispositions à prendre en compte selon votre localisation, type d'habitat et " +
-                        "projet. Il est consultable à l'adresse suivante : http://www.planseisme.fr/-Didacticiel-.html</p>");
+        
+            if (hasSismiciteMoyenne(avisDTO)) {
+                page.append("<p>Pour certains bâtiments de taille importante ou sensibles, des dispositions spécifiques à mettre en oeuvre s'appliquent lors de la construction. Un guide interactif " +
+                            "est proposé sur le site Plan Séisme pour identifier précisément les dispositions à prendre en compte selon votre localisation, votre type d'habitat ou votre" +
+                            " projet. Il est consultable à l'adresse suivante : http://www.planseisme.fr/-Didacticiel-.html</p>");
+                page.append("<p>Pour connaitre les consignes à appliquer en cas de séisme, vous pouvez consulter le site : : http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html</p>");
+            }
+        
+            if (hasSismiciteHaute(avisDTO) || hasSismiciteTresHaute(avisDTO)) {
+                page.append("<p>Pour le bâti neuf et pour certains travaux lourds sur le bâti existant, en fonction de la zone de sismicité et du type de construction, des dispositions spécifiques " +
+                            "à mettre en oeuvre s'appliquent lors de la construction</p>");
+                page.append("<p>Un guide interactif est proposé pour identifier précisément les dispositions à prendre en compte selon votre localisation, votre type d'habitat ou votre projet. Il " +
+                            "est consultable à l'adresse suivante : http://www.planseisme.fr/-Didacticiel-.html</p>");
+            }
+        
+            if (hasSismiciteHaute(avisDTO)) {
+                page.append("<p>Pour connaitre les consignes à appliquer en cas de séisme , vous pouvez consulter le site : http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html</p>");
+            }
+        
+            if (hasSismiciteTresHaute(avisDTO)) {
+                page.append("<p>Consignes à suivre en cas de séisme :<br/>" +
+                            "- s’informer : écouter la radio, les premières consignes étant données par Radio France ;<br/>" +
+                            "- ne pas aller chercher les enfants à l’école.</p>");
+                page.append("<p>Rester où l’on est :</p>");
+                page.append("<p>- à l’intérieur : se mettre près d’un mur, une colonne porteuse ou sous des meubles solides, s’éloigner des fenêtres ;<br/>" +
+                            "- à l’extérieur : ne pas rester sous des fils électriques ou sous ce qui peut s’effondrer (ponts, corniches, toitures…) ;<br/>" +
+                            "- en voiture : s’arrêter et ne pas descendre avant la fin des secousses.</p>");
+                page.append("<p>Se protéger la tête avec les bras.</p>");
+                page.append("<p>Ne pas allumer de flamme.</p>");
+                page.append("<p>Pour plus de détails, vous pouvez consulter le site : http://www.planseisme.fr/Que-faire-en-cas-de-seisme.html</p>");
+            }
         }
     
         if (hasRadonHaut(avisDTO)) {
             page.append("<h4 id=\"recommendations_radon\">Radon</h4>");
-            page.append("<p>Le bien est situé dans une zone à potentiel radon significatif. Il donc est fortement recommandé de procéder au mesurage du radon dans le bien afin de s’assurer que sa " +
-                        "concentration est inférieure au niveau de référence fixé à 300 Bq/m3, et idéalement la plus basse raisonnablement possible. Il est conseillé de faire appel à des " +
-                        "professionnels du bâtiment pour réaliser un diagnostic de la situation et vous aider à choisir les solutions les plus adaptées selon le type de logement et la mesure. Ces " +
-                        "solutions peuvent être mises en œuvre progressivement en fonction des difficultés de réalisation ou de leur coût. À l’issue des travaux, vous devrez réaliser de nouvelles " +
-                        "mesures de radon pour vérifier leur efficacité.</p>");
+            page.append("<p>Le bien est situé dans une zone à potentiel radon significatif. En plus des bonnes pratiques de qualité de l'air (aérer quotidiennement le logement par ouverture des " +
+                        "fenêtres au moins 10 minutes par jour, ne pas obstruer les systèmes de ventilation), il est donc fortement recommandé de procéder au mesurage du radon dans le " +
+                        "bien afin de s'assurer que sa concentration est inférieure au niveau de référence fixé à 300 Bq/m3, et idéalement la plus basse raisonnablement possible. Il est conseillé " +
+                        "de faire appel à des professionnels du bâtiment pour réaliser un diagnostic de la situation et vous aider à choisir les solutions les plus adaptées selon le type de " +
+                        "logement et la mesure. Ces solutions peuvent être mises en œuvre progressivement en fonction des difficultés de réalisation ou de leur coût. À l’issue des travaux, vous " +
+                        "devrez réaliser de nouvelles mesures de radon pour vérifier leur efficacité.</p>");
         }
         
         if (hasPollutionPrincipale(avisDTO)) {
             page.append("<h4 id=\"recommendations_pollution\">Pollution des sols</h4>");
-            page.append("<p>En cas de vente ou de location, le propriétaire est tenu de communiquer les informations relatives aux pollutions des sols, à l’acquéreur ou au locataire. (article L. " +
-                        "514-20 du Code de l’Environnement et L 125-7 du Code de l’Environnement).</p>");
+            page.append("<p>En cas de vente ou de location, le propriétaire est tenu de communiquer les informations relatives aux pollutions des sols, à l’acquéreur ou au locataire. (article " +
+                        (avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0 ? "L. 514-20 du Code de l’Environnement" : "") +
+                        (avisDTO.getInstallationClasseeSurParcelleDTOs().size() > 0 && avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0 ? " et " : "") +
+                        (avisDTO.getSecteurInformationSolSurParcelleDTOs().size() > 0 ? "L. 125-7 du Code de l’Environnement" : "") +
+                        ").</p>");
             page.append("<p>En cas de changement d’usage du terrain (travaux, constructions, changement d’affectation du bien), le maître d’ouvrage doit faire appel à un bureau d’étude qui devra " +
                         "attester de la mise en oeuvre de mesures de gestion de la pollution des sols. Si elle est exigée lors d’un dépôt de permis de construire ou d’aménager " +
-                        "(Article L.556-1 du Code de l’Environnement), l’attestation devra être délivrée par un bureau d’étude certifiée.</p>");
+                        "(Article L.556-1 du Code de l’Environnement), l’attestation devra être délivrée par un bureau d’étude certifié.</p>");
         }
     }
     
@@ -681,9 +705,16 @@ public class PdfRedactor {
         return avisDTO.getSummary().getCommune().getCodeZoneSismicite() != null && avisDTO.getSummary().getCommune().getCodeZoneSismicite().equals("2");
     }
     
+    private boolean hasSismiciteTresHaute(AvisDTO avisDTO) {
+        
+        return avisDTO.getSummary().getCommune().getCodeZoneSismicite() != null &&
+               (avisDTO.getSummary().getCommune().getCodeZoneSismicite().equals("4") || avisDTO.getSummary().getCommune().getCodeZoneSismicite().equals("5"));
+    }
+    
     private boolean hasSismiciteHaute(AvisDTO avisDTO) {
         
-        return hasSismicite(avisDTO) && !hasSismiciteMoyenne(avisDTO);
+        return avisDTO.getSummary().getCommune().getCodeZoneSismicite() != null &&
+               avisDTO.getSummary().getCommune().getCodeZoneSismicite().equals("3");
     }
     
     private boolean hasPPR(AvisDTO avisDTO) {
@@ -709,14 +740,21 @@ public class PdfRedactor {
                                localAppPath + "/pictogrammes_risque/" + getLogoRisque(ppr.getAlea().getFamilleAlea().getCode()) + ".png",
                                "<p>" + (!ppr.isExistsInGeorisque() && !ppr.isExistsInGpu() ? "La commune est située" : "L’immeuble est situé") +
                                " dans le périmètre d’un " + ppr.getAlea().getFamilleAlea().getFamillePPR().getLibelle() + " de type " + ppr.getAlea().getFamilleAlea().getLibelle() + " - " + ppr.getAlea().getLibelle() +
-                               (ppr.getDateApprobation() != null ? ", approuvé le " + sdf.format(ppr.getDateApprobation()) : ", prescrit le " + sdf.format(ppr.getDatePrescription())) + "." + "<br/>" +
-                               (ppr.getDateApprobation() != null ? "Un PPR approuvé est un PPR définitivement adopté." :
-                                ppr.getDateApplicationAnticipee() != null ? "Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation." :
-                                "Un PPR prescrit est un PPR en cours d’élaboration sur la commune dont le périmètre et les règles sont en cours d’élaboration."
-                               ) +
+                               (ppr.getDateApprobation() != null ? ", approuvé le " + sdf.format(ppr.getDateApprobation()) : "") +
+                               (ppr.getDatePrescription() != null ? ", prescrit le " + sdf.format(ppr.getDatePrescription()) : "") +
+                               (ppr.getDateApplicationAnticipee() != null ? ", anticipé le " + sdf.format(ppr.getDateApplicationAnticipee()) : "") +
+                               ".<br/>" +
+                               (ppr.getDateApprobation() != null ? "Un PPR approuvé est un PPR définitivement adopté." : "") +
+                               (ppr.getDatePrescription() != null ? "Un PPR prescrit est un PPR en cours d’élaboration sur la commune dont le périmètre et les règles sont en cours d’élaboration." :
+                                "") +
+                               (ppr.getDateApplicationAnticipee() != null ? "Un PPR anticipé est un PPR non encore approuvé mais dont les règles sont  déjà à appliquer, par anticipation." : "") +
                                "<br/><br/>" +
-                               "Le plan de prévention des risques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d'urbanisme héritées du " +
-                               "passé et de mieux encadrer l'urbanisation future autour du site.</p>");
+                               (ppr.getAlea().getFamilleAlea().getFamillePPR().getCode().equals("PPRT") ?
+                                "Le plan de prévention des risques technologiques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d’urbanisme" +
+                                " héritées du passé et de mieux encadrer l’urbanisation future autour du site." :
+                                "Le plan de prévention des risques est un document réalisé par l’État qui a pour objectif de résoudre les situations difficiles en matière d'urbanisme héritées du " +
+                                "passé et de mieux encadrer l'urbanisation future autour du site.") +
+                               "</p>");
         }
         
         if (hasSismicite(avisDTO)) {

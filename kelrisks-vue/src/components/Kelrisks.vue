@@ -185,7 +185,7 @@
             </a>
 
             <div class="partenaire">
-                <img alt="Fabrique Numérique - Ministère de la Transition Écologique et Solidaire"
+                <img alt="Fabrique Numérique - Ministère de la transition écologique"
                      height="160"
                      src="/images/logo-fabriquenumerique.svg"
                      width="160">
@@ -199,12 +199,12 @@
                 <a @click="showStats()">Stats</a>
                 <a href="/swagger-ui.html"
                    rel="noopener noreferrer"
+
                    target="_blank">API</a>
             </div>
 
             <div class="version">{{ env.presentationVersion }}</div>
 
-            <!--            <c-g-u ref="cgu"/>-->
             <who-are-we ref="haw"/>
 
         </footer>
@@ -224,7 +224,6 @@
 </template>
 
 <script>
-import CGU from '../components/content/CGU'
 import HowTo from '../components/content/HowTo'
 import WhoAreWe from '../components/content/WhoAreWe'
 import Konami from '../components/content/Konami'
@@ -274,7 +273,6 @@ export default {
         Stats,
         SearchResults,
         SearchFormParcelle,
-        CGU,
         HowTo,
         WhoAreWe,
         Konami
