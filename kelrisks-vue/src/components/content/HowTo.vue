@@ -1,6 +1,6 @@
 <template>
     <div id="howto_wrapper">
-        <h3>Kelrisks, comment ça marche ?</h3>
+        <h3>ERRIAL, comment ça marche ?</h3>
         <div class="box panel">
             <div class="content">
                 <img height="75"
