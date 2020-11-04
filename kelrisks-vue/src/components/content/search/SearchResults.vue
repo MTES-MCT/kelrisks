@@ -453,9 +453,7 @@
             <div id="bottomButtonsWrapper">
                 <a @click="$emit('flow', 1)"
                    class="bouton success"
-                   href='#bullet-progress-bar_wrapper'
-                   rel="noopener noreferrer"
-                   target="_blank">
+                   href='#bullet-progress-bar_wrapper'>
                     Compléter l'état des risques
                     <font-awesome-icon class="end"
                                        icon="chevron-right"/>
